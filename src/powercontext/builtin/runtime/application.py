@@ -851,13 +851,12 @@ class ScopedContextApplication:
     async def prepare_incremental(
         self,
         request: PrepareContextRequest,
-        /,
         base_pack: ContextPack | None = None,
     ) -> ContextPack | ContextPackDelta:
         """Prepare the normal context and encode it as a full pack or suffix delta."""
 
         prepared = await self.prepare(request)
-        target = ContextPack.from_content(prepared.content or "")
+        target = ContextPack.from_content(prepared.content or "", chunk_bytes=64)
         if base_pack is None:
             return target
         return ContextPackDelta.between(base_pack, target)
