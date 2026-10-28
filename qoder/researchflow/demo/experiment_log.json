@@ -1,0 +1,89 @@
+{
+  "experiment_id": "EXP-2026-10-29-seekdb-hybrid",
+  "subject": "seekdb v1.4.0.0 retrieval mode comparison on a bilingual probe corpus",
+  "environment": {
+    "seekdb_version": "5.7.25-OceanBase seekdb-v1.4.0.0",
+    "oceanbase_base": "OceanBase 4.3.5.3",
+    "endpoint": "127.0.0.1:2881",
+    "database": "test",
+    "sdk": "pyseekdb 1.4.0.post1",
+    "embedding": "all-MiniLM-L6-v2 ONNX, 384 dimensions"
+  },
+  "parameters": {
+    "corpus_size_documents": 4,
+    "vector_index": {
+      "type": "hnsw",
+      "distance": "cosine",
+      "dimension": 384
+    },
+    "hybrid_rank": {
+      "algorithm": "rrf",
+      "rank_constant": 60,
+      "rank_window_size": 60
+    },
+    "n_results": 5,
+    "analyzers_under_test": [
+      "ik",
+      "ngram",
+      "space"
+    ]
+  },
+  "results": [
+    {
+      "analyzer": "ik",
+      "create_collection": "ok",
+      "add_seconds": 1.19,
+      "row_count": 4,
+      "vector_top1": "d1",
+      "vector_top1_distance": 0.3753,
+      "chinese_needle": "混合召回",
+      "chinese_fts_top1": "d3",
+      "hybrid_rrf_scores": [
+        0.0325,
+        0.0164,
+        0.0159,
+        0.0156
+      ],
+      "metadata_filter": "ok_empty_result",
+      "verdict": "PASS"
+    },
+    {
+      "analyzer": "ngram",
+      "create_collection": "ok",
+      "add_seconds": 0.78,
+      "row_count": 4,
+      "vector_top1": "d1",
+      "vector_top1_distance": 0.3753,
+      "chinese_needle": "混合召回",
+      "chinese_fts_top1": "d3",
+      "hybrid_rrf_scores": [
+        0.0325,
+        0.0164,
+        0.0159,
+        0.0156
+      ],
+      "metadata_filter": "ok_empty_result",
+      "verdict": "PASS"
+    },
+    {
+      "analyzer": "space",
+      "create_collection": "ok",
+      "add_seconds": 0.88,
+      "row_count": 4,
+      "vector_top1": "d1",
+      "vector_top1_distance": 0.3753,
+      "chinese_needle": "混合召回",
+      "chinese_fts_top1": "d4",
+      "hybrid_rrf_scores": [
+        0.0164,
+        0.0161,
+        0.0159,
+        0.0156
+      ],
+      "metadata_filter": "ok_empty_result",
+      "verdict": "PASS_WITH_NOTE",
+      "note": "space analyzer does not segment Chinese, so the FTS top-1 is wrong"
+    }
+  ],
+  "conclusion": "ik selected as the default analyzer for the bilingual corpus."
+}
