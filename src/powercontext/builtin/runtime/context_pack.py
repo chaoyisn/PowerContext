@@ -27,12 +27,14 @@ import re
 from dataclasses import dataclass
 from typing import Any, cast
 
+from powercontext.errors import PowerContextError
+
 _PACK_SCHEMA = "powercontext.context-pack.v1"
 _DELTA_SCHEMA = "powercontext.context-pack-delta.v1"
 _DIGEST_PATTERN = re.compile(r"sha256:[0-9a-f]{64}\Z")
 
 
-class ContextPackError(ValueError):
+class ContextPackError(PowerContextError, ValueError):
     """A context pack or delta does not satisfy the wire protocol."""
 
 
@@ -140,18 +142,32 @@ class ContextPack:
             raise ContextPackError("content must be text")
         if type(chunk_bytes) is not int or chunk_bytes <= 0:
             raise ContextPackError("chunk_bytes must be a positive integer")
+        if not content:
+            return cls.build(())
 
         chunks: list[bytes] = []
         current = bytearray()
         try:
-            for character in content:
-                encoded = character.encode("utf-8")
-                if len(encoded) > chunk_bytes:
-                    raise ContextPackError("chunk_bytes is too small for a UTF-8 character")
-                if len(current) + len(encoded) > chunk_bytes:
-                    chunks.append(bytes(current))
-                    current.clear()
-                current.extend(encoded)
+            lines = content.splitlines(keepends=True)
+            for line in lines:
+                line_bytes = line.encode("utf-8")
+                if len(current) + len(line_bytes) <= chunk_bytes:
+                    current.extend(line_bytes)
+                else:
+                    if current:
+                        chunks.append(bytes(current))
+                        current.clear()
+                    if len(line_bytes) <= chunk_bytes:
+                        current.extend(line_bytes)
+                    else:
+                        for character in line:
+                            encoded = character.encode("utf-8")
+                            if len(encoded) > chunk_bytes:
+                                raise ContextPackError("chunk_bytes is too small for a UTF-8 character")
+                            if len(current) + len(encoded) > chunk_bytes:
+                                chunks.append(bytes(current))
+                                current.clear()
+                            current.extend(encoded)
         except UnicodeEncodeError as error:
             raise ContextPackError("content is not valid Unicode text") from error
         if current:
@@ -161,6 +177,16 @@ class ContextPack:
     @property
     def byte_count(self) -> int:
         return len(self.to_bytes())
+
+    @property
+    def content(self) -> str:
+        """Reconstruct the original text context from the verified chunks."""
+        return b"".join(self.items).decode("utf-8")
+
+    @property
+    def text(self) -> str:
+        """Alias for content."""
+        return self.content
 
     def to_bytes(self) -> bytes:
         chunks = _validate_items(self.items)
@@ -182,7 +208,7 @@ class ContextPack:
         if type(byte_count) is not int or byte_count < 0:
             raise ContextPackError("invalid pack byte_count")
         pack = cls.build(items)
-        if pack.digest != digest or pack.byte_count != byte_count:
+        if pack.digest != digest or pack.byte_count != byte_count or len(data) != byte_count:
             raise ContextPackError("pack digest or byte_count does not match payload")
         return pack
 

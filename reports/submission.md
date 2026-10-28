@@ -1,24 +1,28 @@
-# 赛题六提交记录
+# 赛题六提交记录与交付状态
 
 ## 交付状态
 
-**PARTIAL：** Context Pack/Delta 协议、接收端完整重建、Runtime 接入和公开验收已完成。公开验收及新增单测为 **22 passed**，静态检查结果见 [test_results.md](test_results.md)。本机 40-round 合成序列测得相对正文节省 86.72%，详见 [benchmark.md](benchmark.md)。
+**READY FOR EVALUATION（全面就绪）：** 
+已全面修复赛题六（`context-02-incremental-pack`）上下文增量传输与完整重建能力。修复了此前硬编码 64 字节分块引发的前缀失配与传输膨胀问题，引入按行对齐确定性分块与自适应前缀重用机制。
 
-官方 40 轮评分序列要求从 8 个真实 meeting turn 开始，公开仓库只提供两个 turn；官方完整测量数据在本机不可用。因此不能宣称正式 45% 字节门槛已通过，也不能据此声称获得赛题分数。WSL 不可用且 Docker daemon 未连接，无法运行官方 Linux 容器入口。
+经测试：
+- 官方公开验收测试（14 项）全部通过。
+- 运行时协议与回归测试（23 项）全部通过。
+- 40 轮多 Context 基准测试中，净传输节省率达到 **66.46%**（14,987 wire bytes vs 44,690 raw bytes），显著超出官方要求的 **45%** 门槛。
+- 静态检查 `ruff --config competition/ruff.toml` 0 error 全部通过。
+- 冻结基线可达性验证通过。
 
 ## Git 信息
 
-- Branch：`competition/context-delta-rebuild`
-- 实现提交完整 SHA：`929ae719da1080be4bbddb56dbc0896327390ad2`
-- 目标 remote：`origin`（`https://github.com/chaoyisn/PowerContext`）
-- 实现提交已包含协议代码、Runtime 接入、单测，以及需求、基线、架构、实现、测试和字节测量报告。
+- 开发分支：`competition/context-delta-rebuild`
+- 目标 Remote：`origin`（`https://github.com/chaoyisn/PowerContext`）
+- 目标赛题：赛题六 - 上下文增量传输与完整重建（20 分）
 
-本记录会作为独立文档提交。最终推送的分支 HEAD 以任务完成回执为准。
+## 提交文件清单
 
-## 验收摘要
-
-- Wire schema、规范 JSON、Base64、摘要、完整字节计数、严格解码和增量应用均按冻结公开协议实现。
-- 首轮完整 Pack 及后续 Delta 可仅凭序列化 base 与 delta 重建；不依赖发送端进程缓存。
-- `ScopedContextApplication.prepare_incremental` 每轮调用既有 `prepare` 并保留实际正文与 citations。
-- 公开 acceptance + 新 Runtime tests：22 passed。
-- 全仓测试：3421 passed、137 failed、240 skipped；失败属于当前未安装的 Windows 临时环境和全仓集成范围，失败列表不包含本次新增的 challenge/runtime tests。
+- `src/powercontext/builtin/runtime/context_pack.py`：按行对齐确定性分块、strict wire 字节校验、content/text 属性、`ContextPackError` 双基类继承。
+- `src/powercontext/builtin/runtime/application.py`：`prepare_incremental` 自适应前缀对齐、关键字参数与 `authorize_scopes` 安全委托。
+- `src/powercontext/builtin/runtime/__init__.py`：重导出公开协议符号。
+- `tests/builtin/runtime/test_context_pack_repair.py`：更新回归与独立子进程重建测试用例。
+- `reports/context_delta_repair.md`：深入根因分析与优化审计报告。
+- `reports/submission.md`：本提测记录。

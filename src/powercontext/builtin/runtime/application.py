@@ -166,7 +166,7 @@ from powercontext.builtin.runtime._scope_cache import (
     ScopeCacheObserver,
     ScopeEvictor,
 )
-from powercontext.builtin.runtime.context_pack import ContextPack, ContextPackDelta
+from powercontext.builtin.runtime.context_pack import ContextPack, ContextPackDelta, ContextPackError
 from powercontext.builtin.runtime.decision_model import DecisionModel
 from powercontext.builtin.runtime.errors import InvalidRuntimeRequestError, TopicMemoryProcessingUnavailableError
 from powercontext.builtin.runtime.models import (
@@ -852,13 +852,36 @@ class ScopedContextApplication:
         self,
         request: PrepareContextRequest,
         base_pack: ContextPack | None = None,
+        *,
+        authorize_scopes: Callable[[tuple[str, ...]], Awaitable[None]] | None = None,
     ) -> ContextPack | ContextPackDelta:
         """Prepare the normal context and encode it as a full pack or suffix delta."""
 
-        prepared = await self.prepare(request)
-        target = ContextPack.from_content(prepared.content or "", chunk_bytes=64)
+        if authorize_scopes is not None:
+            prepared = await self.prepare(request, authorize_scopes=authorize_scopes)
+        else:
+            prepared = await self.prepare(request)
+        content = prepared.content or ""
         if base_pack is None:
-            return target
+            return ContextPack.from_content(content)
+
+        if not isinstance(base_pack, ContextPack):
+            raise ContextPackError("base_pack must be a ContextPack")
+        base_pack.to_bytes()
+
+        target_bytes = content.encode("utf-8")
+        matched_chunks: list[bytes] = []
+        offset = 0
+        for item in base_pack.items:
+            if target_bytes[offset : offset + len(item)] == item:
+                matched_chunks.append(item)
+                offset += len(item)
+            else:
+                break
+
+        remaining_text = target_bytes[offset:].decode("utf-8")
+        suffix_pack = ContextPack.from_content(remaining_text)
+        target = ContextPack.build(tuple(matched_chunks) + suffix_pack.items)
         return ContextPackDelta.between(base_pack, target)
 
     async def _prepare(self, request: PrepareContextRequest, scope: ScopeDescriptor, /) -> PreparedContext:
