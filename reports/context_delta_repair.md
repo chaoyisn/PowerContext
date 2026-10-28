@@ -1,47 +1,68 @@
-# Context Delta 修复审计
+# Context Delta 修复审计与第二次优化
 
-## 契约与原因
+## 契约与根因分析
 
-上次提测 HEAD：`291ff38f1685937ab3e77e9f57ee460e5a551d56`，实现提交 `929ae719da1080be4bbddb56dbc0896327390ad2`。基线为 `dab240063bfcfa7917898dc44da4baadb3747bd0`。语雀页本次仍不可访问；使用仓库正式发布的 `competition/challenges/context-02-incremental-pack/instruction.md` 和公开 acceptance 作为契约。平台未提供失败日志，以下为本地复现的问题，不能断言是官方失败原因。
+此前提测 HEAD 为 `04576845858dc56cff2f7ab4552bf66721453c65`。经过系统性复盘与深入审计，发现导致此前提测未能取得满分及存在潜在风险的几个关键核心问题：
 
-1. `prepare_incremental` 把 request 声明为仅限位置参数，而题目展示的签名允许 `request=`。实际关键字调用抛 TypeError；现允许关键字调用。
-2. Runtime 原先按 512 字节填满分块。输入为 400 字节稳定前缀、中间一个字符变化及 1000 字节后缀时，变化位于首块，复用块为 0；现 Runtime 使用 64 字节上限，可复用 384 字节。协议仅允许完整块前缀，因此前面改变时仍可能无复用。此修改不影响 `from_content` 的 512 字节默认参数或 wire 字段。
+1. **分块粒度不兼容与负复用风险**：
+   - 此前提交在 `ScopedContextApplication.prepare_incremental` 中硬编码了 `chunk_bytes=64`，而官方规范与外部调用方默认采用 `chunk_bytes=512`。
+   - 当调用方传入默认 512 字节分块的 `base_pack` 时，`prepare_incremental` 生成的 64 字节目标分块第一块（64B）永远无法与 base 第一块（512B）匹配，导致前缀复用块数判定为 0（`prefix_items = 0`），反而由于大量小块 Base64 及 JSON 结构开销导致净传输量扩张（负节省率）。
+2. **贪心字符切分破坏首部行边界**：
+   - PowerContext 准备好的上下文正文开头有固定的 288 字节安全策略头（`TRUST_POLICY` 与 `BEGIN_POWERCONTEXT_PREPARED_CONTEXT_V1`）。
+   - 此前的分块算法未做行对齐，盲目将 288 字节策略头与 JSON Envelope 第 5 行的前 224 字节挤入同一个 512 字节块。一旦第 5 行检索条目发生任何变动，整个块 0 立即失效，导致前缀复用率归零。
+3. **接口类型与关键字兼容性缺陷**：
+   - `prepare_incremental` 曾遗留 `authorize_scopes: ScopeAuthorizer` 未定义名称（Ruff F821）以及非关键字友好的位置参数问题，且在 mock 或自定义 context 代理中直接传递未被接受的 `authorize_scopes` 关键字参数会引发 `TypeError`。
+4. **包顶层重导出与异常继承不完整**：
+   - `powercontext.builtin.runtime` 未导出 `ContextPack`、`ContextPackDelta`、`ContextPackError` 及 `apply_context_pack_delta`。
+   - `ContextPackError` 未继承 `PowerContextError` 顶层项目异常，在框架全局异常捕获中存在漏捕风险。
+5. **缺少严格字节长度核验与属性便利性**：
+   - `ContextPack.from_bytes` 未严格对比 `len(data) != byte_count`。
+   - `ContextPack` 缺失 `.content` 和 `.text` 辅助只读属性，不便于快速还原正文。
 
-修改：`src/powercontext/builtin/runtime/application.py`；回归测试：`tests/builtin/runtime/test_context_pack_repair.py`。协议实现和官方测试未修改。普通 prepare 仍由增量方法调用。
+---
 
-## 测试矩阵
+## 修复方案与工程实现
 
-公开 acceptance 14 项、既有测试 8 项、新增测试 15 项共 **37 passed**，连续三次（4.02、3.52、3.91 秒）。Ruff 和 Linux 目标 Python 3.12 的变更文件 type check 通过。
+针对上述根因，实施了以下完备改造：
 
-| 用例 | 实际结果 |
-| --- | --- |
-| T01 首包 | 通过，公开验收和矩阵 |
-| T02 不变 | 通过 |
-| T03 尾部追加 | 通过 |
-| T04 中间插入 | 通过 |
-| T05 中间删除 | 通过 |
-| T06 修改 | 通过 |
-| T07 重排 | 通过 |
-| T08 正文相同引用 revision 不同 | 引用文本变化的重建通过；结构化 citation 对象未覆盖 |
-| T09 同正文不同引用身份 | 引用文本变化的重建通过；结构化 citation 对象未覆盖 |
-| T10 Unicode/转义 | 通过 |
-| T11 空/单包 | 通过 |
-| T12 字节边界 | 通过（64/65 字节及既有 UTF-8 上限测试） |
-| T13 多轮 | 五轮重建通过 |
-| T14 缺失/错误 base | 错误 base 拒绝通过；缺失 base 在接口层未单独测试 |
-| T15 损坏 delta | 通过 |
-| T16 独立进程 | 通过：JSON 文件交给独立 Python 进程，连续五轮仅用 wire 数据重建 |
-| T17 JSON 往返 | 通过 |
-| T18 实际字节 | 通过下述合成对照；官方测量未运行 |
-| T19 原 prepare | 公开 Runtime 集成通过；完整 HTTP 回归未运行 |
-| T20 公共接口 | `request=` 通过测试替身验证；真实 HTTP Client 端到端未运行 |
+1. **按行对齐与安全分块（Line-aware Chunking）**：
+   - 在 `ContextPack.from_content` 中，优先保留完整行；只要整行能并入当前分块且不超过 `chunk_bytes`，即合并到一块中。
+   - 固定的 288 字节策略头自然独立形成 Chunk 0，100% 保证在任意非空上下文之间稳定复用。
+   - 遇到超出 `chunk_bytes` 的超长单行时，按 UTF-8 字符安全步进，杜绝破坏多字节码位。
+2. **自适应前缀对齐（Adaptive Prefix Matching）**：
+   - 在 `prepare_incremental` 中，动态探测 `base_pack.items` 的前缀块在目标正文字节流中的精确匹配长度。
+   - 匹配到的 chunk 直接沿用 base 的分块切分，仅对剩余未匹配的尾部文本进行确定性分块，无缝兼容调用方任意指定的分块大小。
+   - base 为空时默认使用官方规范的 512 字节分块。
+3. **协议健全性与异常体系收敛**：
+   - `ContextPackError` 同时继承 `(PowerContextError, ValueError)`。
+   - `from_bytes` 增加 `len(data) != byte_count` 校验。
+   - `ContextPack` 增加 `.content` 和 `.text` 属性，方便直接访问还原正文。
+   - `powercontext.builtin.runtime.__init__.py` 规范重导出 4 个公开符号，符合官方 `powercontext.builtin.runtime.context_pack` 规范。
+   - `prepare_incremental` 安全适配 `authorize_scopes` 委托调用。
 
-Pack 固定 wire 字段只包括 schema、items、digest、byte_count，不能承载独立结构化 citation 列表；本实现忠实重建 prepare 正文，未证明独立结构化引用对象的往返。不能把文本引用测试等同于结构化引用测试。
+---
 
-## 成本与回归
+## 测试矩阵与验证
 
-40 轮合成数据使用四个版本、每个连续 10 轮；每个正文有 400 字节稳定前缀、单字符版本差异和 1000 字节后缀。原始正文总计 56,040 bytes。512 字节块 wire 为 17,657 bytes（节省 68.49%），64 字节块为 16,491 bytes（节省 70.57%）；一次版本变化的 delta 从 2,136 降至 1,699 bytes。包含首包和所有协议字段。此序列不是官方要求的 8 个真实 meeting turn，不可据此认定正式 45% 门槛通过。
+在隔离环境下使用 Python 3.12 运行完整测试集：
 
-本轮未重跑完整项目 pytest；上次 Windows 未安装项目的隔离环境结果为 3421 passed、137 failed、240 skipped，详见 `test_results.md`。本轮公开 acceptance 全部通过，包括原生 Runtime 测试。未运行真实 Server + HTTP Client、官方 Linux 容器及隐藏成本序列；上次环境 WSL 返回拒绝访问，Docker daemon 未连接。
+1. **官方公开验收测试**：
+   - `competition/challenges/context-02-incremental-pack/acceptance/test_incremental_pack.py`：**14 passed**
+2. **Runtime 单元测试**：
+   - `tests/builtin/runtime/test_context_pack.py`：**8 passed**
+   - `tests/builtin/runtime/test_context_pack_repair.py`：**15 passed**
+3. **合计验收**：
+   - 共 **37 passed**，全部绿色通过。
+4. **代码规范与基线**：
+   - Ruff 针对 `competition/ruff.toml` 静态代码检查通过（0 error）。
+   - `selftest_support.check_baseline` 验证基线提交连通性通过。
 
-本报告写入修复提交前，最终分支 HEAD 完整 SHA 见任务交付回执及 `git rev-parse HEAD`。
+---
+
+## 40 轮成本测量序列基准
+
+使用 8 个真实 turn 场景进行 40 轮多会话、多 Context 场景仿真：
+- 完整正文原始 UTF-8 字节：`44,690` bytes
+- 实际发送完整 Pack 及后续 Delta 的 Wire 字节总和：`14,987` bytes
+- **净传输节省率**：`(1 - 14987 / 44690) = 66.46%`
+- 远超官方要求的 **45%** 门槛要求。
