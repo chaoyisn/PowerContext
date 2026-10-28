@@ -1,4 +1,4 @@
-"""Exercise the four competition features together through the public Runtime."""
+"""Exercise the integrated competition features together through the public Runtime."""
 
 import importlib
 import json
@@ -8,10 +8,12 @@ import httpx
 from powercontext.builtin.artifacts.memory.http_reranker import HTTPMemoryReranker
 from powercontext.builtin.runtime import (
     GetMemoryEntryRequest,
+    PrepareContextRequest,
     SearchMemoryRequest,
     SubmitSourceObservation,
     open_builtin_runtime,
 )
+from powercontext.builtin.runtime.context_pack import ContextPack, ContextPackDelta, apply_context_pack_delta
 from powercontext.sources import (
     CSV_ROW_SOURCE_DEFINITION,
     PI_EVENT_SOURCE_DEFINITION,
@@ -77,5 +79,15 @@ async def test_csv_pi_count_trigger_and_http_rerank_together(tmp_path, monkeypat
                 entries = (await app.list()).entries
                 for row in entries:
                     assert (await app.get(GetMemoryEntryRequest(citation=row.citation))).entry == row.entry
+                context = runtime.context.for_scope(sid)
+                request = PrepareContextRequest(query="CountEvidence", max_bytes=4096)
+                base = await context.prepare_incremental(request=request)
+                assert isinstance(base, ContextPack)
+                delta = await context.prepare_incremental(request=request, base_pack=base)
+                assert isinstance(delta, ContextPackDelta)
+                rebuilt = apply_context_pack_delta(
+                    ContextPack.from_bytes(base.to_bytes()), ContextPackDelta.from_bytes(delta.to_bytes())
+                )
+                assert b"".join(rebuilt.items).decode("utf-8") == (await context.prepare(request)).content
             async with open_builtin_runtime(settings, memory_reranker=reranker) as runtime:
                 assert await checks.source_refs(runtime, sid, "memory") == expected
