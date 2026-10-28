@@ -7,7 +7,7 @@
 | 检查 | 结果 |
 | --- | --- |
 | 冻结基线 `9db1753434162c0aa7c9f1189a1722e617880a52` | 未实现题目 API，公开验收收集时因缺少 `powercontext.builtin.inference.coalescing` 模块失败 |
-| 官方公开验收（最终整合源码状态） | **8 passed in 22.27s** |
+| 官方公开验收（保留 Context Delta 的最终整合源码状态） | **8 passed in 16.92s** |
 | 官方原生请求预算 | 随公开验收通过：24 条文本、6 个 scope、批次上限 6，Provider 恰好 4 次调用；6 次向量搜索后仍为 4 次 |
 
 官方命令使用仓库固定的 `competition/.venv` 与 `competition/pytest.ini`。第一次误选开发虚拟环境时缺少 pytest-asyncio 插件，未计作正式验收运行；随后使用固定竞赛环境运行官方 Make 目标并通过。
@@ -16,7 +16,7 @@
 
 | 检查 | 结果 |
 | --- | --- |
-| `tests/builtin/inference/test_coalescing.py`（最终整合源码状态） | **14 passed in 6.56s** |
+| `tests/builtin/inference/test_coalescing.py`（保留 Context Delta 的最终整合源码状态） | **14 passed in 7.23s** |
 | 并发去重、取消隔离、Provider 故障重试关键用例，第 1 轮 | **8 passed in 6.34s** |
 | 同上，第 2 轮 | **8 passed in 6.25s** |
 | 同上，第 3 轮 | **8 passed in 5.92s** |
@@ -27,6 +27,8 @@
 新增 Provider 故障测试分别覆盖 HTTP 500、超时、连接失败和非法 JSON；四种异常均原样传播，失败不进入缓存，下一次相同 Key 请求会重新调用 Provider 并成功。错误向量数量和 NaN 的失败后重试也继续通过。
 
 ## 全仓回归
+
+保留原远端集成分支并合入 Context Delta 后，最终合并树上的六项代码题公开 acceptance 已分别验证：CSV、Pi、HTTP、Context Delta、Embedding 合并运行 **64 passed in 27.92s**；Source Count 在同一工作树的断网固定容器中 **17 passed in 349.35s**。共 81 项公开验收通过；这是竞赛公开验收集合，不代表全仓 pytest 通过。
 
 整合分支曾运行完整 pytest：**39 failed、3717 passed、141 skipped、6 warnings**（3895 items，46:19）。该轮使用的 Git 归档快照遗漏了已跟踪的 `scripts/`，且开发 venv 未启用 pytest-asyncio；因此其中发布脚本/证据扫描和 4 个 async 用例失败不构成有效源码回归结论。后续在真实工作树并启用 asyncio 插件，复跑 Pi、release、scan 三组共 **34 passed、5 failed**；Pi 与 release 用例通过，证据扫描剩余 5 项因 WSL 未安装 `jq` 而报告 `jq_unavailable`。换行敏感的脚本与中文文档仅在复跑期间临时转为 LF，均已恢复原始字节。
 
