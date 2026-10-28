@@ -101,6 +101,7 @@ from powercontext.builtin.artifacts.skill.distribution import RemoteSkillDistrib
 from powercontext.builtin.artifacts.skill.publication import ManagedSkillPublicationService
 from powercontext.builtin.artifacts.skill.registry import ExternalSkillRegistryService
 from powercontext.builtin.artifacts.topic_memory import (
+    MAX_TOPIC_MEMORY_SEARCH_LIMIT,
     TOPIC_MEMORY_SOURCE_WINDOW_BINDING,
     PublishedTopicMemory,
     TopicMemory,
@@ -190,6 +191,7 @@ from powercontext.builtin.runtime.protocols import (
 )
 from powercontext.builtin.runtime.recall import RelationalRecallTokenEstimator
 from powercontext.builtin.runtime.recurrence import RelationalRecurrenceLedger
+from powercontext.builtin.runtime.source_lifecycle import SourceLifecycleRepository
 from powercontext.builtin.runtime.statistics import RelationalScopedStatistics
 from powercontext.builtin.scope import ScopeApplication
 from powercontext.builtin.scope.subject_sources import SubjectSourceService
@@ -583,6 +585,7 @@ class RelationalContexts:
             processing_binding_states=ArtifactProcessingBindingStateRepository(),
             topic_memories=topic_memory_repository,
         )
+        self.source_lifecycle = SourceLifecycleRepository()
         self._model_usage = _ModelUsageRecorder(
             database,
             self.repositories.statistics,
@@ -991,16 +994,24 @@ class RelationalContexts:
             embedding_profile = query_embedding.embedding_profile
         scope = validate_scope_id(scope_id)
         async with self.database.transaction() as connection:
-            return await self.repositories.topic_memories.search(
+            result = await self.repositories.topic_memories.search(
                 connection,
                 scope,
                 query,
-                limit=limit,
+                limit=MAX_TOPIC_MEMORY_SEARCH_LIMIT,
                 mode=mode,
                 query_vector=query_vector,
                 embedding_profile=embedding_profile,
                 admission=admission,
             )
+            managed, available = await self.source_lifecycle.topic_visibility(connection, scope)
+            hits = tuple(
+                hit
+                for hit in result.hits
+                if (hit.artifact_ref.artifact_id, hit.artifact_ref.revision) not in managed
+                or (hit.artifact_ref.artifact_id, hit.artifact_ref.revision) in available
+            )
+            return result.model_copy(update={"hits": hits[:limit]})
 
     async def search_skills(
         self,
