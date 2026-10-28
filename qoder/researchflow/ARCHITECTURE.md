@@ -304,6 +304,29 @@ LLM 被要求对每条论断打标：
 页码必须能在 `rf_pages` 中查到；不合法的 citation 直接剔除并在响应里报告 `invalid_citations`。
 零命中时不进入 LLM，直接返回 `no_evidence`。
 
+### 5.3 证据门控（实测标定）
+
+向量 ANN 总会返回 k 个最近邻，`MATCH...AGAINST` 也可能因部分 token 重叠给出非零分，
+因此「语料里没有答案」的问题仍会产生命中。门控用两条独立通道判定一个命中能否成为证据：
+
+1. **词法覆盖率** `coverage >= 0.30`：查询的判别性 token（去停用词、ASCII 按 `_`/`-` 切分、
+   CJK 用字符二元组）在命中块中出现的比例。
+   阈值来自实测余量：demo 语料上可回答问题 0.67–1.00，不可回答 0.00–0.14。
+2. **语义逃逸** `semantic_similarity >= 0.62`：查询向量与命中向量的余弦相似度，
+   覆盖无字面重叠的改写与跨语言匹配；三种检索模式下都可用（检索时一并取回 embeddings）。
+
+门控只决定「能否成为 citation」；原始命中始终返回，UI 可解释为何某条未入选。
+
+### 5.4 运行期实测补充
+
+- **写入后刷新向量索引**：不刷新时新写入向量可能不被 ANN 立即召回（实测 13 chunk 只回 3）。
+  入库后调用 `collection.refresh_index()`。
+- **降级启动**：seekdb 不可达时 API 仍然启动，`/api/health` 报 `degraded` 并在 `schema` 字段给出真实原因，
+  数据接口返回 503 + 驱动错误。否则连「报告故障」都做不到（T8 首轮因此失败）。
+- **LLM 瞬时故障重试**：仅对传输/服务端错误做 3 次退避重试；鉴权与参数错误立即失败。
+- **PowerContext 中文检索限制**：默认 SQLite 索引为 `fts5 tokenize='unicode61'`，纯中文查询 0 命中。
+  恢复主路径走全量 `list_memory_entries` + 快照，不依赖搜索；recall query 用真实 ASCII 锚点扩展并如实回传。
+
 ---
 
 ## 6. 可用性与降级策略（诚实报告，不假装成功）
@@ -321,6 +344,8 @@ LLM 被要求对每条论断打标：
 
 本项目为 **本地可独立运行** 的三进程架构：seekdb（Docker）+ PowerContext Server + ResearchFlow FastAPI + Vite 前端。
 
-Qoder Sites 托管的是**静态站点/函数**，不会自动托管本地 FastAPI、seekdb 容器或 PowerContext 进程。
-因此第一阶段的结论是：**前端静态资源可发布到 Qoder Sites，后端需要一个可公网访问的部署位置**
-（详见 `VERIFICATION.md` 的「Qoder Sites 部署可行性」章节）。本轮不实际发布。
+Qoder Sites 托管的是**静态站点 + 单个 Deno/TS Edge Function + 托管 PostgreSQL + 对象存储**：
+没有 Python 运行时、没有持久进程、托管库没有向量/全文检索能力。
+因此 **FastAPI / seekdb / PowerContext 无法整体上站**（逐条核对官方 skill 文档的结论）。
+
+第一阶段结论与三种接入方案、发布前置清单见 `VERIFICATION.md` 第 5 节。**本轮不实际发布。**

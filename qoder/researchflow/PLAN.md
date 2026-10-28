@@ -15,41 +15,43 @@
 - [x] 实测 LLM（DeepSeek）与本地 Embedding（all-MiniLM-L6-v2 ONNX 384 维）
 - [x] `ARCHITECTURE.md` / `PLAN.md` / `.env.example` / `.gitignore`
 
-## P1 数据闭环（seekdb）
+## P1 数据闭环（seekdb）— 已完成
 
-- [ ] `db/seekdb.py`：pymysql 连接、`rf_documents` / `rf_pages` 建表、`rf_chunks` collection、健康检查
-- [ ] `ingestion/parsers.py`：PyMuPDF 真实物理页（`page.number + 1`，空页保留身份）、MD、TXT
-- [ ] `ingestion/chunking.py`：页内分块，保留 `char_start` / `char_end`
-- [ ] `ingestion/service.py`：SHA-256 去重、幂等 upsert、失败写 `status=failed` + `error_message`
-- [ ] `retrieval/embeddings.py`：`minilm` / `hashing` / `openai` 三 provider
-- [ ] `retrieval/service.py`：`vector` / `fulltext` / `hybrid` 三模式 + `compare`
-- [ ] 证据查看接口：按 `doc_id` + `page_no` 回原文，页码不存在则 404
-- [ ] 单测 + 集成测试：**T1 / T2 / T3 / T8**
+- [x] `db/seekdb.py`：pymysql 连接、`rf_documents` / `rf_pages` 建表、`rf_chunks` collection、健康检查
+- [x] `ingestion/parsers.py`：PyMuPDF 真实物理页（`page.number + 1`，空页保留身份）、MD、TXT
+- [x] `ingestion/chunking.py`：页内分块，保留 `char_start` / `char_end`
+- [x] `ingestion/service.py`：SHA-256 去重、幂等 upsert、失败写 `status=failed` + `error_message`
+- [x] `retrieval/embeddings.py`：`minilm` / `hashing` / `openai` 三 provider
+- [x] `retrieval/service.py`：`vector` / `fulltext` / `hybrid` 三模式 + `compare`
+- [x] 证据查看接口：按 `doc_id` + `page_no` 回原文，页码不存在则 404
+- [x] 单测 + 集成测试：**T1 / T2 / T3 / T8**
 
-## P2 记忆闭环（PowerContext）
+## P2 记忆闭环（PowerContext）— 已完成
 
-- [ ] `memory/client.py`：连接、健康探测、失败显式报错
-- [ ] `memory/service.py`：`ensure_scope`（幂等 key）、`save_progress`、`restore`、`list_history`
-- [ ] 记忆条目按 `kind` 分类写入；进度快照写 Artifact（revision 历史）
-- [ ] 恢复视图区分「历史记忆」与「文献证据」两种来源标签
-- [ ] 测试：**T4 / T5 / T6 / T7**
+- [x] `memory/client.py`：连接、健康探测、失败显式报错
+- [x] `memory/service.py`：`ensure_scope`（幂等 key）、`save_progress`、`restore`、`list_history`
+- [x] 记忆条目按 `kind` 分类写入；进度快照写 Atomic Memory（含 seq/updated_at/fingerprint）
+- [x] 恢复视图区分「历史记忆」与「文献证据」两种来源标签
+- [x] 测试：**T4 / T5 / T6 / T7**
 
-## P3 最小产品
+## P3 最小产品 — 已完成
 
-- [ ] `agent/`：证据约束问答、三级结论（`supported` / `inferred` / `no_evidence`）、citation 服务端回查校验、retrieval-only 模式
-- [ ] FastAPI 全量路由 + OpenAPI 文档 + CORS + 结构化日志 + request_id
-- [ ] 上传校验：扩展名白名单、大小上限、文件名路径穿越防护
-- [ ] 前端四页面（React + Vite + TS）：项目总览 / 知识库 / AI 工作台 / 任务记忆
-- [ ] 浏览器实测四页面主流程与边界
+- [x] `agent/`：证据约束问答、三级结论（`supported` / `inferred` / `no_evidence`）、citation 服务端回查校验、retrieval-only 模式
+- [x] FastAPI 全量路由 + OpenAPI 文档 + CORS + 结构化日志 + request_id
+- [x] 上传校验：扩展名白名单、大小上限、文件名路径穿越防护
+- [x] 前端四页面（React + Vite + TS）：项目总览 / 知识库 / AI 工作台 / 任务记忆
+- [x] 浏览器实测四页面主流程与边界
 
-## P4 交付与验收
+## P4 交付与验收 — 已完成
 
-- [ ] `demo/`：多页 PDF（可按真实页码核对）+ Markdown 研究计划 + 结构化实验记录
-- [ ] T1–T8 端到端跑通，逐条记录 输入 / 预期 / 实际 / PASS-FAIL / 日志位置（**不预填结果**）
-- [ ] `README.md` / `RUN.md` / `VERIFICATION.md` / `QODER_LOG.md`
-- [ ] `git diff` 复核：仅新增 `qoder/researchflow/**`，四个生态目录与其他赛题零改动
-- [ ] Qoder Sites 部署可行性分析与后续接入方案（本轮不发布）
-- [ ] 人工截图取证清单
+- [x] `demo/`：多页 PDF（可按真实页码核对，含空白页）+ Markdown 研究计划 + 结构化实验记录
+- [x] T1–T8 端到端跑通，逐条记录 输入 / 预期 / 实际 / PASS-FAIL / 日志位置（**不预填结果**）
+- [x] `README.md` / `RUN.md` / `VERIFICATION.md` / `QODER_LOG.md` / `ARCHITECTURE.md` / `.env.example`
+- [x] `git diff` 复核：仅新增/修改 `qoder/researchflow/**`，四个生态目录与其他赛题零改动
+- [x] Qoder Sites 部署可行性分析与后续接入方案（本轮不发布）
+- [x] 人工截图取证清单（QODER_LOG.md 末尾）
+
+**最终结果：pytest 88 通过；验收 T1–T8 + T9-LLM 全部 PASS（150 项校验 0 失败）；浏览器四页实测通过。**
 
 ---
 
