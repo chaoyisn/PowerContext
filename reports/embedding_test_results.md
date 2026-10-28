@@ -7,7 +7,7 @@
 | 检查 | 结果 |
 | --- | --- |
 | 冻结基线 `9db1753434162c0aa7c9f1189a1722e617880a52` | 未实现题目 API，公开验收收集时因缺少 `powercontext.builtin.inference.coalescing` 模块失败 |
-| `make -C competition test-embedding` | **8 passed in 16.62s**（新增故障场景用例后复跑） |
+| 官方公开验收（最终整合源码状态） | **8 passed in 22.27s** |
 | 官方原生请求预算 | 随公开验收通过：24 条文本、6 个 scope、批次上限 6，Provider 恰好 4 次调用；6 次向量搜索后仍为 4 次 |
 
 官方命令使用仓库固定的 `competition/.venv` 与 `competition/pytest.ini`。第一次误选开发虚拟环境时缺少 pytest-asyncio 插件，未计作正式验收运行；随后使用固定竞赛环境运行官方 Make 目标并通过。
@@ -16,7 +16,7 @@
 
 | 检查 | 结果 |
 | --- | --- |
-| `tests/builtin/inference/test_coalescing.py` | **14 passed in 6.19s** |
+| `tests/builtin/inference/test_coalescing.py`（最终整合源码状态） | **14 passed in 6.56s** |
 | 并发去重、取消隔离、Provider 故障重试关键用例，第 1 轮 | **8 passed in 6.34s** |
 | 同上，第 2 轮 | **8 passed in 6.25s** |
 | 同上，第 3 轮 | **8 passed in 5.92s** |
