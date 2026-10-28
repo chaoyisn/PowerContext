@@ -63,3 +63,5 @@ Context Delta 共存回归的 `tests/e2e/test_integrated_competition.py` 在当�
 ## 得分说明
 
 公开的 Fork 关系和五个代码题公开验收均通过，理论目标为 110 分。全仓回归尚有上述 WSL 环境问题及未复核失败组，平台必测组也未运行。实际官方得分尚待用户手动提测；没有向 OceanBase 平台发起提交。
+
+集成分支通过普通 fast-forward 推送，赛题八独立分支与集成分支的远端 HEAD 均已核对与本地一致。未 force push、未修改 `master`，也未执行官方提测。
