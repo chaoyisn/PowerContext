@@ -15,10 +15,12 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import math
 from collections import Counter
 from collections.abc import Callable
 
+import httpx
 import pytest
 
 from powercontext.builtin.artifacts.memory import EmbeddingProfile
@@ -166,6 +168,44 @@ def test_failures_and_invalid_vectors_are_not_cached_and_independent_batches_fin
                 await model.embed((text,))
             assert (await model.embed((text,))).vectors == ((float(len(text)),),)
             assert base.attempts[text] == 2
+
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        TimeoutError("provider timed out"),
+        ConnectionError("provider unavailable"),
+        json.JSONDecodeError("invalid JSON", "{", 1),
+        httpx.HTTPStatusError(
+            "server error",
+            request=httpx.Request("POST", "https://provider.invalid/embeddings"),
+            response=httpx.Response(500),
+        ),
+    ],
+    ids=("timeout", "connection", "invalid-json", "http-500"),
+)
+def test_provider_errors_propagate_without_caching_and_can_be_retried(
+    error: Exception,
+) -> None:
+    class FailingOnceEmbedding(RecordingEmbedding):
+        async def embed(self, texts: tuple[str, ...], /) -> EmbeddingResult:
+            self.calls.append(texts)
+            if len(self.calls) == 1:
+                raise error
+            return EmbeddingResult(vectors=tuple((float(len(text)),) for text in texts))
+
+    async def scenario() -> None:
+        base = FailingOnceEmbedding()
+        model = CoalescingEmbeddingModel(base, coalesce_ms=0)
+
+        with pytest.raises(type(error)) as caught:
+            await model.embed(("retry-me",))
+
+        assert caught.value is error
+        assert (await model.embed(("retry-me",))).vectors == ((8.0,),)
+        assert base.calls == [("retry-me",), ("retry-me",)]
 
     asyncio.run(scenario())
 
