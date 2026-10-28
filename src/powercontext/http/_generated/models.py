@@ -3959,6 +3959,10 @@ class PrepareContextRequest(BaseModel):
         Field(description="Opt into current-Scope native code evidence. No index is built during preparation."),
     ] = False
     assembly: ContextAssembly | None = None
+    evidence_selection: Annotated[
+        StrictBool,
+        Field(description="Opt into query-driven evidence selection."),
+    ] = False
 
 
 class GeneratedCandidateResponse(BaseModel):
