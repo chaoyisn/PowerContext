@@ -17,6 +17,31 @@ from ..logging_setup import get_logger
 
 logger = get_logger(__name__)
 
+_TRANSIENT_MARKERS = (
+    "connection error",
+    "connection reset",
+    "timed out",
+    "timeout",
+    "temporarily",
+    "service unavailable",
+    "rate limit",
+    "429",
+    "500",
+    "502",
+    "503",
+    "504",
+)
+
+
+def _is_transient(exc: Exception) -> bool:
+    """Retry only transport/server hiccups - never an auth or bad-request error."""
+    from openai import APIConnectionError, APITimeoutError, InternalServerError, RateLimitError
+
+    if isinstance(exc, (APIConnectionError, APITimeoutError, RateLimitError, InternalServerError)):
+        return True
+    text = f"{type(exc).__name__}: {exc}".lower()
+    return any(marker in text for marker in _TRANSIENT_MARKERS)
+
 
 @dataclass
 class LLMResponse:
@@ -78,26 +103,51 @@ class LLMGateway:
             "max_tokens": max_tokens or self.settings.llm_max_tokens,
         }
         started = time.perf_counter()
-        try:
-            if json_mode:
-                try:
-                    response = client.chat.completions.create(
-                        **kwargs, response_format={"type": "json_object"}
-                    )
-                except Exception as exc:
-                    # Not every OpenAI-compatible endpoint implements response_format.
-                    logger.warning(
-                        "json response_format rejected, retrying in plain mode",
-                        fields={"error": f"{type(exc).__name__}: {exc}"},
-                    )
+        attempts = 3
+        last_error: Exception | None = None
+        response = None
+        for attempt in range(attempts):
+            try:
+                if json_mode:
+                    try:
+                        response = client.chat.completions.create(
+                            **kwargs, response_format={"type": "json_object"}
+                        )
+                    except Exception as exc:
+                        if _is_transient(exc):
+                            raise
+                        # Not every OpenAI-compatible endpoint implements response_format.
+                        logger.warning(
+                            "json response_format rejected, retrying in plain mode",
+                            fields={"error": f"{type(exc).__name__}: {exc}"},
+                        )
+                        response = client.chat.completions.create(**kwargs)
+                else:
                     response = client.chat.completions.create(**kwargs)
-            else:
-                response = client.chat.completions.create(**kwargs)
-        except Exception as exc:
+                break
+            except Exception as exc:
+                last_error = exc
+                if not _is_transient(exc) or attempt == attempts - 1:
+                    raise LLMUnavailableError(
+                        f"LLM request failed: {type(exc).__name__}: {exc}",
+                        detail={
+                            "model": self.settings.llm_model,
+                            "attempts": attempt + 1,
+                            "transient": _is_transient(exc),
+                        },
+                    ) from exc
+                delay = 1.5 * (attempt + 1)
+                logger.warning(
+                    "transient LLM failure, retrying",
+                    fields={"attempt": attempt + 1, "error": f"{type(exc).__name__}: {exc}", "retry_in_s": delay},
+                )
+                time.sleep(delay)
+
+        if response is None:
             raise LLMUnavailableError(
-                f"LLM request failed: {type(exc).__name__}: {exc}",
+                f"LLM request failed after {attempts} attempts: {last_error}",
                 detail={"model": self.settings.llm_model},
-            ) from exc
+            )
 
         choice = response.choices[0] if response.choices else None
         content = (choice.message.content or "") if choice else ""

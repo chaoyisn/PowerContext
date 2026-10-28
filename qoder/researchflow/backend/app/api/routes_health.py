@@ -19,6 +19,7 @@ async def health(state=Depends(get_app_state)) -> dict[str, Any]:
     available = bool(seekdb.get("available"))
     return {
         "status": "ok" if available else "degraded",
+        "schema": state.schema_result,
         "components": {
             "seekdb": seekdb,
             "powercontext": powercontext,

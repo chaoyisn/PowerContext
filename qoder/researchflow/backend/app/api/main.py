@@ -160,12 +160,39 @@ def create_app() -> FastAPI:
         }
 
     if FRONTEND_DIST.is_dir():
-        from fastapi.staticfiles import StaticFiles
-
-        app.mount("/", StaticFiles(directory=str(FRONTEND_DIST), html=True), name="frontend")
+        _mount_frontend(app)
         logger.info("serving built frontend", fields={"path": str(FRONTEND_DIST)})
 
     return app
+
+
+def _mount_frontend(app: FastAPI) -> None:
+    """Serve the built SPA from the same origin as the API.
+
+    ``StaticFiles`` mounted at ``/`` would 404 on client-side routes such as ``/knowledge``,
+    so unknown non-API paths fall back to ``index.html`` and let the router handle them.
+    """
+    from fastapi.responses import FileResponse
+    from fastapi.staticfiles import StaticFiles
+
+    dist_root = FRONTEND_DIST.resolve()
+    assets = dist_root / "assets"
+    if assets.is_dir():
+        app.mount("/assets", StaticFiles(directory=str(assets)), name="assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def spa(full_path: str):
+        if full_path.startswith("api"):
+            return JSONResponse(
+                status_code=404,
+                content={"error": {"code": "not_found", "message": f"unknown API path /{full_path}"}},
+            )
+        if full_path:
+            candidate = (dist_root / full_path).resolve()
+            # Guard against ../ traversal escaping the build directory.
+            if candidate.is_file() and candidate.is_relative_to(dist_root):
+                return FileResponse(candidate)
+        return FileResponse(dist_root / "index.html")
 
 
 app = create_app()

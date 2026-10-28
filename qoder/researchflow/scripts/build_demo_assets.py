@@ -19,6 +19,12 @@ PDF_NAME = "seekdb_hybrid_retrieval_notes.pdf"
 
 # Page 4 is deliberately blank: acceptance test T1 asserts that an empty physical page
 # still gets its own stable page record.
+#
+# Pages are bilingual on purpose. This mirrors how a Chinese research group actually takes
+# notes on English material, and it is what makes cross-lingual retrieval testable: the
+# Chinese summary line carries the same facts as the English body, so a Chinese question can
+# be answered from an English-source document. The cross-lingual limitation of the default
+# embedding model is documented separately in VERIFICATION.md.
 PDF_PAGES: list[list[str]] = [
     [
         "seekdb Hybrid Retrieval Field Notes",
@@ -29,8 +35,9 @@ PDF_PAGES: list[list[str]] = [
         "document. The server reports VERSION() as 5.7.25-OceanBase seekdb-v1.4.0.0",
         "and listens on port 2881. The database used for all examples is named test.",
         "",
-        "Baseline latency for a single round trip SELECT VERSION() query measured",
-        "from the local machine was 142 milliseconds including connection setup.",
+        "第 1 页（中文摘要）：基线环境为 seekdb v1.4.0.0，底层 OceanBase 4.3.5.3，",
+        "监听端口 2881，示例数据库名为 test。SELECT VERSION() 的返回值是",
+        "5.7.25-OceanBase seekdb-v1.4.0.0。",
     ],
     [
         "Page 2 - Vector index configuration",
@@ -48,6 +55,10 @@ PDF_PAGES: list[list[str]] = [
         "",
         "Measured cosine distance for the query 'hybrid retrieval vector and full text'",
         "against the best matching row was 0.3753, giving a similarity of 0.6247.",
+        "",
+        "第 2 页（中文摘要）：向量列类型为 VECTOR(384)，索引类型 HNSW，距离度量 cosine。",
+        "查询 hybrid retrieval vector and full text 的最佳匹配余弦距离是 0.3753，",
+        "对应相似度 0.6247。",
     ],
     [
         "Page 3 - Full text analyzers",
@@ -63,6 +74,10 @@ PDF_PAGES: list[list[str]] = [
         "Conclusion recorded on page 3: use the ik analyzer as the default for a",
         "bilingual Chinese and English research corpus, and keep the analyzer name",
         "configurable so ngram can be substituted without a code change.",
+        "",
+        "第 3 页（中文摘要）：全文分析器共有 ik、ngram、space 三种经过验证。",
+        "中文查询「混合召回」下 ik 分析器把真正包含该短语的记录排在第一位，",
+        "space 分析器因为不切分中文而排错。结论：双语科研语料默认使用 ik 分析器。",
     ],
     [
         " ",
@@ -81,6 +96,11 @@ PDF_PAGES: list[list[str]] = [
         "Those three values - 0.0328, 0.0325 and 0.0164 - are exactly the distances",
         "returned by collection.hybrid_search with rank={'rrf': {}} on the probe",
         "corpus, which is how the RRF implementation was confirmed end to end.",
+        "",
+        "第 5 页（中文摘要）：混合检索用互惠排名融合 RRF 合并全文腿与向量腿，",
+        "公式为 1 / (rank_constant + rank) 求和，默认 rank_constant = 60。",
+        "一条记录如果在两条腿里都排第一，融合分数是 1/61 + 1/61 = 0.0328；",
+        "一条腿第一、另一条腿第二是 0.0325；只在一条腿里排第一是 0.0164。",
     ],
 ]
 

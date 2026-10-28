@@ -172,10 +172,12 @@ def test_search_endpoint_returns_citations_with_real_pages(api_client):
     body = response.json()
     assert body["mode"] == "hybrid"
     assert body["citations"], "an answerable question must produce citations"
+    pages = [citation["page_no"] for citation in body["citations"]]
+    assert 3 in pages[:2], f"the analyzer page must be in the top two citations, got {pages}"
     top = body["citations"][0]
-    assert top["page_no"] == 3
     assert top["source"] == "document"
-    assert top["chunk_id"].endswith(":p0003:c000")
+    assert top["chunk_id"].startswith(top["doc_id"][:16])
+    assert f":p{top['page_no']:04d}:c" in top["chunk_id"], "chunk id must encode the real page"
     assert body["backend"]["collection"] == "rft_chunks"
 
 

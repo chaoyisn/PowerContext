@@ -170,10 +170,12 @@ def test_normalize_score_maps_each_mode_into_unit_interval():
 
 
 def test_gate_rule():
-    assert passes_gate(mode="hybrid", coverage=0.4, normalized_score=0.9)
-    assert not passes_gate(mode="hybrid", coverage=0.0, normalized_score=0.99)
-    assert passes_gate(mode="vector", coverage=0.0, normalized_score=0.8)
-    assert not passes_gate(mode="vector", coverage=0.0, normalized_score=0.3)
+    # lexical coverage alone qualifies a hit
+    assert passes_gate(coverage=0.4)
+    assert not passes_gate(coverage=0.1)
+    # a paraphrase with no literal overlap qualifies on semantic similarity alone
+    assert passes_gate(coverage=0.0, semantic_similarity=0.8)
+    assert not passes_gate(coverage=0.0, semantic_similarity=0.3)
     assert combined_relevance(1.0, 1.0) == 1.0
 
 

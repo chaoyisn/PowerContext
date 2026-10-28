@@ -10,6 +10,7 @@ from fastapi import Request
 from ..agent.llm import LLMGateway
 from ..config import Settings, get_settings
 from ..db.seekdb import SeekDBStore
+from ..logging_setup import get_logger
 from ..memory.client import PowerContextGateway
 from ..retrieval.embeddings import EmbeddingBackend, build_embedding_backend
 
@@ -25,10 +26,23 @@ class AppState:
 
 
 def build_state(settings: Settings | None = None) -> AppState:
+    """Build shared state. A seekdb outage must not prevent startup.
+
+    If the schema cannot be created the app still comes up in a degraded state so that
+    /api/health can report the real failure and the data endpoints can return 503 with the
+    driver error, instead of the whole service being unreachable (acceptance test T8).
+    """
     settings = settings or get_settings()
     store = SeekDBStore(settings)
     embeddings = build_embedding_backend(settings)
-    schema_result = store.ensure_schema(embedding_dimension=embeddings.dimension)
+    try:
+        schema_result: dict[str, Any] = store.ensure_schema(embedding_dimension=embeddings.dimension)
+    except Exception as exc:
+        schema_result = {"created": False, "error": f"{type(exc).__name__}: {exc}"}
+        get_logger(__name__).error(
+            "seekdb schema not ready at startup, continuing in degraded mode",
+            fields={"error": schema_result["error"]},
+        )
     return AppState(
         settings=settings,
         store=store,

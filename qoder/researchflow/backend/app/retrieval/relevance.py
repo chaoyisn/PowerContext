@@ -83,14 +83,21 @@ def combined_relevance(normalized_score: float, coverage: float) -> float:
 
 def passes_gate(
     *,
-    mode: str,
     coverage: float,
-    normalized_score: float,
+    semantic_similarity: float = 0.0,
     min_coverage: float = 0.30,
     vector_confidence: float = 0.62,
 ) -> bool:
-    """0.30 was picked from a measured margin, not guessed: on the demo corpus the
-    answerable questions score coverage 0.67-1.00 and the unanswerable ones 0.00-0.14."""
+    """Two independent ways a hit can qualify as evidence.
+
+    * ``coverage >= min_coverage`` - the chunk literally contains the query's terms. 0.30
+      comes from a measured margin on the demo corpus: answerable questions score
+      0.67-1.00, unanswerable ones 0.00-0.14.
+    * ``semantic_similarity >= vector_confidence`` - the chunk is a paraphrase or a
+      cross-lingual match that shares no literal tokens. This is the cosine similarity between
+      the query vector and the stored vector, so it is available in every retrieval mode,
+      not just pure vector search.
+    """
     if coverage >= min_coverage:
         return True
-    return mode == "vector" and normalized_score >= vector_confidence
+    return semantic_similarity >= vector_confidence

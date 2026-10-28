@@ -229,6 +229,17 @@ ON DUPLICATE KEY UPDATE
                     for chunk in batch
                 ],
             )
+
+        if chunks:
+            # Without this, freshly written vectors are not reliably visible to ANN search
+            # (observed: a 13-chunk corpus returning only 3 hits right after ingest).
+            try:
+                collection.refresh_index()
+            except Exception as exc:
+                logger.warning(
+                    "vector index refresh failed; ANN recall may lag until seekdb catches up",
+                    fields={"doc_id": doc_id, "error": f"{type(exc).__name__}: {exc}"},
+                )
     except Exception as exc:
         _mark_failed(store, settings, doc_id, clean_name, content_type, data, parsed, now, exc)
         logger.error(

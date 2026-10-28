@@ -11,6 +11,8 @@ import time
 from dataclasses import asdict, dataclass, field
 from typing import Any, Literal, Sequence
 
+import numpy as np
+
 from ..config import Settings, get_settings
 from ..db.seekdb import SeekDBStore
 from ..errors import ResearchFlowError
@@ -47,6 +49,7 @@ class RetrievalHit:
     matched_by: str = ""
     coverage: float = 0.0
     normalized_score: float = 0.0
+    semantic_similarity: float = 0.0
     relevance: float = 0.0
     gate_passed: bool = False
 
@@ -122,6 +125,17 @@ def build_where(filters: dict[str, Any] | None) -> dict[str, Any] | None:
     return where or None
 
 
+def _cosine_similarity(left: Sequence[float] | None, right: Sequence[float] | None) -> float:
+    if not left or not right or len(left) != len(right):
+        return 0.0
+    a = np.asarray(left, dtype=np.float64)
+    b = np.asarray(right, dtype=np.float64)
+    na, nb = float(np.linalg.norm(a)), float(np.linalg.norm(b))
+    if na == 0.0 or nb == 0.0:
+        return 0.0
+    return round(float(np.dot(a, b) / (na * nb)), 6)
+
+
 def _rows_to_hits(
     query: str,
     mode: str,
@@ -129,6 +143,8 @@ def _rows_to_hits(
     documents: Sequence[str] | None,
     metadatas: Sequence[dict[str, Any]] | None,
     distances: Sequence[float] | None,
+    embeddings: Sequence[Sequence[float]] | None,
+    query_vector: Sequence[float] | None,
     *,
     score_kind: str,
     matched_by: str,
@@ -143,6 +159,8 @@ def _rows_to_hits(
         text = text or ""
         raw = float(distances[index]) if distances and index < len(distances) else 0.0
         score = (1.0 - raw) if invert_distance else raw
+        stored_vector = embeddings[index] if embeddings and index < len(embeddings) else None
+        similarity = _cosine_similarity(query_vector, stored_vector)
         coverage = lexical_coverage(query, text)
         normalized = normalize_score(score, score_kind)
         hits.append(
@@ -163,11 +181,11 @@ def _rows_to_hits(
                 matched_by=matched_by,
                 coverage=coverage,
                 normalized_score=normalized,
+                semantic_similarity=similarity,
                 relevance=combined_relevance(normalized, coverage),
                 gate_passed=passes_gate(
-                    mode=mode,
                     coverage=coverage,
-                    normalized_score=normalized,
+                    semantic_similarity=similarity,
                     min_coverage=min_coverage,
                     vector_confidence=vector_confidence,
                 ),
@@ -205,8 +223,11 @@ def search(
     limit = int(top_k or settings.retrieval_top_k)
     limit = max(1, min(limit, 50))
     where = build_where(filters)
-    include = ["documents", "metadatas"]
+    # Embeddings are fetched so the semantic half of the evidence gate can be evaluated in
+    # every mode, not only in pure vector search.
+    include = ["documents", "metadatas", "embeddings"]
     started = time.perf_counter()
+    query_vector = backend.embed([text])[0]
 
     backend_info = {
         "endpoint": f"{settings.seekdb_host}:{settings.seekdb_port}",
@@ -251,9 +272,8 @@ def search(
 
     try:
         if mode == "vector":
-            vector = backend.embed([text])[0]
             raw = collection.query(
-                query_embeddings=[vector],
+                query_embeddings=[query_vector],
                 n_results=limit,
                 where=where,
                 include=include,
@@ -265,6 +285,8 @@ def search(
                 _first(raw, "documents"),
                 _first(raw, "metadatas"),
                 _first(raw, "distances"),
+                _first(raw, "embeddings"),
+                query_vector,
                 score_kind=(
                     "cosine_similarity" if settings.seekdb_vector_distance == "cosine" else "distance"
                 ),
@@ -287,16 +309,17 @@ def search(
                 _first(raw, "documents"),
                 _first(raw, "metadatas"),
                 _first(raw, "distances"),
+                _first(raw, "embeddings"),
+                query_vector,
                 score_kind="fts_relevance",
                 matched_by="fulltext",
                 invert_distance=False,
                 **scoring,
             )
         else:
-            vector = backend.embed([text])[0]
             raw = collection.hybrid_search(
                 query={"where_document": {"$contains": text}, "where": where, "n_results": limit},
-                knn={"query_embeddings": [vector], "where": where, "n_results": limit},
+                knn={"query_embeddings": [query_vector], "where": where, "n_results": limit},
                 rank={"rrf": {}},
                 n_results=limit,
                 include=include,
@@ -308,6 +331,8 @@ def search(
                 _first(raw, "documents"),
                 _first(raw, "metadatas"),
                 _first(raw, "distances"),
+                _first(raw, "embeddings"),
+                query_vector,
                 score_kind="rrf",
                 matched_by="hybrid",
                 invert_distance=False,
