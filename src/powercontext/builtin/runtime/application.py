@@ -248,6 +248,7 @@ from powercontext.builtin.runtime.recall_sufficiency import (
     build_recall_candidates,
     recall_effort,
 )
+from powercontext.builtin.runtime.source_lifecycle import SourceLifecycleApplication
 from powercontext.builtin.runtime.statistics import RelationalScopedStatistics, overview_selection
 from powercontext.builtin.scope import ScopeApplication, ScopeDescriptor, ScopeSelection
 from powercontext.builtin.scope.subject_sources import SubjectSourceService
@@ -2562,6 +2563,7 @@ class ScopedMemoryApplication:
                     request.citation,
                 )
                 updated = await service.forget(current, entries=(entry,), reason=request.reason)
+                await self._runtime.lifecycle.for_scope(self.scope_id).mark_manual_inactive(request.citation)
             retired = next(item for item in await service.entries(updated) if item.entry_id == entry.entry_id)
             return MemoryMutationResult(
                 previous_revision=current.revision,
@@ -3109,6 +3111,7 @@ class BuiltinRuntime:
         self.handoff = HandoffApplication(self)
         self.work = WorkApplication(self)
         self.memory = MemoryApplication(self)
+        self.lifecycle = SourceLifecycleApplication(self)
         self.topic_memory = TopicMemoryApplication(self)
         self.records = RecordApplication(self)
         self.prompts = PromptApplication(self)

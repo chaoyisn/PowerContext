@@ -1015,6 +1015,35 @@ MEMORY_ENTRY_HEADS_TABLE = Table(
 
 MEMORY_TABLES = (MEMORY_ENTRY_VERSIONS_TABLE, MEMORY_ENTRY_HEADS_TABLE)
 
+SOURCE_LIFECYCLE_NODES_TABLE = Table(
+    "pc_source_lifecycle_nodes",
+    SHARED_METADATA,
+    Column("scope_id", identity_string(MAX_SCOPE_ID_LENGTH), primary_key=True),
+    Column("node_id", identity_string(MAX_ARTIFACT_ID_LENGTH), primary_key=True),
+    Column("node_type", identity_string(8), nullable=False),
+    Column("reference", _canonical_payload_type(), nullable=False),
+    Column("parents", _canonical_payload_type(), nullable=False),
+    Column("policy", identity_string(3), nullable=False),
+    Column("revision", Integer),
+    Column("sequence", Integer),
+    Column("event_available", Boolean),
+    Column("event_reason", _entry_text_type()),
+    Column("available", Boolean, nullable=False),
+    Column("managed_revision", Integer),
+    Column("pending_state", identity_string(8)),
+    Column("pending_from_revision", Integer),
+    CheckConstraint("node_type IN ('source', 'memory', 'topic')", name="ck_pc_source_lifecycle_node_type"),
+    CheckConstraint("policy IN ('all', 'any')", name="ck_pc_source_lifecycle_policy"),
+    CheckConstraint("revision IS NULL OR revision > 0", name="ck_pc_source_lifecycle_revision_positive"),
+    CheckConstraint("sequence IS NULL OR sequence >= 0", name="ck_pc_source_lifecycle_sequence_nonnegative"),
+    CheckConstraint(
+        "managed_revision IS NULL OR managed_revision > 0", name="ck_pc_source_lifecycle_managed_revision_positive"
+    ),
+    CheckConstraint(
+        "pending_state IS NULL OR pending_state IN ('active', 'inactive')", name="ck_pc_source_lifecycle_pending_state"
+    ),
+)
+
 TOPIC_MEMORY_TABLES = (
     TOPIC_MEMORY_RETRIEVAL_SHAPE_TABLE,
     TOPIC_MEMORY_REVISION_PUBLICATIONS_TABLE,
@@ -1187,5 +1216,10 @@ BUILTIN_TABLES = (
     + MEMORY_TABLES
     + STATISTICS_TABLES
     + RECURRENCE_TABLES
-    + (ARTIFACT_TAGS_TABLE, DREAM_RUNS_TABLE, RECEIPT_MIGRATION_REVIEW_TABLE)
+    + (
+        ARTIFACT_TAGS_TABLE,
+        DREAM_RUNS_TABLE,
+        RECEIPT_MIGRATION_REVIEW_TABLE,
+        SOURCE_LIFECYCLE_NODES_TABLE,
+    )
 )
