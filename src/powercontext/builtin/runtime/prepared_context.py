@@ -17,6 +17,9 @@
 from __future__ import annotations
 
 import json
+import math
+import re
+from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
 from itertools import chain
@@ -106,6 +109,7 @@ class PreparedContextBuild:
     origins: tuple[PreparedContextOrigin, ...]
     omissions: PreparedContextOmissions = PreparedContextOmissions()
     code_origins: tuple[CodeEvidenceRef, ...] = ()
+    fragments: tuple[EvidenceFragment, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -115,6 +119,16 @@ class MemoryEntryAddress:
     memory: ArtifactAddress
     entry_id: str
     entry_version_id: str
+
+
+@dataclass(frozen=True)
+class EvidenceFragment:
+    """Selected original evidence fragment with exact character coordinates."""
+
+    address: MemoryEntryAddress
+    start: int
+    end: int
+    text: str
 
 
 PreparedContextOrigin = MemoryCitation | ArtifactRef | MemoryEntryAddress | ArtifactAddress
@@ -235,6 +249,13 @@ class PreparedContextBuilder:
         if sum(len(candidates.hits) for candidates in experience_candidates) > self.experience_candidate_limit:
             raise PreparedContextInvariantError("experience-candidate-limit")
 
+        if request.evidence_selection:
+            return self._build_evidence_selection_result(
+                request=request,
+                current_scope_id=current_scope_id,
+                memory_candidates=memory_candidates,
+            )
+
         content, origins, omissions = self._select_entries(
             request=request,
             current_scope_id=current_scope_id,
@@ -276,6 +297,21 @@ class PreparedContextBuilder:
         the same inputs as :meth:`build_scopes_result` are guaranteed to yield the same
         counters because both go through :meth:`_select_entries`.
         """
+
+        if request.evidence_selection:
+            build = self._build_evidence_selection_result(
+                request=request,
+                current_scope_id=current_scope_id,
+                memory_candidates=memory_candidates,
+            )
+            content_bytes = build.context.content_bytes
+            return RecallBudgetView(
+                max_bytes=request.max_bytes,
+                delivered_items=len(build.origins),
+                truncated_items=build.omissions.truncated_items,
+                dropped_items=build.omissions.dropped_items,
+                unused_bytes=max(0, request.max_bytes - content_bytes),
+            )
 
         content, origins, omissions = self._select_entries(
             request=request,
@@ -659,6 +695,263 @@ class PreparedContextBuilder:
             return _EntryFit(dropped_no_fitting_truncation=True)
         return _EntryFit(entry=best)
 
+    def _build_evidence_selection_result(  # noqa: C901
+        self,
+        *,
+        request: PrepareContextRequest,
+        current_scope_id: str | None,
+        memory_candidates: Sequence[PreparedMemoryCandidates],
+    ) -> PreparedContextBuild:
+        for group in memory_candidates:
+            if group.hits and group.memory_ref is None:
+                raise PreparedContextInvariantError("memory-ref-missing")
+            for hit in group.hits:
+                if hit.memory_ref != group.memory_ref:
+                    raise PreparedContextInvariantError("memory-ref-mismatch")
+
+        total_hits = sum(len(group.hits) for group in memory_candidates)
+        if total_hits == 0:
+            return PreparedContextBuild(
+                context=self.empty(),
+                origins=(),
+                omissions=PreparedContextOmissions(),
+                fragments=(),
+            )
+
+        q_tokens = _tokenize_evidence_text(request.query)
+        q_content = [t for t in q_tokens if t not in _STOPWORDS] or q_tokens
+        if not q_content:
+            return PreparedContextBuild(
+                context=self.empty(),
+                origins=(),
+                omissions=PreparedContextOmissions(),
+                fragments=(),
+            )
+        q_content_set = set(q_content)
+
+        df: Counter[str] = Counter()
+        all_candidate_spans: list[_CandidateEvidenceSpan] = []
+        total_spans = 0
+
+        for group in memory_candidates:
+            for _hit_idx, hit in enumerate(group.hits):
+                if not hit.entry_id.strip() or not hit.entry_version_id.strip() or not hit.text.strip():
+                    continue
+                raw_text = hit.text
+                spans = _extract_sentence_spans(raw_text)
+                for s, e in spans:
+                    total_spans += 1
+                    seg_tokens = set(_tokenize_evidence_text(raw_text[s:e]))
+                    for t in q_content_set:
+                        if t in seg_tokens:
+                            df[t] += 1
+
+        N = max(1, total_spans)
+        lower_query = request.query.lower().strip()
+        query_words = re.findall(r"[a-z0-9]+|[\u4e00-\u9fa5]", lower_query)
+
+        for group in memory_candidates:
+            for hit_idx, hit in enumerate(group.hits):
+                if not hit.entry_id.strip() or not hit.entry_version_id.strip() or not hit.text.strip():
+                    continue
+                raw_text = hit.text
+                spans = _extract_sentence_spans(raw_text)
+                for s, e in spans:
+                    text_slice = raw_text[s:e]
+                    tokens = _tokenize_evidence_text(text_slice)
+                    token_set = set(tokens)
+                    matched = [t for t in q_content if t in token_set]
+                    if not matched:
+                        continue
+                    coverage = len(set(matched)) / len(q_content_set)
+                    bm25 = 0.0
+                    for t in matched:
+                        idf = math.log(1.0 + (N - df[t] + 0.5) / (df[t] + 0.5)) + 1.0
+                        tf = tokens.count(t)
+                        bm25 += idf * (tf * 2.5) / (tf + 1.5)
+
+                    phrase_boost = 0.0
+                    lower_slice = text_slice.lower()
+                    if lower_query and lower_query in lower_slice:
+                        phrase_boost += 8.0
+                    elif len(query_words) >= 2:
+                        for i in range(len(query_words) - 1):
+                            bigram = f"{query_words[i]} {query_words[i + 1]}"
+                            if bigram in lower_slice:
+                                phrase_boost += 2.0
+
+                    num_boost = sum(3.0 for t in matched if t.isdigit())
+                    doc_prior = 1.0 / (1.0 + hit_idx)
+
+                    score = (1.0 + 3.0 * coverage) * bm25 + phrase_boost + num_boost + doc_prior
+                    all_candidate_spans.append(
+                        _CandidateEvidenceSpan(
+                            group=group,
+                            hit=hit,
+                            hit_idx=hit_idx,
+                            start=s,
+                            end=e,
+                            text=text_slice,
+                            score=score,
+                        )
+                    )
+
+        if not all_candidate_spans:
+            return PreparedContextBuild(
+                context=self.empty(),
+                origins=(),
+                omissions=PreparedContextOmissions(),
+                fragments=(),
+            )
+
+        all_candidate_spans.sort(key=lambda c: (-c.score, c.hit_idx, c.start))
+
+        selected: list[_CandidateEvidenceSpan] = []
+        dropped_items = 0
+
+        def _make_items(cands: Sequence[_CandidateEvidenceSpan]) -> list[dict[str, object]]:
+            return [
+                {
+                    "citation": {
+                        "scope_id": c.group.scope_id,
+                        "memory_ref": c.group.memory_ref.model_dump(mode="json"),  # type: ignore[union-attr]
+                        "entry_id": c.hit.entry_id,
+                        "entry_version_id": c.hit.entry_version_id,
+                    },
+                    "content": c.text,
+                    "start": c.start,
+                    "end": c.end,
+                }
+                for c in cands
+            ]
+
+        for cand in all_candidate_spans:
+            merged_index = -1
+            cand_key = (cand.group.scope_id, cand.hit.entry_id, cand.hit.entry_version_id)
+            for i, sel in enumerate(selected):
+                sel_key = (sel.group.scope_id, sel.hit.entry_id, sel.hit.entry_version_id)
+                if sel_key != cand_key:
+                    continue
+                overlap = not (cand.end < sel.start or cand.start > sel.end)
+                adjacent = False
+                if not overlap:
+                    gap_s = min(sel.end, cand.end)
+                    gap_e = max(sel.start, cand.start)
+                    gap_text = cand.hit.text[gap_s:gap_e]
+                    if gap_s == gap_e or gap_text.strip() == "" or gap_text in {".", ",", ";", " - "}:
+                        adjacent = True
+                if overlap or adjacent:
+                    merged_index = i
+                    break
+
+            if merged_index >= 0:
+                exist = selected[merged_index]
+                new_start = min(exist.start, cand.start)
+                new_end = max(exist.end, cand.end)
+                merged_cand = _CandidateEvidenceSpan(
+                    group=exist.group,
+                    hit=exist.hit,
+                    hit_idx=exist.hit_idx,
+                    start=new_start,
+                    end=new_end,
+                    text=exist.hit.text[new_start:new_end],
+                    score=exist.score + cand.score,
+                )
+                trial = list(selected)
+                trial[merged_index] = merged_cand
+                if _evidence_envelope_bytes(_make_items(trial)) <= request.max_bytes:
+                    selected = trial
+                else:
+                    dropped_items += 1
+            else:
+                trial = [*selected, cand]
+                if _evidence_envelope_bytes(_make_items(trial)) <= request.max_bytes:
+                    selected = trial
+                else:
+                    if not selected:
+                        low = cand.start + 10
+                        high = cand.end - 1
+                        best_cand = None
+                        while low <= high:
+                            mid = (low + high) // 2
+                            sub_text = cand.hit.text[cand.start:mid]
+                            trial_c = _CandidateEvidenceSpan(
+                                group=cand.group,
+                                hit=cand.hit,
+                                hit_idx=cand.hit_idx,
+                                start=cand.start,
+                                end=mid,
+                                text=sub_text,
+                                score=cand.score,
+                            )
+                            if _evidence_envelope_bytes(_make_items([trial_c])) <= request.max_bytes:
+                                best_cand = trial_c
+                                low = mid + 1
+                            else:
+                                high = mid - 1
+                        if best_cand is not None:
+                            selected = [best_cand]
+                        else:
+                            dropped_items += 1
+                    else:
+                        dropped_items += 1
+
+        if not selected:
+            return PreparedContextBuild(
+                context=self.empty(),
+                origins=(),
+                omissions=PreparedContextOmissions(
+                    dropped_items=len(all_candidate_spans),
+                    dropped_no_fitting_truncation=len(all_candidate_spans),
+                ),
+                fragments=(),
+            )
+
+        selected.sort(key=lambda c: (c.hit_idx, c.start))
+
+        fragments: list[EvidenceFragment] = []
+        origins: list[PreparedContextOrigin] = []
+        for c in selected:
+            address = MemoryEntryAddress(
+                memory=ArtifactAddress(scope_id=c.group.scope_id, artifact=c.group.memory_ref),  # type: ignore[arg-type]
+                entry_id=c.hit.entry_id,
+                entry_version_id=c.hit.entry_version_id,
+            )
+            fragments.append(
+                EvidenceFragment(
+                    address=address,
+                    start=c.start,
+                    end=c.end,
+                    text=c.text,
+                )
+            )
+            if current_scope_id is not None and c.group.scope_id == current_scope_id:
+                origins.append(
+                    MemoryCitation(
+                        memory_ref=c.group.memory_ref,  # type: ignore[arg-type]
+                        entry_id=c.hit.entry_id,
+                        entry_version_id=c.hit.entry_version_id,
+                    )
+                )
+            else:
+                origins.append(address)
+
+        final_items = _make_items(selected)
+        content = _render_evidence_envelope(final_items)
+        content_bytes = len(content.encode("utf-8"))
+        if content_bytes > request.max_bytes:
+            raise PreparedContextInvariantError("output-budget")
+
+        return PreparedContextBuild(
+            context=PreparedContext(status="ready", content=content, content_bytes=content_bytes),
+            origins=tuple(origins),
+            omissions=PreparedContextOmissions(
+                dropped_items=dropped_items,
+                dropped_no_fitting_truncation=dropped_items,
+            ),
+            fragments=tuple(fragments),
+        )
+
 
 def _interleave(
     memory: Sequence[_PreparedContextEntry],
@@ -728,3 +1021,93 @@ def _truncate_utf8(text: str, byte_budget: int) -> str:
     prefix_budget = byte_budget - len(_ELLIPSIS.encode("utf-8"))
     encoded_prefix = text.encode("utf-8")[:prefix_budget]
     return f"{encoded_prefix.decode('utf-8', errors='ignore')}{_ELLIPSIS}"
+
+
+_STOPWORDS: frozenset[str] = frozenset({
+    "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are",
+    "aren't", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both",
+    "but", "by", "can", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't",
+    "doing", "don't", "down", "during", "each", "few", "for", "from", "further", "had", "hadn't",
+    "has", "hasn't", "have", "haven't", "having", "he", "he'd", "he'll", "he's", "her", "here",
+    "here's", "hers", "herself", "him", "himself", "his", "how", "how's", "i", "i'd", "i'll",
+    "i'm", "i've", "if", "in", "into", "is", "isn't", "it", "it's", "its", "itself", "let's",
+    "me", "more", "most", "mustn't", "my", "myself", "no", "nor", "not", "of", "off", "on",
+    "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own",
+    "same", "shan't", "she", "she'd", "she'll", "she's", "should", "shouldn't", "so", "some",
+    "such", "than", "that", "that's", "the", "their", "theirs", "them", "themselves", "then",
+    "there", "there's", "these", "they", "they'd", "they'll", "they're", "they've", "this",
+    "those", "through", "to", "too", "under", "until", "up", "very", "was", "wasn't", "we",
+    "we'd", "we'll", "we're", "we've", "were", "weren't", "what", "what's", "when", "when's",
+    "where", "where's", "which", "while", "who", "who's", "whom", "why", "why's", "with",
+    "won't", "would", "wouldn't", "you", "you'd", "you'll", "you're", "you've", "your",
+    "yours", "yourself", "yourselves",
+})
+
+
+def _tokenize_evidence_text(text: str) -> list[str]:
+    words = re.findall(r"[a-z0-9]+", text.lower())
+    cjk = re.findall(r"[\u4e00-\u9fff]", text.lower())
+    tokens = words + cjk
+    if len(cjk) > 1:
+        for i in range(len(cjk) - 1):
+            tokens.append(cjk[i] + cjk[i + 1])
+    return tokens
+
+
+def _extract_sentence_spans(raw_text: str) -> list[tuple[int, int]]:  # noqa: C901
+    spans: list[tuple[int, int]] = []
+    pattern = re.compile(r'(?<=[.!?\u3002\uff01\uff1f])\s+|\n+|(?<=[\u3002\uff01\uff1f\uff1b])')
+    pos = 0
+    for match in pattern.finditer(raw_text):
+        start = pos
+        end = match.start()
+        while start < end and raw_text[start].isspace():
+            start += 1
+        while end > start and raw_text[end - 1].isspace():
+            end -= 1
+        if start < end:
+            spans.append((start, end))
+        pos = match.end()
+    if pos < len(raw_text):
+        start = pos
+        end = len(raw_text)
+        while start < end and raw_text[start].isspace():
+            start += 1
+        while end > start and raw_text[end - 1].isspace():
+            end -= 1
+        if start < end:
+            spans.append((start, end))
+    if not spans:
+        start = 0
+        end = len(raw_text)
+        while start < end and raw_text[start].isspace():
+            start += 1
+        while end > start and raw_text[end - 1].isspace():
+            end -= 1
+        if start < end:
+            spans.append((start, end))
+    return spans
+
+
+@dataclass
+class _CandidateEvidenceSpan:
+    group: PreparedMemoryCandidates
+    hit: MemoryHit
+    hit_idx: int
+    start: int
+    end: int
+    text: str
+    score: float
+
+
+def _render_evidence_envelope(items: Sequence[dict[str, object]]) -> str:
+    envelope = {
+        "trust": "untrusted_history",
+        "items": list(items),
+    }
+    encoded = json.dumps(envelope, ensure_ascii=False, separators=(",", ":"))
+    return "\n\n".join((TRUST_POLICY, f"{_BEGIN_MARKER}\n{encoded}\n{_END_MARKER}"))
+
+
+def _evidence_envelope_bytes(items: Sequence[dict[str, object]]) -> int:
+    return len(_render_evidence_envelope(items).encode("utf-8"))
