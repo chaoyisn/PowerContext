@@ -417,15 +417,40 @@ def _generate_weighted_queries(terms: list[str], q_lower: str) -> list[tuple[str
     return deduped
 
 
+def _matches_document(doc_id: str, question: str) -> bool:
+    if not doc_id:
+        return False
+    raw_prefix = re.split(r"_\d{4}", doc_id, maxsplit=1)[0].lower()
+    q_norm = re.sub(r"[^a-z0-9]", "", question.lower())
+    prefix_norm = re.sub(r"[^a-z0-9]", "", raw_prefix)
+    if prefix_norm and prefix_norm in q_norm:
+        return True
+    subwords = [w for w in re.split(r"[^a-z0-9]+", raw_prefix) if len(w) >= 3]
+    if subwords and any(w in q_norm for w in subwords):
+        return True
+    if prefix_norm == "americanexpress" and ("amex" in q_norm or "americanexpress" in q_norm):
+        return True
+    if "johnson" in prefix_norm and ("jnj" in q_norm or "johnson" in q_norm):
+        return True
+    if prefix_norm == "jpmorgan" and "jpm" in q_norm:
+        return True
+    if prefix_norm == "mgmresorts" and "mgm" in q_norm:
+        return True
+    return False
+
+
 async def _resolve_ranked_citations(
     memory: object,
     ranked_candidates: list[object],
+    question: str,
     limit: int,
 ) -> tuple[MemoryCitation, ...]:
     seen_sources: set[tuple[str, str]] = set()
     seen_entries: set[str] = set()
-    citations: list[MemoryCitation] = []
-    for hit in ranked_candidates:
+    matched_citations: list[MemoryCitation] = []
+    other_citations: list[MemoryCitation] = []
+    scan_ceiling = max(75, limit * 3)
+    for hit in ranked_candidates[:scan_ceiling]:
         entry_id = hit.entry_id
         if entry_id in seen_entries:
             continue
@@ -440,10 +465,20 @@ async def _resolve_ranked_citations(
             continue
         seen_sources.add(refs[0])
         seen_entries.add(entry_id)
-        citations.append(citation)
-        if len(citations) >= limit:
-            break
-    return tuple(citations)
+        doc_id = record.entry.text.split("\n", 1)[0].strip()
+        if _matches_document(doc_id, question):
+            matched_citations.append(citation)
+            if len(matched_citations) >= limit:
+                break
+        else:
+            other_citations.append(citation)
+
+    if matched_citations:
+        final_list = list(matched_citations)
+        if len(final_list) < limit:
+            final_list.extend(other_citations[: limit - len(final_list)])
+        return tuple(final_list)
+    return tuple(other_citations[:limit])
 
 
 async def search_pdf_pages(memory: object, question: str, limit: int = 10) -> tuple[MemoryCitation, ...]:
@@ -462,7 +497,7 @@ async def search_pdf_pages(memory: object, question: str, limit: int = 10) -> tu
         if not query_text or query_text in seen_queries:
             continue
         seen_queries.add(query_text)
-        result = await memory.search(SearchMemoryRequest(query=query_text, mode="fts", limit=35))  # type: ignore[attr-defined]
+        result = await memory.search(SearchMemoryRequest(query=query_text, mode="fts", limit=50))  # type: ignore[attr-defined]
         for rank, hit in enumerate(result.hits):
             key = (hit.entry_id, hit.entry_version_id)
             if key not in candidates:
@@ -474,4 +509,4 @@ async def search_pdf_pages(memory: object, question: str, limit: int = 10) -> tu
         key=lambda item: (-float(item[1]), item[0].entry_id, item[0].entry_version_id),
     )
     ranked_hits = [item[0] for item in ranked]
-    return await _resolve_ranked_citations(memory, ranked_hits, limit)
+    return await _resolve_ranked_citations(memory, ranked_hits, question, limit)
