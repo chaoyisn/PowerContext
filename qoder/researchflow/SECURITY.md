@@ -15,6 +15,11 @@ ResearchFlow 后端是一个**本地单用户工具**：API 默认绑定 `127.0.
 - **公网暴露：禁止直接暴露 FastAPI**。若要做在线体验，必须前置网关（TLS、认证、限流），
   或采用方案一（静态展示站，不连后端）。见 `SITE_DEPLOYMENT.md` §3。
 - Qoder Sites 展示版是纯静态站点，不携带任何密钥、不连接任何数据库。
+- **该展示站已正式发布并公开访问**（<https://researchflow-5esfsogn38f.qoder.zone>，
+  `access_mode=public`，经用户明确授权）。公开面仅为比赛展示材料：真实运行截图、
+  由真实验收/测试产物导出的 `data/evidence.json`、静态 CSS/JS。上传前已扫描确认
+  不含密钥、凭据、完整 Qoder UID 或任何用户上传的私有文档内容；站点无后端、无表单、
+  无写入接口，因此不存在匿名用户访问他人记忆或文档的路径。
 
 ## 2. 审计结果
 
@@ -27,7 +32,7 @@ ResearchFlow 后端是一个**本地单用户工具**：API 默认绑定 `127.0.
 | 5 | SQL 注入（自有 SQL） | 全部语句参数化；恶意 doc_id 作为标识符查询返回 404 且表完好 | `test_sql_injection_in_identifiers_is_inert`（4 个 payload） |
 | 6 | **SDK 层过滤绕过（已修复）** | 实测发现：seekdb 全文腿对含 SQL 元字符的 metadata 过滤值会**静默丢弃整个 where 子句**（恶意值表现与无过滤完全一致；向量腿参数化正常）。修复：`build_where` 对 `doc_id`（必须 64 位 hex）与 `content_type`（白名单）做 fail-closed 校验，非法即 422 | `test_metadata_filters_fail_closed_on_hostile_values`、`test_search_rejects_malformed_filter_values`；实测记录见 `logs/bench-*` 与 QODER_LOG V2 |
 | 7 | CORS | 默认仅 `localhost:5173` / `127.0.0.1:5173`，`allow_credentials=False` | `test_cors_posture_is_loopback_only` |
-| 8 | 密钥泄露 | 密钥只来自环境变量；`/api/meta`、`/api/health`、`LLMGateway.info()` 均不含密钥；`.env` 在 `.gitignore`；提交前扫描无密钥 | `test_public_payloads_carry_no_secret_material`、`test_llm_gateway_info_exposes_no_key`、每次 commit 前的 `git diff` 密钥扫描 |
+| 8 | 密钥泄露 | 密钥只来自环境变量；`/api/meta`、`/api/health`、`LLMGateway.info()` 均不含密钥；`.env` 在 `.gitignore`。**V3 推送前复查发现历史提交曾纳入 PowerContext 运行期产物（本地 `.powercontext.db.cursor-key`、SQLite `WAL/SHM`、迁移状态）与完整 Qoder UID**：HEAD 已清理（文件转存到已忽略目录、UID 改为截断引用），`.gitignore` 补 `*cursor-key*`/`*.db-wal`/`*.db-shm`/`services/powercontext-acceptance-data/`/`*.qoder.site`，历史清理与推送方案见 `PUSH_PRECHECK.md` | `test_public_payloads_carry_no_secret_material`、`test_llm_gateway_info_exposes_no_key`、`PUSH_PRECHECK.md` §1 |
 | 9 | 日志脱敏 | 结构化日志只记录截断后的查询文本（≤60 字符）、计数与错误类型；不记录密钥、不记录完整文档内容 | `app/logging_setup.py`、`agent/service.py` 日志字段 |
 | 10 | 提示注入（上传文档） | 证据以「---原文开始/结束---」包裹并声明为数据；系统提示禁止执行文档内指令；服务端 citation 校验会剔除文档诱导出的编造引用；含注入文本的文档无法通过证据门控 | `test_evidence_is_wrapped_as_data_not_instructions`、`test_injected_document_cannot_become_evidence_for_an_unrelated_question`、`test_invented_citation_from_injection_is_stripped` |
 | 11 | 记忆隔离 | 一个项目一个 PowerContext Scope；A 项目的记忆在 B 项目的恢复结果中不可见 | `test_memory_is_isolated_between_projects` |

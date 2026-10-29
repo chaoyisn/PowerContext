@@ -356,9 +356,17 @@ W1 基线 6/6 定位但**不产出任何引用对象**且耗时不含人工阅�
 可点引用 5/6，1 条需人工修正（正确块排第 6）。W2 基线从手工笔记恢复 5/7（漏记 2 条）、
 无结构无来源指针不可跨会话；ResearchFlow 7/7 逐字段精确、独立进程恢复、0 修正。
 
-### 7.6 展示站验证
+### 7.6 展示站验证与正式发布
 
-`scripts/verify_site.cjs`（Playwright 无头）：证据数据渲染（9/9 PASS、149 passed、9 行验收表）、
+**本地验证**：`scripts/verify_site.cjs`（Playwright 无头）：证据数据渲染（9/9 PASS、149 passed、9 行验收表）、
 9 张截图全部加载、锚点跳转与整页刷新正常、390px 横向溢出 0px、无 console/pageerror。
 预览图 `site/preview/site-desktop.png`、`site/preview/site-mobile.png`。
-**云端发布仍阻塞**，见 `SITE_DEPLOYMENT.md`。
+
+**云端已正式发布并公开访问**（V3，2026-10-29）：<https://researchflow-5esfsogn38f.qoder.zone>
+`published=true`、`readiness=publication_completed`、`operation.committed=true`、`access_mode=public`
+（公开切换经用户明确授权）。未登录验证：无凭据 curl 根路径与全部静态资源 200、深链 200、
+不存在路径 404；无头浏览器全新上下文（无 cookie）`failed requests (>=400): 0`、9 张截图 `broken=0`、
+390px 横向溢出 0px、无 console/pageerror。线上整页截图与逐项清单：
+`verification/site-public/`（`PUBLISH_VERIFICATION.md`、`site-desktop.png`、`site-mobile.png`）。
+发布过程与能力边界见 `SITE_DEPLOYMENT.md` §5。V2 期间的 `sites_unavailable` 阻塞已解除，
+其原始实测记录保留在 `SITE_DEPLOYMENT.md` §1 作为过程证据。

@@ -116,10 +116,10 @@ backend/.venv/Scripts/python scripts/seed_demo.py
 ## 4. 验证命令
 
 ```bash
-# 单元 + 集成测试（88 个；对真实 seekdb 与真实 PowerContext）
+# 单元 + 集成测试（149 个；对真实 seekdb 与真实 PowerContext）
 cd backend && .venv/Scripts/python -m pytest tests/ -q
 
-# T1-T8 端到端验收（自带独立 PowerContext:17430 与 API:8788，真实重启/断连）
+# T1-T9 端到端验收（自带独立 PowerContext:17430 与 API:8788，真实重启/断连）
 cd .. && backend/.venv/Scripts/python scripts/run_acceptance.py
 
 # 需要连共享 seekdb 容器一起重启验证时（会影响同机其他赛题，谨慎）：

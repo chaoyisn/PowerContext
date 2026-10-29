@@ -42,8 +42,10 @@ V2 期间的 `sites_unavailable` 平台阻塞已解除；发布、公开切换�
    - `shots/` 9 张**真实运行截图**（`scripts/capture_screenshots.cjs` 无头浏览器采集，可复现）；
    - `data/evidence.json` 由 `scripts/build_site_data.py` 从真实验收报告 + 真实 pytest 运行 + 实时
      `/api/health` 导出，**不含任何模拟数据**。
-2. **本地验证通过**（`scripts/verify_site.cjs`，Playwright 无头）：
-   - 证据数据渲染：`9 / 9 PASS`、`88 passed`、验收表 9 行；
+2. **本地验证通过**（`scripts/verify_site.cjs`，Playwright 无头；V2 首轮记录）：
+   - 证据数据渲染：`9 / 9 PASS`、`88 passed`、验收表 9 行
+     （V2 收尾后站点数据已重建为 `149 passed`，线上现状见 §5 与
+     `verification/site-public/PUBLISH_VERIFICATION.md`）；
    - 9 张截图全部加载成功（broken=0）；
    - 锚点跳转与整页 reload 正常；
    - 390px 移动端横向溢出 0px；

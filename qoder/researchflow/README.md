@@ -98,7 +98,7 @@ python scripts/seed_demo.py
 ## 4. 验证与验收
 
 - `pytest`：**149 个测试**全部通过（单元、seekdb 集成、PowerContext 集成、安全、保留集、中文记忆）。
-- `scripts/run_acceptance.py`：T1–T8 端到端验收 + 真实 LLM 用例 T9，共 **150 项校验 0 失败**，
+- `scripts/run_acceptance.py`：T1–T9 端到端验收（含真实 LLM 用例），共 **150 项校验 0 失败**，
   自带独立 PowerContext 与 API 实例，真实执行服务重启与断连。
 - `scripts/fresh_env_e2e.py`：**全新环境**评审旅程（新 venv、新 seekdb 容器与卷、新 PowerContext
   数据目录）20/20 步通过，结束自动清理。
