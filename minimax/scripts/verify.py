@@ -948,6 +948,15 @@ def run_all(settings: Settings, only: list[str] | None = None) -> int:
     }
     report["overall"] = PASS if report["summary"]["fail"] == 0 and report["summary"]["blocked"] == 0 else FAIL
 
+    # The evidence file is committed *after* the run, so the commit that
+    # carries this report is necessarily newer than the commit that was
+    # tested. Say so explicitly instead of leaving the reviewer to guess
+    # which commit the result belongs to.
+    report["git_version_note"] = (
+        "commit / git_version 是本次运行所测试的代码提交；"
+        "把本报告提交进仓库的那次提交会更新本文件本身，但不改变被测试的代码。"
+    )
+
     output = settings.evidence_dir / "acceptance_report.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(_dump(report), encoding="utf-8")
