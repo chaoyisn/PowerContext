@@ -41,9 +41,16 @@ def _dump(payload: Any) -> str:
 
 
 def _repository_root(settings: Settings) -> Path:
-    """Return the git repository that holds the sample code."""
+    """Return the git repository that holds the sample code.
 
-    return settings.root.resolve()
+    The sample lives under ``minimax/`` inside the competition repository, so
+    the repository root is the parent of the module root.
+    """
+
+    root = settings.root.resolve()
+    if (root.parent / ".git").exists():
+        return root.parent
+    return root
 
 
 def _build_stores(settings: Settings) -> tuple[SeekDBStore, PowerContextStateStore]:
@@ -187,6 +194,7 @@ def command_apply(settings: Settings, args: argparse.Namespace) -> int:
     builder = ContextBuilder(store, state_store, settings.root)
     context = builder.build(args.task_id, args.task, args.spec_id)
     context.retrieval["repository_root"] = str(_repository_root(settings))
+    context.retrieval["module_root"] = str(settings.root.resolve())
 
     agent = MiniMaxAgent(settings)
     result = agent.run(context, apply=not args.dry_run)

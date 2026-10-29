@@ -32,14 +32,13 @@ class TaskStore:
         return task
 
     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:
-        """Return every task ordered by descending priority then ascending id.
+        """Return tasks ordered by descending priority then ascending id.
 
-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter
-        is not implemented yet.
+        ``status`` optionally filters tasks by exact, case-sensitive status match.
         """
 
-        del status
-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]
+        tasks = filter_by_status(self.tasks, status)
+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]
 
     def find_by_id(self, task_id: int) -> Task | None:
         for task in self.tasks:

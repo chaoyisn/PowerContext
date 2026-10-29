@@ -70,6 +70,7 @@ class MiniMaxResult:
             "applied_files": self.applied_files,
             "error": self.error,
             "patch": self.patch,
+            "raw_response": self.raw_response,
         }
 
 
@@ -77,16 +78,39 @@ def extract_patch(text: str) -> str:
     """Pull the unified diff out of a model response."""
 
     fenced = re.search(r"```(?:diff|patch)?\s*\n(.*?)```", text, re.DOTALL)
+    candidates: list[str] = []
     if fenced:
-        candidate = fenced.group(1)
-        if "diff --git" in candidate or "--- " in candidate:
-            return candidate.strip("\n") + "\n"
+        candidates.append(fenced.group(1))
+    for marker in ("*** Begin Patch", "*** End Patch"):
+        pass
+    if "*** Begin Patch" in text:
+        block = text.split("*** Begin Patch", 1)[1]
+        if "*** End Patch" in block:
+            block = block.split("*** End Patch", 1)[0]
+        candidates.append(block)
     start = text.find("diff --git")
-    if start == -1:
-        start = text.find("--- ")
-    if start == -1:
+    if start != -1:
+        candidates.append(text[start:])
+    elif text.find("--- ") != -1:
+        candidates.append(text[text.find("--- ") :])
+
+    for candidate in candidates:
+        cleaned = _strip_patch_markers(candidate)
+        if "diff --git" in cleaned or "--- " in cleaned:
+            return cleaned
+    return ""
+
+
+def _strip_patch_markers(text: str) -> str:
+    """Remove the fence and patch-tool markers that surround a unified diff."""
+
+    cleaned = text.replace("*** Begin Patch", "").replace("*** End Patch", "")
+    cleaned = re.sub(r"^```[a-zA-Z]*\s*$", "", cleaned, flags=re.MULTILINE)
+    cleaned = re.sub(r"^```\s*$", "", cleaned, flags=re.MULTILINE)
+    cleaned = cleaned.strip("\n")
+    if not cleaned:
         return ""
-    return text[start:].strip("\n") + "\n"
+    return cleaned + "\n"
 
 
 class MiniMaxAgent:
@@ -96,9 +120,36 @@ class MiniMaxAgent:
         self.settings = settings or load_settings()
 
     def _prompt(self, context: DevelopmentContext) -> str:
+        repository_root = Path(context.retrieval.get("repository_root", "") or Path.cwd())
+        code_payload = []
+        for item in context.code:
+            # The diff must apply against the real file, so the model gets the
+            # current file text next to the symbol the database located.
+            file_text = ""
+            for candidate in (
+                repository_root / item["file_path"],
+                repository_root.parent / item["file_path"],
+                Path(item["source_path"]),
+            ):
+                if candidate.is_file():
+                    file_text = candidate.read_text(encoding="utf-8")
+                    break
+            code_payload.append(
+                {
+                    "file_path": item["file_path"],
+                    "repository_path": self._repository_path(repository_root, item["file_path"]),
+                    "qualified_name": item["qualified_name"],
+                    "signature": item["signature"],
+                    "start_line": item["start_line"],
+                    "end_line": item["end_line"],
+                    "symbol_content": item["content"],
+                    "file_content": file_text,
+                }
+            )
         payload = {
             "task": context.task,
             "task_id": context.task_id,
+            "repository_root": str(repository_root),
             "specifications": [
                 {
                     "spec_id": item["spec_id"],
@@ -110,17 +161,7 @@ class MiniMaxAgent:
                 }
                 for item in context.specifications
             ],
-            "code": [
-                {
-                    "file_path": item["file_path"],
-                    "qualified_name": item["qualified_name"],
-                    "signature": item["signature"],
-                    "start_line": item["start_line"],
-                    "end_line": item["end_line"],
-                    "content": item["content"],
-                }
-                for item in context.code
-            ],
+            "code": code_payload,
             "tests": [
                 {
                     "file_path": item["file_path"],
@@ -140,6 +181,15 @@ class MiniMaxAgent:
             + json.dumps(payload, ensure_ascii=False, indent=2)
             + "\n\nReturn the unified diff now."
         )
+
+    @staticmethod
+    def _repository_path(repository_root: Path, file_path: str) -> str:
+        """Return the path of a material relative to the git repository root."""
+
+        candidate = repository_root / file_path
+        if candidate.exists():
+            return candidate.relative_to(repository_root).as_posix()
+        return Path(file_path).as_posix()
 
     def run(self, context: DevelopmentContext, *, apply: bool = True) -> MiniMaxResult:
         """Ask MiniMax for a patch and apply it to the repository."""
@@ -212,33 +262,74 @@ class MiniMaxAgent:
         )
 
     @staticmethod
+    def _normalize_paths(patch: str, repository_root: Path, module_root: Path) -> str:
+        """Rewrite diff paths to the real repository-relative paths.
+
+        The model receives module-relative paths such as ``sample/taskmanager.py``.
+        Git needs the path relative to the repository root, so the module
+        directory prefix is restored when it is missing.
+        """
+
+        if not module_root.name:
+            return patch
+        try:
+            prefix = module_root.relative_to(repository_root).as_posix() + "/"
+        except ValueError:
+            return patch
+
+        def with_prefix(path: str) -> str:
+            """Add the module prefix to a diff path, keeping its a/ or b/ marker."""
+
+            for marker in ("a/", "b/"):
+                if path.startswith(marker):
+                    return marker + prefix + path[len(marker) :]
+            return prefix + path
+
+        def rewrite(match: re.Match[str]) -> str:
+            body = match.group(2)
+            if body.startswith(prefix) or body.startswith(("a/" + prefix, "b/" + prefix)):
+                return match.group(0)
+            return f"{match.group(1)}{with_prefix(body)}"
+
+        patch = re.sub(r"(--- a/|\+\+\+ b/)([^\t\n]+)", rewrite, patch)
+
+        def rewrite_header(match: re.Match[str]) -> str:
+            first, second = match.group(1), match.group(2)
+            new_first = first if first.startswith(prefix) else with_prefix(first)
+            new_second = second if second.startswith(prefix) else with_prefix(second)
+            return f"diff --git {new_first} {new_second}"
+
+        return re.sub(r"diff --git (\S+) (\S+)", rewrite_header, patch)
+
+    @staticmethod
     def _apply_patch(patch: str, context: DevelopmentContext) -> tuple[bool, list[str]]:
         """Apply the patch with git so the change shows up in the real diff."""
 
         import subprocess
 
-        root = Path(context.retrieval.get("repository_root", "")) if context.retrieval else Path()
-        if not root or not root.exists():
-            root = Path.cwd()
-        completed = subprocess.run(
+        repository_root = Path(context.retrieval.get("repository_root", "")) or Path.cwd()
+        module_root = Path(context.retrieval.get("module_root", "") or "")
+        if module_root:
+            patch = MiniMaxAgent._normalize_paths(patch, repository_root, module_root)
+        attempts = (
+            ["git", "apply", "--whitespace=nowarn", "--recount", "-"],
+            ["git", "apply", "--whitespace=nowarn", "--recount", "--3way", "-"],
             ["git", "apply", "--whitespace=nowarn", "-"],
-            input=patch.encode("utf-8"),
-            cwd=str(root),
-            capture_output=True,
+            ["git", "apply", "--whitespace=nowarn", "--3way", "-"],
         )
-        if completed.returncode != 0:
+        for command in attempts:
             completed = subprocess.run(
-                ["git", "apply", "--whitespace=nowarn", "--3way", "-"],
+                command,
                 input=patch.encode("utf-8"),
-                cwd=str(root),
+                cwd=str(repository_root),
                 capture_output=True,
             )
-        if completed.returncode != 0:
-            return False, []
-        names = subprocess.run(
-            ["git", "diff", "--name-only"],
-            cwd=str(root),
-            capture_output=True,
-            text=True,
-        )
-        return True, [line for line in names.stdout.splitlines() if line]
+            if completed.returncode == 0:
+                names = subprocess.run(
+                    ["git", "diff", "--name-only"],
+                    cwd=str(repository_root),
+                    capture_output=True,
+                    text=True,
+                )
+                return True, [line for line in names.stdout.splitlines() if line]
+        return False, []
