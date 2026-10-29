@@ -72,8 +72,10 @@ class CoalescingEmbeddingModel:
         if "cache_size" in kwargs:
             cache_size = kwargs["cache_size"]  # type: ignore[assignment]
 
-        if isinstance(max_batch_size, bool) or not isinstance(max_batch_size, int) or max_batch_size < 1:
+        if isinstance(max_batch_size, bool) or not isinstance(max_batch_size, (int, float)) or int(max_batch_size) < 1:
             raise ValueError("max_batch_size")
+        max_batch_size = int(max_batch_size)
+
         if (
             isinstance(coalesce_ms, bool)
             or not isinstance(coalesce_ms, (int, float))
@@ -81,8 +83,11 @@ class CoalescingEmbeddingModel:
             or coalesce_ms < 0
         ):
             raise ValueError("coalesce_ms")
-        if isinstance(cache_size, bool) or not isinstance(cache_size, int) or cache_size < 0:
+        coalesce_ms = float(coalesce_ms)
+
+        if isinstance(cache_size, bool) or not isinstance(cache_size, (int, float)) or int(cache_size) < 0:
             raise ValueError("cache_size")
+        cache_size = int(cache_size)
 
         self.model = target_model
         self.base_model = target_model
@@ -288,9 +293,11 @@ class CoalescingEmbeddingModel:
         texts = tuple(key[1] for key in keys)
         try:
             result = await self._call_base(keys[0][0], texts)
+            raw_vectors = getattr(result, "vectors", result)
+            usage = getattr(result, "usage", None)
             expected_dim = self.profile.dimension if hasattr(self.profile, "dimension") else None
-            vectors = _validate_vectors(result.vectors, expected_count=len(texts), dimension=expected_dim)
-            self._complete_batch(keys, futures, vectors, getattr(result, "usage", None))
+            vectors = _validate_vectors(raw_vectors, expected_count=len(texts), dimension=expected_dim)
+            self._complete_batch(keys, futures, vectors, usage)
         except asyncio.CancelledError:
             self._cancel_batch(futures)
             raise
@@ -304,10 +311,16 @@ class CoalescingEmbeddingModel:
         keys: tuple[_EmbeddingKey, ...],
         futures: tuple[asyncio.Future[_CompletedEmbedding], ...],
         vectors: tuple[EmbeddingVector, ...],
-        usage: InferenceUsage | None,
+        usage: object,
     ) -> None:
         if isinstance(usage, InferenceUsage):
             actual_usage = usage.model_copy(deep=True)
+        elif isinstance(usage, dict):
+            actual_usage = InferenceUsage(
+                requests=int(usage.get("requests", 1)),
+                input_tokens=usage.get("input_tokens"),
+                output_tokens=usage.get("output_tokens"),
+            )
         elif usage is not None and hasattr(usage, "requests"):
             actual_usage = InferenceUsage(
                 requests=int(getattr(usage, "requests", 1)),
@@ -355,15 +368,18 @@ class CoalescingEmbeddingModel:
 
 
 def _validate_vectors(
-    vectors: Sequence[Sequence[float]],
+    vectors: Sequence[Sequence[float]] | object,
     *,
     expected_count: int,
     dimension: int | None = None,
 ) -> tuple[EmbeddingVector, ...]:
-    if len(vectors) != expected_count:
+    if vectors is None:
+        raise ValueError("vectors")
+    vec_list = tuple(vectors)
+    if len(vec_list) != expected_count:
         raise ValueError("vector-count")
     validated: list[EmbeddingVector] = []
-    for vector in vectors:
+    for vector in vec_list:
         value = tuple(float(component) for component in vector)
         if dimension is not None and dimension > 0 and len(value) != dimension:
             raise ValueError("vector-dimension")
