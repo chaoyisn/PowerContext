@@ -1,0 +1,55 @@
+{
+  "after": {
+    "code_files": [
+      "sample/taskmanager.py"
+    ],
+    "contains_probe": true,
+    "content_hash": "041d106bc9d4b8738f7290a2f029421aa9a61621b3c36217bf7883d289eba0cf",
+    "revision": "r3",
+    "test_files": [
+      "tests/test_list_tasks_status_filter.py",
+      "tests/test_list_tasks_status_wildcard.py",
+      "tests/test_taskmanager_regression.py"
+    ],
+    "version": "1.2.0"
+  },
+  "before": {
+    "contains_probe": false,
+    "content_hash": "e9ffc2806e19a5c135a2f2dbea7db01633d29a1e155fee1fe0a97a33fab6a771",
+    "revision": "r2",
+    "version": "1.1.0"
+  },
+  "checks": {
+    "code_binding_survived": true,
+    "content_hash_changed": true,
+    "context_resolves_exactly_one_specification": true,
+    "effective_revision_is_the_newest": true,
+    "new_requirement_absent_before": true,
+    "new_requirement_reaches_context": true,
+    "superseded_revision_still_stored": true,
+    "test_binding_survived": true,
+    "version_advanced": true,
+    "working_tree_restored": true
+  },
+  "database_cleanup": {
+    "dropped": "sdd_context_specprobe",
+    "status": "PASS"
+  },
+  "database_reset": {
+    "dropped": "sdd_context_specprobe",
+    "status": "PASS"
+  },
+  "description": "临时修改一条规格要求（并提升版本号），重新导入并重建上下文，证明新要求真的进入了上下文，而不仅仅是版本号变化。运行结束后规格文件被还原，隔离库被删除。",
+  "isolated_database": "sdd_context_specprobe",
+  "isolated_scope": {
+    "scope_id": "scp_6y5e4jkj32yscb0cxhjwkw6kxz",
+    "status": "PASS"
+  },
+  "mode": "SPEC_CHANGE_PROPAGATION",
+  "probe_marker": "PROBE-CHECK-7F3A",
+  "status": "PASS",
+  "stored_versions": [
+    "1.1.0",
+    "1.2.0"
+  ]
+}
