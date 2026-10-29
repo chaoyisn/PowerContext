@@ -605,6 +605,17 @@ def test_05_state_reusable(settings: Settings) -> dict[str, Any]:
     if not health.get("available"):
         return _result("TEST-05", "任务状态可复用", BLOCKED, f"PowerContext 不可用: {health.get('error')}")
 
+    # The reading process also needs seekdb, because it builds a context from
+    # the database. When the database is unreachable the item cannot run at
+    # all, which is a blocked item and not a failing one.
+    try:
+        SeekDBStore(settings).server_version()
+        passed_dependencies = True
+        dependency_detail = ""
+    except SeekDBUnavailableError as error:
+        passed_dependencies = False
+        dependency_detail = f"seekdb 不可用: {error}"
+
     task_id = f"{TASK_ID}-RESTART"
     marker = f"verify-restart-{int(time.time())}"
 
@@ -666,6 +677,21 @@ def test_05_state_reusable(settings: Settings) -> dict[str, Any]:
     completed = payload.get("completed", [])
     todos = payload.get("todos", [])
     verifications = payload.get("verifications", [])
+
+    # A failing subprocess is only a business failure when both dependencies
+    # were actually reachable. If seekdb is down, the read could not build a
+    # context at all, so the item is blocked rather than failed.
+    if not passed_dependencies:
+        return _result(
+            "TEST-05",
+            "任务状态可复用",
+            BLOCKED,
+            f"依赖不可用，无法验证状态恢复: {dependency_detail}",
+            {
+                "checks": {"dependencies_reachable": False},
+                "dependency_detail": dependency_detail,
+            },
+        )
 
     checks: dict[str, Any] = {
         "write_process_succeeded": write.returncode == 0,

@@ -1,6 +1,6 @@
 {
   "branch": "competition/minimax-sdd-context",
-  "commit": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+  "commit": "c866bc7b7226411a3d785f0899df6d5a2b6c55eb",
   "generated_by": "minimax/scripts/verify.py",
   "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
   "module_root_relative": "minimax",
@@ -44,7 +44,7 @@
       "evidence_paths": [
         "minimax/sample/taskmanager.py"
       ],
-      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+      "git_version": "c866bc7b7226411a3d785f0899df6d5a2b6c55eb",
       "item": "TEST-01",
       "status": "PASS",
       "title": "流程可在干净环境运行"
@@ -261,7 +261,7 @@
         "minimax/evidence/minimax_evidence_audit.json",
         "minimax/evidence/phase3_git_diff.patch"
       ],
-      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+      "git_version": "c866bc7b7226411a3d785f0899df6d5a2b6c55eb",
       "item": "TEST-02",
       "status": "PASS",
       "title": "MiniMax 真实参与代码修改"
@@ -295,7 +295,7 @@
       "evidence_paths": [
         "minimax/evidence/context_snapshot.json"
       ],
-      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+      "git_version": "c866bc7b7226411a3d785f0899df6d5a2b6c55eb",
       "item": "TEST-03",
       "status": "PASS",
       "title": "上下文内容正确且来源真实"
@@ -330,7 +330,7 @@
       "evidence_paths": [
         "minimax/evidence/seekdb_queries.json"
       ],
-      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+      "git_version": "c866bc7b7226411a3d785f0899df6d5a2b6c55eb",
       "item": "TEST-04",
       "status": "PASS",
       "title": "数据库真实参与"
@@ -348,7 +348,7 @@
           "scope": "read process"
         }
       ],
-      "detail": "进程退出后由全新进程读回 26 条完成项、26 条待办、26 条验证结果，并合并进新构建的上下文",
+      "detail": "进程退出后由全新进程读回 29 条完成项、29 条待办、29 条验证结果，并合并进新构建的上下文",
       "evidence": {
         "checks": {
           "context_resolves_code": true,
@@ -367,7 +367,7 @@
         "recovered_state": {
           "artifact_ids": {
             "sdd-completed": "art_f58f5928b33e48f69b5e9e5d7532ab8b",
-            "sdd-todo": "art_e7b7288dca1f4cf9a80c09aa0ca8a254",
+            "sdd-todo": "art_f930bbfb81a441a687a36bcb743ed94a",
             "sdd-verification": "art_fc8e9ff1c9a94f468ddacd234731d59e"
           },
           "completed": [
@@ -379,6 +379,7 @@
             "verify-restart-1793286369:completed",
             "verify-restart-1793284525:completed",
             "verify-restart-1793284660:completed",
+            "verify-restart-1793287451:completed",
             "verify-restart-1793285870:completed",
             "verify-restart-1793284613:completed",
             "verify-restart-1793286688:completed",
@@ -388,12 +389,14 @@
             "verify-restart-1793285852:completed",
             "verify-restart-1793284681:completed",
             "verify-restart-1793287164:completed",
+            "verify-restart-1793287427:completed",
             "verify-restart-1793284346:completed",
             "verify-restart-1793284648:completed",
             "verify-restart-1793284490:completed",
             "verify-restart-1793286819:completed",
             "verify-restart-1793285732:completed",
             "verify-restart-1793286332:completed",
+            "verify-restart-1793287389:completed",
             "verify-restart-1793286571:completed",
             "verify-restart-1793286998:completed",
             "verify-restart-1793287322:completed"
@@ -404,6 +407,7 @@
           "task_id": "TASK-SPEC-REQ-001-RESTART",
           "todos": [
             "verify-restart-1793286369:todo",
+            "verify-restart-1793287389:todo",
             "verify-restart-1793284652:todo",
             "verify-restart-1793286332:todo",
             "verify-restart-1793284648:todo",
@@ -411,6 +415,7 @@
             "verify-restart-1793286247:todo",
             "verify-restart-1793284525:todo",
             "verify-restart-1793284613:todo",
+            "verify-restart-1793287451:todo",
             "verify-restart-1793284638:todo",
             "verify-restart-1793284346:todo",
             "verify-restart-1793286889:todo",
@@ -428,7 +433,8 @@
             "verify-restart-1793285906:todo",
             "verify-restart-1793286571:todo",
             "verify-restart-1793285852:todo",
-            "verify-restart-1793286998:todo"
+            "verify-restart-1793286998:todo",
+            "verify-restart-1793287427:todo"
           ],
           "verifications": [
             "verify-restart-1793286332:verification",
@@ -439,6 +445,7 @@
             "verify-restart-1793286247:verification",
             "verify-restart-1793286220:verification",
             "verify-restart-1793286571:verification",
+            "verify-restart-1793287389:verification",
             "verify-restart-1793286688:verification",
             "verify-restart-1793286369:verification",
             "verify-restart-1793285881:verification",
@@ -446,12 +453,14 @@
             "verify-restart-1793284613:verification",
             "verify-restart-1793284660:verification",
             "verify-restart-1793284490:verification",
+            "verify-restart-1793287427:verification",
             "verify-restart-1793284638:verification",
             "verify-restart-1793284652:verification",
             "verify-restart-1793286998:verification",
             "verify-restart-1793287322:verification",
             "verify-restart-1793285870:verification",
             "verify-restart-1793285852:verification",
+            "verify-restart-1793287451:verification",
             "verify-restart-1793286889:verification",
             "verify-restart-1793284648:verification",
             "verify-restart-1793286819:verification",
@@ -468,7 +477,7 @@
       "evidence_paths": [
         "minimax/evidence/phase4_cross_process.json"
       ],
-      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+      "git_version": "c866bc7b7226411a3d785f0899df6d5a2b6c55eb",
       "item": "TEST-05",
       "status": "PASS",
       "title": "任务状态可复用"
@@ -561,7 +570,7 @@
         "minimax/evidence/phase3_git_diff.patch",
         "minimax/evidence/red_green_audit.json"
       ],
-      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+      "git_version": "c866bc7b7226411a3d785f0899df6d5a2b6c55eb",
       "item": "TEST-06",
       "status": "PASS",
       "title": "代码改动生效"

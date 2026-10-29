@@ -1,9 +1,11 @@
 {
-  "blocked_checks": [],
+  "blocked_checks": [
+    "powercontext"
+  ],
   "checks": {
     "git": {
       "branch": "competition/minimax-sdd-context",
-      "head": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+      "head": "c866bc7b7226411a3d785f0899df6d5a2b6c55eb",
       "reason": "healthy",
       "status": "PASS"
     },
@@ -34,11 +36,11 @@
       "status": "PASS"
     },
     "powercontext": {
-      "endpoint": "http://127.0.0.1:8790",
-      "reason": "healthy",
-      "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
+      "endpoint": "http://127.0.0.1:9999",
+      "reason": "SERVICE_NOT_STARTED",
+      "remedy": "启动 PowerContext Server（python -m powercontext.server ...），或用 SDD_POWERCONTEXT_URL 指向已有实例。",
       "service": "powercontext",
-      "status": "PASS"
+      "status": "BLOCKED"
     },
     "python": {
       "detail": "Python 3.12.13（官方要求 3.12）",
@@ -54,26 +56,11 @@
       "service": "seekdb",
       "status": "PASS",
       "user": "root"
-    },
-    "task_state": {
-      "known_task_ids": [
-        "TASK-SPEC-REQ-001",
-        "TASK-SPEC-REQ-001-PHASE4-3A17ED93",
-        "TASK-SPEC-REQ-001-PHASE4-7E0A5E42",
-        "TASK-SPEC-REQ-001-PHASE4-93461BB4",
-        "TASK-SPEC-REQ-001-PHASE4-CC407D48",
-        "TASK-SPEC-REQ-001-PHASE4-F6EBCBDC",
-        "TASK-SPEC-REQ-001-RESTART"
-      ],
-      "note": "存在历史任务状态；跨进程恢复验证会使用独立任务 ID，不会与历史状态混淆。",
-      "reason": "healthy",
-      "sample_task_has_state": true,
-      "status": "PASS"
     }
   },
   "description": "区分服务未启动 / 凭据错误 / 库不存在 / 业务测试失败四类问题。",
   "failed_checks": [],
   "mode": "DIAGNOSTIC",
   "repository_root": "E:\\OceanBaseContest\\powercontext-minimax",
-  "status": "PASS"
+  "status": "BLOCKED"
 }
