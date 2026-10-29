@@ -1,6 +1,6 @@
 {
   "branch": "competition/minimax-sdd-context",
-  "commit": "daa60b555868eda4d22f4bd60b8f43c232dd6476",
+  "commit": "6000a6696d293f9dbb5d098795b7059bab621508",
   "generated_by": "minimax/scripts/verify.py",
   "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
   "overall": "PASS",
@@ -70,7 +70,7 @@
       "title": "MiniMax 真实参与代码修改"
     },
     {
-      "detail": "上下文包含规格 1.1.0 (r2)、11 个代码符号、20 个测试，全部来源文件真实存在",
+      "detail": "上下文包含规格 1.1.0 (r2)、9 个代码符号、20 个测试，全部来源文件真实存在",
       "evidence": {
         "checks": {
           "all_sources_exist": true,
@@ -94,7 +94,7 @@
       "title": "上下文内容正确且来源真实"
     },
     {
-      "detail": "seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 41 行，写入后立即可读回，内容与磁盘文件一致",
+      "detail": "seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 34 行，写入后立即可读回，内容与磁盘文件一致",
       "evidence": {
         "checks": {
           "code_rows_match_files": true,
@@ -107,9 +107,9 @@
           "write_visible_to_read": true
         },
         "counts": {
-          "sdd_code_symbol": 11,
-          "sdd_relation": 8,
-          "sdd_specification": 2,
+          "sdd_code_symbol": 9,
+          "sdd_relation": 4,
+          "sdd_specification": 1,
           "sdd_test": 20
         },
         "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0"
@@ -119,7 +119,7 @@
       "title": "数据库真实参与"
     },
     {
-      "detail": "进程退出后由全新进程读回 4 条完成项、4 条待办、4 条验证结果，并合并进新构建的上下文",
+      "detail": "进程退出后由全新进程读回 8 条完成项、8 条待办、8 条验证结果，并合并进新构建的上下文",
       "evidence": {
         "checks": {
           "context_resolves_code": true,
@@ -138,13 +138,17 @@
         "recovered_state": {
           "artifact_ids": {
             "sdd-completed": "art_ca8d97e8bb7b407891bb20c763307c3a",
-            "sdd-todo": "art_97e109aabbd54100bc1f45fbdc1850c0",
-            "sdd-verification": "art_6adcbd0653b84febb7be4222b785fc27"
+            "sdd-todo": "art_c293d19719d14f56975bfb599cf35784",
+            "sdd-verification": "art_c991be1a60014740ac9c647a45070a19"
           },
           "completed": [
             "verify-restart-1793284525:completed",
+            "verify-restart-1793284660:completed",
             "verify-restart-1793284613:completed",
+            "verify-restart-1793284652:completed",
+            "verify-restart-1793284638:completed",
             "verify-restart-1793284346:completed",
+            "verify-restart-1793284648:completed",
             "verify-restart-1793284490:completed"
           ],
           "description": null,
@@ -152,16 +156,24 @@
           "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
           "task_id": "TASK-SPEC-REQ-001-RESTART",
           "todos": [
+            "verify-restart-1793284652:todo",
+            "verify-restart-1793284648:todo",
             "verify-restart-1793284525:todo",
             "verify-restart-1793284613:todo",
+            "verify-restart-1793284638:todo",
             "verify-restart-1793284346:todo",
-            "verify-restart-1793284490:todo"
+            "verify-restart-1793284490:todo",
+            "verify-restart-1793284660:todo"
           ],
           "verifications": [
             "verify-restart-1793284525:verification",
             "verify-restart-1793284346:verification",
             "verify-restart-1793284613:verification",
-            "verify-restart-1793284490:verification"
+            "verify-restart-1793284660:verification",
+            "verify-restart-1793284490:verification",
+            "verify-restart-1793284638:verification",
+            "verify-restart-1793284652:verification",
+            "verify-restart-1793284648:verification"
           ]
         },
         "write_process": {
@@ -199,7 +211,7 @@
           "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
           "exit_code": 0,
           "stderr": "",
-          "stdout": "......................                                                   [100%]\n22 passed in 0.03s\n"
+          "stdout": "......................                                                   [100%]\n22 passed in 0.04s\n"
         },
         "git_diff": "diff --git a/minimax/sample/taskmanager.py b/minimax/sample/taskmanager.py\nindex 8f482216..4d57d400 100644\n--- a/minimax/sample/taskmanager.py\n+++ b/minimax/sample/taskmanager.py\n@@ -32,14 +32,13 @@ class TaskStore:\n         return task\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:",
         "r1_after": {
