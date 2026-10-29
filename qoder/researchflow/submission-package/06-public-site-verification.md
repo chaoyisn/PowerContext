@@ -144,3 +144,16 @@ SITE VERIFY OK https://researchflow-5esfsogn38f.qoder.zone/
    PowerContext 无多用户鉴权，把后端直接开放会造成跨用户读取记忆/文档的风险。
 5. 站点的 `access_mode` 全程为 `public`：本轮只做内容替换，未新建站点、未改域名、
    未把公开改为私有。发布前用 `get_site_access` 读回、发布后用 `get_publish_status` 复核。
+
+## 5. 推送后的再次核验（22:59，本地，UTC+8）
+
+Git 封版提交推送完成后，用同一条无凭据命令再跑一次，确认「仓库里被提交的 `site/public/`」
+与「线上正在服务的版本」仍是同一份：
+
+```
+$ backend/.venv/Scripts/python scripts/verify_published_site.py https://researchflow-5esfsogn38f.qoder.zone
+15/15 files byte-identical to the local build      （逐文件 SHA 与 §2.1 完全相同）
+```
+
+也就是说：**Git 提交 ↔ 本地构建 ↔ 公开站点 ↔ 演示视频**（c2/c10 录自该地址，
+且 `video-check.json` 现场复核过线上页与本地构建一致）四方在同一版本上闭环。

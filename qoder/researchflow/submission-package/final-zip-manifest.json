@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-29T22:58:28+08:00",
+  "generated_at": "2026-10-29T23:00:17+08:00",
   "archive": "D:\\OceanBase\\deliverables\\researchflow-final\\ResearchFlow-Qoder-Final.zip",
-  "archive_bytes": 32754353,
-  "archive_sha256": "a193a8b69bc14326bec501e01b4ff17ac6f4d5ed76995da48cb0573b91ba83a7",
+  "archive_bytes": 32754849,
+  "archive_sha256": "61385a425c91f566a1b4f9e85513c71205e01e56f9883b1c5543d43ea2572fd6",
   "members": 303,
-  "raw_bytes": 34918334,
+  "raw_bytes": 34919418,
   "compression_ratio": 0.938,
   "scan_hits": [],
   "extract_ok": true,
@@ -42,7 +42,7 @@
     },
     "ResearchFlow/submission-package": {
       "files": 32,
-      "bytes": 11376712
+      "bytes": 11377796
     },
     "ResearchFlow/verification": {
       "files": 138,

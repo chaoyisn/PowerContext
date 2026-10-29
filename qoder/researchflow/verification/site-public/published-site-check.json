@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T21:47:21+08:00",
+  "checked_at": "2026-10-29T22:59:38+08:00",
   "base": "https://researchflow-5esfsogn38f.qoder.zone",
   "method": "credential-free HTTP GET (urllib, no cookie jar, no-cache headers)",
   "html_normalization": "Qoder Sites injects <script data-qoder-watermark> into served HTML; that block alone is removed before hashing, everything else is compared as-is",

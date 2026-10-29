@@ -194,6 +194,7 @@ git push origin 2026-competition-ecosystem                          # 普通 fas
 git rev-parse HEAD origin/2026-competition-ecosystem                # 两个完整 SHA 必须相同
 ```
 
+本轮实际推送范围（fast-forward，无 force）：`fe8c14c7a7621638622235bbbde0920c36fd529b..4c52cd1a95752e4aef0e4246e3874ea887414e9c`，其中封版提交为 `ada5be24bc08a7b3bc7db527f8c5638c81b3d045`（217 文件 / +13634 −4422），第二条只补开发日志与打包清单。推送后 `git fetch origin` 核对本地与远端完整 SHA 相同；「当前 tip」本身仍交回 `git rev-parse` 现取。
 - 封版前的远端 tip（本轮起点，已核对与本地一致）：
   `fe8c14c7a7621638622235bbbde0920c36fd529b`；官方基线
   `d647275c308e09b7b623f322a26f5c4e85734fb0` 仍是其祖先。
