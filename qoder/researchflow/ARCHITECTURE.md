@@ -127,6 +127,7 @@ seekdb 侧已验证的 SQL 能力（用于混合检索与排障）：
 | --- | --- | --- |
 | LLM | **可用** | `DEEPSEEK_API_KEY` 存在；`deepseek-chat` @ `https://api.deepseek.com` 实测返回 `OK` |
 | Embedding（本地） | **可用** | pyseekdb `DefaultEmbeddingFunction` = all-MiniLM-L6-v2 ONNX，384 维，首次下载 86.2MB 后本地缓存，实测 17.5s 完成 |
+| Embedding（多语，可选） | **可用** | `multilingual` provider：paraphrase-multilingual-MiniLM-L12-v2 量化 ONNX（约 120MB，首次联网下载至 `RF_DATA_DIR/models`），onnxruntime + tokenizers 直接加载，mean-pooling + L2 归一化；跨语言相似度实测 0.79–0.81（minilm 0.17–0.44） |
 | Embedding（离线兜底） | 已实现 | `hashing` provider：确定性字符 n-gram 哈希，384 维，零下载 |
 | Embedding（远程） | 可配置 | `openai` provider：任意 OpenAI 兼容 `/embeddings` |
 
@@ -326,6 +327,14 @@ LLM 被要求对每条论断打标：
 - **LLM 瞬时故障重试**：仅对传输/服务端错误做 3 次退避重试；鉴权与参数错误立即失败。
 - **PowerContext 中文检索限制**：默认 SQLite 索引为 `fts5 tokenize='unicode61'`，纯中文查询 0 命中。
   恢复主路径走全量 `list_memory_entries` + 快照，不依赖搜索；recall query 用真实 ASCII 锚点扩展并如实回传。
+- **V2 召回层修复**：`memory.local_memory_search` 在已从 PowerContext 读回的条目上做
+  CJK 二元组覆盖匹配（下限 0.2，避免单个泛化词误召回），并对「下一步/未解决」这类元提问做
+  意图→kind 定向读取。数据源仍是 PowerContext，仅匹配逻辑自研；响应以
+  `search_backend_used ∈ {powercontext, researchflow-local-cjk, none}` 明示实际作答后端。
+  实测：PowerContext 自带搜索 6/10 且负例误报 1/1；本地路径 hit@3 10/10、负例 0/1（BENCHMARK.md §1）。
+- **过滤值 fail-closed**：实测 seekdb 全文腿会静默丢弃含 SQL 元字符的 metadata where 子句
+  （恶意 `doc_id` 表现与无过滤一致），故 `build_where` 校验 `doc_id`（64 位 hex）与
+  `content_type`（白名单），非法即 422，绝不放宽结果集。
 
 ---
 

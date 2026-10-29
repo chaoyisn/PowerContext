@@ -95,10 +95,15 @@ python scripts/seed_demo.py
 
 ## 4. 验证与验收
 
-- `pytest`：**88 个测试**全部通过（含针对真实 seekdb 与真实 PowerContext 的集成测试）。
-- `scripts/run_acceptance.py`：T1–T8 端到端验收，自带独立 PowerContext 与 API 实例，
-  真实执行服务重启与断连，逐条记录 输入 / 预期 / 实际 / PASS-FAIL / 日志位置，**不预填结果**。
-- 全部证据与失败案例见 [VERIFICATION.md](./VERIFICATION.md)。
+- `pytest`：**149 个测试**全部通过（单元、seekdb 集成、PowerContext 集成、安全、保留集、中文记忆）。
+- `scripts/run_acceptance.py`：T1–T8 端到端验收 + 真实 LLM 用例 T9，共 **150 项校验 0 失败**，
+  自带独立 PowerContext 与 API 实例，真实执行服务重启与断连。
+- `scripts/fresh_env_e2e.py`：**全新环境**评审旅程（新 venv、新 seekdb 容器与卷、新 PowerContext
+  数据目录）20/20 步通过，结束自动清理。
+- `scripts/bench_memory_zh.py` / `bench_retrieval.py` / `bench_workflow.py`：中文记忆、中英检索、
+  工作流提效三项基准，结果见 [BENCHMARK.md](./BENCHMARK.md)。
+- 比赛网站：`site/public/`（静态展示版，含真实运行截图与真实验证数据），见 [SITE_DEPLOYMENT.md](./SITE_DEPLOYMENT.md)。
+- 全部证据与失败案例见 [VERIFICATION.md](./VERIFICATION.md) 与 [SECURITY.md](./SECURITY.md)。
 
 ---
 
@@ -109,9 +114,15 @@ qoder/researchflow/
 ├── ARCHITECTURE.md        P0 审计结论 + 架构与数据模型（含实测证据）
 ├── PLAN.md                分阶段计划与验收映射
 ├── QODER_LOG.md           Qoder 开发日志（做了什么、踩了什么坑、怎么修的）
-├── VERIFICATION.md        seekdb / PowerContext 真实使用证据、T1-T8、部署可行性、风险
-├── RUN.md                 启动、演示、验证命令
+├── VERIFICATION.md        seekdb / PowerContext 真实使用证据、T1-T9、部署可行性、风险
+├── BENCHMARK.md           中文记忆 / 中英检索 / 工作流提效的方法与原始结果
+├── SECURITY.md            安全审计结论与公网部署前置条件
+├── SITE_DEPLOYMENT.md     Sites 能力复核、阻塞证据、发布步骤与验证清单
+├── SUBMISSION.md          提交材料清单与需人工补充项
+├── RUN.md                 启动、演示、验证命令（Windows 与 Linux/WSL）
 ├── .env.example           全部配置项（不含真实密钥）
+├── site/public/           比赛展示网站（静态，真实截图与真实验证数据）
+├── verification/          已提交的验收运行原始记录
 ├── backend/
 │   ├── pyproject.toml     固定兼容版本
 │   └── app/
@@ -141,9 +152,11 @@ qoder/researchflow/
 - 嵌入式 seekdb（`pylibseekdb`）在 Windows 上**不可用**（官方只发 manylinux wheel），
   本项目使用官方 `pyseekdb` 的**远程服务器模式**。Linux/macOS 可切嵌入式，见 `.env.example`。
 - PowerContext 1.4.1 的默认 SQLite 索引使用 `fts5 unicode61` 分词，**纯中文记忆检索命中不到**；
-  完整记忆恢复不依赖搜索（走 `list_memory_entries` 全量读取），且 UI 会展示该限制说明。
-- 默认 embedding 为 all-MiniLM-L6-v2（英文词表），中文查询命中纯英文原文时语义相似度偏低；
-  已通过「双语 demo 语料 + 混合检索 + 语义逃逸门控 + 可切换 embedding provider」缓解，
-  限制本身在 VERIFICATION.md 中如实记录。
+  V2 增加了 CJK 感知的本地匹配 + kind 定向读取作为召回层修复（数据仍来自 PowerContext），
+  并在响应中明示实际作答的后端；限制本身在 VERIFICATION.md 与 BENCHMARK.md 中如实记录。
+- 默认 embedding 为 all-MiniLM-L6-v2（英文词表）。V2 新增可选 `multilingual` provider
+  （paraphrase-multilingual-MiniLM-L12-v2 量化 ONNX），跨语言相似度实测 0.79–0.81 vs 0.17–0.44；
+  其召回优先阈值会引入 1/2 负例误报，故默认仍为精度优先配置，权衡见 BENCHMARK.md §2.3。
+- 中英混合检索仍有 2 条「英文改写问中文原文」在默认阈值下被门控拦下，属当前能力边界，已记录。
 - Qoder Sites **不能**托管 FastAPI / seekdb / PowerContext（无持久进程、无 Python 运行时）；
-  公开部署方案见 VERIFICATION.md 第 6 节，本轮未发布。
+  展示站为静态版，发布当前被平台阻塞（`sites_unavailable`），见 SITE_DEPLOYMENT.md。

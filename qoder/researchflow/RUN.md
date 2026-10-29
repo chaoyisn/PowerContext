@@ -156,7 +156,64 @@ backend/.venv/Scripts/python scripts/reset_store.py --yes
 
 ---
 
-## 6. 常见问题
+## 6. Linux / WSL 运行说明
+
+与 Windows 的唯一实质差异是 **seekdb 嵌入式模式在 Linux 可用**，但本项目默认仍走远程服务器模式，
+因此命令几乎一致：
+
+```bash
+# 依赖
+cd backend && uv venv --python 3.11 .venv && uv pip install --python .venv -e ".[dev]"
+cd .. && uv venv --python 3.11 services/.venv-powercontext \
+  && uv pip install --python services/.venv-powercontext "powercontext[cli,server]==1.4.1"
+
+# seekdb（若无现成容器）
+docker run -d --name rf-seekdb -p 127.0.0.1:2881:2881 \
+  -e CPU_COUNT=2 -e MEMORY_LIMIT=2G -e DATAFILE_SIZE=2G -e LOG_DISK_SIZE=2G \
+  oceanbase/seekdb:latest
+
+# PowerContext 与后端（路径分隔符换成 /，可执行文件在 bin/ 下）
+POWERCONTEXT_HOME=$PWD/services/powercontext-data \
+  services/.venv-powercontext/bin/powercontext server run --host 127.0.0.1 --port 17429 --no-env-file
+cd backend && RF_LLM_API_KEY="$DEEPSEEK_API_KEY" .venv/bin/python -m app.api.main
+```
+
+WSL 注意：Docker Desktop 的端口转发对 WSL 可见；若 seekdb 跑在 Windows 侧而服务跑在 WSL 内，
+把 `RF_SEEKDB_HOST` 指向 `host.docker.internal` 或 Windows 主机 IP。
+**无法自动安装的组件**：无。全部依赖来自 PyPI / npm / Docker Hub / HuggingFace；
+多语 embedding 模型首次使用需联网下载约 120MB（失败会自动回退 hashing，不影响启动）。
+
+---
+
+## 7. 基准与全新环境复现
+
+```bash
+python scripts/bench_memory_zh.py      # B1 中文记忆召回（修复前后对比数据）
+python scripts/bench_retrieval.py      # B2 三 provider × 三模式 Recall/MRR/延迟
+RF_RETRIEVAL_VECTOR_CONFIDENCE=0.28 python scripts/bench_retrieval.py --providers multilingual
+python scripts/bench_workflow.py       # D 两条工作流提效测量 + SVG 图表
+python scripts/fresh_env_e2e.py        # C1 全新 venv/容器/数据目录的评审旅程（自动清理）
+```
+
+`fresh_env_e2e.py` 会新建两个 venv、启动一个**新的** seekdb 容器（端口 2890、独立卷）与
+新的 PowerContext 实例（端口 17431），跑完自动 `docker rm -f -v` 清理，不影响开发实例。
+
+---
+
+## 8. 比赛网站本地预览
+
+```bash
+python scripts/build_site_data.py      # 从真实验收/pytest/健康检查导出证据数据
+cd site/public && python -m http.server 4173
+# 打开 http://127.0.0.1:4173/
+NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" node scripts/verify_site.cjs
+```
+
+发布到 Qoder Sites 的步骤与当前阻塞见 [SITE_DEPLOYMENT.md](./SITE_DEPLOYMENT.md)。
+
+---
+
+## 9. 常见问题
 
 | 现象 | 原因与处理 |
 | --- | --- |

@@ -286,3 +286,76 @@ pytest 88 通过。浏览器四页实测通过。
 13. 断开 seekdb 后：检索接口 503 与真实错误文本（T8）。
 14. `logs/acceptance-*/acceptance-report.md` 的汇总表（T1–T8 全 PASS）。
 15. `pytest -q` 的 `88 passed` 输出。
+
+---
+
+# V2 迭代日志（2026-10-29 第二轮）
+
+## 08:20 状态核对与 Sites 能力实测
+
+分支 `2026-competition-ecosystem` @ `745f9561`，工作区干净；seekdb / PowerContext / API 三服务在线。
+不再只信 V1 文档：用真实 MCP 工具复核 Sites 能力——`get_context` 返回
+`projectRoot=D:\OceanBase`、`sites=[]`、CN prod、Desktop 宿主；`list_sites` 正常（服务可达、账号已认证）。
+
+## 08:30 真实截图采集
+
+内嵌浏览器视口不可用（`NATIVE_BROWSER_VIEWPORT_UNAVAILABLE`），改用全局 Playwright 的无头 Chromium。
+踩坑：bundled playwright-core 期望 chromium-1247 而本机为 1223 → 脚本动态探测已安装可执行文件。
+踩坑：两处 `waitForSelector` 命中了页面介绍文案（「续研简报」「资料直接支持」也出现在说明段落），
+截到加载态/错误位置 → 改用结果区独有标记（「记忆条数」「论断核验」）。产出 9 张真实运行截图。
+
+## 08:50 展示站构建与本地验证
+
+纯静态单页（锚点导航，天然无路由刷新 404），数据来自 `build_site_data.py`
+（验收报告 + 真实 pytest 运行 + 实时 /api/health），`verify_site.cjs` 校验渲染/截图加载/刷新/移动端溢出/控制台错误。
+首版移动端横向溢出 68px（8 列基准表）→ 小屏表格改横向滚动容器，复测 0px。
+
+## 09:00 Sites 发布阻塞（如实记录）
+
+`prepare_site` 三次返回 `sites_unavailable`（完整参数 / 同 actionId 重试 / 最小参数+新 actionId），
+`get_publish_status` 返回 `sites_action_unavailable`；本地遥测显示准备动作已启动后失败
+（`creator_uid=01a175e3-…`），说明失败在云端阶段。该错误码不在 skill 文档清单中。
+随后一次自动重试被权限分类器拦截，提示需人工核验账号 Sites 权益。
+**未发布、未伪造任何发布状态**；SITE_DEPLOYMENT.md 记录了重试参数、发布序列与匿名验证清单。
+
+## 09:10 B1 中文记忆：先诊断再修
+
+建 10 条中文查询集，对四条召回路径实测：PowerContext 搜索 6/10 且**负例误报 1/1**；
+精确读取字段级 100%（证明存储无损）→ 瓶颈在召回层。
+两轮迭代：① 元提问（「下一步计划是什么」）词面零重叠 → 加意图→kind 定向读取（6/10→8/10…9/10）；
+② 负例因单个泛化词「实验」弱重叠被召回 → 加 0.2 覆盖下限 → **10/10 且负例 0**。
+修复后快照条目不再混入 search_hits（它曾把元提问的 effective 结果占满）。
+
+## 09:20 B2 跨语言：实测而非假设
+
+不假设任何模型「天然跨语言」：先测翻译句对余弦——multilingual 0.792/0.813，minilm 0.174/0.442，
+负例两者 ≤0.093。再跑 11 查询 × 3 provider × 3 模式基准。
+踩坑：首轮 R@1 全 0.67 且三模式相同 → 逐条排查发现一条 qrel 写错（页 5 过滤却问页 1 内容），修正数据集。
+结论：0.62 阈值 fp 0/2；multilingual+0.28 R@5 1.00 但 fp 1/2 → 默认保持精度优先，权衡写入文档。
+
+## 09:30 C3 安全：发现一个真实 SDK 层缺陷
+
+恶意 `doc_id` 过滤实测：向量腿 0 hits（参数化正常），**全文腿 5 hits 与无过滤完全一致** →
+pyseekdb/seekdb 在全文腿静默丢弃含 SQL 元字符的 where 子句。
+修复：`build_where` fail-closed 校验（hex-64 / 白名单），非法 422；补 API 与单元回归。
+另加 PDF 页数/字符上限、提示注入回归（注入文档过不了门控、编造引用被剔除）、
+跨项目记忆隔离、并发与断连重连、LLM 重试降级，共 25 项安全测试。
+
+## 09:40 C1 全新环境复现
+
+`fresh_env_e2e.py`：新 venv ×2、新 seekdb 容器（2890 + 独立卷）、新 PowerContext（17431）、新 API（8790），
+评审旅程 20/20 PASS，结束 `docker rm -f -v` 清理。证明不依赖开发机缓存/历史库/预启动服务。
+
+## 09:50 D 提效测量：把基线的局限写清楚
+
+首版 W1 基线 0ms、W2 基线 7/7，看起来「基线全胜」——这是度量失真而非产品失败：
+基线是不含人工阅读的机器扫描代理，且笔记 fixture 写得比真人更全。
+修正：W1 报告 top1/top5 双指标与「是否产出引用对象」；W2 笔记 fixture 故意漏记 2 条建模「人会忘」。
+最终：W1 基线 6/6 但 0 引用对象；RF top1 5/6、top5 5/6、引用 5/6、1 条需修正（正确块排第 6）。
+W2 基线 5/7 + 2 修正 + 无结构/无指针/不可跨会话；RF 7/7 精确 + 独立进程恢复 + 0 修正。
+**不把这些包装成「全面提速」**，BENCHMARK.md 逐条标注基线性质。
+
+## 10:00 收尾
+
+pytest 149 全绿；站点含基准章节并复验通过；README/RUN/VERIFICATION/ARCHITECTURE/SUBMISSION/
+SECURITY/BENCHMARK/SITE_DEPLOYMENT 更新到 V2 状态；分三次提交（站点 / B+C3 / B2+D）。

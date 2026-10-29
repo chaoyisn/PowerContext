@@ -6,7 +6,7 @@
 - 基线分支：`2026-competition-ecosystem`
 - 基线 SHA：`d647275c308e09b7b623f322a26f5c4e85734fb0`
 - 验证日期：2026-10-29（UTC+8）
-- 验收运行目录：`logs/acceptance-20261029-033242/`
+- 验收运行目录：`logs/acceptance-20261029-100634/`
 
 ---
 
@@ -150,20 +150,23 @@ GET /health/ready → {"status":"ready","checks":{"runtime":"ready","database":"
 
 ## 3. 测试与验收汇总
 
-### 3.1 pytest（88 个，全部通过）
+### 3.1 pytest（149 个，全部通过）
 
 ```
 cd backend && .venv/Scripts/python -m pytest tests/ -q
-→ 88 passed（连续两轮，30.09s / 31.64s）
+→ 149 passed（V2 末轮 45.36s）
 ```
 
 | 文件 | 覆盖 |
 | --- | --- |
-| `tests/test_parsing.py` | 哈希/路径安全/分块偏移/解析/相关性门控/记忆模型（25 个，纯单元） |
+| `tests/test_parsing.py` | 哈希/路径安全/分块偏移/解析/相关性门控/记忆模型（单元） |
 | `tests/test_seekdb_integration.py` | T1/T2/T3/T8（对真实 seekdb） |
 | `tests/test_memory_integration.py` | T4/T5/T7（对真实 PowerContext） |
+| `tests/test_memory_zh.py` | B1 中文记忆召回回归（独立数据集驱动） |
 | `tests/test_qa.py` | citation 服务端校验、降级、仅检索模式、记忆分通道 |
-| `tests/test_api.py` | HTTP 契约、错误码、OpenAPI、上传校验 |
+| `tests/test_security.py` | C3 上传/解析 DoS/提示注入/SQL 注入/隔离/CORS/密钥 |
+| `tests/test_heldout.py` | C2 保留集：多空白页 PDF、跨文档定位、并发、断连重连、LLM 重试 |
+| `tests/test_api.py` | HTTP 契约、错误码、OpenAPI、上传校验、过滤校验 |
 
 ### 3.2 验收运行（T1–T8 + T9，全部 PASS）
 
@@ -294,3 +297,68 @@ invalid_citations: []
 | P2 | LLM 供应商瞬时故障 | 已加 3 次指数退避重试，仅对传输/服务端错误重试 |
 | P3 | 前端窄屏未逐页截图验证 | CSS 媒体查询已实现；建议人工补一轮移动端走查 |
 | P3 | Qoder Sites 出站未文档化 | 方案 A 前需一次最小实测 |
+
+---
+
+## 7. V2 增量验证（2026-10-29 第二轮）
+
+### 7.1 全新环境复现（C1）
+
+`scripts/fresh_env_e2e.py` 在**不依赖开发机任何缓存/数据库/预启动服务**的条件下跑通评审旅程：
+新建两个 venv（从 pyproject 固定版本安装）、新建 seekdb 容器（端口 2890、独立匿名卷）、
+新建 PowerContext 数据目录（端口 17431）、新建 API（端口 8790、前缀 `rffresh_`），
+然后上传样例 → 查询并回查第 5 页 → 建项目绑 Scope → 保存进度 → **独立进程恢复** → 清理容器与卷。
+
+结果：**20/20 步 PASS**（76.2s），原始记录 `logs/fresh-env-20261029-094431.json`。
+关键行：
+
+```
+[PASS] fresh seekdb accepts connections — 5.7.25-OceanBase seekdb-v1.4.0.0
+[PASS] fresh seekdb holds the imported corpus — {"documents": 3, "pages": 7, "projects": 0, "chunks": 13}
+[PASS] query returns the expected page — top=seekdb_hybrid_retrieval_notes.pdf p5
+[PASS] save progress writes to fresh PowerContext — written=3, snapshot_artifact_id=art_a1…
+[PASS] a separate process restores the saved progress — decisions/next_steps 与保存值逐字相等
+[PASS] fresh seekdb container and volume removed — rf-fresh-seekdb
+```
+
+### 7.2 中文记忆检索修复前后（B1）
+
+同一数据集、同一 PowerContext 实例：
+
+| 路径 | 修复前 | 修复后 |
+| --- | --- | --- |
+| PowerContext `search_memory` | 6/10，负例误报 1/1 | 不变（平台行为，如实保留） |
+| ResearchFlow CJK 匹配 + kind 定向读取 | —（不存在） | hit@3 **10/10**，hit@1 8/10，负例 0/1 |
+
+定位结论：存储层无损（全量读取 100%），瓶颈在召回层。原始数据 `logs/bench-memory-zh-*.json`。
+
+### 7.3 中英混合检索（B2）
+
+- 跨语言相似度实测：multilingual 0.792 / 0.813（翻译句对），minilm 0.174 / 0.442；负例两者均 ≤0.093。
+- 默认阈值 0.62：三 provider R@1 0.78、负例误报 0/2。
+- multilingual + 0.28：R@5 1.00、MRR 0.87，但负例误报 1/2（PostgreSQL/MVCC 查询）。
+- 仍未覆盖：2 条「英文改写问中文原文」在 0.62 下被门控拦下——记录为能力边界，不修饰。
+  原始数据 `logs/bench-retrieval-20261029-091422.json`。
+
+### 7.4 安全审计新增发现（C3）
+
+**SDK 层过滤绕过（已修复）**：实测 seekdb v1.4.0.0 + pyseekdb 1.4.0.post1 的
+`hybrid_search` 全文腿对含 SQL 元字符的 metadata 过滤值会**静默丢弃整个 where 子句**
+（恶意值与无过滤结果完全一致：5 hits / 2 docs；向量腿参数化正常：0 hits）。
+修复：`build_where` 对 `doc_id`（64 位 hex）与 `content_type`（白名单）做 fail-closed 校验，非法返回 422。
+回归：`test_metadata_filters_fail_closed_on_hostile_values`、`test_search_rejects_malformed_filter_values`。
+其余 14 项审计结论见 `SECURITY.md` §2。
+
+### 7.5 工作流提效（D）
+
+见 `BENCHMARK.md` §3 与 `logs/bench-workflow-20261029-095416.json`。要点：
+W1 基线 6/6 定位但**不产出任何引用对象**且耗时不含人工阅读；ResearchFlow top1 5/6、top5 5/6、
+可点引用 5/6，1 条需人工修正（正确块排第 6）。W2 基线从手工笔记恢复 5/7（漏记 2 条）、
+无结构无来源指针不可跨会话；ResearchFlow 7/7 逐字段精确、独立进程恢复、0 修正。
+
+### 7.6 展示站验证
+
+`scripts/verify_site.cjs`（Playwright 无头）：证据数据渲染（9/9 PASS、149 passed、9 行验收表）、
+9 张截图全部加载、锚点跳转与整页刷新正常、390px 横向溢出 0px、无 console/pageerror。
+预览图 `site/preview/site-desktop.png`、`site/preview/site-mobile.png`。
+**云端发布仍阻塞**，见 `SITE_DEPLOYMENT.md`。
