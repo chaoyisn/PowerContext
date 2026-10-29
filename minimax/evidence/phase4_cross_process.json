@@ -27,27 +27,27 @@
       "phase4: д������˳��� 0"
     ]
   },
-  "marker": "55B3AE6C",
+  "marker": "634D67FD",
   "passed": true,
   "read_process": {
-    "pid": 27288,
+    "pid": 3808,
     "returncode": 0,
     "stderr": ""
   },
   "recovered_state": {
     "artifact_ids": {
-      "sdd-completed": "art_4e82dbe6063144f7bb5e3358bb5eb6ce",
-      "sdd-task-description": "art_fd3ca9ab37a94e09ab8e07ff4fddcb33",
-      "sdd-todo": "art_a4f2cfb4adf644e9a9bad232291ab908",
-      "sdd-verification": "art_ff7c384fcc874064827fb05c18ba4a4f"
+      "sdd-completed": "art_989ac90a5ddd453aa2f9b7f9e2b599db",
+      "sdd-task-description": "art_e6edfc2619f44f22877a4c38f19accf8",
+      "sdd-todo": "art_95cc68a784084f3480c10ad3c6791aca",
+      "sdd-verification": "art_3bd1a2ffaf184bc9b17c4d2c23b5f78b"
     },
     "completed": [
       "phase4: ״̬���ڶ���������д��"
     ],
-    "description": "phase4: ����ָ̻���֤���� 55B3AE6C",
+    "description": "phase4: ����ָ̻���֤���� 634D67FD",
     "has_state": true,
     "scope_id": "scp_71x66qsskbk0z495be9nnxhbbw",
-    "task_id": "TASK-SPEC-REQ-001-PHASE4-0B9560E0",
+    "task_id": "TASK-SPEC-REQ-001-PHASE4-E19C54A5",
     "todos": [
       "phase4: ��֤����̶�ȡ"
     ],
@@ -61,21 +61,21 @@
     "description": null,
     "has_state": false,
     "scope_id": "scp_71x66qsskbk0z495be9nnxhbbw",
-    "task_id": "TASK-SPEC-REQ-001-PHASE4-0B9560E0",
+    "task_id": "TASK-SPEC-REQ-001-PHASE4-E19C54A5",
     "todos": [],
     "verifications": []
   },
   "state_record_ids": {
-    "sdd-completed": "art_4e82dbe6063144f7bb5e3358bb5eb6ce",
-    "sdd-task-description": "art_fd3ca9ab37a94e09ab8e07ff4fddcb33",
-    "sdd-todo": "art_a4f2cfb4adf644e9a9bad232291ab908",
-    "sdd-verification": "art_ff7c384fcc874064827fb05c18ba4a4f"
+    "sdd-completed": "art_989ac90a5ddd453aa2f9b7f9e2b599db",
+    "sdd-task-description": "art_e6edfc2619f44f22877a4c38f19accf8",
+    "sdd-todo": "art_95cc68a784084f3480c10ad3c6791aca",
+    "sdd-verification": "art_3bd1a2ffaf184bc9b17c4d2c23b5f78b"
   },
-  "task_id": "TASK-SPEC-REQ-001-PHASE4-0B9560E0",
+  "task_id": "TASK-SPEC-REQ-001-PHASE4-E19C54A5",
   "write_process": {
-    "pid": 14512,
+    "pid": 13716,
     "returncode": 0,
     "stderr": "",
-    "stdout": "{\"pid\": 14512, \"marker\": \"55B3AE6C\"}"
+    "stdout": "{\"pid\": 13716, \"marker\": \"634D67FD\"}"
   }
 }

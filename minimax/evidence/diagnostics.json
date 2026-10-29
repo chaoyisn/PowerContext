@@ -3,7 +3,7 @@
   "checks": {
     "git": {
       "branch": "competition/minimax-sdd-context",
-      "head": "7d0939cbbb995ddcfe52112f5b56dfc94d2e2597",
+      "head": "c6f614def34825e6f76f536ecb0694bf7eb20939",
       "reason": "healthy",
       "status": "PASS"
     },
@@ -59,13 +59,18 @@
       "known_task_ids": [
         "TASK-SPEC-REQ-001-PHASE4-0B9560E0",
         "TASK-SPEC-REQ-001-PHASE4-1CF6F530",
+        "TASK-SPEC-REQ-001-PHASE4-C7B095C8",
         "TASK-SPEC-REQ-001-PHASE4-CAF16F52",
         "TASK-SPEC-REQ-001-PHASE4-CEFA82D0",
+        "TASK-SPEC-REQ-001-PHASE4-E19C54A5",
         "TASK-SPEC-REQ-001-RESTART",
         "TASK-SPEC-REQ-001-RESTART-0C30609A",
+        "TASK-SPEC-REQ-001-RESTART-7E26B82C",
+        "TASK-SPEC-REQ-001-RESTART-8EB7BD6A",
         "TASK-SPEC-REQ-001-RESTART-A7CDDF5B",
         "TASK-SPEC-REQ-001-RESTART-BA37B4A0",
-        "TASK-SPEC-REQ-001-RESTART-C53D3304"
+        "TASK-SPEC-REQ-001-RESTART-C53D3304",
+        "TASK-SPEC-REQ-001-RESTART-E2328797"
       ],
       "note": "存在历史任务状态；跨进程恢复验证会使用独立任务 ID，不会与历史状态混淆。",
       "reason": "healthy",

@@ -3,7 +3,7 @@
 - 总体结果：**PASS**
 - 通过 / 失败 / 阻塞：6 / 0 / 0（共 6 项）
 - Git 分支：`competition/minimax-sdd-context`
-- Git 版本：`7d0939cbbb995ddcfe52112f5b56dfc94d2e2597`
+- Git 版本：`c6f614def34825e6f76f536ecb0694bf7eb20939`
 - Python：`3.12.13`
 - 生成命令：`python minimax/scripts/verify.py --all`
 - 模块路径：`minimax`
@@ -12,18 +12,18 @@
 
 | 编号 | 名称 | 结果 | Git 版本 | 证据路径 |
 | --- | --- | --- | --- | --- |
-| TEST-01 | 流程可在干净环境运行 | **PASS** | `7d0939cb` | `minimax/sample/taskmanager.py` |
-| TEST-02 | MiniMax 真实参与代码修改 | **PASS** | `7d0939cb` | `minimax/evidence/minimax_calls`<br>`minimax/evidence/minimax_evidence_audit.json`<br>`minimax/evidence/phase3_git_diff.patch` |
-| TEST-03 | 上下文内容正确且来源真实 | **PASS** | `7d0939cb` | `minimax/evidence/context_snapshot.json` |
-| TEST-04 | 数据库真实参与 | **PASS** | `7d0939cb` | `minimax/evidence/seekdb_queries.json` |
-| TEST-05 | 任务状态可复用 | **PASS** | `7d0939cb` | `minimax/evidence/phase4_cross_process.json` |
-| TEST-06 | 代码改动生效 | **PASS** | `7d0939cb` | `minimax/evidence/phase1_before.log`<br>`minimax/evidence/phase3_after.log`<br>`minimax/evidence/phase4_r2_before.log`<br>`minimax/evidence/phase4_r2_after.log`<br>`minimax/evidence/phase3_git_diff.patch`<br>`minimax/evidence/red_green_audit.json` |
+| TEST-01 | 流程可在干净环境运行 | **PASS** | `c6f614de` | `minimax/sample/taskmanager.py` |
+| TEST-02 | MiniMax 真实参与代码修改 | **PASS** | `c6f614de` | `minimax/evidence/minimax_calls`<br>`minimax/evidence/minimax_evidence_audit.json`<br>`minimax/evidence/phase3_git_diff.patch` |
+| TEST-03 | 上下文内容正确且来源真实 | **PASS** | `c6f614de` | `minimax/evidence/context_snapshot.json` |
+| TEST-04 | 数据库真实参与 | **PASS** | `c6f614de` | `minimax/evidence/seekdb_queries.json` |
+| TEST-05 | 任务状态可复用 | **PASS** | `c6f614de` | `minimax/evidence/phase4_cross_process.json` |
+| TEST-06 | 代码改动生效 | **PASS** | `c6f614de` | `minimax/evidence/phase1_before.log`<br>`minimax/evidence/phase3_after.log`<br>`minimax/evidence/phase4_r2_before.log`<br>`minimax/evidence/phase4_r2_after.log`<br>`minimax/evidence/phase3_git_diff.patch`<br>`minimax/evidence/red_green_audit.json` |
 
 ### TEST-01 — 流程可在干净环境运行
 
 - 结果：**PASS**
 - 说明：样例、目标测试、回归测试与 CLI 均可在无第三方依赖的干净环境运行
-- Git 版本：`7d0939cbbb995ddcfe52112f5b56dfc94d2e2597`
+- Git 版本：`c6f614def34825e6f76f536ecb0694bf7eb20939`
 - 实际执行的命令：
 - `python -m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q` → 退出码 `0`
 - `python -m minimax.sdd_context.cli --help` → 退出码 `0`
@@ -34,7 +34,7 @@
 
 - 结果：**PASS**
 - 说明：归档中 2 条真实开发调用记录（轮次 ['r1', 'r2']）均含模型身份、任务输入与已应用的补丁，补丁逐条重放到改动前的代码后仍通过该轮目标测试，且与 Git 历史中的真实改动逐行对应
-- Git 版本：`7d0939cbbb995ddcfe52112f5b56dfc94d2e2597`
+- Git 版本：`c6f614def34825e6f76f536ecb0694bf7eb20939`
 - 实际执行的命令：
 - r1 — `python -m pytest minimax/tests/test_list_tasks_status_filter.py -q  # 在该轮改动前的代码上重放归档补丁后运行` → 退出码 `0`
 - r2 — `python -m pytest minimax/tests/test_list_tasks_status_wildcard.py -q  # 在该轮改动前的代码上重放归档补丁后运行` → 退出码 `0`
@@ -47,7 +47,7 @@
 
 - 结果：**PASS**
 - 说明：上下文包含规格 1.1.0 (r2)、9 个代码符号、20 个测试，全部来源文件真实存在
-- Git 版本：`7d0939cbbb995ddcfe52112f5b56dfc94d2e2597`
+- Git 版本：`c6f614def34825e6f76f536ecb0694bf7eb20939`
 - 实际执行的命令：
 - `python -m minimax.sdd_context.cli context --task-id TASK-SPEC-REQ-001 --spec-id SPEC-REQ-001` → 退出码 `0`
 - 证据路径：
@@ -57,7 +57,7 @@
 
 - 结果：**PASS**
 - 说明：seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 34 行，写入后立即可读回，内容与磁盘文件一致
-- Git 版本：`7d0939cbbb995ddcfe52112f5b56dfc94d2e2597`
+- Git 版本：`c6f614def34825e6f76f536ecb0694bf7eb20939`
 - 实际执行的命令：
 - `python minimax/scripts/seekdb_evidence.py` → 退出码 `0`
 - 证据路径：
@@ -67,7 +67,7 @@
 
 - 结果：**PASS**
 - 说明：进程退出后由全新进程读回 1 条完成项、1 条待办、1 条验证结果，并合并进新构建的上下文
-- Git 版本：`7d0939cbbb995ddcfe52112f5b56dfc94d2e2597`
+- Git 版本：`c6f614def34825e6f76f536ecb0694bf7eb20939`
 - 实际执行的命令：
 - write process — `python -c "...record_completed/record_todo/record_verification..."` → 退出码 `0`
 - read process — `python -c "...ContextBuilder.build..."` → 退出码 `0`
@@ -78,7 +78,7 @@
 
 - 结果：**PASS**
 - 说明：同一目标测试在改动前以 AssertionError 失败、改动后通过，回归测试保持通过，且目标测试文件哈希前后一致
-- Git 版本：`7d0939cbbb995ddcfe52112f5b56dfc94d2e2597`
+- Git 版本：`c6f614def34825e6f76f536ecb0694bf7eb20939`
 - 实际执行的命令：
 - r1 before — `pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_taskmanager_regression.py -q  # r1 Red` → 退出码 `1` (日志 `minimax/evidence/phase1_before.log`)
 - r1 after — `pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_taskmanager_regression.py -q  # r1 Green` → 退出码 `0` (日志 `minimax/evidence/phase3_after.log`)

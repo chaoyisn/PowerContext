@@ -57,8 +57,8 @@
       "observed": {
         "regression_after": "8 passed in 0.02s",
         "regression_before": "8 passed in 0.02s",
-        "target_after": "10 passed in 0.02s",
-        "target_before": "6 failed, 4 passed, 1 warning in 0.11s"
+        "target_after": "10 passed in 0.03s",
+        "target_before": "6 failed, 4 passed in 0.09s"
       },
       "passed": true,
       "pre_change_commit": "e66ae7f7~1",
@@ -123,9 +123,9 @@
       },
       "observed": {
         "regression_after": "8 passed in 0.02s",
-        "regression_before": "8 passed in 0.03s",
-        "target_after": "4 passed in 0.01s",
-        "target_before": "3 failed, 1 passed in 0.08s"
+        "regression_before": "8 passed in 0.02s",
+        "target_after": "4 passed in 0.03s",
+        "target_before": "3 failed, 1 passed in 0.09s"
       },
       "passed": true,
       "pre_change_commit": "14959429~1",

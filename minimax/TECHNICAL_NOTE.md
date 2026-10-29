@@ -98,6 +98,7 @@ Red 阶段的样例代码接受 `status` 参数但显式忽略它（`del status`
 | Green (r2) | `22 passed`，`EXITCODE=0` |
 | seekdb | `5.7.25-OceanBase seekdb-v1.4.0.0`，四表共 39 行 |
 | PowerContext | 跨进程写 3 类记录 → 新进程读回并合入上下文（读取进程 PID 与写入进程 PID 不同） |
+| 全新环境 | 新建 `include-system-site-packages = false` 的虚拟环境，从零安装依赖后六项验收、三个审计脚本、pytest 与 phase4 全部通过 |
 | 验收 | TEST-01..06 全部 PASS（`minimax/evidence/acceptance_report.json`） |
 
 ## 可复现的验证入口
