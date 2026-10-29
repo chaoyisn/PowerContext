@@ -47,17 +47,11 @@ E       assert 0 == 3
 E        +  where 0 = len([])
 
 minimax\tests\test_list_tasks_status_wildcard.py:47: AssertionError
-============================== warnings summary ===============================
-D:\OceanBase\venv312\Lib\site-packages\_pytest\cacheprovider.py:475
-  D:\OceanBase\venv312\Lib\site-packages\_pytest\cacheprovider.py:475: PytestCacheWarning: could not create cache path C:\Users\chaoy\AppData\Local\Temp\sdd-round-r2-keja86s1\.pytest_cache\v\cache\nodeids: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chaoy\\AppData\\Local\\Temp\\sdd-round-r2-keja86s1\\pytest-cache-files-c6lp08tg' -> 'C:\\Users\\chaoy\\AppData\\Local\\Temp\\sdd-round-r2-keja86s1\\.pytest_cache'
-    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
-
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ===========================
 FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_returns_every_task
 FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_matches_unfiltered_result
 FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_keeps_return_structure
-3 failed, 1 passed, 1 warning in 0.10s
+3 failed, 1 passed in 0.13s
 
 COMMAND=python -m pytest minimax/tests/test_list_tasks_status_wildcard.py
 EXITCODE=1

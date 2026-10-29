@@ -147,7 +147,7 @@
     "state": {
       "artifact_ids": {},
       "powercontext_url": "http://127.0.0.1:8790",
-      "scope_id": "scp_2dxjs0ag9bsz5nxft9vkj736a3"
+      "scope_id": "scp_51jwv70bpdazr74crwzmgtx56x"
     },
     "tests": [
       "tests/test_list_tasks_status_filter.py",
@@ -172,13 +172,13 @@
     "completed": [],
     "description": null,
     "has_state": false,
-    "scope_id": "scp_2dxjs0ag9bsz5nxft9vkj736a3",
-    "task_id": "TASK-REPRO-1100AC0E",
+    "scope_id": "scp_51jwv70bpdazr74crwzmgtx56x",
+    "task_id": "TASK-REPRO-255FF8C8",
     "todos": [],
     "verifications": []
   },
   "task": "为工单查询函数增加按 status 筛选工单的功能 list_tasks(status='active')",
-  "task_id": "TASK-REPRO-1100AC0E",
+  "task_id": "TASK-REPRO-255FF8C8",
   "tests": [
     {
       "content": "def test_list_tasks_filter_is_case_sensitive() -> None:\n    \"\"\"SPEC-REQ-001 boundary condition 4.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"Active\")\n\n    assert result == []",
