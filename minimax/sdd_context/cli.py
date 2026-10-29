@@ -219,10 +219,9 @@ def command_apply(settings: Settings, args: argparse.Namespace) -> int:
 
 
 def command_verify(settings: Settings, args: argparse.Namespace) -> int:
-    from scripts.verify import run_all  # type: ignore[import-not-found]
+    from minimax.scripts.verify import run_all  # type: ignore[import-not-found]
 
     return run_all(settings, only=args.only)
-
 
 def command_reset(settings: Settings, args: argparse.Namespace) -> int:
     store, _ = _build_stores(settings)

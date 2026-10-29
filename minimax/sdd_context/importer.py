@@ -65,7 +65,7 @@ def parse_python_symbols(path: Path, root: Path) -> list[ImportedSymbol]:
             return f"{', '.join(targets)} = <expression>"
         return type(node).__name__
 
-    def visit(node: ast.AST, prefix: str) -> None:
+    def visit(node: ast.AST, prefix: str, *, in_function: bool = False) -> None:
         for child in ast.iter_child_nodes(node):
             if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 qualified = f"{prefix}{child.name}"
@@ -83,8 +83,8 @@ def parse_python_symbols(path: Path, root: Path) -> list[ImportedSymbol]:
                         content=body,
                     )
                 )
-                visit(child, f"{qualified}.")
-            elif isinstance(child, ast.Assign):
+                visit(child, f"{qualified}.", in_function=True)
+            elif isinstance(child, ast.Assign) and not in_function:
                 qualified = f"{prefix}{ast.unparse(child.targets[0])}"
                 body = "\n".join(lines[child.lineno - 1 : child.end_lineno or child.lineno])
                 symbols.append(

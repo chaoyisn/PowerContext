@@ -3,12 +3,12 @@
     "code_files": [
       "sample/taskmanager.py"
     ],
-    "content_hash": "80646e267b87fe854f3af93d05c9c82b5ca1cf93b10991492760c23c515a8652",
+    "content_hash": "e9ffc2806e19a5c135a2f2dbea7db01633d29a1e155fee1fe0a97a33fab6a771",
     "revision": "r2",
     "spec_id": "SPEC-REQ-001",
     "spec_import": {
-      "content_hash": "80646e267b87fe854f3af93d05c9c82b5ca1cf93b10991492760c23c515a8652",
-      "inherited_relations": 3,
+      "content_hash": "e9ffc2806e19a5c135a2f2dbea7db01633d29a1e155fee1fe0a97a33fab6a771",
+      "inherited_relations": 4,
       "previous_version": "1.0.0",
       "revision": "r2",
       "source_path": "specs/SPEC-REQ-001.md",
@@ -19,6 +19,7 @@
     },
     "test_files": [
       "tests/test_list_tasks_status_filter.py",
+      "tests/test_list_tasks_status_wildcard.py",
       "tests/test_taskmanager_regression.py"
     ],
     "version": "1.1.0"
@@ -32,7 +33,7 @@
     "spec_id": "SPEC-REQ-001",
     "spec_import": {
       "content_hash": "631e9881cf7ee7ad4d195066513addbe70be636d7ae270f2e4ecebc1183397cb",
-      "inherited_relations": 0,
+      "inherited_relations": 4,
       "previous_version": "1.1.0",
       "revision": "r1",
       "source_path": "specs/SPEC-REQ-001.md",
@@ -43,6 +44,7 @@
     },
     "test_files": [
       "tests/test_list_tasks_status_filter.py",
+      "tests/test_list_tasks_status_wildcard.py",
       "tests/test_taskmanager_regression.py"
     ],
     "version": "1.0.0"

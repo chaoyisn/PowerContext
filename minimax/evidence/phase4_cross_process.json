@@ -12,9 +12,11 @@
     "completed": [
       "phase4: 状态已在独立进程中写入",
       "phase4: 状态已在独立进程中写入",
-      "已导入规格 SPEC-REQ-001"
+      "已导入规格 SPEC-REQ-001",
+      "phase4: 状态已在独立进程中写入"
     ],
     "todos": [
+      "phase4: 验证跨进程读取",
       "phase4: 验证跨进程读取",
       "phase4: 验证跨进程读取",
       "实现 status 筛选"
@@ -22,7 +24,8 @@
     "verifications": [
       "phase4: 写入进程退出码 0",
       "phase4: 写入进程退出码 0",
-      "修改前目标测试失败 (exit 1)"
+      "修改前目标测试失败 (exit 1)",
+      "phase4: 写入进程退出码 0"
     ]
   },
   "passed": true,
@@ -32,15 +35,16 @@
   },
   "recovered_state": {
     "artifact_ids": {
-      "sdd-completed": "art_cf620b57d97d460bab55815ae83a09e9",
+      "sdd-completed": "art_e5cf4dea4ef645a5a2ad73bf17ef6095",
       "sdd-task-description": "art_e32e4055cfbb45828d984b2be98b806e",
       "sdd-todo": "art_d5e476065aae4a33a17702876f0d8b5f",
-      "sdd-verification": "art_e9623c50ff6c4e03869d092fe580ee0c"
+      "sdd-verification": "art_f2ebe1c6a7894bd183b2ae3a052704ea"
     },
     "completed": [
       "phase4: 状态已在独立进程中写入",
       "phase4: 状态已在独立进程中写入",
-      "已导入规格 SPEC-REQ-001"
+      "已导入规格 SPEC-REQ-001",
+      "phase4: 状态已在独立进程中写入"
     ],
     "description": "为工单查询函数增加按 status 筛选工单的功能 list_tasks(status='active')",
     "has_state": true,
@@ -49,12 +53,14 @@
     "todos": [
       "phase4: 验证跨进程读取",
       "phase4: 验证跨进程读取",
+      "phase4: 验证跨进程读取",
       "实现 status 筛选"
     ],
     "verifications": [
       "phase4: 写入进程退出码 0",
       "phase4: 写入进程退出码 0",
-      "修改前目标测试失败 (exit 1)"
+      "修改前目标测试失败 (exit 1)",
+      "phase4: 写入进程退出码 0"
     ]
   },
   "write_process": {

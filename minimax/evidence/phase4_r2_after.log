@@ -29,4 +29,8 @@ minimax/tests/test_taskmanager_regression.py::test_task_as_dict_shape_is_stable 
 minimax/tests/test_taskmanager_regression.py::test_filter_by_status_helper_keeps_none_semantics PASSED [ 95%]
 minimax/tests/test_taskmanager_regression.py::test_valid_statuses_constant_is_unchanged PASSED [100%]
 
-============================= 22 passed in 0.04s ==============================
+============================= 22 passed in 0.03s ==============================
+
+EXITCODE=0
+COMMIT=14959429
+TARGET_TEST_SHA256=ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19

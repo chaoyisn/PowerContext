@@ -302,6 +302,23 @@ class MiniMaxAgent:
         return re.sub(r"diff --git (\S+) (\S+)", rewrite_header, patch)
 
     @staticmethod
+    def _patch_targets(patch: str) -> list[str]:
+        """Return the repository-relative files the patch touches."""
+
+        targets: list[str] = []
+        for match in re.finditer(r"^diff --git a/(\S+) b/(\S+)", patch, flags=re.MULTILINE):
+            target = match.group(2)
+            if target not in targets:
+                targets.append(target)
+        if targets:
+            return targets
+        for match in re.finditer(r"^\+\+\+ b/(\S+)", patch, flags=re.MULTILINE):
+            target = match.group(1).strip()
+            if target not in targets and target != "/dev/null":
+                targets.append(target)
+        return targets
+
+    @staticmethod
     def _apply_patch(patch: str, context: DevelopmentContext) -> tuple[bool, list[str]]:
         """Apply the patch with git so the change shows up in the real diff."""
 
@@ -325,11 +342,7 @@ class MiniMaxAgent:
                 capture_output=True,
             )
             if completed.returncode == 0:
-                names = subprocess.run(
-                    ["git", "diff", "--name-only"],
-                    cwd=str(repository_root),
-                    capture_output=True,
-                    text=True,
-                )
-                return True, [line for line in names.stdout.splitlines() if line]
+                # Report the files the patch itself touches, not every file that
+                # happens to differ in the working tree.
+                return True, MiniMaxAgent._patch_targets(patch)
         return False, []

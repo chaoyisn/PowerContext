@@ -1,0 +1,228 @@
+{
+  "branch": "competition/minimax-sdd-context",
+  "commit": "1495942912b11c01df9e449f845f21f7d0cdaec7",
+  "generated_by": "minimax/scripts/verify.py",
+  "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
+  "overall": "PASS",
+  "python": "3.12.13",
+  "repository_root": "E:\\OceanBaseContest\\powercontext-minimax",
+  "results": [
+    {
+      "detail": "样例、目标测试、回归测试与 CLI 均可在无第三方依赖的干净环境运行",
+      "evidence": {
+        "checks": {
+          "cli_help_exit_code": 0,
+          "cli_help_shows_commands": true,
+          "exists:minimax/sample/taskmanager.py": true,
+          "exists:minimax/tests/test_list_tasks_status_filter.py": true,
+          "exists:minimax/tests/test_taskmanager_regression.py": true,
+          "sample_imports_cleanly": true,
+          "sample_probe_output": "1",
+          "sample_probe_stderr": "",
+          "suite_exit_code": 0,
+          "suite_passed": true
+        },
+        "pytest": {
+          "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "......................                                                   [100%]\n22 passed in 0.04s\n"
+        }
+      },
+      "item": "TEST-01",
+      "status": "PASS",
+      "title": "流程可在干净环境运行"
+    },
+    {
+      "detail": "模型 MiniMax-M3.1-Flash 返回的补丁已应用，改动 ['minimax/sample/taskmanager.py']，与 Git Diff 一致",
+      "evidence": {
+        "applied_files": [
+          "minimax/sample/taskmanager.py"
+        ],
+        "checks": {
+          "added_line_count": 1,
+          "context_code_recorded": true,
+          "context_specification_recorded": true,
+          "context_tests_recorded": true,
+          "git_diff_shows_sample_change": true,
+          "model_is_minimax": true,
+          "no_error": true,
+          "patch_applied": true,
+          "patch_lines_present_in_diff": true,
+          "patch_present": true,
+          "patch_touches_sample_code": true,
+          "request_was_sent": true,
+          "response_not_empty": true,
+          "stored_diff_evidence_exists": true,
+          "stored_diff_matches_git": true
+        },
+        "elapsed_seconds": 2.656,
+        "git_diff": "diff --git a/minimax/sample/taskmanager.py b/minimax/sample/taskmanager.py\nindex 8f482216..4d57d400 100644\n--- a/minimax/sample/taskmanager.py\n+++ b/minimax/sample/taskmanager.py\n@@ -32,14 +32,13 @@ class TaskStore:\n         return task\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:",
+        "model": "MiniMax-M3.1-Flash",
+        "request_id": null,
+        "tokens": [
+          3662,
+          256
+        ]
+      },
+      "item": "TEST-02",
+      "status": "PASS",
+      "title": "MiniMax 真实参与代码修改"
+    },
+    {
+      "detail": "上下文包含规格 1.1.0 (r2)、11 个代码符号、20 个测试，全部来源文件真实存在",
+      "evidence": {
+        "checks": {
+          "all_sources_exist": true,
+          "code_resolved": true,
+          "missing_sources": [],
+          "sources_section_present": true,
+          "spec_carries_revised_text": true,
+          "spec_revision_is_r2": true,
+          "spec_version_is_latest": true,
+          "specification_resolved": true,
+          "symbol_problems": [],
+          "symbols_exist_in_files": true,
+          "test_problems": [],
+          "tests_exist_in_files": true,
+          "tests_resolved": true
+        },
+        "specification": "SPEC-REQ-001"
+      },
+      "item": "TEST-03",
+      "status": "PASS",
+      "title": "上下文内容正确且来源真实"
+    },
+    {
+      "detail": "seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 41 行，写入后立即可读回，内容与磁盘文件一致",
+      "evidence": {
+        "checks": {
+          "code_rows_match_files": true,
+          "code_symbol_rows": true,
+          "problems": [],
+          "relation_rows": true,
+          "server_reachable": true,
+          "specification_rows": true,
+          "test_rows": true,
+          "write_visible_to_read": true
+        },
+        "counts": {
+          "sdd_code_symbol": 11,
+          "sdd_relation": 8,
+          "sdd_specification": 2,
+          "sdd_test": 20
+        },
+        "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0"
+      },
+      "item": "TEST-04",
+      "status": "PASS",
+      "title": "数据库真实参与"
+    },
+    {
+      "detail": "进程退出后由全新进程读回 3 条完成项、3 条待办、3 条验证结果，并合并进新构建的上下文",
+      "evidence": {
+        "checks": {
+          "context_resolves_code": true,
+          "context_resolves_specification": true,
+          "read_process_succeeded": true,
+          "state_merged_into_context": true,
+          "state_survived_restart": true,
+          "todo_survived_restart": true,
+          "verification_survived_restart": true,
+          "write_process_succeeded": true
+        },
+        "read_process": {
+          "exit_code": 0,
+          "stderr": ""
+        },
+        "recovered_state": {
+          "artifact_ids": {
+            "sdd-completed": "art_ca8d97e8bb7b407891bb20c763307c3a",
+            "sdd-todo": "art_97e109aabbd54100bc1f45fbdc1850c0",
+            "sdd-verification": "art_6adcbd0653b84febb7be4222b785fc27"
+          },
+          "completed": [
+            "verify-restart-1793284525:completed",
+            "verify-restart-1793284346:completed",
+            "verify-restart-1793284490:completed"
+          ],
+          "description": null,
+          "has_state": true,
+          "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
+          "task_id": "TASK-SPEC-REQ-001-RESTART",
+          "todos": [
+            "verify-restart-1793284525:todo",
+            "verify-restart-1793284346:todo",
+            "verify-restart-1793284490:todo"
+          ],
+          "verifications": [
+            "verify-restart-1793284525:verification",
+            "verify-restart-1793284346:verification",
+            "verify-restart-1793284490:verification"
+          ]
+        },
+        "write_process": {
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "written"
+        }
+      },
+      "item": "TEST-05",
+      "status": "PASS",
+      "title": "任务状态可复用"
+    },
+    {
+      "detail": "同一目标测试在改动前以 AssertionError 失败、改动后通过，回归测试保持通过，且目标测试文件哈希前后一致",
+      "evidence": {
+        "checks": {
+          "current_suite_passes": true,
+          "git_diff_has_r2_change": true,
+          "git_diff_has_records": true,
+          "git_diff_shows_change": true,
+          "r1_failed_before": true,
+          "r1_failed_with_assertion": true,
+          "r1_failure_is_functional": true,
+          "r1_passed_after": true,
+          "r2_failed_before": true,
+          "r2_failed_with_assertion": true,
+          "r2_failure_is_functional": true,
+          "r2_passed_after": true,
+          "r2_target_test_unchanged": true,
+          "regression_passed_before": true,
+          "regression_passes_now": true,
+          "target_test_unchanged": true
+        },
+        "current_suite": {
+          "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "......................                                                   [100%]\n22 passed in 0.03s\n"
+        },
+        "git_diff": "diff --git a/minimax/sample/taskmanager.py b/minimax/sample/taskmanager.py\nindex 8f482216..4d57d400 100644\n--- a/minimax/sample/taskmanager.py\n+++ b/minimax/sample/taskmanager.py\n@@ -32,14 +32,13 @@ class TaskStore:\n         return task\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:",
+        "r1_after": {
+          "exit_code": 0
+        },
+        "r1_before": {
+          "exit_code": 1
+        },
+        "r2_after": {
+          "exit_code": 0
+        },
+        "r2_before": {
+          "exit_code": 1
+        },
+        "r2_target_test_sha256": "ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19",
+        "target_test_sha256": "8be75f1a6e40d659d4a99d6ca2d8e0771f1cc7f076148f27716367c88d8b87de"
+      },
+      "item": "TEST-06",
+      "status": "PASS",
+      "title": "代码改动生效"
+    }
+  ],
+  "summary": {
+    "blocked": 0,
+    "fail": 0,
+    "pass": 6,
+    "total": 6
+  }
+}
