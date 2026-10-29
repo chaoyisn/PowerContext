@@ -3,7 +3,7 @@
   "checks": {
     "git": {
       "branch": "competition/minimax-sdd-context",
-      "head": "8f8a275f427eee17e1334a6da75e64d2f85d5f36",
+      "head": "aab392f6d285d0094878b478c47380d5c5368a1b",
       "reason": "healthy",
       "status": "PASS"
     },
@@ -59,16 +59,24 @@
       "known_task_ids": [
         "TASK-SPEC-REQ-001",
         "TASK-SPEC-REQ-001-PHASE4-0CE40B8C",
+        "TASK-SPEC-REQ-001-PHASE4-11C1ACE3",
         "TASK-SPEC-REQ-001-PHASE4-3A17ED93",
+        "TASK-SPEC-REQ-001-PHASE4-409A50BE",
         "TASK-SPEC-REQ-001-PHASE4-44A5DFE1",
         "TASK-SPEC-REQ-001-PHASE4-4EFBE863",
         "TASK-SPEC-REQ-001-PHASE4-7E0A5E42",
         "TASK-SPEC-REQ-001-PHASE4-93461BB4",
         "TASK-SPEC-REQ-001-PHASE4-CC407D48",
+        "TASK-SPEC-REQ-001-PHASE4-F49ED44B",
         "TASK-SPEC-REQ-001-PHASE4-F6EBCBDC",
         "TASK-SPEC-REQ-001-RESTART",
+        "TASK-SPEC-REQ-001-RESTART-09F7BF0D",
+        "TASK-SPEC-REQ-001-RESTART-34B7FE33",
         "TASK-SPEC-REQ-001-RESTART-34D95372",
-        "TASK-SPEC-REQ-001-RESTART-394F6FF9"
+        "TASK-SPEC-REQ-001-RESTART-394F6FF9",
+        "TASK-SPEC-REQ-001-RESTART-5B15D880",
+        "TASK-SPEC-REQ-001-RESTART-918578D5",
+        "TASK-SPEC-REQ-001-RESTART-F070DBED"
       ],
       "note": "存在历史任务状态；跨进程恢复验证会使用独立任务 ID，不会与历史状态混淆。",
       "reason": "healthy",

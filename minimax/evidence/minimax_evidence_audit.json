@@ -121,7 +121,7 @@
         "commit": "e66ae7f7",
         "patched_matches_committed_version": true,
         "pytest_exit_code": 0,
-        "pytest_summary": "10 passed in 0.03s",
+        "pytest_summary": "10 passed in 0.04s",
         "status": "PASS",
         "target_test": "minimax/tests/test_list_tasks_status_filter.py",
         "target_test_introduced_by_this_round": false

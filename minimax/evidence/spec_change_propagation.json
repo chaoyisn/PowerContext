@@ -42,7 +42,7 @@
   "description": "临时修改一条规格要求（并提升版本号），重新导入并重建上下文，证明新要求真的进入了上下文，而不仅仅是版本号变化。运行结束后规格文件被还原，隔离库被删除。",
   "isolated_database": "sdd_context_specprobe",
   "isolated_scope": {
-    "scope_id": "scp_7x3ryn2tygngpzsfnbqxh5qnvw",
+    "scope_id": "scp_7bw33nheyvpp098fjqak5g42sh",
     "status": "PASS"
   },
   "mode": "SPEC_CHANGE_PROPAGATION",

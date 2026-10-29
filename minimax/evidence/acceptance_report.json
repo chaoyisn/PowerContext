@@ -1,6 +1,6 @@
 {
   "branch": "competition/minimax-sdd-context",
-  "commit": "aa56990683e778badbc6d11f3e7972e4c9181358",
+  "commit": "aab392f6d285d0094878b478c47380d5c5368a1b",
   "generated_by": "minimax/scripts/verify.py",
   "git_version_note": "commit / git_version 是本次运行所测试的代码提交；把本报告提交进仓库的那次提交会更新本文件本身，但不改变被测试的代码。",
   "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
@@ -39,13 +39,13 @@
           "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
           "exit_code": 0,
           "stderr": "",
-          "stdout": "......................                                                   [100%]\n22 passed in 0.04s\n"
+          "stdout": "......................                                                   [100%]\n22 passed in 0.03s\n"
         }
       },
       "evidence_paths": [
         "minimax/sample/taskmanager.py"
       ],
-      "git_version": "aa56990683e778badbc6d11f3e7972e4c9181358",
+      "git_version": "aab392f6d285d0094878b478c47380d5c5368a1b",
       "item": "TEST-01",
       "status": "PASS",
       "title": "流程可在干净环境运行"
@@ -240,7 +240,7 @@
               "commit": "14959429",
               "patched_matches_committed_version": true,
               "pytest_exit_code": 0,
-              "pytest_summary": "4 passed in 0.02s",
+              "pytest_summary": "4 passed in 0.03s",
               "status": "PASS",
               "target_test": "minimax/tests/test_list_tasks_status_wildcard.py",
               "target_test_introduced_by_this_round": true
@@ -262,7 +262,7 @@
         "minimax/evidence/minimax_evidence_audit.json",
         "minimax/evidence/phase3_git_diff.patch"
       ],
-      "git_version": "aa56990683e778badbc6d11f3e7972e4c9181358",
+      "git_version": "aab392f6d285d0094878b478c47380d5c5368a1b",
       "item": "TEST-02",
       "status": "PASS",
       "title": "MiniMax 真实参与代码修改"
@@ -296,7 +296,7 @@
       "evidence_paths": [
         "minimax/evidence/context_snapshot.json"
       ],
-      "git_version": "aa56990683e778badbc6d11f3e7972e4c9181358",
+      "git_version": "aab392f6d285d0094878b478c47380d5c5368a1b",
       "item": "TEST-03",
       "status": "PASS",
       "title": "上下文内容正确且来源真实"
@@ -331,7 +331,7 @@
       "evidence_paths": [
         "minimax/evidence/seekdb_queries.json"
       ],
-      "git_version": "aa56990683e778badbc6d11f3e7972e4c9181358",
+      "git_version": "aab392f6d285d0094878b478c47380d5c5368a1b",
       "item": "TEST-04",
       "status": "PASS",
       "title": "数据库真实参与"
@@ -367,22 +367,22 @@
         },
         "recovered_state": {
           "artifact_ids": {
-            "sdd-completed": "art_1d426961fcc54fc09860d624296be4fb",
-            "sdd-todo": "art_fc1dbe19790741c7bd8c83f651763a22",
-            "sdd-verification": "art_fa78e0161abe4ad2afd88ea31a4aedb0"
+            "sdd-completed": "art_f5c3e18a35f74a9d91ba2c153c57333e",
+            "sdd-todo": "art_2a32a8160aea48dfae580edf7ad7a91c",
+            "sdd-verification": "art_488c9824193a4a43b96a8d9a492cbe5a"
           },
           "completed": [
-            "verify-restart-1793296080:completed"
+            "verify-restart-1793296120:completed"
           ],
           "description": null,
           "has_state": true,
           "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
-          "task_id": "TASK-SPEC-REQ-001-RESTART-5B15D880",
+          "task_id": "TASK-SPEC-REQ-001-RESTART-09F7BF0D",
           "todos": [
-            "verify-restart-1793296080:todo"
+            "verify-restart-1793296120:todo"
           ],
           "verifications": [
-            "verify-restart-1793296080:verification"
+            "verify-restart-1793296120:verification"
           ]
         },
         "write_process": {
@@ -394,7 +394,7 @@
       "evidence_paths": [
         "minimax/evidence/phase4_cross_process.json"
       ],
-      "git_version": "aa56990683e778badbc6d11f3e7972e4c9181358",
+      "git_version": "aab392f6d285d0094878b478c47380d5c5368a1b",
       "item": "TEST-05",
       "status": "PASS",
       "title": "任务状态可复用"
@@ -487,7 +487,7 @@
         "minimax/evidence/phase3_git_diff.patch",
         "minimax/evidence/red_green_audit.json"
       ],
-      "git_version": "aa56990683e778badbc6d11f3e7972e4c9181358",
+      "git_version": "aab392f6d285d0094878b478c47380d5c5368a1b",
       "item": "TEST-06",
       "status": "PASS",
       "title": "代码改动生效"
