@@ -110,7 +110,9 @@ python minimax/scripts/live_minimax_check.py         # 在线真实调用验证�
 python minimax/scripts/audit_red_green.py            # r1 / r2 逐轮 Red→Green 审计
 python minimax/scripts/regenerate_round_logs.py      # 从真实提交重生成 Red/Green 日志
 python -m minimax.scripts.phase4_checks              # 规格更新 + 跨进程恢复
+python minimax/scripts/check_spec_change_propagates.py  # 证明规格变更真的进入上下文
 python minimax/scripts/reproduce_clean.py            # 隔离环境端到端复现
+python minimax/scripts/verify_fresh_env.py           # 全新 Python 环境下的安装与验收
 ```
 
 这些入口都只做真实操作：真实 pytest 子进程、真实 SQL、真实 HTTP。

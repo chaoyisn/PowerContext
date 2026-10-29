@@ -106,8 +106,19 @@ python -m minimax.scripts.phase4_checks
 
 证据：`minimax/evidence/phase4_cross_process.json`。
 
-### TEST-06 代码改动生效
+### 规格变更是否真的进入上下文
 
+```bash
+python minimax/scripts/check_spec_change_propagates.py
+```
+
+`phase4_checks.py` 重放的是仓库里已提交的 r1 / r2。这个脚本回答的是**机制本身**：
+临时插入一条已提交版本里不存在的要求并提升版本号，重新导入并重建上下文，
+断言新要求出现在上下文里、改动前不存在、内容哈希变化、绑定未丢失、旧版本仍留档。
+在隔离库名与隔离 scope 下运行，运行结束后还原规格文件。
+证据：`minimax/evidence/spec_change_propagation.json`。
+
+### TEST-06 代码改动生效
 ```bash
 python minimax/scripts/audit_red_green.py
 python minimax/scripts/regenerate_round_logs.py

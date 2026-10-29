@@ -67,6 +67,8 @@ minimax/
 │   ├── audit_red_green.py        r1 / r2 逐轮 Red→Green 证据审计
 │   ├── regenerate_round_logs.py  从真实 Git 提交重生成 Red/Green 日志
 │   ├── reproduce_clean.py        隔离环境端到端复现
+│   ├── verify_fresh_env.py       全新 Python 环境下的安装与验收
+│   ├── check_spec_change_propagates.py  证明规格变更真的进入上下文
 │   ├── seed_call_archive.py      从 Git 历史播种调用归档
 │   ├── seekdb_evidence.py        seekdb 检索证据
 │   └── phase4_checks.py          规格更新 + 跨进程恢复的专项证据
@@ -256,7 +258,23 @@ python -m minimax.scripts.phase4_checks
 跨进程验证使用**每次运行唯一的任务 ID**，从空状态开始，并记录写入进程与读取进程的
 操作系统 PID——两者必须不同，且读取进程必须能证明恢复内容参与了新的上下文输出。
 
-### 4.8 重置验证样本
+### 4.8 证明规格变更真的进入上下文
+
+上面重放的是仓库里已提交的两个版本。若想知道**机制本身**是否成立——改了规格之后，
+新要求到底有没有进入交给 MiniMax 的上下文，还是只有版本号变了而内容照旧——用：
+
+```bash
+python minimax/scripts/check_spec_change_propagates.py
+```
+
+该脚本临时插入一条已提交版本里**不存在**的要求并提升版本号，重新导入并重建上下文，
+然后断言：新要求出现在上下文里、改动前不存在、内容哈希变化、代码与测试绑定未丢失、
+旧版本仍留档但不是当前生效版本。
+
+它在**隔离的库名与隔离的 scope** 下运行，运行结束后还原规格文件并删除隔离库，
+因此不会影响正式证据。
+
+### 4.9 重置验证样本
 
 ```bash
 python -m minimax.sdd_context.cli reset
