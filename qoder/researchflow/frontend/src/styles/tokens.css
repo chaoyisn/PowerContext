@@ -1,0 +1,153 @@
+/* ResearchFlow design tokens — 中性色阶 + 单一克制强调色 + 记忆通道辅色。
+   主操作按钮用墨色（不是高饱和品牌色），强调色只用于选中、链接与焦点，避免工具站的塑料感。 */
+
+:root {
+  color-scheme: light;
+
+  /* 中性表面 */
+  --bg: #f7f7f8;
+  --sidebar: #f1f1f3;
+  --surface: #ffffff;
+  --surface-2: #f4f4f6;
+  --surface-3: #ececee;
+  --hover: #e9e9ec;
+
+  /* 文字 */
+  --text: #17181c;
+  --text-muted: #676c76;
+  --text-faint: #949aa4;
+  --ink: #1b1d23;
+  --ink-hover: #33363f;
+  --on-ink: #ffffff;
+
+  /* 描边 */
+  --border: #e3e3e7;
+  --border-soft: #ebebef;
+  --border-strong: #d2d3d9;
+
+  /* 强调（文献证据通道 / seekdb） */
+  --accent: #3f6bc4;
+  --accent-hover: #35609f;
+  --accent-text: #2f5aa8;
+  --accent-soft: #eaf0fa;
+  --accent-line: #ccd9f0;
+
+  /* 记忆通道（PowerContext）——与证据通道永远视觉可辨 */
+  --memory: #6c53b8;
+  --memory-hover: #5b459f;
+  --memory-text: #5b459f;
+  --memory-soft: #f0edfa;
+  --memory-line: #d9d0ef;
+
+  /* 语义状态 */
+  --green: #1f7a45;
+  --green-soft: #e8f4ec;
+  --green-line: #c2e2cd;
+  --amber: #8a5c10;
+  --amber-soft: #fbf2df;
+  --amber-line: #ecd8a6;
+  --red: #b03127;
+  --red-soft: #fbebe9;
+  --red-line: #f0c8c3;
+
+  /* 圆角 */
+  --r-xs: 6px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+
+  /* 阴影（克制，最多三层） */
+  --sh-1: 0 1px 2px rgba(18, 20, 24, 0.05);
+  --sh-2: 0 2px 10px rgba(18, 20, 24, 0.07);
+  --sh-3: 0 12px 32px rgba(18, 20, 24, 0.12);
+
+  /* 4px 间距阶梯 */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+  --s-9: 56px;
+  --s-10: 72px;
+
+  /* 旧别名：保留给既有类使用，避免样式回退 */
+  --sp-1: 8px;
+  --sp-2: 16px;
+  --sp-3: 24px;
+  --sp-4: 32px;
+  --sp-5: 40px;
+  --sp-6: 48px;
+
+  /* 字号阶梯 */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14.5px;
+  --fs-lg: 16px;
+  --fs-xl: 19px;
+  --fs-2xl: 23px;
+  --fs-3xl: 29px;
+  --fs-hero: 34px;
+
+  --mono: ui-monospace, 'Cascadia Mono', 'SF Mono', 'Segoe UI Mono', Consolas, 'Liberation Mono', monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI Variable', 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --sidebar-w: 264px;
+  --sidebar-w-collapsed: 68px;
+  --evidence-w: 348px;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #17181b;
+  --sidebar: #1c1d21;
+  --surface: #212227;
+  --surface-2: #26272c;
+  --surface-3: #2d2e34;
+  --hover: #2f3037;
+
+  --text: #e9eaee;
+  --text-muted: #a4a9b3;
+  /* 深色下的次要文字：#7e838d 在 --surface 上只有 4.17:1，达不到 AA，这里提到 5.2:1。 */
+  --text-faint: #8f95a0;
+  --ink: #e9eaee;
+  --ink-hover: #ffffff;
+  --on-ink: #17181b;
+
+  --border: #303138;
+  --border-soft: #2a2b31;
+  --border-strong: #3d3e46;
+
+  --accent: #6e97e0;
+  --accent-hover: #8cabea;
+  --accent-text: #9dbcf5;
+  --accent-soft: #22293a;
+  --accent-line: #33405c;
+
+  --memory: #a189e0;
+  --memory-hover: #b6a2ea;
+  --memory-text: #bda9ee;
+  --memory-soft: #2a2540;
+  --memory-line: #3f3860;
+
+  --green: #6ec08c;
+  --green-soft: #1e2b23;
+  --green-line: #2f4536;
+  --amber: #dbb068;
+  --amber-soft: #2d2618;
+  --amber-line: #47391f;
+  --red: #e58c82;
+  --red-soft: #2f1e1d;
+  --red-line: #4a2c29;
+
+  --sh-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --sh-2: 0 2px 10px rgba(0, 0, 0, 0.4);
+  --sh-3: 0 14px 36px rgba(0, 0, 0, 0.5);
+}

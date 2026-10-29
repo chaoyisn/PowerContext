@@ -552,3 +552,350 @@ Markdown 链接零失效；`site/public` 的 10 个资源被 `index.html` / `app
 不为凑 3:00 拉长旁白（2:05 已全覆盖 8 个必答点）、不生成 ZIP 二进制（只给命令）、
 不改门控阈值、不重构前端、不把后端暴露到公网。
 
+
+---
+
+## 14:00–15:55 前端 UI/UX 重构：从「管理后台」到「AI 助手工作台」
+
+本轮目标不是加后端功能，而是把展示层升级为可用的现代 AI 助手界面。
+边界守住了：**没有改一行后端代码**，API、数据结构、门控阈值、149 个测试与验收逻辑全部原样，
+`/api/*` 契约与 Playwright 选择器契约由脚本同步维护（见下）。
+
+### 信息架构
+
+三段式外壳：左 Sidebar（项目 / 本机会话 / 导航 / 三个真实状态点）· 中主区 · 右 Evidence/Context 面板。
+`/` 对话式首页（价值主张 + 四个能力入口 + 首屏提问框）、`/workbench` 证据问答、
+`/knowledge` 文档卡片 + 页导航 + 三模检索、`/memory` 研究进度面板、`/verification` 健康与验收、`/docs` 接口。
+原「项目总览」页取消：健康计数下沉到 `/verification`，续研简报前移到 `/memory`。
+文献证据（seekdb，`--accent`）与研究记忆（PowerContext，`--memory`）在颜色、分栏、标签上强制分通道，
+不靠文案解释。设计 token 统一在 `styles/tokens.css`（间距 / 圆角 / 阴影 / 字号 / 双主题）。
+
+### 真实浏览器自测抓出的 5 个缺陷（都不是看代码能看出来的）
+
+| 现象 | 根因 | 修法 |
+| --- | --- | --- |
+| 390px 下 `/knowledge` 整页横向溢出（scrollWidth 479 / clientWidth 390） | `.page-inner { margin:0 auto }` 让它成为 shrink-to-fit 的 flex item，auto 外边距优先于 `align-items:stretch`，宽度按 min-content 撑开 | `.view > .page-inner` 补 `width:100%` + `min-width:0` |
+| 移动端主区只有 264px 宽 | ≤900px 的单列声明是 `.app-shell`（0,1,0），被 ≤1240px 的 `.app-shell[data-evidence='closed']`（0,2,0）压过 | ≤900px 块把带属性的写法一起列出，含 0,3,0 组合选择器 |
+| 输入框掉出首屏、整页在滚（docScrollHeight 1243 vs 视口 900） | `.main-column` 是网格项且 `min-height:auto`，整行被消息流撑高；侧栏与证据面板因 `overflow:hidden` 才幸免 | `.main-column { min-height:0 }`，同时删掉从未被使用的 `.app-root`/`.page-scroll` 死样式 |
+| 面板标题在窄屏塌成一列一个字（「文档列表」竖排） | 中文可逐字断行，`.panel-title` 默认可收缩，被同排的长副标题挤到 min-content | 标题单独包 `.panel-name { flex:none; white-space:nowrap }`，`.panel-title` 改为可换行 |
+| 发送按钮里「提问」两字竖排 | `.composer-send` 是按 36px 圆形图标按钮写的 | 改 `inline-flex` + `min-width` + `white-space:nowrap` |
+
+另有一处早期发现：`styles/shell.css` 写好了却没被 import，外壳会以无样式渲染。
+
+### 自测证据（automated）
+
+- `npm run build` 绿：`tsc -b && vite build` → CSS 64.04 kB / JS 281.74 kB。
+- `scripts/capture_screenshots.cjs` 重写后跑通：10 张真实运行截图（新增 `s10-verification.png`），
+  并在 390×844 对六个路由逐条断言「无横向溢出 + 主区内无横向滚动容器 + 面板标题不竖排」，全部 PASS。
+- `scripts/build_site_data.py` 重新导出：验收 `9/9 PASS`、`pytest 149 passed / 0 failed`（真实复跑）、
+  截图 10 张、seekdb 真实版本与计数。
+- `scripts/verify_site.cjs`：`screenshots: 10 broken: 0`、`mobile h-overflow px: 0`、`failed requests (>=400): 0` → SITE VERIFY OK。
+- 演示视频脚本的 13 组选择器用一次性无副作用脚本逐条命中真实 DOM（含 `fieldset(下一步 next_steps)`
+  严格唯一、全新上下文按 project_id 恢复、无证据分支），未写入任何记忆行。
+
+### 脚本与文档同步
+
+`capture_screenshots.cjs` 重写为新 IA；`make_demo_video.cjs` 两处失效锚点改齐
+（`text=后端健康状态` 改走 `/verification`、`tr:has-text(...)` 改 `.doc-card:has-text(...)`）；
+`build_site_data.py` 截图说明改齐新页面；README / RUN / ARCHITECTURE / VERIFICATION /
+DEMO_SCRIPT / SITE_DEPLOYMENT / submission-package 01·02·09 里「四个页面」「首页健康条」的描述全部改到现状。
+`PLAN.md` 与 `QODER_LOG.md` 的历史条目按原样保留（它们是过程记录，不是现状说明）。
+
+### 尚未做（如实记录）
+
+1. **演示视频仍是重构前的 UI**：`submission-package/demo/` 未重录——重录会覆盖已交付产物，
+   且脚本会连公开站点一起入镜，需要一次明确授权。
+2. **线上站点仍是重构前的 9 张截图版本**：本地已就绪，未重新发布。
+3. 移动端只做了自动化布局断言与 2 张截图，**没有真机人工复核**。
+
+---
+
+## 16:00–18:30 UI 重构轮收尾：真实浏览器验收、缺陷修复与发布资源准备
+
+本轮不加业务功能，只做一件事：**把"看着改好了"变成"真实浏览器里点过并且和接口对得上"**。
+未重新发布站点、未重录演示视频。
+
+### 先承认：前一轮的自测方法不够
+
+上一轮的自测主要看 DOM 与截图。这一轮把 `scripts/verify_interactions.cjs` 写成 29 组真实手势用例后，
+立刻暴露出 4 个真实缺陷和 5 个脚本自身的假阳性。**只看 DOM 是查不出这些的。**
+
+### 修掉的真实缺陷
+
+1. **`/docs` 深链被抢**：FastAPI 自带的 Swagger 占用了 `/docs`，SPA 里点到「架构与接口」再刷新会落到
+   Swagger 页。路由改名 `/architecture`（`App.tsx` / `Sidebar` / `Layout` / 两页文案 / 采集脚本 /
+   README / 提交包同步），现在 6 个路由的深链直达与刷新都落在同一页。
+2. **390px 整页横向溢出**：Docs 页三张宽表格把页面撑出 487px。新增 `.table-scroll`
+   （`overflow-x:auto` + `overscroll-behavior-x:contain`）包住表格，并让溢出断言区分
+   「容器内滚动」与「整页溢出」——否则修好了也会被误判。
+3. **深色模式对比度不达 AA**：次要文字 `#7e838d` 在 `--surface` 上只有 4.17:1。
+   提到 `--text-faint: #8f95a0`，实测 **5.27:1**（用例里直接算相对亮度，不是目测）。
+4. **问答失败只在角落弹 toast**：上游 5xx 时会话流里什么都没有，用户不知道问题去哪了。
+   现在失败会在消息流里留下可读错误卡 + 「重试这个问题」，重试沿用原问题文本重新发请求。
+
+（滚动跟随、「回到最新消息」、composer 吸底对齐、IME 回车、输入框 240px 长高、抽屉 Esc/遮罩、
+移动端键盘遮挡等交互细节在同轮完成，逐项由下面的用例覆盖。）
+
+### 脚本自身的假阳性（同样如实记）
+
+- `flat()` 是 Node 侧函数，在 `$eval` 的浏览器回调里调用会抛 ReferenceError 并被 `.catch(()=> '')` 吞掉，
+  表现为「项目没有被选中」——改了 5 轮才定位到，是脚本 bug 不是应用 bug。
+- 引用高亮同时作用于聊天 chip 与右侧面板卡片，第一个 `.citation-highlight` 没有 `id`，断言要按 id 挑。
+- 390px 点遮罩时 Playwright 默认点元素中心，而中心正被抽屉盖住 → 改成显式 `{position}` 点暴露区域。
+- 弹窗未关就抛错，遮罩会把后面 5 组用例全拖成超时 → 原文页断言进 `try/finally`，无论如何都 Esc。
+- 上传用例等 toast 太早 → 改成 `waitForResponse` 命中 `/api/documents/upload` 再取 JSON。
+
+### 验收结果（全部 automated）
+
+| 项 | 结果 |
+| --- | --- |
+| `npm run build`（`tsc -b && vite build`） | 绿，JS 283.62 kB / CSS 64.98 kB |
+| 后端 `pytest tests/ -q`（真实 seekdb + PowerContext） | **149 passed / 0 failed / 0 skipped** |
+| T1–T9 端到端验收（`build_site_data.py` 读取的报告） | 9/9 PASS、150 项校验 0 失败 |
+| 真实浏览器交互验收 | **29/29 PASS**，全程 0 未捕获 JS 错误、0 非预期 console error、0 非预期 4xx/5xx |
+| 响应式截图矩阵 | 6 路由 × 390/768/1280/1920 × 明暗 = 48 张，横向溢出 0 张 |
+| 展示站本地验证 | 截图 10 张 broken 0、锚点与刷新正常、390px 溢出 0px、失败请求 0 |
+
+一次真实的上游抖动：中途某轮 `/api/qa/ask` 被第三方 LLM 返回 503（后端重试到上限后如实透传），
+问答轮次没提交，导致 3 组依赖它的用例连带失败。处理方式是让脚本按同一手势重发（最多 3 次），
+并把这类上游 5xx 单独计数——**应用侧的错误卡+重试路径本身由专门用例断言，不把第三方抖动算成前端缺陷**，
+也不掩盖它（`interactions.json` 里保留 `upstream_5xx_on_qa_ask` 字段）。上表是修好后完整重跑的结果。
+
+### 线上与本地的关系（抓取核对，不靠推断）
+
+无痕抓取线上页并存档：`verification/browser-acceptance/compare/online-live-site/`。
+线上是**重构前**的自包含静态展示页（72 818 字节，**0 个 button / 0 个 input / 0 个 form**）——
+所以它不存在"看着能点、点了没反应"的死控件，但也确实不含新版界面。
+本地 `site/public/` 已按最终构建重采截图、重导 `data/evidence.json`，并新增
+「浏览器交互验收 29/29」证据卡；`README.md` 顶部与 `SITE_DEPLOYMENT.md` §6 明确写出
+「线上仍是重构前版本，等视觉确认与发布授权」。
+
+### 交付产物保护
+
+- **未重新发布** Qoder Sites；`prepare_site` 的历史 draft 保持原样，未调用 `publish_site`。
+- **未覆盖**旧演示视频与 `submission-package/demo/`。
+- 重构前的 10 张站点截图用 `git show HEAD:...` 原样导出到
+  `verification/browser-acceptance/compare/ui-before-refactor/`，再重采新版，
+  用 `scripts/build_ui_compare.cjs` 生成前后对比图（桌面 6 组 + 移动 2 组）。
+- 验收脚本产生的临时上传文档与临时 md 文件均已删除；记忆写入只发生在专用验收项目
+  `浏览器交互验收 · 自动` 内，重复运行命中 `snapshot_unchanged`（写入 0 条、去重跳过 3 条）。
+
+### 范围与敏感信息
+
+`git status` 56 项改动**全部**位于 `qoder/researchflow/` 内，其他 8 个 worktree 与 master 在途改动未触碰；
+密钥扫描命中的 4 处均为 `$DEEPSEEK_API_KEY` 形式的环境变量引用与模型词表文件，无真实凭据；
+`.env.example` 保持占位。未提交、未推送。
+
+### 留给下一轮（需要授权）
+
+1. 视觉确认 → 重新 `prepare_site` + `publish_site` → 线上匿名复验。
+2. 演示视频按新版界面重录（会覆盖 `submission-package/demo/`，需明确授权）。
+3. 移动端真机人工复核（目前只有自动化布局断言 + 截图，**不等于真机验证**）。
+
+## 18:35–19:10 界面做减法：能力不砍，只收进渐进披露
+
+用户看完预览后的反馈是「页面整体太复杂了，简化一些」。这一轮只做减法，不动后端、不动 API、
+不动阈值与测试逻辑，也不删任何能力——所有控件的 `id` 与请求参数保持原样，只是渲染位置变了。
+
+### 具体减掉了什么
+
+- **首页**：删掉 4 张能力卡（`.cap-grid` / `.cap-card`，它们与侧栏导航是同一批链接）和 hero
+  顶部那对 SourceTag 药丸；标题从「ResearchFlow：让你的文献检索、实验记录与研究进度真正连续起来。」
+  压成「每个回答，都要能翻到那一页。」；两段说明并成一句。
+- **输入区**：`composer-bar` 从 7 个常驻控件降到 3 个（上传文档 / 检索模式 / 选项）。
+  关联项目、回答方式、top_k、证据门控、四个证据过滤字段全部收进默认折叠的「选项」。
+  折叠时按钮上仍然写着 `选项 · 仅检索 · 已关联项目 · top_k 12 · 限定文档`——**渐进披露不能变成
+  静默生效**，这是这一轮唯一新增的产品约束。
+- **侧栏**：项目行不再打印 `scope scp_… · proj_…`（只在未绑定 scope 时提示一句，因为那是真异常态）；
+  会话行去掉尾部 project_id；整块「未选择研究项目 + 分栏分色说明」删掉；三个健康 chip 的
+  tooltip 从长句压成短语；brand 副标题缩短到一行放得下。
+- **顶栏**：去掉常驻的「证据来自 seekdb」药丸——会话标题副行本来就带同样的信息。
+- **Knowledge / Memory / Verification / Docs**：每页 intro 从 2–3 句压到 1 句；面板副标题里的
+  `POST /api/retrieval/search`、`SHA-256` 这类实现细节从界面文案里撤掉（接口文档页照旧完整说明）。
+
+产物尺寸顺带变小：JS 283.62 → **279.98 kB**，CSS 64.98 → **62.88 kB**；删掉的
+`.cap-*` / `.hero-kicker` / `.channel-legend` / `.mode-tag` / `.composer-spacer` / `.input-tiny`
+规则与 `Link` / `SourceTag` / `useMemo` 导入一并清掉，不留兼容壳。
+
+### 脚本同步时暴露的真实契约
+
+`page.click('.composer-switch >> text=仅检索')` 在折叠态下失败，不是因为选择器旧了，而是因为
+条件渲染的节点**根本不在 DOM 里**。于是给三个脚本补了显式展开步骤（`openComposerOptions` /
+`pickProject`），并把这一件事写成新的断言组：**折叠后 `#qa-project` 与回答方式确实从 DOM 消失，
+非默认设置仍然标在按钮上，重新展开后勾选与分段选择保持原值**。交互验收从 29 组变成 **30 组，
+30 通过 / 0 失败**（本轮无上游 5xx）。首页地标从 `text=让你的文献检索` 改成 `text=每个回答`。
+
+### 回归与重采
+
+`pytest` 149 passed / 0 failed（后端一行没改，仍然跑一遍确认）；`npm run build` 绿；
+6 路由 × 4 宽度 × 明暗 = 48 张真实截图重采，横向溢出 0 张；`site/public/shots` 与
+`data/evidence.json` 按新界面重导，展示站本地复验通过。
+
+### 一处需要纠正的说法
+
+用户提到「README.md:166 说『网站由六条命令产出』」。全仓检索 `六条` 只命中
+`DEMO_SCRIPT.md:83` 的「十六条记忆」，README 里并不存在这句话。真实缺口是另一处：
+`RUN.md` §8 的网站产出序列只写了 `build_site_data.py` → `http.server` → `verify_site.cjs`，
+缺了产出 `site/public/shots/` 的截图脚本与对比图脚本。已按实际执行顺序补齐（含
+`capture_screenshots.cjs` / `capture_responsive_matrix.cjs` / `build_ui_compare.cjs` /
+`verify_interactions.cjs`），README 目录树同时补上 `build_ui_compare.cjs` 与
+`make_demo_video.cjs`，并把「29 组」改成「30 组」。
+
+## 19:10–20:40 按简化后的界面重录演示视频
+
+用户授权覆盖旧成片之后，重录前先做了一件事：把录制脚本里会被新交互契约打断的步骤找出来。
+`make_demo_video.cjs` 里三处 `selectOption('#qa-project')` 在折叠态下会直接抛
+"select not found"——节点根本不在 DOM 里。改成 `pickProject()`：展开「选项」→ 选项目 →
+再收起，画面里始终是简化后的干净输入条。首页地标、响应式矩阵的地标同步换成 `text=每个回答`。
+
+### 一个不能糊过去的分叉：展示站场景录谁
+
+线上 Qoder Sites 仍是**简化前**发布的版本（`data/evidence.json` 里连 `interactions` 字段都没有，
+截图还是旧的 9 张），而本轮没有重新发布的授权。若 c2 / c10 继续录线上地址，同一支视频里
+就会出现"产品是简化后的、展示站是简化前的"，并且口播"已发布"会变成不实陈述。
+
+处理方式：新增 `SITE_SRC`（默认 `http://127.0.0.1:4181`，即本地重建的 `site/public`），
+两个展示站场景改录它，旁白与片尾卡片同时如实说明"线上仍是旧版、重新发布要等视觉确认与单独授权"；
+`video-manifest.json` 的 `sources` 拆成 `showcaseScenesRecordedFrom` 与 `publishedSite`，
+并写入 `publishedSiteNote`。**没有**为了画面好看而先斩后奏地发布站点。
+
+### 录制过程中改掉的两处诚实性问题
+
+1. 第一版成片里 c2 的第二句旁白写着"等你确认视觉效果并授权重新发布之后才会替换"——
+   这句是对着用户说的，不是对着评审说的。改成陈述事实的第三人称，删掉 webm 单独重录该场景。
+2. `record()` 复用缓存录屏时用 `durationOf(webm)` 当"真实操作耗时"，而 webm 容器比交互本身长
+   （c6 实测 14.6s 操作 → 容器 19.3s），会把耗时写虚高。改为把实测值持久化进
+   `facts.wallSeconds`，缓存命中时取回原值；随后仍用 `--force-record` 整体重录一遍，
+   保证 11 个场景出自同一次运行、数字口径一致。
+
+### 最终成片
+
+`submission-package/demo/researchflow-demo.mp4`：**133.2s（2 分 13 秒）**、1280×800、
+H.264 + AAC 48 kHz 立体声、30 fps、6.3 MB、28 条字幕（烧录 + 独立 `.vtt`）。
+逐场景真实耗时 3.35–14.57s，重放系数 1.111–2.5，全部记在 `video-manifest.json`。
+
+本次运行读回的真实值（旁白用的就是这些，不是稿子）：pytest `149 passed in 48.50s`
+（日志 `logs/pytest-20261029T123409.log`）、seekdb `5.7.25-OceanBase seekdb-v1.4.0.0` + `ik`、
+`文档 3 / 页 7 / chunks 13`、vector top `0.4407`、hybrid RRF `0.0328`、
+论断 `资料直接支持：2 / 模型推断：0 / 尚无证据：0` 且 3 条引用、无证据轮 `尚无证据：1`、
+记忆保存命中幂等分支 `written=0 / skipped_duplicates=2` + 「内容未变化，未产生重复记忆」、
+全新上下文恢复 18 条、展示站验证区块 `149 passed | 9 / 9 PASS`、
+浏览器交互验收 `30/30`（读自本地 `evidence.json`，`generated_at=2026-10-29T19:04:39+08:00`）。
+
+抽帧核对（`build/video/check/`，不入库）：t=70s 是简化后的工作台与页原文弹窗，
+t=15s / t=124s 是本地重建的展示站，t=84s 是记忆页幂等结果——画面与旁白逐条对得上。
+
+旧成片（13:33、124.8s）已不在工作区，但 blob 仍在 git 历史里（`HEAD` 版本 6 163 758 字节），
+需要时可取回比对。相关文档同步：`08-demo-video.md` 重写、`DEMO_SCRIPT.md` 分镜与旁白稿、
+`01` / `05` / `06` / `SUBMISSION.md` / `FINAL_SUBMISSION.md` / `10-human-handoff.md` 里
+凡引用旧时长、旧字幕数、旧验收组数的行都已按本次实测改正；`QODER_LOG.md` 更早的条目
+（13:33 那次 124.8s）保持原样，因为它是当时的真实记录。
+
+## 21:30–22:30 封版轮：冻结 → 重新发布 → 重录 → 材料同步
+
+本轮的目标不是加功能，而是把「本地新版 / 公开站点 / 演示视频 / Git 提交 / 比赛材料」
+这五件事拉回同一个事实口径。
+
+### 阶段一 前端冻结（不改后端、不改验收口径）
+
+`npm run build`（`tsc -b && vite build`）通过；`backend/.venv` 跑 pytest **149 passed in 55.21s**；
+`run_acceptance.py` 重跑为 **9/9 PASS、150 项校验 150 ok**（运行号 `20261029-213920`，
+逐用例日志同步进 `verification/acceptance-run/`）；浏览器交互验收 **30/30**、
+4 视口 × 6 路由、48 张响应式截图 0 横向溢出。
+`git diff` 确认 `backend/app/**`、`backend/tests/**`、`scripts/run_acceptance.py` 未动，
+改动全部落在 `frontend/src/**`、`site/**`、`scripts/**` 与文档；密钥与绝对路径扫描零命中。
+
+### 阶段二 更新发布到原站点（不新建替代站点）
+
+`prepare_site` 带 `projectId` 且 **不带** `createNewSite` → 同一 project、同一域名；
+`publish_site` 之后 `access_mode` 仍是 `public`（本轮授权是"保持公开"，不是"切换公开"）。
+两个真实踩坑记进 `SITE_DEPLOYMENT.md` §6.3：
+
+1. `get_publish_status` 只接受 `actionId`，多传 `projectRoot` 会被 schema 拒绝；
+2. 描述符文件回写有一个 `descriptorStatus: pending` 窗口，此时重试同一 action 即可，
+   不要新建 action——否则会出现第二个冻结草稿。
+
+发布后用**无凭据、无 cookie** 的抓取逐文件比对（`scripts/verify_published_site.py`）：
+15/15 一致。唯一开始对不上的 `index.html`（线上 73239 B vs 本地 16197 B）不是内容陈旧，
+而是 Qoder Sites 会给每个 HTML 注入 `<script data-qoder-watermark="v1">`；
+剥掉这一段之后哈希 `efb56204…` 与本地及描述符里的 `indexSha256` 完全相同。
+这个归一化写进了检查脚本与所有引用它的文档，避免下一轮把它误判成"线上还是旧版"。
+
+### 阶段三 重录视频：来源换成线上真实地址，并给成片加验收
+
+c2 / c10 两个展示站场景改为**直接录公开 URL**（`SITE_SRC` 默认等于 `RF_SITE_URL`），
+上一轮"录本地 :4181 并在旁白里声明线上是旧版"的分支已删除——线上确实更新了，
+再保留那段口播就变成不实陈述。新增 `scripts/check_demo_video.cjs`：对**交付物本身**
+（mp4 / vtt / manifest）做 25 项检查并落盘 `demo/video-check.json`，构建尾部自动执行，
+任一不过则整个出片流程非零退出。逐场景中点自动抽帧到 `demo/keyframes/`（11 张）。
+
+三处真实修正：
+
+1. **`facts.startedAt` 取自缓存**：合并 `facts.json` 之后才赋值，否则 manifest 会把
+   本次运行写成几小时前的时间戳。
+2. **全新环境复现的步数被写死成 `20/20`**：与 09:44 报告里的 `passed/total = 22/22`
+   不符（那个 `20/20` 是"旅程本体"计数，报告总数含清理步骤）。改为脚本读最新
+   `logs/fresh-env-*.json` 的真实 `passed/total`，卡片与旁白都不再手填数字。
+3. **重跑全新环境旅程时踩到端口冲突**：22:12 那次只有 10/11，原因是本机另一个会话的
+   进程恰好占了 8790，而旧版 `wait_http` 把"任何 <500 的响应"当作服务已就绪，
+   错误被推迟成 `KeyError: 'components'`。修法是加端口占用前置检查、就绪判据要求响应体
+   含 `components`、三个端口与容器名可用 `RF_FRESH_*` 覆盖；22:20 换空闲端口重跑 **23/23**。
+   失败那份报告保留在 `logs/fresh-env-20261029-221217.json`，没有删。
+
+最终成片：**135.0 s（2 分 15 秒）/ 6 796 164 B / 1280×800 / h264 High + AAC 48 kHz 立体声 /
+4 046 帧 / 28 条字幕**，`video-check.json` 25 项全 PASS（音画差 0.028 s、字幕覆盖 0.89、
+11 场景 11 关键帧、展示站来源为线上 URL 且线上页与本地构建一致）。
+旁白口径统一为"已正式发布"，片尾卡写站点 host。
+
+### 阶段四 材料同步：把"按记忆写的数字"改成"按产物写的数字"
+
+这一阶段没有新增功能，全部工作是把文档里的每一处陈述重新对齐到本轮产物，并补四篇交付物：
+`submission-package/FORM_FIELDS.md`（报名表可逐条复制的成品文本，含"必须一并粘贴的展示模式声明"
+与"不要填的东西"）、`FILES_TO_UPLOAD.md`（上传路径 / 字节 / SHA-256 / ZIP 逐目录清单 /
+逐条排除理由 / 隐私终检命令）、`FINAL_AUDIT.md`（六阶段终审 + 五方同步矩阵 + 保留的失败记录）、
+`MANUAL_ONLY.md`（只剩人工的 6 项，按是否阻塞报名排序）。
+
+核对时发现并改正的过期陈述（都是上一轮改完之后没回头同步的遗留）：
+
+1. **README 头部仍写"线上当前仍是界面重构与简化之前的展示页，等视觉确认与发布授权"**——
+   21:46 已经发布成功，这句话现在是不实陈述。改为"线上当前版本 = 简化后的冻结构建"，
+   并把视频那一行从 `2:13 / 20:36` 改成 `2:15 / 134.97 s / 6 796 164 B / 22:21 定稿`。
+2. **两处"22:09 定稿"**（`FINAL_SUBMISSION.md` §3、`10-human-handoff.md` §1 与 §4）——
+   成片真实 mtime 与 `video-check.json.checkedAt` 都是 22:21，按实测改正。
+3. **`01-overview-and-highlights.md` §2 第 7 条仍写"评审旅程 20 步全过"**——
+   当次报告是 23/23；这与阶段三里那个硬编码 `20/20` 是同一个旧口径的残留。
+4. **`AUDIT.md` 附录里那条 `zip -r` 草案**——它不扫描凭据、不自校验，也没有排除
+   只在本机转写里出现的绝对路径，却仍被写在"打包命令"标题下。保留原文并明确标注
+   "不要用它打包"，把实际使用的白名单打包器与它的四步自校验写清楚。
+5. `SUBMISSION.md` §5 的 12 项官方清单本身没变，新增 §5.1 记录五件"为能直接报名而做"的产物；
+   §6 的人工项改为指向 `MANUAL_ONLY.md`（避免两处各写一份、以后各改各的）。
+
+### 阶段五 ZIP：让"包是完整的"变成一条能执行的断言
+
+`scripts/build_final_zip.py` 第一次真跑就抓出四个问题，都不是设计时想到的：
+
+1. **`SKIP_DIRS` 里的 `data` 顺手把展站自己的数据文件也吞了**：
+   `site/public/data/evidence.json` 的路径里也有 `data`，被静默漏收 → 包里的站点打不开，
+   而线上核验文档明明说 15 个文件。改法是区分"仓库根的运行态目录"与"嵌套的同名目录"
+   （新增 `SKIP_ROOT_PREFIX` 只对根前缀生效），并给 5 个关键成员加
+   `required member not collected` 硬断言——这类"静默漏收"以后会直接失败而不是产出残包。
+2. **`verification/browser-acceptance/interactions-run.log` 第 2 行记录了本机 Chromium
+   安装路径（含 Windows 用户名）**，被本机路径扫描命中。这是真实运行转写，**不改写证据**，
+   所以整份不进 ZIP（仓库里仍在），机器可读的 `interactions.json` 完整在包内；
+   排除理由写进 `PRIVACY_SKIPPED` 并随清单落盘，让"排除了什么、为什么"也是证据的一部分。
+3. **打包器自己的注释里写了本机用户目录示例，被自己的扫描命中**——改写措辞，代码行为不变。
+4. **两个只在真跑后才暴露的实现错**：清单的逐目录统计按"归档路径反推源路径"计算，
+   而 `evidence-logs/` 是重映射过的，`FileNotFoundError` 直接崩在最后一步（ZIP 本身已写好）；
+   改为按成员表反查真实源文件。`.zip.sha256` 用文本模式写，Windows 下变成 CRLF，
+   `sha256sum -c` 报 `No such file or directory`；改为显式写字节 LF，实测 `OK`。
+
+一个刻意的设计取舍：**压缩包不包含自己的校验和**。所以归档字节数与 SHA-256 只写在 ZIP
+**外部**的 `ResearchFlow-Qoder-Final.zip.sha256` 与 `final-zip-manifest.json` 里，
+文档中不写死这两个值（写了就必然过期），只写不随文字变动变化的事实：
+**303 个成员、扫描 0 命中、`testzip()` 无损坏成员、解压回全新临时目录逐字节比对
+missing / differing / unexpected = 0 / 0 / 0**。交付目录同时放一份成片
+（6 796 164 B，与仓库内同字节，SHA-256 `f0dfab38…`），平台只收媒体文件时不必从仓库里取。
+
+22:51 那次构建实测：32 748 059 B / 原始 34 905 046 B / 压缩比 0.9382 /
+SHA-256 `5931a1a07991d8b87e53e74f8db2c5577b730c678ced4b08bb1fcf9e28c82600`。
+此后每改一个字的文档都会让这两个值变化，因此以交付目录里的 sidecar 为唯一权威。

@@ -20,7 +20,7 @@ DeepSeek `deepseek-chat`。测量日期 2026-10-29。
 | --- | --- | --- |
 | 后端测试 | **149 passed**（88 基础 + 21 中文记忆 + 25 安全 + 15 保留集） | `cd backend && .venv/Scripts/python -m pytest tests/ -q` |
 | 端到端验收 | T1–T9 **9 PASS / 0 FAIL / 0 SKIP**，共 **150 项**逐条校验 | `verification/acceptance-run/`（`05-acceptance-index.md`） |
-| 全新环境复现 | 评审旅程 **20/20** 通过（新 venv + 新 seekdb 容器 2890 + 新 PowerContext 17431，跑完自动清理） | `scripts/fresh_env_e2e.py` |
+| 全新环境复现 | 评审旅程 **23/23** 通过（新 venv + 新 seekdb 容器 + 新 PowerContext 数据目录，端口可覆盖，跑完自动清理） | `scripts/fresh_env_e2e.py` |
 | 检索质量 B2 | 3 provider × 3 mode：R@1/R@3/R@5/MRR 全表；默认阈值 0.62 下**负例误报 0/2** | `scripts/bench_retrieval.py` → `logs/bench-retrieval-*.json`、`BENCHMARK.md` §2 |
 | 中文记忆召回 B1 | 修复前 6/10（含 1 次负例误报）→ 修复后 **hit@3 10/10、hit@1 8/10、负例误报 0** | `scripts/bench_memory_zh.py` → `logs/bench-memory-zh-20261029-090133.json`、`BENCHMARK.md` §1 |
 | 混合检索正确性 | 演示问题 RRF 融合分 **0.0328** = 文档中手写的 `1/61+1/61` | T2 日志 + 站点截图 `s5-retrieval.png` |
@@ -77,7 +77,7 @@ DeepSeek `deepseek-chat`。测量日期 2026-10-29。
 | --- | --- |
 | 验收报告与逐用例日志 | `verification/acceptance-run/acceptance-report.md` / `.json` / `logs/` |
 | 基准原始 JSON | `logs/bench-*.json`（仓库内保留最近一次；复跑即生成新的） |
-| 真实运行截图（9 张） | `site/public/shots/`，由 `scripts/capture_screenshots.cjs` 无头浏览器采集 |
+| 真实运行截图（10 张） | `site/public/shots/`，由 `scripts/capture_screenshots.cjs` 无头浏览器采集（2026-10-29 UI 重构后重采，含移动端逐路由横向溢出断言） |
 | 公开站点匿名验证 | `verification/site-public/PUBLISH_VERIFICATION.md` + `06-public-site-verification.md` |
 | 演示视频与逐场景事实 | `submission-package/demo/`（`video-manifest.json` 记录采集方式与重放系数） |
 | 开发过程记录 | `QODER_LOG.md` + `07-qoder-dev-evidence.md` |

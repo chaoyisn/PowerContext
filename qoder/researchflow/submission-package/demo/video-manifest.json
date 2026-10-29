@@ -1,13 +1,18 @@
 {
-  "generatedAt": "2026-10-29T05:33:52.107Z",
-  "durationSeconds": 124.82,
+  "generatedAt": "2026-10-29T14:21:40.672Z",
+  "durationSeconds": 134.95,
   "resolution": "1280x800",
   "sources": {
     "localApp": "http://127.0.0.1:8787",
+    "showcaseScenesRecordedFrom": "https://researchflow-5esfsogn38f.qoder.zone",
     "publishedSite": "https://researchflow-5esfsogn38f.qoder.zone",
+    "publishedSiteNote": "c2/c10 两个展示站场景录自公开 URL：线上已是简化后的最终构建，与本地 site/public 逐文件哈希一致（见 verification/site-public/published-site-check.json）",
     "python": "backend/.venv (project venv)",
-    "pytestLog": "logs/pytest-20261029T051017.log",
-    "pytestLine": "149 passed in 48.86s"
+    "pytestLog": "logs/pytest-20261029T140102.log",
+    "pytestLine": "149 passed in 55.21s",
+    "freshEnvLog": "logs/fresh-env-20261029-222030.json",
+    "freshEnvSteps": "23/23",
+    "freshEnvAt": "2026-10-29T22:20:30+08:00"
   },
   "captureMethod": {
     "browserScenes": "Playwright 无头浏览器录屏，驱动真实运行的前端 + FastAPI + seekdb + PowerContext",
@@ -16,14 +21,29 @@
     "retiming": "浏览器录屏按旁白时长用 setpts 等比重放（短片段放慢、长片段适度加速，系数见各场景 speedFactor），未删除或跳剪任何真实步骤"
   },
   "facts": {
-    "startedAt": "2026-10-29T05:17:51.436Z",
-    "pytestLog": "logs/pytest-20261029T051017.log",
-    "pytestLine": "149 passed in 48.86s",
+    "startedAt": "2026-10-29T14:21:18.699Z",
+    "pytestSeconds": 57,
+    "pytestLog": "logs/pytest-20261029T140102.log",
+    "pytestLine": "149 passed in 55.21s",
+    "pytestTotal": "149",
+    "wallSeconds": {
+      "c2-site": 3.741,
+      "c3-upload": 4.786,
+      "c4-retrieval": 8.947,
+      "c5-pages": 8.77,
+      "c6-workbench": 19.358,
+      "c7-memory": 8.142,
+      "c8-restore": 6.443,
+      "c10-arch": 6.442
+    },
     "siteTitle": "ResearchFlow — 基于 seekdb 与 PowerContext 的科研知识与任务连续性助手",
+    "siteGeneratedAt": "2026-10-29T21:42:26+08:00",
+    "siteInteractions": "30/30",
+    "siteUrl": "https://researchflow-5esfsogn38f.qoder.zone",
     "docId": "4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e",
     "documents": 3,
     "pages": 7,
-    "projects": 5,
+    "projects": 6,
     "chunks": 13,
     "seekdbVersion": "5.7.25-OceanBase seekdb-v1.4.0.0",
     "fts": "ik",
@@ -35,19 +55,100 @@
     "blankPage": "页面原文 · 第 4 页 文献证据 · seekdb 关闭（Esc） 文件名 seekdb_hybrid_retrieval_notes.pdf doc_id 4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e page_id 4d5da56c0b76197b:p0004 char_count 0 content_typ",
     "page5": "页面原文 · 第 5 页 文献证据 · seekdb 关闭（Esc） 文件名 seekdb_hybrid_retrieval_notes.pdf doc_id 4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e page_id 4d5da56c0b76197b:p0005 char_count 847 content_type pdf Page 5 - Rec",
     "page5Id": "4d5da56c0b76197b:p0005",
-    "claimLine": "资料直接支持：2 模型推断：0 尚无证据：0",
-    "citationCount": 3,
+    "claimLine": "资料直接支持：3 模型推断：0 尚无证据：0",
+    "citationCount": 4,
     "citationPage": "页面原文 · 第 5 页 文献证据 · seekdb 关闭（Esc） 文件名 seekdb_hybrid_retrieval_notes.pdf doc_id 4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e page_id 4d5da56c0b76197b:p0005 char_count 847 content_t",
-    "noEvidenceLine": "论断核验 资料直接支持：0 模型推断：0 尚无证据：1 尚无证据 这篇文档里有没有关于量子纠缠实验的测量结果",
-    "writtenValue": "1",
+    "noEvidenceLine": " 论断核验 资料直接支持：0 模型推断：0 尚无证据：1 尚无证据 这篇文档里有没有关于量子纠缠实验的测量结果",
+    "writtenValue": "0",
     "seqValue": "2",
-    "skipped": "1",
+    "skipped": "2",
     "dupResult": "内容未变化，未产生重复记忆",
     "resumeBrief": "项目：seekdb 混合检索在科研知识库中的效果验证 研究目标：确认 seekdb 的向量 + 全文混合检索能否为科研问答提供可核对的页级证据 上次保存时间：2026-10-29T05:27:29+00:00（seq 2） 【上次做到了哪里】 （快照中没有记录） 【接下来该做什么】 下一步： - 把三模对比与重叠分析纳入下一轮 top_k=20 召回评测 以上全部来自 PowerContext 历史记忆，不是文献原文证据。",
     "briefHasNewStep": true,
     "entryCount": "18",
-    "sitePasses": "149 passed | 9 / 9 PASS"
+    "sitePasses": "149 passed | 9 / 9 PASS",
+    "freshEnvLog": "logs/fresh-env-20261029-222030.json",
+    "freshEnvAt": "2026-10-29T22:20:30+08:00",
+    "freshEnvPassed": 23,
+    "freshEnvTotal": 23,
+    "freshEnvSeconds": 68
   },
+  "keyframes": [
+    {
+      "scene": "c1-intro",
+      "atSeconds": 4.25,
+      "file": "keyframes/01-c1-intro.png",
+      "kind": "card"
+    },
+    {
+      "scene": "c2-site",
+      "label": "展示站 · 已发布线上版",
+      "atSeconds": 14.2,
+      "file": "keyframes/02-c2-site.png",
+      "kind": "browser"
+    },
+    {
+      "scene": "c3-upload",
+      "label": "本地应用 · 入库",
+      "atSeconds": 26.84,
+      "file": "keyframes/03-c3-upload.png",
+      "kind": "browser"
+    },
+    {
+      "scene": "c4-retrieval",
+      "label": "本地应用 · 三模检索",
+      "atSeconds": 40.71,
+      "file": "keyframes/04-c4-retrieval.png",
+      "kind": "browser"
+    },
+    {
+      "scene": "c5-pages",
+      "label": "本地应用 · 页级引用",
+      "atSeconds": 53.8,
+      "file": "keyframes/05-c5-pages.png",
+      "kind": "browser"
+    },
+    {
+      "scene": "c6-workbench",
+      "label": "本地应用 · 证据问答",
+      "atSeconds": 68.82,
+      "file": "keyframes/06-c6-workbench.png",
+      "kind": "browser"
+    },
+    {
+      "scene": "c7-memory",
+      "label": "本地应用 · 保存进度",
+      "atSeconds": 84.79,
+      "file": "keyframes/07-c7-memory.png",
+      "kind": "browser"
+    },
+    {
+      "scene": "c8-restore",
+      "label": "全新会话 · 恢复",
+      "atSeconds": 99.56,
+      "file": "keyframes/08-c8-restore.png",
+      "kind": "browser-new-context"
+    },
+    {
+      "scene": "c9-tests",
+      "atSeconds": 113.81,
+      "file": "keyframes/09-c9-tests.png",
+      "kind": "card"
+    },
+    {
+      "scene": "c10-arch",
+      "label": "展示站 · 架构与验证（线上）",
+      "atSeconds": 125.05,
+      "file": "keyframes/10-c10-arch.png",
+      "kind": "browser"
+    },
+    {
+      "scene": "c11-outro",
+      "atSeconds": 132.32,
+      "file": "keyframes/11-c11-outro.png",
+      "kind": "card"
+    }
+  ],
   "scenes": [
     {
       "id": "c1-intro",
@@ -63,13 +164,13 @@
     {
       "id": "c2-site",
       "kind": "browser",
-      "label": "公开站点",
-      "finalSeconds": 9.6,
-      "realWallSeconds": 2.76,
+      "label": "展示站 · 已发布线上版",
+      "finalSeconds": 11.4,
+      "realWallSeconds": 3.74,
       "speedFactor": 2.5,
       "cues": [
-        "线上展示站已经发布在 Qoder Sites，公开可访问，地址是 researchflow 减 5esfsogn38f 点 qoder 点 zone。",
-        "它是纯静态展示版：真实截图、真实验收数据，不连数据库，也不提供模拟查询。"
+        "这是比赛的展示站，已经正式发布，纯静态：截图和验收数字都由脚本从真实运行里导出，页面不连数据库，也不提供模拟查询。",
+        "这一版就是界面简化之后重新发布到原域名的内容，线上文件与本地最终构建逐个比对完全一致。"
       ]
     },
     {
@@ -77,7 +178,7 @@
       "kind": "browser",
       "label": "本地应用 · 入库",
       "finalSeconds": 13.87,
-      "realWallSeconds": 4.6,
+      "realWallSeconds": 4.79,
       "speedFactor": 2.5,
       "cues": [
         "本地是完整产品。先上传一份五页的 PDF，第四页是刻意留空的。",
@@ -90,8 +191,8 @@
       "kind": "browser",
       "label": "本地应用 · 三模检索",
       "finalSeconds": 13.88,
-      "realWallSeconds": 7.8,
-      "speedFactor": 1.779,
+      "realWallSeconds": 8.95,
+      "speedFactor": 1.528,
       "cues": [
         "检索有三种模式：纯向量、纯全文，以及 RRF 融合的混合检索。这里问一个只写在第五页的细节。",
         "混合检索命中第五页，RRF 融合分数 0.0328，和文档里手写的值一致。",
@@ -103,8 +204,8 @@
       "kind": "browser",
       "label": "本地应用 · 页级引用",
       "finalSeconds": 12.3,
-      "realWallSeconds": 7.84,
-      "speedFactor": 1.57,
+      "realWallSeconds": 8.77,
+      "speedFactor": 1.405,
       "cues": [
         "页码用的是 PDF 的物理页号，从一开始数；空白页也保留页级身份，这样引用才对得上。",
         "点开第四页，它明确告诉你这一页是空的，但仍然有页级身份。",
@@ -115,12 +216,12 @@
       "id": "c6-workbench",
       "kind": "browser",
       "label": "本地应用 · 证据问答",
-      "finalSeconds": 14.8,
-      "realWallSeconds": 19.68,
-      "speedFactor": 0.752,
+      "finalSeconds": 17.73,
+      "realWallSeconds": 19.36,
+      "speedFactor": 0.858,
       "cues": [
-        "到工作台问同一个问题。回答里的每个引用编号都能点开，看到它对应的原文页。",
-        "每条论断都标注了「资料直接支持：2 模型推断：0 尚无证据：0」；服务端会把模型给出的引用逐条回查 seekdb，编造的引用一律剔除。",
+        "到工作台问同一个问题。输入区平时只有三个控件，高级参数收在「选项」里，非默认值会直接写在按钮上。",
+        "每条论断都标注了「资料直接支持：3 模型推断：0 尚无证据：0」；引用编号能点开它对应的原文页，因为服务端会把模型给出的引用逐条回查 seekdb，编造的引用一律剔除。",
         "反过来问一个语料里根本没有的问题：它回答尚无证据，引用列表是空的。"
       ]
     },
@@ -128,12 +229,12 @@
       "id": "c7-memory",
       "kind": "browser",
       "label": "本地应用 · 保存进度",
-      "finalSeconds": 12.14,
-      "realWallSeconds": 8.6,
-      "speedFactor": 1.411,
+      "finalSeconds": 14.21,
+      "realWallSeconds": 8.14,
+      "speedFactor": 1.751,
       "cues": [
         "记忆这一块交给 PowerContext：一个科研项目对应一个 Scope，保存永远是显式动作，系统不会自动写入。",
-        "加一条下一步计划并保存，返回写入 1 条、序号递增到 2。",
+        "这条计划之前已经写入过，幂等键把它拦下来了：written=0、skipped_duplicates=2，记忆不会重复堆积。",
         "再点一次同样的内容，它告诉你内容没变化，不产生重复记忆。"
       ]
     },
@@ -142,8 +243,8 @@
       "kind": "browser-new-context",
       "label": "全新会话 · 恢复",
       "finalSeconds": 15.31,
-      "realWallSeconds": 8.28,
-      "speedFactor": 1.849,
+      "realWallSeconds": 6.44,
+      "speedFactor": 1.832,
       "cues": [
         "现在换一个全新的会话窗口，只选同一个 project id。",
         "续研简报直接给出上次做到了哪里、接下来该做什么，刚才新加的那条计划已经在里面；恢复出来的是 18 条记忆。",
@@ -153,23 +254,23 @@
     {
       "id": "c9-tests",
       "kind": "card",
-      "finalSeconds": 9.63,
+      "finalSeconds": 13.2,
       "realWallSeconds": null,
       "speedFactor": null,
       "cues": [
-        "这些行为都不是口头承诺。后端一百四十九个测试，直接打真实的 seekdb 和真实的 PowerContext。",
-        "端到端验收 T1 到 T9 全部通过，还有一次在全新虚拟环境里的评审旅程，二十步全过。"
+        "这些行为都不是口头承诺。后端 149 个测试，直接打真实的 seekdb 和真实的 PowerContext。",
+        "端到端验收 T1 到 T9 全部通过，界面简化之后的浏览器交互验收 30/30 组全绿，另有一次全新环境的评审旅程，23 步全过，报告就是当次运行留下的 JSON。"
       ]
     },
     {
       "id": "c10-arch",
       "kind": "browser",
-      "label": "公开站点 · 架构与验证",
-      "finalSeconds": 9.51,
-      "realWallSeconds": 6.64,
-      "speedFactor": 1.432,
+      "label": "展示站 · 架构与验证（线上）",
+      "finalSeconds": 9.27,
+      "realWallSeconds": 6.44,
+      "speedFactor": 1.446,
       "cues": [
-        "架构在站点的 architecture 区块：上传解析分页、seekdb 双索引、混合检索与证据门控、引用核验、PowerContext 记忆。",
+        "架构区块讲整条链路：上传解析分页、seekdb 双索引、混合检索与证据门控、引用回查、PowerContext 记忆。",
         "验证区块贴的是真实日志和真实截图，不是渲染出来的假数据。"
       ]
     },

@@ -5,9 +5,19 @@
 > 代码位置：`qoder/researchflow/`
 > **在线展示站（已公开发布）**：<https://researchflow-5esfsogn38f.qoder.zone>
 > 静态展示版，含真实运行截图与真实验证数据；不连接数据库、不提供模拟查询。完整可交互系统按 [RUN.md](./RUN.md) 本地启动。
-> **演示视频**：`submission-package/demo/researchflow-demo.mp4`（1280×800、2:05）——
-> 真实运行的浏览器录屏 + 中文配音 + 烧录字幕，逐场景溯源见 `submission-package/demo/video-manifest.json`。
+> 线上当前版本 = **界面重构与简化之后的冻结构建**（2026-10-29 21:46 更新发布到同一 project / 同一域名，
+> 访问策略保持 `public` 未变）；15/15 文件与本地 `site/public` 逐字节一致，逐项核对见
+> [submission-package/06-public-site-verification.md](./submission-package/06-public-site-verification.md)
+> 与 [SITE_DEPLOYMENT.md](./SITE_DEPLOYMENT.md) §6。
+> **演示视频**：`submission-package/demo/researchflow-demo.mp4`（1280×800、**2:15 / 134.97 s / 6 796 164 B**，
+> 2026-10-29 22:21 定稿：界面简化 + 站点重新发布之后重录，展示站两个场景直接录自线上地址）——
+> 真实运行的浏览器录屏 + 中文配音 + 烧录字幕，逐场景溯源见 `submission-package/demo/video-manifest.json`，
+> 对成片文件本身执行的 25 项自动检查见 `submission-package/demo/video-check.json`（全 PASS）。
 > **提交包入口**：[submission-package/FINAL_SUBMISSION.md](./submission-package/FINAL_SUBMISSION.md)
+> （报名可直接复制的表单文本：[FORM_FIELDS.md](./submission-package/FORM_FIELDS.md)；
+> 上传清单与校验：[FILES_TO_UPLOAD.md](./submission-package/FILES_TO_UPLOAD.md)；
+> 只剩人工的 6 项：[MANUAL_ONLY.md](./submission-package/MANUAL_ONLY.md)；
+> 六阶段终审：[FINAL_AUDIT.md](./submission-package/FINAL_AUDIT.md)）
 
 ResearchFlow 是一个「带证据的知识库 + 长期任务记忆 + 科研进度恢复」的科研工作台，
 面向研究生、科研人员与 AI Infra 工程师。它不是 ChatPDF：
@@ -46,7 +56,10 @@ ResearchFlow 是一个「带证据的知识库 + 长期任务记忆 + 科研进�
 - 历史记忆在 UI 与 API 中始终标记为 `source="memory"`，永不冒充文献证据。
 
 **D. 最小可用界面（React + Vite + TypeScript）**
-四个页面：项目总览 / 知识库 / AI 工作台 / 任务记忆。中文为主，响应式，专业 SaaS 风格。
+三段式应用外壳：左侧项目/会话侧栏 · 中间对话与工具主区 · 右侧可折叠 Evidence / Context 面板。
+页面：对话首页 `/`、工作台 `/workbench`、知识库 `/knowledge`、研究进度 `/memory`、
+验证 `/verification`、架构与接口 `/architecture`（`/docs` 留给 FastAPI 自带的 OpenAPI）。中文为主，桌面优先并自适应移动端，浅色 / 深色双主题；
+文献证据（seekdb）与研究记忆（PowerContext）在配色、分栏与标签上始终分通道呈现。
 
 ---
 
@@ -89,10 +102,11 @@ cd backend && RF_LLM_API_KEY="$DEEPSEEK_API_KEY" .venv/Scripts/python -m app.api
 python scripts/seed_demo.py
 
 # 4. 打开浏览器
-#    http://127.0.0.1:8787/            项目总览
+#    http://127.0.0.1:8787/            对话首页（价值主张 + 能力入口 + 提问框）
+#    http://127.0.0.1:8787/workbench   证据问答工作台
 #    http://127.0.0.1:8787/knowledge   知识库
-#    http://127.0.0.1:8787/workbench   AI 工作台
-#    http://127.0.0.1:8787/memory      任务记忆
+#    http://127.0.0.1:8787/memory      研究进度（记忆）
+#    http://127.0.0.1:8787/verification 后端健康与验收证据
 #    http://127.0.0.1:8787/docs        OpenAPI
 ```
 
@@ -104,7 +118,13 @@ python scripts/seed_demo.py
 - `scripts/run_acceptance.py`：T1–T9 端到端验收（含真实 LLM 用例），共 **150 项校验 0 失败**，
   自带独立 PowerContext 与 API 实例，真实执行服务重启与断连。
 - `scripts/fresh_env_e2e.py`：**全新环境**评审旅程（新 venv、新 seekdb 容器与卷、新 PowerContext
-  数据目录）20/20 步通过，结束自动清理。
+  数据目录）23/23 步通过，结束自动清理。
+- `scripts/verify_interactions.cjs`：**真实浏览器交互验收**（Playwright 驱动 Chromium 做真实手势）
+  **30 组全绿**——提问、点引用、开原文页、上传、保存记忆、跨会话恢复、错误重试、抽屉、深色、
+  渐进披露折叠、390/768/1280/1920 四宽度；断言把页面渲染文本与拦截到的接口 JSON 逐字比对，不看 mock。
+  证据：`verification/browser-acceptance/`（含 48 张响应式截图与重构前后对比图），逐项说明见
+  [VERIFICATION.md](./VERIFICATION.md) §8。
+- `scripts/verify_site.cjs`：展示站渲染与锚点/刷新/移动端溢出/失败请求检查（本地与线上同一套）。
 - `scripts/bench_memory_zh.py` / `bench_retrieval.py` / `bench_workflow.py`：中文记忆、中英检索、
   工作流提效三项基准，结果见 [BENCHMARK.md](./BENCHMARK.md)。
 - 比赛网站：`site/public/`（静态展示版，含真实运行截图与真实验证数据），**已公开发布**于
@@ -143,7 +163,7 @@ qoder/researchflow/
 │       ├── agent/                 llm / prompts / service（证据问答）
 │       └── api/                   FastAPI 路由 + schemas + OpenAPI
 │   └── tests/                     149 个测试（单元 + seekdb/PowerContext 集成 + 安全 + 保留集 + HTTP）
-├── frontend/              React 18 + Vite 5 + TS，四个页面
+├── frontend/              React 18 + Vite 5 + TS，六个页面（对话/工作台/知识库/进度/验证/架构）
 ├── demo/                  可复现样例：多页 PDF（含空白页）/ Markdown 计划 / 结构化实验记录
 └── scripts/
     ├── build_demo_assets.py   生成 demo 语料
@@ -151,6 +171,12 @@ qoder/researchflow/
     ├── smoke_ingest_retrieve.py / smoke_memory.py
     ├── seed_demo.py           通过 HTTP API 灌入演示数据
     ├── reset_store.py         只清理本项目的 rf_ 前缀对象
+    ├── verify_interactions.cjs   真实浏览器交互验收（30 组）
+    ├── capture_screenshots.cjs / capture_responsive_matrix.cjs  真实运行截图采集
+    ├── build_ui_compare.cjs     把两组真实截图并排成前后对比图
+    ├── make_demo_video.cjs      真实浏览器流程录制演示视频（含配音字幕）
+    ├── build_site_data.py     把真实验收/测试/健康快照导出为展示站数据
+    ├── verify_site.cjs        展示站渲染与响应式检查
     └── run_acceptance.py      T1-T9 验收运行器（150 项校验）
 ```
 

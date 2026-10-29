@@ -28,15 +28,16 @@ SHOTS = PROJECT_ROOT / "site" / "public" / "shots"
 API = os.environ.get("RF_API", "http://127.0.0.1:8787")
 
 SHOT_CAPTIONS = {
-    "s1-overview.png": "项目总览：四个后端组件的实时健康状态与真实计数（seekdb 版本、文档/页/chunk 数）",
+    "s1-overview.png": "对话式首页：左侧项目与会话、中间提问、右侧 Evidence/Context 上下文栏",
     "s2-resume-brief.png": "跨会话恢复：仅凭 project_id 从 PowerContext 取回续研简报与待办",
     "s3-page-navigator.png": "页级证据：PDF 的 5 个物理页全部保留身份，第 4 页空白页被明确标记",
     "s4-page-viewer.png": "证据回查：点击引用打开 seekdb 中存储的原文页，含 page_id 与字符数",
     "s5-retrieval.png": "混合检索：RRF 融合分、覆盖率、相关度与门控状态逐项展示",
     "s6-workbench.png": "证据问答：回答带可点引用，论断按「资料直接支持/模型推断/尚无证据」分级",
-    "s7-memory.png": "任务记忆：显式保存、恢复与历史时间线，全程标记「历史记忆 · PowerContext」",
-    "s8-mobile-overview.png": "移动端布局：390px 视口下导航折叠为顶部栏",
-    "s9-mobile-knowledge.png": "移动端知识库：文档列表与检索面板单列排布",
+    "s7-memory.png": "研究进度面板：显式保存、恢复与历史时间线，全程标记「历史记忆 · PowerContext」",
+    "s10-verification.png": "验证页：四个后端组件的实时健康状态与真实计数（seekdb 版本、文档/页/chunk 数）",
+    "s8-mobile-overview.png": "移动端首页：390px 视口下侧栏与上下文栏折叠为抽屉，输入框仍在首屏",
+    "s9-mobile-knowledge.png": "移动端知识库：文档卡片与检索面板单列排布",
 }
 
 LIMITATIONS = [
@@ -94,6 +95,25 @@ def live_health() -> dict:
         "embedding": health["components"]["embedding"],
         "llm": {k: health["components"]["llm"].get(k) for k in ("enabled", "model")},
         "collection": meta["seekdb"]["collection"],
+    }
+
+
+def browser_interactions() -> dict:
+    """The Chromium interaction run is the only evidence that the UI really behaves as shown."""
+    report = PROJECT_ROOT / "verification" / "browser-acceptance" / "interactions.json"
+    if not report.exists():
+        raise SystemExit("no browser interaction report; run scripts/verify_interactions.cjs first")
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    checked = datetime.fromisoformat(payload["checked_at"].replace("Z", "+00:00")).astimezone()
+    passed, failed = int(payload["passed"]), int(payload["failed"])
+    return {
+        "passed": passed,
+        "failed": failed,
+        "total": passed + failed,
+        "routes": payload["routes"],
+        "viewport_matrix": payload["viewport_matrix"],
+        "checked_at": checked.isoformat(timespec="seconds"),
+        "target": payload["target"],
     }
 
 
@@ -185,6 +205,7 @@ def main() -> int:
             "cases": cases,
         },
         "pytest": pytest_summary(),
+        "interactions": browser_interactions(),
         "live": live_health(),
         "screenshots": shots,
         "benchmarks": benchmarks(),
@@ -196,6 +217,7 @@ def main() -> int:
     print(f"wrote {out.relative_to(PROJECT_ROOT)}")
     print("acceptance:", payload["acceptance"]["summary"])
     print("pytest:", payload["pytest"])
+    print("browser interactions:", payload["interactions"]["passed"], "/", payload["interactions"]["total"])
     print("screenshots:", len(shots))
     return 0
 

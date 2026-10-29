@@ -128,7 +128,7 @@ a:hover { text-decoration: underline; }
 .shot figcaption { padding: 10px 12px; font-size: 13px; color: var(--ink-soft); }
 
 /* ---------- verification ---------- */
-.verify-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.verify-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px; }
 .verify-card { text-align: left; }
 .big-number { font-size: 40px; font-weight: 700; color: var(--ok); margin: 4px 0; letter-spacing: -1px; }
 .muted { color: var(--muted); font-size: 13.5px; }

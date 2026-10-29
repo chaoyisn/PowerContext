@@ -127,18 +127,40 @@ SITE VERIFY OK
   [`11-v3-requirement-matrix.md`](11-v3-requirement-matrix.md)。
 - **仍缺（不得由 Agent 代做）**：8 张 Qoder 对话截图、报名平台 UID、平台最终提交、
   外部真实用户反馈；视频时长 2:05 偏短。逐项见 `10-human-handoff.md`。
+  > 本行是封版审计当时的实测（对应 13:33 成片）。当晚界面简化 + 重新发布后又重录了视频，
+  > **最终成片为 2 分 15 秒 / 6.5 MB（22:21 定稿）**，逐项时长见 `08-demo-video.md` §2；
+  > 「偏短」这一条按评审要求「不要求机械凑够 3 分钟」不再列为缺陷。
 
-## 10. 代码冻结、无无关优化 ✅
+## 10. 代码冻结、无无关优化 ✅（13:3x 当时）
 
-- 本轮**零产品代码改动**：`backend/app/**`、`frontend/src/**`、`site/public/**`、
+- 当时**零产品代码改动**：`backend/app/**`、`frontend/src/**`、`site/public/**`、
   `tests/**` 全部未修改（见 §2 的改动清单）。
-- 新增的两个脚本只服务于交付（视频生成），不改变任何运行期行为；站点未重新构建、未重新发布。
+- 当时新增的两个脚本只服务于交付（视频生成），不改变任何运行期行为；站点未重新构建、未重新发布。
 - 明确放弃的可选优化：不重构前端、不补多用户鉴权、不把后端上线、不改门控阈值、
   不追 3:00 时长、不生成 ZIP 二进制（命令已给出，见下）。
 
+> **§10 之后的边界变化**：随后的 UI 重构与简化轮**改了前端与展示站**（未改后端业务代码、
+> API 契约、检索阈值、记忆逻辑与验收逻辑），并按用户授权重新发布了站点、重新录制了视频。
+> 该轮的冻结核对结论见 §11；「不改后端 / 不改验收口径」这一条始终成立。
+
 ---
 
-## 附 · 需要单文件附件时的打包命令（本轮未执行）
+## 11. 封版后增量复核（2026-10-29 21:3x–22:2x，UI 重构 + 简化 + 重新发布 + 重录）
+
+| 检查 | 结果 | 证据 |
+| --- | --- | --- |
+| 前端构建 | `npm run build`（`tsc -b && vite build`）通过 | `frontend/dist/` |
+| 后端测试 | `149 passed in 55.21s`，项目 venv + 真实 seekdb + 真实 PowerContext | `logs/pytest-20261029T140102.log` |
+| T1–T9 端到端 | `9 / 9 PASS`，150 项校验 150 ok | `verification/acceptance-run/`（运行号 20261029-213920） |
+| 浏览器交互验收 | `30 / 30`，4 视口 × 6 路由，console/page/http 错误各 0 | `verification/browser-acceptance/interactions.json`、`responsive/`（48 张截图） |
+| 全新环境复现 | `23/23 步`（68.4 s），失败过一次并已修好前置检查 | `logs/fresh-env-20261029-222030.json`、`logs/fresh-env-20261029-221217.json` |
+| 站点重新发布 | 同一 project / 同一域名 / 仍 `public`，未新建替代站点 | `verification/site-public/PUBLISH_VERIFICATION.md` |
+| 线上与本地一致 | 15/15 文件一致（HTML 剥离平台水印脚本后逐字节相同） | `verification/site-public/published-site-check.json` |
+| 成片交付检查 | 25 项全 PASS（解码、音画同步、字幕覆盖、场景数、关键帧、线上来源） | `submission-package/demo/video-check.json` |
+| 改动范围 | 全部仍在 `qoder/researchflow/**`；其他赛题 worktree 与 master 未触碰 | `git status --porcelain`、`git diff --name-only d647275c...HEAD` |
+| 敏感信息 | 无 key / 密码 / 完整 UID / 私人语料入库；`.env`、venv、数据库、日志按忽略规则排除 | `PUSH_PRECHECK.md` §2 口径复扫 |
+
+## 附 · 打包命令
 
 ```bash
 cd qoder/researchflow
@@ -152,3 +174,18 @@ zip -r ../ResearchFlow-submission.zip submission-package README.md RUN.md VERIFI
 
 排除项：venv、数据库文件、`logs/`（含运行期字段）、`build/` 中间产物、`.env`、站点描述符。
 打包前请再跑一次 §7 的扫描命令确认零命中。
+**最终交付 ZIP 已实际生成**（不是只给命令）：路径、清单与解压核对结果见
+`FINAL_AUDIT.md` 与 `FILES_TO_UPLOAD.md`。
+
+上面这条 `zip -r` 是 13:3x 写的草案，**不要用它打包**：它不扫描凭据、不自校验、
+也无法排除只在本机转写里出现的绝对路径。封版实际使用的是白名单打包器：
+
+```bash
+cd qoder/researchflow
+backend/.venv/Scripts/python scripts/build_final_zip.py
+```
+
+它收集显式白名单 → 对全部文本成员跑 7 条凭据/隐私正则（命中即**拒绝写出**）→
+写归档与 ZIP 外部的 `.sha256` sidecar → 解压到全新临时目录逐字节比对每个成员 →
+把字节数、压缩比、扫描命中数、逐目录统计、隐私排除项与核对结果写进
+`final-zip-manifest.json`。实测结论见 `FINAL_AUDIT.md` §6。

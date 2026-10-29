@@ -119,7 +119,7 @@ w1-hnsw 的失败在 multilingual + 0.28 配置下可恢复（见 §2.3），已
 | --- | --- | --- |
 | pytest（V1 88 + 中文记忆 21 + 安全 25 + 保留集 15） | **149 passed** | `backend/tests/` |
 | 验收 T1–T9 | **9/9 PASS，150 项校验 0 失败** | `verification/acceptance-run/` |
-| 全新环境复现（新 venv / 新 seekdb 容器与卷 / 新 PowerContext 数据目录） | **20/20 步 PASS** | `logs/fresh-env-20261029-094431.json` |
+| 全新环境复现（新 venv / 新 seekdb 容器与卷 / 新 PowerContext 数据目录） | **23/23 步 PASS**（68.4 s，22:20） | `logs/fresh-env-20261029-222030.json` |
 | 站点渲染验证（数据/截图/刷新/移动端溢出/控制台错误） | 通过 | `scripts/verify_site.cjs` |
 
 ---

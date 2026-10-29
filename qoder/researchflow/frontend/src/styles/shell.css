@@ -1,0 +1,668 @@
+/* 应用外壳：左 Sidebar / 中主区 / 右 Evidence Panel 三段式（桌面优先，移动端抽屉）。 */
+
+.app-shell {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--evidence-w);
+  height: 100dvh;
+  transition: grid-template-columns 0.22s var(--ease);
+}
+
+.app-shell[data-sidebar='collapsed'] {
+  --sidebar-w: var(--sidebar-w-collapsed);
+}
+
+.app-shell[data-evidence='closed'] {
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) 0;
+}
+
+.app-shell[data-evidence='closed'] .evidence {
+  border-left-color: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------ Sidebar */
+
+.sidebar {
+  min-width: 0;
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-3) var(--s-2);
+  min-height: 52px;
+}
+
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: var(--r-sm);
+  background: var(--ink);
+  color: var(--on-ink);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+}
+
+.brand-block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.brand-name {
+  font-size: var(--fs-md);
+  font-weight: 680;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-collapse {
+  margin-left: auto;
+  flex: none;
+}
+
+.app-shell[data-sidebar='collapsed'] .brand-block,
+.app-shell[data-sidebar='collapsed'] .nav-label,
+.app-shell[data-sidebar='collapsed'] .sidebar-section,
+.app-shell[data-sidebar='collapsed'] .sidebar-foot,
+.app-shell[data-sidebar='collapsed'] .new-chat-label {
+  display: none;
+}
+
+.app-shell[data-sidebar='collapsed'] .sidebar-head {
+  justify-content: center;
+  padding: var(--s-3) var(--s-2) var(--s-2);
+}
+
+.app-shell[data-sidebar='collapsed'] .sidebar-collapse {
+  margin: 0;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.app-shell[data-sidebar='collapsed'] .nav-item {
+  justify-content: center;
+  padding: 9px 0;
+}
+
+.app-shell[data-sidebar='collapsed'] .new-chat {
+  justify-content: center;
+  padding: 9px 0;
+}
+
+.sidebar-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 var(--s-2) var(--s-3);
+}
+
+.new-chat {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  margin: var(--s-1) 0 var(--s-3);
+  padding: 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 560;
+  cursor: pointer;
+  box-shadow: var(--sh-1);
+  transition: background-color 0.16s var(--ease), border-color 0.16s var(--ease);
+}
+
+.new-chat:hover {
+  background: var(--surface-2);
+  border-color: var(--text-faint);
+}
+
+.sidebar-section {
+  margin-top: var(--s-4);
+}
+
+.sidebar-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  padding: 0 var(--s-2) var(--s-1);
+  font-size: 11px;
+  font-weight: 660;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 7px var(--s-2);
+  border-radius: var(--r-sm);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 520;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  font-family: inherit;
+  text-align: left;
+  transition: background-color 0.14s var(--ease), color 0.14s var(--ease);
+}
+
+.nav-item:hover {
+  background: var(--hover);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-item-active {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 620;
+  box-shadow: var(--sh-1);
+}
+
+.nav-item-active svg {
+  color: var(--accent);
+}
+
+.nav-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 项目 / 会话列表 */
+
+.side-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.side-row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--text-muted);
+  padding: 7px var(--s-2);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  min-width: 0;
+  transition: background-color 0.14s var(--ease), color 0.14s var(--ease);
+}
+
+.side-row:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.side-row-active {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.side-row-title {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 540;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.side-row-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.side-row-active .side-row-sub {
+  color: var(--accent-text);
+  opacity: 0.8;
+}
+
+.side-empty {
+  padding: var(--s-2);
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+
+.side-new-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-2);
+  margin-top: var(--s-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.side-list li {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.side-list .side-row {
+  flex: 1;
+  min-width: 0;
+}
+
+.side-row-delete {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  display: none;
+  place-items: center;
+  border: none;
+  border-radius: var(--r-xs);
+  background: var(--surface-3);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+}
+
+.side-list li:hover .side-row-delete,
+.side-row-delete:focus-visible {
+  display: grid;
+}
+
+.side-row-delete:hover {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.sidebar-expand {
+  margin: var(--s-1) auto var(--s-3);
+}
+
+.sidebar-foot {
+  margin-top: auto;
+  flex: none;
+  border-top: 1px solid var(--border);
+  padding: var(--s-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  background: var(--sidebar);
+}
+
+.health-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+}
+
+.health-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: help;
+  white-space: nowrap;
+}
+
+.health-chip-bad {
+  border-color: var(--red-line);
+  background: var(--red-soft);
+  color: var(--red);
+  font-weight: 600;
+}
+
+.health-chip-warn {
+  border-color: var(--amber-line);
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+/* ------------------------------------------------------------ 主列 */
+
+.main-column {
+  min-width: 0;
+  /* 作为网格项，min-height 默认 auto 会让整行被消息流撑到 100dvh 之外，
+     结果页面整体滚动、输入框被顶到首屏之下。侧栏与证据面板靠 overflow:hidden 已经免疫。 */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.topbar {
+  flex: none;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-5);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 82%, var(--surface));
+  backdrop-filter: blur(8px);
+}
+
+.topbar-title {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.topbar-title strong {
+  font-size: var(--fs-sm);
+  font-weight: 620;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-title span {
+  font-size: 11px;
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+}
+
+.menu-btn,
+.evidence-toggle-mobile {
+  display: none;
+}
+
+.view {
+  flex: 1;
+  /* 没有 min-width:0，宽内容（长文件名、指标卡）会把中栏顶到超过视口宽度，移动端出现横向溢出。 */
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-inner {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+/* 内容页直接以 .page-inner 作为滚动容器。 */
+.view > .page-inner {
+  flex: 1;
+  /* 它是 .view 的 flex item，而 .page-inner 的 margin:0 auto 会让 auto 外边距优先于
+     stretch —— 不给 width:100% 时，宽度会按内容的 min-content 撑开并把中栏顶出视口。 */
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--s-6) var(--s-7) var(--s-10);
+}
+
+/* ------------------------------------------------------------ Evidence Panel */
+
+.evidence {
+  min-width: 0;
+  overflow: hidden;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.18s var(--ease);
+}
+
+.evidence-head {
+  flex: none;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0 var(--s-3) 0 var(--s-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.evidence-head h2 {
+  font-size: var(--fs-sm);
+  font-weight: 640;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.evidence-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--s-4);
+}
+
+.evidence-empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-6) var(--s-3);
+  color: var(--text-faint);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.evidence-group {
+  margin-bottom: var(--s-6);
+}
+
+.evidence-group:last-child {
+  margin-bottom: 0;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 14, 18, 0.42);
+  z-index: 40;
+  display: none;
+  animation: rf-fade 0.18s var(--ease) both;
+}
+
+.overlay-sidebar {
+  z-index: 55;
+}
+
+@keyframes rf-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.evidence-close {
+  margin-left: auto;
+  flex: none;
+}
+
+/* 证据栏在桌面是常驻列，关闭按钮由顶栏的 panelRight 负责 */
+@media (min-width: 1241px) {
+  .evidence-close {
+    display: none;
+  }
+}
+
+@media (max-width: 1240px) {
+  .overlay-evidence {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .overlay-sidebar {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------------ 响应式 */
+
+@media (max-width: 1240px) {
+  .app-shell,
+  .app-shell[data-evidence='closed'] {
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  }
+
+  .evidence {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(420px, 92vw);
+    z-index: 50;
+    box-shadow: var(--sh-3);
+    transform: translateX(102%);
+    transition: transform 0.24s var(--ease);
+    opacity: 1;
+    pointer-events: auto;
+    border-left: 1px solid var(--border);
+  }
+
+  .app-shell[data-evidence='open'] .evidence {
+    transform: none;
+  }
+
+  .app-shell[data-evidence='closed'] .evidence {
+    opacity: 1;
+  }
+
+  .evidence-toggle-mobile {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 900px) {
+  /* 此断点下侧栏与证据面板都变成抽屉，不再占网格列。
+     必须把带属性选择器的写法一起覆盖掉：否则 .app-shell[data-evidence='closed'] 的
+     两列声明优先级更高，主区会被挤到 264px 宽。 */
+  .app-shell,
+  .app-shell[data-sidebar='collapsed'],
+  .app-shell[data-evidence='closed'],
+  .app-shell[data-sidebar='collapsed'][data-evidence='closed'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(300px, 88vw);
+    z-index: 60;
+    box-shadow: var(--sh-3);
+    transform: translateX(-102%);
+    transition: transform 0.24s var(--ease);
+  }
+
+  .app-shell[data-sidebar='open'] .sidebar {
+    transform: none;
+  }
+
+  .app-shell[data-sidebar='collapsed'] .brand-block,
+  .app-shell[data-sidebar='collapsed'] .nav-label,
+  .app-shell[data-sidebar='collapsed'] .sidebar-section,
+  .app-shell[data-sidebar='collapsed'] .sidebar-foot {
+    display: initial;
+  }
+
+  .app-shell[data-sidebar='collapsed'] .nav-item,
+  .app-shell[data-sidebar='collapsed'] .new-chat {
+    justify-content: flex-start;
+    padding: 7px var(--s-2);
+  }
+
+  .menu-btn {
+    display: inline-flex;
+  }
+
+  .topbar {
+    padding: var(--s-2) var(--s-3);
+  }
+
+  .view > .page-inner {
+    padding: var(--s-4) var(--s-3) var(--s-8);
+  }
+}
+
+@media (max-width: 620px) {
+  h1 {
+    font-size: var(--fs-xl);
+  }
+}

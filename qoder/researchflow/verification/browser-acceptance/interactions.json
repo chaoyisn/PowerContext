@@ -1,0 +1,181 @@
+{
+  "checked_at": "2026-10-29T13:37:35.251Z",
+  "target": "http://127.0.0.1:8787",
+  "viewport_matrix": [
+    390,
+    768,
+    1280,
+    1920
+  ],
+  "routes": [
+    "/",
+    "/workbench",
+    "/knowledge",
+    "/memory",
+    "/verification",
+    "/architecture"
+  ],
+  "passed": 30,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "侧边栏折叠后主区变宽、标题隐藏，再展开恢复",
+      "ok": true,
+      "ms": 1666
+    },
+    {
+      "name": "证据面板可通过顶栏按钮开合，并改变网格列宽",
+      "ok": true,
+      "ms": 715
+    },
+    {
+      "name": "Shift+Enter 只换行、不发送；输入法组合态的 Enter 也不发送",
+      "ok": true,
+      "ms": 522
+    },
+    {
+      "name": "输入框随内容长高，最高 240px 后内部滚动",
+      "ok": true,
+      "ms": 563
+    },
+    {
+      "name": "Enter 发送真实问答：加载态 → 论断区块 → 引用 chip，文本与 API 返回一致",
+      "ok": true,
+      "ms": 2221
+    },
+    {
+      "name": "citation 点击：证据面板定位到高亮条目，并打开真实原文页",
+      "ok": true,
+      "ms": 836
+    },
+    {
+      "name": "向上翻看历史时不再被强制拉回底部，「回到最新消息」可用",
+      "ok": true,
+      "ms": 1666
+    },
+    {
+      "name": "仅检索模式：走 /api/retrieval/search，命中数与接口一致，不打 LLM",
+      "ok": true,
+      "ms": 637
+    },
+    {
+      "name": "渐进披露：折叠选项后控件真的收起，但非默认设置仍写在按钮上",
+      "ok": true,
+      "ms": 682
+    },
+    {
+      "name": "PDF 上传：新文档入库、计数与接口一致、列表可见，随后清理",
+      "ok": true,
+      "ms": 2879
+    },
+    {
+      "name": "重复上传同一 PDF：命中去重并直接复用库中版本",
+      "ok": true,
+      "ms": 769
+    },
+    {
+      "name": "新建/选中验收项目后显式保存进度，写入结果与接口一致",
+      "ok": true,
+      "ms": 2476
+    },
+    {
+      "name": "跨会话恢复：重新进入页面后凭 project_id 取回同一条记忆",
+      "ok": true,
+      "ms": 2850
+    },
+    {
+      "name": "相同内容重复保存：命中 snapshot_unchanged，不产生重复记忆",
+      "ok": true,
+      "ms": 295
+    },
+    {
+      "name": "请求失败时给出可读错误反馈（拦截 /api/qa/ask）",
+      "ok": true,
+      "ms": 5353
+    },
+    {
+      "name": "深色主题：切换生效、刷新后保持、正文对比度达 WCAG AA",
+      "ok": true,
+      "ms": 2100
+    },
+    {
+      "name": "390px：侧栏与证据面板为抽屉，遮罩与 Esc 都能关闭",
+      "ok": true,
+      "ms": 3134
+    },
+    {
+      "name": "移动端键盘弹起（视口收缩）时输入框仍完整可见",
+      "ok": true,
+      "ms": 1708
+    },
+    {
+      "name": "390px 输入 16px 字号，避免 iOS 聚焦缩放",
+      "ok": true,
+      "ms": 241
+    },
+    {
+      "name": "390px：六个路由均无横向溢出",
+      "ok": true,
+      "ms": 4766
+    },
+    {
+      "name": "768px：六个路由均无横向溢出",
+      "ok": true,
+      "ms": 4938
+    },
+    {
+      "name": "1280px：六个路由均无横向溢出",
+      "ok": true,
+      "ms": 4966
+    },
+    {
+      "name": "1920px：六个路由均无横向溢出",
+      "ok": true,
+      "ms": 5017
+    },
+    {
+      "name": "1920px：消息列与输入框同宽并水平居中",
+      "ok": true,
+      "ms": 930
+    },
+    {
+      "name": "每个路由深链直达与刷新都落在同一页",
+      "ok": true,
+      "ms": 9904
+    },
+    {
+      "name": "顶栏导航可在 6 个页面之间来回切换且不残留抽屉",
+      "ok": true,
+      "ms": 5097
+    },
+    {
+      "name": "整个过程没有未捕获的 JS 错误",
+      "ok": true,
+      "ms": 1
+    },
+    {
+      "name": "控制台没有新增 error（资源缺失/接口异常）",
+      "ok": true,
+      "ms": 0
+    },
+    {
+      "name": "接口调用没有 4xx/5xx（受控失败与上游 LLM 抖动除外）",
+      "ok": true,
+      "ms": 0
+    },
+    {
+      "name": "localStorage 会话回放：刷新后同一段对话仍在，且标注为本机数据",
+      "ok": true,
+      "ms": 1060
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "http_errors": [],
+  "upstream_5xx_on_qa_ask": [],
+  "errors_during_controlled_failure": {
+    "console": 1,
+    "page": 0,
+    "http": 0
+  }
+}

@@ -200,18 +200,22 @@ invalid_citations: []
 
 用真实浏览器访问 `http://127.0.0.1:8787/`（后端同源提供前端构建产物）逐页验证：
 
-- 项目总览：健康条显示 seekdb 真实版本/计数、PowerContext 1.4.1、LLM、embedding；
-  项目卡片展开显示续研简报与「历史记忆 · PowerContext」标记的待办。
-- 知识库：页导航显示 5 个物理页且第 4 页标记「空白页（保留页级身份）」；
-  检索结果卡片含 score+score_kind、coverage、relevance、chunk_id、门控徽章；
+- 对话首页 `/`：三段式外壳（左项目 / 本机会话侧栏、中首页与提问框、右 Evidence / Context 面板）；
+  侧栏底部实时展示 seekdb / PowerContext / LLM 状态点。
+- 知识库 `/knowledge`：文档卡片展开页导航显示 5 个物理页且第 4 页标记「空白页（保留页级身份）」；
+  检索结果卡片含 score+score_kind、coverage、relevance、chunk_id、门控徽章，并同步到右侧「本轮检索命中」；
   「查看原文」弹窗显示 seekdb 存储原文与 `page_id`/`char_count`。
-- AI 工作台：grounded 回答带 `[c1]` 可点引用；论断核验「资料直接支持：2」；
+- 证据问答 `/workbench`：grounded 回答带 `[c1]` 可点引用；论断核验「资料直接支持：2」；
   记忆面板紫色通道并带「不是文献原文证据」声明。
-- 任务记忆：PowerContext 状态横幅、保存表单（含从检索结果选择证据）、
-  恢复简报、按类型分组的历史时间线（seq / artifact_id / revision / state）。
+- 研究进度 `/memory`：PowerContext 状态横幅、保存表单（含从检索结果选择证据）、
+  自动恢复的续研简报、按类型分组的研究卡片与历史时间线（seq / artifact_id / revision / state）。
+- 验证 `/verification`：seekdb 真实版本/计数、PowerContext 1.4.1、LLM、embedding 的实时健康，
+  以及 T1–T9 验收与 pytest 真实日志。
 
-响应式：侧边栏在 ≤900px 折叠为顶部导航（CSS 媒体查询实现）；
-桌面端已浏览器实测，窄屏仅做了 CSS 层面验证，未逐页截图。
+响应式（automated，`scripts/capture_screenshots.cjs` 于 390×844 无头 Chromium 逐路由断言）：
+侧栏与证据面板在 ≤900px 折叠为抽屉，六个路由 `documentElement.scrollWidth == clientWidth`
+且主区内无横向滚动容器溢出，全部通过；同时截图 2 张移动端页面（`s8`/`s9`）。
+真实手机上的手感（human）未做逐页人工复核。
 
 ---
 
@@ -309,7 +313,14 @@ invalid_citations: []
 新建 PowerContext 数据目录（端口 17431）、新建 API（端口 8790、前缀 `rffresh_`），
 然后上传样例 → 查询并回查第 5 页 → 建项目绑 Scope → 保存进度 → **独立进程恢复** → 清理容器与卷。
 
-结果：**20/20 步 PASS**（76.2s），原始记录 `logs/fresh-env-20261029-094431.json`。
+结果：**23/23 步 PASS**（68.4 s），原始记录 `logs/fresh-env-20261029-222030.json`（封版当晚 22:20 重跑）。
+23 步 = 评审旅程本体 21 步 + 端口前置检查 + 容器与卷清理；报告里的 `full reviewer journey completed`
+一行写的是 `21/21 steps passed`（清理步骤在其之后才追加）。
+同日 09:44 的一次为 22/22（`logs/fresh-env-20261029-094431.json`）；22:12 的一次失败也已保留
+（`logs/fresh-env-20261029-221217.json`，10/11）——本机另一进程恰好占用了 8790 端口，而旧版就绪判据
+把「任何 <500 的响应」当作服务已就绪，于是错误被推迟成 `KeyError: 'components'`。
+已修：端口占用前置检查（新增一步，故总数从 22 变 23）、就绪判据要求响应体含 `components`、
+三个端口与容器名可用 `RF_FRESH_SEEKDB_PORT` / `RF_FRESH_PC_PORT` / `RF_FRESH_API_PORT` / `RF_FRESH_CONTAINER` 覆盖。
 关键行：
 
 ```
@@ -359,7 +370,8 @@ W1 基线 6/6 定位但**不产出任何引用对象**且耗时不含人工阅�
 ### 7.6 展示站验证与正式发布
 
 **本地验证**：`scripts/verify_site.cjs`（Playwright 无头）：证据数据渲染（9/9 PASS、149 passed、9 行验收表）、
-9 张截图全部加载、锚点跳转与整页刷新正常、390px 横向溢出 0px、无 console/pageerror。
+10 张截图全部加载、锚点跳转与整页刷新正常、390px 横向溢出 0px、无 console/pageerror。
+（2026-10-29 前端 UI 重构后重跑：`screenshots: 10 broken: 0`、`mobile h-overflow px: 0`、`failed requests (>=400): 0`。）
 预览图 `site/preview/site-desktop.png`、`site/preview/site-mobile.png`。
 
 **云端已正式发布并公开访问**（V3，2026-10-29）：<https://researchflow-5esfsogn38f.qoder.zone>
@@ -370,3 +382,41 @@ W1 基线 6/6 定位但**不产出任何引用对象**且耗时不含人工阅�
 `verification/site-public/`（`PUBLISH_VERIFICATION.md`、`site-desktop.png`、`site-mobile.png`）。
 发布过程与能力边界见 `SITE_DEPLOYMENT.md` §5。V2 期间的 `sites_unavailable` 阻塞已解除，
 其原始实测记录保留在 `SITE_DEPLOYMENT.md` §1 作为过程证据。
+
+## 8. 前端 UI 重构后的真实浏览器交互验收（2026-10-29 第三轮）
+
+执行方式：`scripts/verify_interactions.cjs`（Playwright 驱动真实 Chromium，对着真实后端
+`127.0.0.1:8787` + seekdb + PowerContext + DeepSeek 跑真实手势）。**不检查 mock、不只看 DOM**：
+每条断言都拿页面渲染出来的文本与脚本拦截到的接口 JSON 逐字比对，因此"界面有东西"不等于通过。
+
+结果：**30 组全部通过 / 0 失败**（`verification/browser-acceptance/interactions.json`，
+运行日志 `interactions-run.log`，记录于 2026-10-29 18:59 +08:00，标注 **automated**）。
+本轮界面做了减法（首页只留问题入口、输入区次要控件收进「选项」、侧栏去掉重复说明），
+能力一项未删，因此新增一组用例专门验证渐进披露本身。
+
+| 组别 | 断言的真实行为 |
+| --- | --- |
+| 外壳 | 侧栏 264→68→264px 折叠且主区变宽 >180px；证据面板第三列压到 0px 再恢复 |
+| 输入区 | Shift+Enter 只插换行不发请求；`isComposing` 的 Enter 不发送；输入框长高到 240px 上限后内部滚动 |
+| 完整问答 | Enter 触发真实 `/api/qa/ask` → 加载态与「生成中」禁用态 → 论断区块渲染文本与接口 `claims[]` 逐条一致（本轮 2/2 命中，mode=grounded） |
+| 引用链路 | 按接口 `citation_id` 选 chip → 点击后面板条目进入高亮 → 打开原文页并核对 `page_id` 与 seekdb 返回正文一致 → Esc 关弹窗且不连带关掉面板 |
+| 滚动 | 向上翻看时不被拉回底部，「回到最新消息」出现且点击后真正回到底部 |
+| 仅检索 | 走 `/api/retrieval/search`，命中数与门控结果与接口一致，且**没有**打 LLM |
+| 渐进披露 | 折叠「选项」后 `#qa-project` 与回答方式确实从 DOM 收起，但非默认设置仍写在按钮文案上；重新展开后勾选与分段选择保持原值，切回问答后按钮同步 |
+| 上传 | 真实上传新文档：`doc_id`/页数/chunk 数与接口一致、列表可见、随后删除；重复上传命中去重 |
+| 记忆 | 显式保存写入 PowerContext 且条数与接口一致；跨会话凭 `project_id` 取回同一条；相同内容重复保存命中 `snapshot_unchanged` 并给出「内容未变化」文案 |
+| 错误反馈 | 拦截 `/api/qa/ask` 制造失败 → 页面给出可读错误 + 重试按钮 → 点重试真的重新发请求并渲染成功、错误消失 |
+| 深色模式 | 切换生效、刷新保持，正文对比度实测 **5.27:1**（≥ WCAG AA 4.5:1） |
+| 移动端 | 390px 侧栏/证据面板为抽屉，遮罩点击与 Esc 都能关；视口收缩（键盘弹起）时输入框仍完整可见；输入字号 16px 不触发 iOS 聚焦缩放 |
+| 响应式 | 390 / 768 / 1280 / 1920 四宽度 × 6 路由整页无横向溢出（容器内滚动单独统计，不误判为溢出）；1920px 消息列与输入框同宽居中 |
+| 路由 | 6 个路由深链直达与刷新都落在同一页；顶栏来回切换不残留抽屉 |
+| 运行时健康 | 全程 0 未捕获 JS 错误、0 非预期 console error、0 非预期 4xx/5xx；刷新后本机会话仍在且标注「最近会话 · 本机」 |
+
+同批产出：`verification/browser-acceptance/responsive/` 48 张真实截图（6 路由 × 4 宽度 × 明暗两套，
+`manifest.json` 记录每张的 `scrollWidth/clientWidth`，溢出 0 张）；
+`verification/browser-acceptance/compare/` 重构前后对比图与线上站点当前快照。
+
+过程事实（不修饰）：本轮此前的一次运行中，上游 LLM 对 `/api/qa/ask` 返回过 503（后端重试到上限后
+如实透传）。当时问答轮次未提交，导致后续 3 组依赖该轮结果的用例连带失败。脚本据此改为按同一手势
+重发（最多 3 次）并把这类上游 5xx 从「前端交互失败」里单独摘出来计数——应用侧的错误卡+重试路径本身
+由「错误反馈」用例单独断言，第三方抖动不计入前端缺陷。上表为修复后完整重跑的结果。

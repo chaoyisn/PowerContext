@@ -45,8 +45,8 @@ cd backend && RF_LLM_API_KEY="$DEEPSEEK_API_KEY" .venv/Scripts/python -m app.api
 cd .. && backend/.venv/Scripts/python scripts/seed_demo.py
 ```
 
-打开 <http://127.0.0.1:8787/>。健康条应显示
-`5.7.25-OceanBase seekdb-v1.4.0.0`、`PowerContext 1.4.1`、分析器 `ik`、集合 `rf_chunks`
+打开 <http://127.0.0.1:8787/>（对话首页，可直接提问）。健康状态与真实计数在 <http://127.0.0.1:8787/verification>，
+应显示 `5.7.25-OceanBase seekdb-v1.4.0.0`、`PowerContext 1.4.1`、分析器 `ik`、集合 `rf_chunks`
 与真实计数；若显示降级状态，先按 `RUN.md` §9 排障。
 PowerContext 就绪判断：`curl http://127.0.0.1:17429/health/ready` → `{"status":"ready",…}`。
 
@@ -64,8 +64,12 @@ cd backend && .venv/Scripts/python -m pytest tests/ -q
 cd .. && backend/.venv/Scripts/python scripts/run_acceptance.py
 # 报告：logs/acceptance-<时间戳>/acceptance-report.md + .json + 每用例 .log
 
-# 全新环境评审旅程（新建 venv / 新 seekdb 容器 2890 / 新 PowerContext 17431，跑完自动清理）
+# 全新环境评审旅程（新建 venv / 新 seekdb 容器 / 新 PowerContext 数据目录，跑完自动清理）
 backend/.venv/Scripts/python scripts/fresh_env_e2e.py
+# 期望：报告 JSON 里 passed == total（封版当晚一跑为 23/23，68.4 s）
+# 端口被本机其他进程占用时会**在第 2 步就明确失败**，可改用
+#   RF_FRESH_SEEKDB_PORT / RF_FRESH_PC_PORT / RF_FRESH_API_PORT / RF_FRESH_CONTAINER
+# 指定空闲端口与容器名后重跑
 
 # 只清理本项目对象（rf_ 前缀），不碰同机其他赛题
 backend/.venv/Scripts/python scripts/reset_store.py --yes
@@ -83,20 +87,46 @@ backend/.venv/Scripts/python scripts/reset_store.py --yes
 3. **seekdb upsert 后需要 `refresh_index()`** 才能立刻被检索到，本项目已在写入路径处理。
 4. **同机共享 seekdb 容器**：本项目全部对象带 `rf_` / `rfacc_` 前缀隔离；
    `run_acceptance.py --restart-seekdb` 会影响同机其他赛题，除非必要不要加。
+   封版本机就出现过另一个会话的进程占用 8790，导致全新环境复现误判就绪——
+   现在脚本会先检查三个端口是否空闲，因此这类冲突在第 2 步就报出来，
+   而不是拖到后面变成一句看不懂的 `KeyError`。
 5. **不配置 `RF_LLM_API_KEY` 不影响验收主链路**：问答会明确标注「仅检索模式」，
    不会把检索摘要冒充模型回答。
 
 ## 5. 复现演示视频（Task A 产物）
 
 ```bash
-# 前置：三个进程已启动并已 seed_demo.py（见 §2）
+# 前置：三个进程已启动并已 seed_demo.py（见 §2）；展示站两个场景直接录公开线上地址
 NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" \
   node scripts/make_demo_video.cjs
 # 产物：submission-package/demo/researchflow-demo.mp4 + .vtt + video-manifest.json
+#       + video-check.json（对成片执行的 25 项交付自动检查）+ keyframes/（11 张逐场景抽帧）
 # 中间件（录屏 / 配音 / ASS）：build/video/（已 gitignore，不进提交包）
 ```
 
-`--no-pytest` 复用缓存的真实 pytest 输出；`--force-record` 忽略缓存录屏全部重录。
+`--no-pytest` 复用缓存的真实 pytest 输出；`--force-record` 忽略缓存录屏全部重录；
+`RF_SITE_URL` 改线上地址（默认即已发布站点），`RF_SITE_LOCAL` 可临时改回本地构建。
+收尾会自动跑 `scripts/check_demo_video.cjs`，任一检查不过则整个出片流程非零退出。
+
+## 5.1 复现最终上传包（ZIP）
+
+```bash
+backend/.venv/Scripts/python scripts/build_final_zip.py     # 可选参数：自定义输出 zip 路径
+# 产物（默认写到仓库之外的交付目录，避免大体积媒体被误提交）：
+#   D:\OceanBase\deliverables\researchflow-final\
+#     ResearchFlow-Qoder-Final.zip        303 个成员
+#     ResearchFlow-Qoder-Final.zip.sha256 一行式，可 sha256sum -c
+#     final-zip-manifest.json             字节数 / 压缩比 / 逐目录统计 / 隐私排除项 / 解压核对结果
+#     researchflow-demo.mp4               成片副本（与仓库内同字节）
+```
+
+四条内建纪律，改脚本时不要绕过：**白名单外一律不收**（`INCLUDE_DIRS` / `INCLUDE_FILES` /
+`INCLUDE_LOGS`）；**5 个关键成员缺失即失败**（`required member not collected`，防止嵌套同名目录
+被 `SKIP_DIRS` 静默吞掉，例如展站的 `site/public/data/evidence.json`）；
+**7 条凭据与本机路径正则命中即拒绝写出**；**写完必须解压回全新临时目录逐字节比对**，
+`missing / differing / unexpected` 任一非 0 则非零退出。
+`PRIVACY_SKIPPED` 里那份 `interactions-run.log` 是"真实转写含本机路径"的例子——
+不改写证据、不放进包、理由随清单落盘。
 
 ## 6. 本地边界
 

@@ -1,0 +1,177 @@
+/* 验证页与文档页：timeline、指标卡、说明列表。 */
+
+.page-inner-narrow {
+  max-width: 920px;
+}
+
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: var(--s-3);
+  margin-bottom: var(--s-3);
+}
+
+.metric-row:last-child {
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------ timeline */
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: var(--border);
+}
+
+.tl-item {
+  display: flex;
+  gap: var(--s-3);
+  align-items: flex-start;
+  position: relative;
+}
+
+.tl-dot {
+  flex: none;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--green-soft);
+  border: 1px solid var(--green-line);
+  color: var(--green);
+  z-index: 1;
+}
+
+.tl-dot-num {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tl-body {
+  min-width: 0;
+  flex: 1;
+  padding-bottom: 2px;
+}
+
+.tl-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: 3px;
+}
+
+.tl-head strong {
+  font-size: var(--fs-md);
+  font-weight: 620;
+}
+
+.tl-body p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.62;
+  color: var(--text-muted);
+}
+
+.tl-meta {
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------ 列表与卡片 */
+
+.limit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.limit-list strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-sm);
+  font-weight: 640;
+}
+
+.limit-list p {
+  margin: 3px 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.62;
+  color: var(--text-muted);
+}
+
+.label-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--s-3);
+}
+
+.label-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--s-3);
+  background: var(--surface-2);
+}
+
+.label-card .badge {
+  margin-bottom: var(--s-2);
+}
+
+.label-card p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.docs-p {
+  margin: 0 0 var(--s-3);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.docs-p:last-child {
+  margin-bottom: 0;
+}
+
+.docs-p code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-xs);
+  padding: 0 4px;
+}
+
+@media (max-width: 900px) {
+  .tl-meta {
+    margin-left: 0;
+  }
+}

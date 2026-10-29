@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-10-29T14:21:40.765Z",
+  "file": "researchflow-demo.mp4",
+  "bytes": 6796164,
+  "durationSeconds": 134.97,
+  "videoCodec": "h264/High",
+  "videoResolution": "1280x800",
+  "videoPixFormat": "yuv420p",
+  "frames": 4046,
+  "audioCodec": "aac",
+  "audioChannels": 2,
+  "avSyncGapSeconds": 0.028,
+  "decodeClean": "no decoder errors",
+  "cueCount": 28,
+  "cueFirstStart": 0,
+  "cueLastEnd": 134.15,
+  "cueMaxGapSeconds": 0.83,
+  "cuesWithinDuration": "28 cues",
+  "cueCoverageRatio": 0.89,
+  "sceneCount": 11,
+  "scenesWithCaptions": "11/11",
+  "browserScenesWithMeasuredWallTime": 8,
+  "keyframesPresent": "11/11",
+  "noZeroDurationScene": "8.5,11.4,13.87,13.88,12.3,17.73,14.21,15.31,13.2,9.27,5.27",
+  "showcaseRecordedFromPublishedUrl": "https://researchflow-5esfsogn38f.qoder.zone",
+  "publishedHostInFinalScene": "researchflow-5esfsogn38f.qoder.zone",
+  "publishedSiteReachable": {
+    "status": 200,
+    "url": "https://researchflow-5esfsogn38f.qoder.zone"
+  },
+  "publishedEvidenceIsCurrent": {
+    "generated_at": "2026-10-29T21:42:26+08:00",
+    "interactions": "30/30"
+  },
+  "publishedPageMatchesLocalBuild": "12132B served == 12132B local after removing the platform watermark",
+  "pass": true,
+  "failureCount": 0
+}

@@ -1,0 +1,52 @@
+{
+  "generated_at": "2026-10-29T22:55:57+08:00",
+  "archive": "D:\\OceanBase\\deliverables\\researchflow-final\\ResearchFlow-Qoder-Final.zip",
+  "archive_bytes": 32753499,
+  "archive_sha256": "0b76d3a71ffb94e7aeb05c5504b1e80c033342b0a95aa7b3b03e6798c9ca906d",
+  "members": 303,
+  "raw_bytes": 34916402,
+  "compression_ratio": 0.9381,
+  "scan_hits": [],
+  "extract_ok": true,
+  "privacy_skipped": {
+    "verification/browser-acceptance/interactions-run.log": "line 2 records the local Chromium install path, which contains the Windows user folder"
+  },
+  "tree": {
+    "ResearchFlow": {
+      "files": 13,
+      "bytes": 214824
+    },
+    "ResearchFlow/backend": {
+      "files": 45,
+      "bytes": 260471
+    },
+    "ResearchFlow/demo": {
+      "files": 5,
+      "bytes": 13606
+    },
+    "ResearchFlow/evidence-logs": {
+      "files": 1,
+      "bytes": 263
+    },
+    "ResearchFlow/frontend": {
+      "files": 32,
+      "bytes": 307422
+    },
+    "ResearchFlow/scripts": {
+      "files": 22,
+      "bytes": 281532
+    },
+    "ResearchFlow/site": {
+      "files": 15,
+      "bytes": 1348102
+    },
+    "ResearchFlow/submission-package": {
+      "files": 32,
+      "bytes": 11376712
+    },
+    "ResearchFlow/verification": {
+      "files": 138,
+      "bytes": 21113470
+    }
+  }
+}

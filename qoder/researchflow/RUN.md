@@ -91,23 +91,28 @@ backend/.venv/Scripts/python scripts/seed_demo.py
 
 ## 3. 演示流程（约 5 分钟）
 
-1. **项目总览** `http://127.0.0.1:8787/`
-   健康条显示 seekdb 真实版本与计数、PowerContext 1.4.1、LLM 与 embedding provider。
-   点击项目卡片 → 看到「历史记忆 · PowerContext」标记的续研简报与待办。
+1. **对话首页** `http://127.0.0.1:8787/`
+   三段式外壳：左侧项目 / 本机会话侧栏、中间首页价值主张与四个能力入口（找证据 / 看原文页 /
+   记住研究进度 / 恢复下一步）、右侧 Evidence / Context 面板。底部输入框即可直接提问。
+   后端健康与真实计数（seekdb 版本、文档 / 页 / chunk、PowerContext、LLM、embedding）在
+   **验证页** `/verification`；侧栏底部只展示 seekdb / PowerContext / LLM 三个实时状态点。
 2. **知识库** `/knowledge`
    - 展开 `seekdb_hybrid_retrieval_notes.pdf` 的页导航：5 个物理页，第 4 页标记「空白页（保留页级身份）」。
    - 点第 5 页 → 弹窗显示 seekdb 中存储的原文与 `page_id`。
    - 搜索「一条记录如果在两条腿里都排第一，RRF 融合分数是多少」，勾选「启用证据门控」→
-     命中第 5 页，卡片显示 score（RRF 融合分）、coverage、relevance、chunk_id。
+     命中第 5 页，卡片显示 score（RRF 融合分）、coverage、relevance、chunk_id，
+     同时命中结果逐条出现在右侧「本轮检索命中」面板。
    - 点「对比三种检索方式」→ 三列并排 + 重叠分析。
    - 再拖一份 `demo/research_plan.md` 上传 → 显示「重复上传已去重」。
-3. **AI 工作台** `/workbench`
+3. **证据问答工作台** `/workbench`
    - 关联项目后提问上面的问题 → 回答带 `[c1]`，论断核验显示「资料直接支持：2」，
-     引用面板可点开第 5 页原文；记忆面板显示紫色「历史记忆 · PowerContext」通道。
+     点引用编号在右侧面板高亮对应证据、并可点开第 5 页原文；记忆面板显示紫色「历史记忆 · PowerContext」通道。
    - 提问「这篇文档里有没有关于量子纠缠实验的测量结果」→
      回答「尚无证据」，`citations` 为空，**不会编造引用**。
-4. **任务记忆** `/memory`
-   - 选项目 → 看到恢复的续研简报、按类型分组的 16 条记忆（含 seq / artifact_id / revision）。
+   - 「保存到记忆」是显式按钮，保存成功后在右侧面板回显写入结果。
+4. **研究进度** `/memory`
+   - 选项目即自动恢复 → 续研简报、按类型分组的研究卡片（含 seq / artifact_id / revision）、
+     16 条记忆与历史时间线。
    - 在保存表单加一条 next_steps → 保存 → 显示 `written=1`、`seq` 递增、snapshot artifact id。
    - 再点一次保存同样内容 → 显示「内容未变化，未产生重复记忆」。
 
@@ -202,11 +207,18 @@ python scripts/fresh_env_e2e.py        # C1 全新 venv/容器/数据目录的�
 
 ## 8. 比赛网站本地预览
 
+网站里的截图与数字都由下面这几条命令从真实运行里产出，逐条执行即可复现：
+
 ```bash
-python scripts/build_site_data.py      # 从真实验收/pytest/健康检查导出证据数据
+export NODE_PATH="$(npm root -g)/@playwright/cli/node_modules"
+node scripts/capture_screenshots.cjs         # 真实运行截图 -> site/public/shots/
+node scripts/capture_responsive_matrix.cjs   # 6 路由 × 4 宽度 × 明暗 = 48 张 -> verification/browser-acceptance/responsive/
+node scripts/build_ui_compare.cjs            # 把两组真实截图并排成前后对比图（可用 RF_COMPARE_* 换一组）
+node scripts/verify_interactions.cjs         # 30 组真实浏览器交互验收 -> verification/browser-acceptance/interactions.json
+python scripts/build_site_data.py            # 从上面这些真实产物 + pytest + 健康快照导出展示站数据
 cd site/public && python -m http.server 4173
 # 打开 http://127.0.0.1:4173/
-NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" node scripts/verify_site.cjs
+node scripts/verify_site.cjs http://127.0.0.1:4173/   # 第一个参数可换成线上地址；第二个参数是截图输出目录
 ```
 
 发布到 Qoder Sites 的步骤与当前阻塞见 [SITE_DEPLOYMENT.md](./SITE_DEPLOYMENT.md)。

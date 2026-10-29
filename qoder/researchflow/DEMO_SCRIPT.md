@@ -2,9 +2,16 @@
 
 用途：比赛评审演示视频（目标时长 **2 分 40 秒**，可压缩到 2 分 10 秒或放宽到 3 分钟）。
 原则：**只演示已存在的真实功能与真实数据**，不摆拍不存在的结果，不使用模拟查询。
-录制与配音需人工完成（见 §5 移交清单）；本文提供逐镜脚本、旁白稿、录制步骤与关键帧截图清单。
+**成片已由脚本自动录制完成**（`submission-package/demo/researchflow-demo.mp4`，
+2 分 15 秒，逐场景时长与真实操作耗时见 `submission-package/08-demo-video.md`）；
+本文保留为分镜依据与**可选的真人重录脚本**，不是待办。
 
 在线展示站（可作为片头/片尾镜头，无需本地环境）：<https://researchflow-5esfsogn38f.qoder.zone>
+> 2026-10-29 21:46 已把**简化后的冻结构建**更新发布到该地址（同一 project、同一域名、仍为 public）。
+> 线上 15 个文件与本地 `site/public/` 一致（HTML 去掉平台注入的水印脚本后逐字节相同），见
+> `verification/site-public/PUBLISH_VERIFICATION.md`。成片的 c2 / c10 两个场景就是录自这个线上地址。
+> 本地若要先看新版：`python scripts/build_site_data.py` 重新生成，再用
+> `python -m http.server 4181 --directory site/public` 打开。
 
 ---
 
@@ -30,7 +37,7 @@ backend/.venv/Scripts/python scripts/seed_demo.py     # 上传 demo/ 三份文�
 | 录屏 | 1080p / 30fps；分镜分段录制，后期拼接 | 出错只需重录单镜 |
 | 数据状态 | 录制前跑一次 `scripts/seed_demo.py`，确保 3 文档 / 7 页 / 13 chunk | 与网站上的真实计数一致 |
 
-**录制前自检（1 分钟）**：打开首页确认健康条显示
+**录制前自检（1 分钟）**：打开 `/verification` 确认健康状态显示
 `5.7.25-OceanBase seekdb-v1.4.0.0`、`PowerContext 1.4.1`、`ik`、`rf_chunks`；
 若显示降级状态，先按 `RUN.md` §9 排障，**不要带着降级状态录制**。
 
@@ -42,14 +49,14 @@ backend/.venv/Scripts/python scripts/seed_demo.py     # 上传 demo/ 三份文�
 
 | # | 时长 | 画面 / 操作 | 证据锚点（必须真实可见） |
 | --- | --- | --- | --- |
-| S0 片头 | 0:00–0:12 | 静态标题卡：项目名 + 一句话定位；后半段切到公开站点首页滚动一屏 | 站点 URL `researchflow-5esfsogn38f.qoder.zone` |
-| S1 入库 | 0:12–0:42 | `/knowledge`：拖入 `demo/seekdb_hybrid_retrieval_notes.pdf` → 显示解析结果；再拖一次同一文件 → 去重提示；首页健康条计数特写 | `documents 3 / pages 7 / chunks 13`；「重复上传已去重」；`doc_id` 为文件 SHA-256 |
+| S0 片头 | 0:00–0:12 | 静态标题卡：项目名 + 一句话定位；后半段切到展示站首页滚动一屏 | 站点 URL `researchflow-5esfsogn38f.qoder.zone`（画面即该地址上当前的简化后版本，21:46 已更新发布） |
+| S1 入库 | 0:12–0:42 | `/knowledge`：拖入 `demo/seekdb_hybrid_retrieval_notes.pdf` → 显示解析结果；再拖一次同一文件 → 去重提示；`/verification` 健康计数特写 | `documents 3 / pages 7 / chunks 13`；「重复上传已去重」；`doc_id` 为文件 SHA-256 |
 | S2 三模检索 | 0:42–1:12 | `/knowledge` 搜索「一条记录如果在两条腿里都排第一，RRF 融合分数是多少」，勾选「启用证据门控」→ 命中第 5 页；点「对比三种检索方式」→ 三列并排 + 重叠分析 | `vector / fulltext / hybrid`；RRF 分数 `0.0328`；卡片上的 `score_kind`、`coverage`、`relevance`、`chunk_id` |
-| S3 页级引用 | 1:12–1:40 | 展开该 PDF 的页导航（5 个物理页）→ 点第 4 页显示「空白页（保留页级身份）」→ 点第 5 页弹出 seekdb 中存储的原文；切到 `/workbench` 提同一问题 → 回答带 `[c1]`，点引用面板回查第 5 页原文 | 物理页号从 1 开始；`page_id`；「资料直接支持：2」；不存在页返回 404 |
+| S3 页级引用 | 1:12–1:40 | 展开该 PDF 的页导航（5 个物理页）→ 点第 4 页显示「空白页（保留页级身份）」→ 点第 5 页弹出 seekdb 中存储的原文；切到 `/workbench` 提同一问题 → 回答带 `[c1]`，点引用面板回查第 5 页原文。提问框默认只有**上传 / 检索方式 / 选项**三个控件，`project_id`、`top_k`、门控等都收在「选项」里，非默认值直接写在按钮上 | 物理页号从 1 开始；`page_id`；「资料直接支持：2」；不存在页返回 404 |
 | S4 无证据不编造 | 1:40–1:58 | `/workbench` 提问「这篇文档里有没有关于量子纠缠实验的测量结果」→ 回答「尚无证据」，引用面板为空 | `citations` 为空；论断标注「尚无证据」 |
 | S5 保存进度 | 1:58–2:16 | `/memory`：选项目 → 保存表单里加一条 `next_steps` → 保存 → `written=1`、`seq` 递增、快照 artifact id；再点一次同样内容 → 提示内容未变化 | PowerContext 通道标记；`written=1`；`skipped_duplicates` |
-| S6 跨会话恢复 | 2:16–2:34 | 关闭全部浏览器标签 → 新开一个**无痕窗口** → 只输入同一个 `project_id` → 续研简报「上次做到了哪里 / 接下来该做什么」+ 按类型分组的记忆列表 | `search_backend_used` 明示实际作答后端；记忆条数 16；`artifact_id / revision` |
-| S7 测试与架构 | 2:34–2:52 | 切终端：`python -m pytest tests/ -q` 尾部输出；再展示 `ARCHITECTURE.md` 的架构一图流；最后回到公开站点「验证证据」区块 | `149 passed`；`T1–T9 9/9 PASS`；`全新环境 20/20` |
+| S6 跨会话恢复 | 2:16–2:34 | 关闭全部浏览器标签 → 新开一个**无痕窗口** → 只输入同一个 `project_id` → 续研简报「上次做到了哪里 / 接下来该做什么」+ 按类型分组的记忆列表 | `search_backend_used` 明示实际作答后端；记忆条数以当次读回为准（最近一次为 18）；`artifact_id / revision` |
+| S7 测试与架构 | 2:34–2:52 | 切终端：`python -m pytest tests/ -q` 尾部输出；再展示 `ARCHITECTURE.md` 的架构一图流；最后回到公开站点「验证证据」区块 | `149 passed`；`T1–T9 9/9 PASS`；`全新环境 23/23` |
 | S8 片尾 | 2:52–3:00 | 标题卡：仓库路径 + 分支 + 站点 URL；一行诚实声明 | `qoder/researchflow/` @ `2026-competition-ecosystem` |
 
 > 需要压到 2 分 10 秒时：合并 S4 进 S3（只保留「尚无证据」一句字幕），并把 S7 的终端镜头缩为 5 秒静帧。
@@ -80,12 +87,12 @@ backend/.venv/Scripts/python scripts/seed_demo.py     # 上传 demo/ 三份文�
 > 记忆这一块交给 PowerContext，一个科研项目对应一个 Scope，用 idempotency key 绑定，重启和重试都安全。保存进度是显式动作，系统不会自动写入。这里加一条下一步计划，返回 written=1，序号递增；再点一次同样的内容，它会告诉你内容没变化，不产生重复记忆。
 
 **S6（2:16–2:34）**
-> 现在关掉所有标签页，换一个无痕窗口，只输入同一个 project id。续研简报直接生成「上次做到了哪里、接下来该做什么」，下面按类型分组的是从 PowerContext 恢复出来的十六条记忆。
+> 现在关掉所有标签页，换一个无痕窗口，只输入同一个 project id。续研简报直接生成「上次做到了哪里、接下来该做什么」，下面按类型分组的是从 PowerContext 恢复出来的记忆（上一次这一画面读回 18 条，以当次为准）。
 > 需要说明的是，PowerContext 默认的全文索引对纯中文不友好，所以我们加了一层中文感知的召回，并在响应里明确标出这一条究竟是谁答的。
 
 **S7（2:34–2:52）**
-> 这些行为都不是口头承诺。后端有 149 个测试，直接打真实的 seekdb 和真实的 PowerContext；T1 到 T9 端到端验收 150 项校验全部通过；还有一次在全新虚拟环境、全新容器里跑通的评审旅程，二十步全过。
-> 线上这个展示站是静态版，只有真实截图和真实验证数据，不连数据库，也不提供模拟查询。
+> 这些行为都不是口头承诺。后端有 149 个测试，直接打真实的 seekdb 和真实的 PowerContext；T1 到 T9 端到端验收 150 项校验全部通过；界面简化之后，真实浏览器的交互验收 30 组也全绿；还有一次在全新虚拟环境、全新容器里跑通的评审旅程，二十三步全过。
+> 这个展示站是纯静态的，只有真实截图和真实验证数据，不连数据库，也不提供模拟查询。它已经正式发布，线上文件与本地最终构建逐字节一致。
 
 **S8（2:52–3:00）**
 > 代码在比赛仓库的 qoder/researchflow 目录下。所有数字都可以按 RUN.md 复现。
@@ -94,21 +101,22 @@ backend/.venv/Scripts/python scripts/seed_demo.py     # 上传 demo/ 三份文�
 
 ## 4. 关键帧截图清单（视频静帧 + 提交材料通用）
 
-已有的 9 张真实截图（`site/public/shots/`，由 `scripts/capture_screenshots.cjs` 无头浏览器采集，可复现）：
+已有的 10 张真实截图（`site/public/shots/`，由 `scripts/capture_screenshots.cjs` 无头浏览器采集，可复现）：
 
 | 文件 | 内容 | 对应分镜 |
 | --- | --- | --- |
-| `s1-overview.png` | 项目总览 + 健康条（seekdb 版本、计数、PowerContext 版本） | S1 / S7 |
-| `s2-resume-brief.png` | 续研简报 | S6 |
-| `s3-page-navigator.png` | PDF 物理页导航（含空白页标记） | S3 |
-| `s4-page-viewer.png` | 页原文弹窗（seekdb 中存储的原文 + page_id） | S3 |
-| `s5-retrieval.png` | 检索结果卡片（score / coverage / relevance / chunk_id） | S2 |
-| `s6-workbench.png` | AI 工作台问答 + 论断核验 + 引用面板 | S3 / S4 |
-| `s7-memory.png` | 任务记忆页（分组记忆 + 保存表单） | S5 |
-| `s8-mobile-overview.png` | 390px 移动端总览 | 片尾可选 |
-| `s9-mobile-knowledge.png` | 390px 移动端知识库 | 片尾可选 |
+| `s1-overview.png` | 对话式首页：左侧项目与会话、中间提问、右侧 Evidence/Context 上下文栏 | S1 / S7 |
+| `s2-resume-brief.png` | 跨会话恢复：仅凭 project_id 从 PowerContext 取回续研简报与待办 | S6 |
+| `s3-page-navigator.png` | 页级证据：5 个物理页全部保留身份，第 4 页空白页被明确标记 | S3 |
+| `s4-page-viewer.png` | 证据回查：点击引用打开 seekdb 中存储的原文页，含 page_id 与字符数 | S3 |
+| `s5-retrieval.png` | 混合检索：RRF 融合分、覆盖率、相关度与门控状态逐项展示 | S2 |
+| `s6-workbench.png` | 证据问答：回答带可点引用，论断按「资料直接支持 / 模型推断 / 尚无证据」分级 | S3 / S4 |
+| `s7-memory.png` | 研究进度面板：显式保存、恢复与历史时间线，全程标记「历史记忆 · PowerContext」 | S5 |
+| `s10-verification.png` | 验证页：四个后端组件的实时健康状态与真实计数 | S7 |
+| `s8-mobile-overview.png` | 390px 移动端首页：侧栏与上下文栏折叠为抽屉，输入框仍在首屏 | 片尾可选 |
+| `s9-mobile-knowledge.png` | 390px 移动端知识库：文档卡片与检索面板单列排布 | 片尾可选 |
 
-**视频需要额外人工截取的关键帧（现有 9 张未覆盖）**：
+**视频需要额外人工截取的关键帧（现有 10 张未覆盖）**：
 
 1. 三模检索并排对比 + 重叠分析（S2）
 2. RRF `0.0328` 分数特写（S2）

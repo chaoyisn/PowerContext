@@ -48,3 +48,5 @@ hf-cache/
 
 # 演示视频/站点验证的中间产物（webm/wav/ass/抽帧），可由 scripts 重新生成
 build/
+# 本地预览截图（对照用，不入库；线上核验证据在 verification/site-public/）
+site/preview-local/

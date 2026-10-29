@@ -1,0 +1,569 @@
+/* 研究进度页：记忆通道状态、续研简报、显式保存与记忆历史。 */
+
+.mem-intro {
+  margin-bottom: var(--s-5);
+}
+
+.mem-intro h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--s-2);
+}
+
+.mem-intro p {
+  margin: 0;
+  max-width: 74ch;
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+  line-height: 1.65;
+}
+
+/* 记忆通道用辅色，和证据通道在视觉上永远分开 */
+
+.panel-memory {
+  border-color: var(--memory-line);
+}
+
+.panel-memory > .panel-header {
+  background: var(--memory-soft);
+  border-bottom-color: var(--memory-line);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+
+/* ------------------------------------------------------------ 通道状态 */
+
+.mem-status {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--memory-line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  font-size: var(--fs-sm);
+}
+
+.mem-status-ok {
+  border-color: var(--green-line);
+}
+
+.mem-status-name {
+  font-weight: 600;
+}
+
+.mem-status-url {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.mem-status-chip {
+  padding: 1px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mem-status-reason {
+  margin-top: 6px;
+  font-size: var(--fs-xs);
+  color: var(--red);
+  overflow-wrap: anywhere;
+}
+
+.mem-project-row {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.mem-project-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------ 恢复 */
+
+.mem-restore-form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-3);
+}
+
+.mem-restore-form > .field {
+  flex: 1 1 280px;
+}
+
+.restore-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.mem-facts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: var(--s-2);
+}
+
+.mem-fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--memory-line);
+  background: var(--memory-soft);
+  color: var(--memory-text);
+  font-size: 11.5px;
+}
+
+.mem-fact strong {
+  font-family: var(--mono);
+  font-weight: 660;
+}
+
+.mem-fact code {
+  font-size: 11px;
+}
+
+.mem-block-title {
+  font-size: 11px;
+  font-weight: 680;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-top: var(--s-2);
+}
+
+/* 记忆卡片：目标 / 决策 / 已完成 / 未解决 / 下一步 */
+
+.mem-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
+.mem-card {
+  border: 1px solid var(--memory-line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  padding: var(--s-3);
+  min-width: 0;
+}
+
+.mem-card-decision {
+  border-left: 3px solid var(--memory);
+}
+
+.mem-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  font-size: var(--fs-xs);
+  font-weight: 660;
+  letter-spacing: 0.02em;
+  color: var(--memory-text);
+  margin-bottom: var(--s-2);
+}
+
+.mem-card-title span {
+  font-family: var(--mono);
+  color: var(--text-faint);
+}
+
+.mem-card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.mem-card-list li {
+  display: flex;
+  gap: 6px;
+}
+
+.mem-card-list li::before {
+  content: '·';
+  color: var(--memory-text);
+  font-weight: 700;
+}
+
+.mem-card-snapshot {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mem-evidence-list {
+  list-style: none;
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.mem-evidence-list li {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: var(--fs-xs);
+}
+
+.mem-evidence-name {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 580;
+  margin-bottom: 2px;
+}
+
+.mem-evidence-quote {
+  margin: 6px 0 0;
+  padding-left: var(--s-2);
+  border-left: 2px solid var(--accent-line);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.mem-recall-hits {
+  list-style: none;
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mem-recall-hits li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  font-size: var(--fs-xs);
+}
+
+.mem-recall-text {
+  min-width: 0;
+  flex: 1;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.mem-recall-score {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+/* ------------------------------------------------------------ 保存表单 */
+
+.mem-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
+.list-editor {
+  min-width: 0;
+  margin: 0;
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+}
+
+.list-editor > legend {
+  font-size: var(--fs-xs);
+  font-weight: 660;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  padding: 0 6px;
+}
+
+.list-editor-empty {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+  line-height: 1.55;
+}
+
+.list-editor-rows {
+  list-style: none;
+  margin: 0 0 var(--s-2);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.list-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.list-editor-row .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.evidence-editor {
+  margin-top: var(--s-3);
+}
+
+.evidence-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.evidence-row {
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+
+.evidence-row-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: var(--s-2);
+}
+
+.evidence-row-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--s-2);
+}
+
+.evidence-actions {
+  margin-top: var(--s-2);
+}
+
+.citation-picker {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px dashed var(--border-strong);
+}
+
+.citation-picker-title {
+  font-size: var(--fs-xs);
+  font-weight: 620;
+  color: var(--text-muted);
+  margin-bottom: var(--s-2);
+}
+
+.citation-picker-form {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.citation-picker-form .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.picker-hit-list {
+  list-style: none;
+  margin: var(--s-3) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.picker-hit {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+
+.picker-hit-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+
+.picker-hit-name {
+  font-size: var(--fs-sm);
+  font-weight: 580;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 46%;
+}
+
+.picker-hit-head .btn {
+  margin-left: auto;
+}
+
+.picker-hit-id {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.picker-hit-text {
+  margin: 4px 0 0;
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mem-save-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border-soft);
+}
+
+/* 保存回执 */
+
+.save-result {
+  margin-top: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--memory-line);
+  border-radius: var(--r-md);
+  background: var(--memory-soft);
+}
+
+.save-result-unchanged {
+  border-color: var(--amber-line);
+  background: var(--amber-soft);
+}
+
+.save-result-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-md);
+  font-weight: 640;
+  color: var(--memory-text);
+  margin-bottom: var(--s-2);
+}
+
+.save-result-unchanged .save-result-title {
+  color: var(--amber);
+}
+
+.save-result-kinds {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: var(--s-2);
+  font-size: var(--fs-xs);
+}
+
+/* ------------------------------------------------------------ 历史时间线 */
+
+.mem-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.mem-hitem {
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.mem-hitem-snapshot {
+  border-color: var(--memory-line);
+  background: var(--memory-soft);
+}
+
+.mem-hitem-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.mem-hitem-seq {
+  font-weight: 640;
+  color: var(--text-muted);
+}
+
+.mem-hitem-id {
+  margin-left: auto;
+  overflow-wrap: anywhere;
+}
+
+.mem-hitem-text {
+  font-size: var(--fs-sm);
+  line-height: 1.65;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.mem-hitem-snapshot-text {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: pre-wrap;
+}
+
+@media (max-width: 720px) {
+  .mem-intro h1 {
+    font-size: var(--fs-xl);
+  }
+
+  .picker-hit-name,
+  .mem-hitem-id {
+    max-width: 100%;
+    margin-left: 0;
+  }
+}

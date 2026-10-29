@@ -1,6 +1,6 @@
-# ResearchFlow 验收报告 20261029-100634
+# ResearchFlow 验收报告 20261029-213920
 
-生成时间：2026-10-29T10:08:33+08:00
+生成时间：2026-10-29T21:40:59+08:00
 
 ## 运行环境
 
@@ -18,7 +18,7 @@
 | llm_enabled | `True` |
 | llm_model | `deepseek-chat` |
 | api_url | `http://127.0.0.1:8788` |
-| run_tag | `c83a126f` |
+| run_tag | `6aa01781` |
 | documents_ingested | `['4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e', '60aa394c2a53076681d95ea42589fc6111112a26277395b306dd82efa0e49bcc', '5bfa03744934e583d25b84784eb3915962167d6f958434f384fce5401c3b3ad3']` |
 
 ## 汇总
@@ -30,15 +30,15 @@
 
 | 编号 | 场景 | 结果 | 耗时(ms) | 日志 |
 | --- | --- | --- | --- | --- |
-| T1 | 上传 PDF：全部物理页有稳定记录，seekdb 保存正确 | **PASS** | 9365.6 | `logs\acceptance-20261029-100634\T1.log` |
-| T2 | 明确问题：检索返回正确资料与真实页码 | **PASS** | 4211.5 | `logs\acceptance-20261029-100634\T2.log` |
-| T3 | 不存在答案的问题：不伪造 citation | **PASS** | 4647.5 | `logs\acceptance-20261029-100634\T3.log` |
-| T4 | 新建项目并保存已确认决策与 next_steps，PowerContext 实际写入 | **PASS** | 1016.4 | `logs\acceptance-20261029-100634\T4.log` |
-| T5 | 结束并重建会话后恢复之前的决策与 next_steps | **PASS** | 2083.6 | `logs\acceptance-20261029-100634\T5.log` |
-| T9-LLM | 配置 LLM 后的真实证据问答与 citation 服务端校验 | **PASS** | 3546.4 | `logs\acceptance-20261029-100634\T9-LLM.log` |
-| T6 | 重启服务后数据库与记忆仍可查询 | **PASS** | 16942.1 | `logs\acceptance-20261029-100634\T6.log` |
-| T7 | 断开 PowerContext，对比任务恢复能力，证明其真实作用 | **PASS** | 41559.8 | `logs\acceptance-20261029-100634\T7.log` |
-| T8 | 断开 seekdb，检索接口报真实错误而非返回预置答案 | **PASS** | 17487.4 | `logs\acceptance-20261029-100634\T8.log` |
+| T1 | 上传 PDF：全部物理页有稳定记录，seekdb 保存正确 | **PASS** | 9200.0 | `logs\acceptance-20261029-213920\T1.log` |
+| T2 | 明确问题：检索返回正确资料与真实页码 | **PASS** | 5198.5 | `logs\acceptance-20261029-213920\T2.log` |
+| T3 | 不存在答案的问题：不伪造 citation | **PASS** | 4833.1 | `logs\acceptance-20261029-213920\T3.log` |
+| T4 | 新建项目并保存已确认决策与 next_steps，PowerContext 实际写入 | **PASS** | 2569.7 | `logs\acceptance-20261029-213920\T4.log` |
+| T5 | 结束并重建会话后恢复之前的决策与 next_steps | **PASS** | 2146.6 | `logs\acceptance-20261029-213920\T5.log` |
+| T9-LLM | 配置 LLM 后的真实证据问答与 citation 服务端校验 | **PASS** | 3816.9 | `logs\acceptance-20261029-213920\T9-LLM.log` |
+| T6 | 重启服务后数据库与记忆仍可查询 | **PASS** | 15834.5 | `logs\acceptance-20261029-213920\T6.log` |
+| T7 | 断开 PowerContext，对比任务恢复能力，证明其真实作用 | **PASS** | 23842.4 | `logs\acceptance-20261029-213920\T7.log` |
+| T8 | 断开 seekdb，检索接口报真实错误而非返回预置答案 | **PASS** | 17277.7 | `logs\acceptance-20261029-213920\T8.log` |
 
 ## T1 — 上传 PDF：全部物理页有稳定记录，seekdb 保存正确
 
@@ -86,7 +86,7 @@ PDF 报告 5 个物理页；seekdb 的 rf_pages 表恰好 5 行，page_no 为 1.
 | forced re-ingest keeps doc_id | `4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e` | `4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e` | OK |
 | forced re-ingest does not append rows | `{"documents": 3, "pages": 7, "projects": 0, "chunks": 13}` | `{"documents": 3, "pages": 7, "projects": 0, "chunks": 13}` | OK |
 
-日志：`logs\acceptance-20261029-100634\T1.log`
+日志：`logs\acceptance-20261029-213920\T1.log`
 
 ## T2 — 明确问题：检索返回正确资料与真实页码
 
@@ -150,7 +150,7 @@ all three modes locate the correct page for every answerable question; every cit
 | citation c1 page 2 exists in seekdb | `True` | `True` | OK |
 | compare returns all three modes | `["fulltext", "hybrid", "vector"]` | `["fulltext", "hybrid", "vector"]` | OK |
 
-日志：`logs\acceptance-20261029-100634\T2.log`
+日志：`logs\acceptance-20261029-213920\T2.log`
 
 ## T3 — 不存在答案的问题：不伪造 citation
 
@@ -205,7 +205,7 @@ no citation was produced for any unanswerable question in any mode; QA reports a
 | qa used_citations for how many calories ar | `[]` | `[]` | OK |
 | qa labels no_evidence for how many calories ar | `True` | `True` | OK |
 
-日志：`logs\acceptance-20261029-100634\T3.log`
+日志：`logs\acceptance-20261029-213920\T3.log`
 
 ## T4 — 新建项目并保存已确认决策与 next_steps，PowerContext 实际写入
 
@@ -223,7 +223,7 @@ no citation was produced for any unanswerable question in any mode; QA reports a
 
 **实际**
 
-project acc-c83a126f bound to scope scp_1pdehwady4r7zmyvxhhka53vak; 6 bullets plus 1 snapshot written to PowerContext and read back through its own API
+project acc-6aa01781 bound to scope scp_70md0bda4wqap2g3mdaht7aqcs; 6 bullets plus 1 snapshot written to PowerContext and read back through its own API
 
 **逐项校验**
 
@@ -233,21 +233,21 @@ project acc-c83a126f bound to scope scp_1pdehwady4r7zmyvxhhka53vak; 6 bullets pl
 | PowerContext scope_id returned | `True` | `True` | OK |
 | scope id looks like a PowerContext scope | `True` | `True` | OK |
 | save returns 200 | `True` | `True` | OK |
-| saved scope matches | `scp_1pdehwady4r7zmyvxhhka53vak` | `scp_1pdehwady4r7zmyvxhhka53vak` | OK |
+| saved scope matches | `scp_70md0bda4wqap2g3mdaht7aqcs` | `scp_70md0bda4wqap2g3mdaht7aqcs` | OK |
 | bullets written | `7` | `7` | OK |
 | snapshot artifact id returned | `True` | `True` | OK |
 | snapshot revision >= 1 | `True` | `True` | OK |
 | snapshot unchanged flag | `False` | `False` | OK |
-| persisted in PowerContext: D-c83a126f: 默认检索模式为 hybrid（RRF 融合） | `True` | `True` | OK |
-| persisted in PowerContext: D-c83a126f: 文档主键使用内容 SHA-256 | `True` | `True` | OK |
-| persisted in PowerContext: N-c83a126f: 跑通 T1-T8 | `True` | `True` | OK |
-| persisted in PowerContext: N-c83a126f: 输出 Qoder Sites 部署可行性分析 | `True` | `True` | OK |
+| persisted in PowerContext: D-6aa01781: 默认检索模式为 hybrid（RRF 融合） | `True` | `True` | OK |
+| persisted in PowerContext: D-6aa01781: 文档主键使用内容 SHA-256 | `True` | `True` | OK |
+| persisted in PowerContext: N-6aa01781: 跑通 T1-T8 | `True` | `True` | OK |
+| persisted in PowerContext: N-6aa01781: 输出 Qoder Sites 部署可行性分析 | `True` | `True` | OK |
 | history source label | `memory` | `memory` | OK |
 | history has rf_decision entries | `True` | `True` | OK |
 | PowerContext available | `True` | `True` | OK |
 | PowerContext package version | `1.4.1` | `1.4.1` | OK |
 
-日志：`logs\acceptance-20261029-100634\T4.log`
+日志：`logs\acceptance-20261029-213920\T4.log`
 
 ## T5 — 结束并重建会话后恢复之前的决策与 next_steps
 
@@ -257,7 +257,7 @@ project acc-c83a126f bound to scope scp_1pdehwady4r7zmyvxhhka53vak; 6 bullets pl
 
 ```json
 {
-  "project_id": "acc-c83a126f",
+  "project_id": "acc-6aa01781",
   "new_session": "fresh HTTP client + restarted backend process"
 }
 ```
@@ -275,21 +275,21 @@ decisions and next_steps recovered identically over HTTP and from a brand-new cl
 | 校验项 | 预期 | 实际 | 结果 |
 | --- | --- | --- | --- |
 | memory available | `True` | `True` | OK |
-| restored decisions | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | OK |
-| restored next_steps | `["N-c83a126f: 跑通 T1-T8", "N-c83a126f: 输出 Qoder Sites 部署可行性分析"]` | `["N-c83a126f: 跑通 T1-T8", "N-c83a126f: 输出 Qoder Sites 部署可行性分析"]` | OK |
+| restored decisions | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | OK |
+| restored next_steps | `["N-6aa01781: 跑通 T1-T8", "N-6aa01781: 输出 Qoder Sites 部署可行性分析"]` | `["N-6aa01781: 跑通 T1-T8", "N-6aa01781: 输出 Qoder Sites 部署可行性分析"]` | OK |
 | restored source label | `memory` | `memory` | OK |
-| brief mentions D-c83a126f: 默认检索模式为 hybrid（RRF 融合） | `True` | `True` | OK |
-| brief mentions D-c83a126f: 文档主键使用内容 SHA-256 | `True` | `True` | OK |
-| brief mentions N-c83a126f: 跑通 T1-T8 | `True` | `True` | OK |
-| brief mentions N-c83a126f: 输出 Qoder Sites 部署可行性分析 | `True` | `True` | OK |
+| brief mentions D-6aa01781: 默认检索模式为 hybrid（RRF 融合） | `True` | `True` | OK |
+| brief mentions D-6aa01781: 文档主键使用内容 SHA-256 | `True` | `True` | OK |
+| brief mentions N-6aa01781: 跑通 T1-T8 | `True` | `True` | OK |
+| brief mentions N-6aa01781: 输出 Qoder Sites 部署可行性分析 | `True` | `True` | OK |
 | brief has the two required sections | `True` | `True` | OK |
 | brief is labelled as memory not evidence | `True` | `True` | OK |
 | new process exited cleanly | `True` | `True` | OK |
 | new process sees memory | `True` | `True` | OK |
-| new process restored decisions | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | OK |
-| new process restored next_steps | `["N-c83a126f: 跑通 T1-T8", "N-c83a126f: 输出 Qoder Sites 部署可行性分析"]` | `["N-c83a126f: 跑通 T1-T8", "N-c83a126f: 输出 Qoder Sites 部署可行性分析"]` | OK |
+| new process restored decisions | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | OK |
+| new process restored next_steps | `["N-6aa01781: 跑通 T1-T8", "N-6aa01781: 输出 Qoder Sites 部署可行性分析"]` | `["N-6aa01781: 跑通 T1-T8", "N-6aa01781: 输出 Qoder Sites 部署可行性分析"]` | OK |
 
-日志：`logs\acceptance-20261029-100634\T5.log`
+日志：`logs\acceptance-20261029-213920\T5.log`
 
 ## T9-LLM — 配置 LLM 后的真实证据问答与 citation 服务端校验
 
@@ -324,7 +324,7 @@ the live LLM answered from the retrieved evidence, cited a real page and no fabr
 | no invalid citations | `[]` | `[]` | OK |
 | cited page is the RRF page | `5` | `5` | OK |
 
-日志：`logs\acceptance-20261029-100634\T9-LLM.log`
+日志：`logs\acceptance-20261029-213920\T9-LLM.log`
 
 ## T6 — 重启服务后数据库与记忆仍可查询
 
@@ -356,7 +356,7 @@ PowerContext killed and restarted: memory recovered by project_id. ResearchFlow 
 | memory reported unavailable while down | `False` | `False` | OK |
 | PowerContext ready after restart | `True` | `True` | OK |
 | memory available after restart | `True` | `True` | OK |
-| decisions survived the restart | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | OK |
+| decisions survived the restart | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | OK |
 | resume brief survived the restart | `True` | `True` | OK |
 | API ready after restart | `True` | `True` | OK |
 | documents survived | `3` | `3` | OK |
@@ -368,7 +368,7 @@ PowerContext killed and restarted: memory recovered by project_id. ResearchFlow 
 
 - seekdb 容器未重启：contest-seekdb 与其他赛题共用，自动重启会影响他人。其数据在 Docker volume contest-seekdb-data-20261027 中持久化；用 --restart-seekdb 可显式执行该项验证。
 
-日志：`logs\acceptance-20261029-100634\T6.log`
+日志：`logs\acceptance-20261029-213920\T6.log`
 
 ## T7 — 断开 PowerContext，对比任务恢复能力，证明其真实作用
 
@@ -379,7 +379,7 @@ PowerContext killed and restarted: memory recovered by project_id. ResearchFlow 
 ```json
 {
   "action": "kill the PowerContext server process",
-  "project_id": "acc-c83a126f"
+  "project_id": "acc-6aa01781"
 }
 ```
 
@@ -396,7 +396,7 @@ with PowerContext killed, memory endpoints reported the real outage and returned
 | 校验项 | 预期 | 实际 | 结果 |
 | --- | --- | --- | --- |
 | memory available BEFORE disconnect | `True` | `True` | OK |
-| decisions BEFORE disconnect | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | OK |
+| decisions BEFORE disconnect | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | OK |
 | PowerContext port down | `True` | `True` | OK |
 | memory status available=false | `False` | `False` | OK |
 | memory status carries a real error | `True` | `True` | OK |
@@ -413,9 +413,9 @@ with PowerContext killed, memory endpoints reported the real outage and returned
 | QA still labels the memory channel as memory | `True` | `True` | OK |
 | PowerContext ready again | `True` | `True` | OK |
 | memory available AFTER reconnect | `True` | `True` | OK |
-| decisions recovered AFTER reconnect | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | `["D-c83a126f: 默认检索模式为 hybrid（RRF 融合）", "D-c83a126f: 文档主键使用内容 SHA-256"]` | OK |
+| decisions recovered AFTER reconnect | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | `["D-6aa01781: 默认检索模式为 hybrid（RRF 融合）", "D-6aa01781: 文档主键使用内容 SHA-256"]` | OK |
 
-日志：`logs\acceptance-20261029-100634\T7.log`
+日志：`logs\acceptance-20261029-213920\T7.log`
 
 ## T8 — 断开 seekdb，检索接口报真实错误而非返回预置答案
 
@@ -457,4 +457,4 @@ with seekdb unreachable the API reported degraded health and returned 503 with t
 | qa error is not a canned answer | `True` | `True` | OK |
 | the healthy instance still retrieves | `True` | `True` | OK |
 
-日志：`logs\acceptance-20261029-100634\T8.log`
+日志：`logs\acceptance-20261029-213920\T8.log`

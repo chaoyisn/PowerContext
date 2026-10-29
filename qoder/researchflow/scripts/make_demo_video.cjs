@@ -19,6 +19,9 @@ const OUT = path.join(ROOT, 'submission-package', 'demo');
 const WORK = path.join(ROOT, 'build', 'video');
 const APP = process.env.RF_APP_BASE || 'http://127.0.0.1:8787';
 const SITE = process.env.RF_SITE_URL || 'https://researchflow-5esfsogn38f.qoder.zone';
+// The published site now serves the frozen post-simplification build (verified byte-for-byte),
+// so the showcase scenes are recorded straight from the public URL - the same thing a reviewer sees.
+const SITE_SRC = process.env.RF_SITE_LOCAL || SITE;
 const PDF = path.join(ROOT, 'demo', 'seekdb_hybrid_retrieval_notes.pdf');
 const PROJECT = 'demo-seekdb-hybrid';
 const PROJECT_TITLE = 'seekdb 混合检索在科研知识库中的效果验证';
@@ -29,8 +32,10 @@ const SIZE = { width: 1280, height: 800 };
 const SKIP_PYTEST = process.argv.includes('--no-pytest');
 const FORCE_RECORD = process.argv.includes('--force-record');
 const FACTS = path.join(WORK, 'facts.json');
-const facts = { startedAt: new Date().toISOString() };
+const facts = {};
 if (fs.existsSync(FACTS)) Object.assign(facts, JSON.parse(fs.readFileSync(FACTS, 'utf8')));
+// Set after the merge: a cached facts.json must not make this run look like an earlier one.
+facts.startedAt = new Date().toISOString();
 function saveFacts() {
   fs.writeFileSync(FACTS, JSON.stringify(facts, null, 2), 'utf8');
 }
@@ -94,6 +99,7 @@ function collectPytest() {
     if (!latest) throw new Error('no captured pytest log to reuse; drop --no-pytest');
     facts.pytestLog = `logs/${latest}`;
     facts.pytestLine = fs.readFileSync(path.join(ROOT, 'logs', latest), 'utf8').trim().split('\n').pop();
+    facts.pytestTotal = (facts.pytestLine.match(/(\d+)\s+passed/) || [])[1];
     return;
   }
   const stamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15);
@@ -109,14 +115,42 @@ function collectPytest() {
   facts.pytestSeconds = Math.round((Date.now() - t0) / 1000);
   facts.pytestLog = path.relative(ROOT, logFile).replace(/\\/g, '/');
   facts.pytestLine = out.split('\n').filter((l) => /passed|failed/.test(l)).pop() || out.slice(-120);
+  facts.pytestTotal = (facts.pytestLine.match(/(\d+)\s+passed/) || [])[1];
   saveFacts();
   if (r.status !== 0) throw new Error(`pytest not green: ${facts.pytestLine}`);
+}
+
+// The fresh-environment reviewer journey is a separate real run: it builds brand-new virtualenvs,
+// a brand-new seekdb container and a brand-new PowerContext data directory, then walks the whole
+// journey over HTTP. Its report is the only source for the step count shown on the test card.
+function collectFreshEnv() {
+  const logs = fs.readdirSync(path.join(ROOT, 'logs'))
+    .filter((f) => f.startsWith('fresh-env-') && f.endsWith('.json'))
+    .sort();
+  const latest = logs.pop();
+  if (!latest) throw new Error('no fresh-environment report in logs/; run scripts/fresh_env_e2e.py first');
+  const report = JSON.parse(fs.readFileSync(path.join(ROOT, 'logs', latest), 'utf8'));
+  if (report.passed !== report.total) throw new Error(`fresh-env not green: ${report.passed}/${report.total}`);
+  facts.freshEnvLog = `logs/${latest}`;
+  facts.freshEnvAt = report.generated_at;
+  facts.freshEnvPassed = report.passed;
+  facts.freshEnvTotal = report.total;
+  facts.freshEnvSeconds = Math.round(report.elapsed_s);
 }
 
 // ------------------------------------------------------------------------ 2. scenes
 const scenes = [];
 function scene(def) { scenes.push(def); }
 function step(caption, act) { return { caption, act }; }
+
+// 输入区的次要控件默认折叠：展开 → 选项目 → 再收起，画面上始终是干净的输入条。
+async function pickProject(page, value) {
+  const chip = page.locator('.composer-bar button[aria-expanded]');
+  if ((await chip.getAttribute('aria-expanded')) !== 'true') await chip.click();
+  await page.selectOption('#qa-project', value);
+  await chip.click();
+  await page.waitForTimeout(400);
+}
 
 // The hosted LLM sometimes holds the request open for minutes; one slow call must not
 // abort a run that already recorded five scenes, so resubmit once from a clean page.
@@ -126,7 +160,7 @@ async function askAndWait(page, attempts = 2) {
     if (i > 0) {
       await page.goto(`${APP}/workbench`, { waitUntil: 'networkidle' });
       await page.fill('#qa-question', QUESTION);
-      await page.selectOption('#qa-project', PROJECT);
+      await pickProject(page, PROJECT);
       await page.waitForTimeout(2000);
     }
     await page.click('button:has-text("提问")');
@@ -150,14 +184,18 @@ scene({
 });
 
 scene({
-  id: 'c2-site', kind: 'browser', label: '公开站点',
+  id: 'c2-site', kind: 'browser', label: '展示站 · 已发布线上版',
   steps: [
-    step('线上展示站已经发布在 Qoder Sites，公开可访问，地址是 researchflow 减 5esfsogn38f 点 qoder 点 zone。', async ({ page }) => {
-      await page.goto(SITE, { waitUntil: 'networkidle' });
+    step('这是比赛的展示站，已经正式发布，纯静态：截图和验收数字都由脚本从真实运行里导出，页面不连数据库，也不提供模拟查询。', async ({ page }) => {
+      await page.goto(SITE_SRC, { waitUntil: 'networkidle' });
       await page.waitForSelector('text=ResearchFlow');
       facts.siteTitle = await page.title();
+      const ev = await fetch(`${SITE_SRC}/data/evidence.json`).then((r) => r.json());
+      facts.siteGeneratedAt = ev.generated_at;
+      facts.siteInteractions = `${ev.interactions.passed}/${ev.interactions.total}`;
+      facts.siteUrl = SITE_SRC;
     }),
-    step('它是纯静态展示版：真实截图、真实验收数据，不连数据库，也不提供模拟查询。', async ({ page }) => {
+    step('这一版就是界面简化之后重新发布到原域名的内容，线上文件与本地最终构建逐个比对完全一致。', async ({ page }) => {
       await page.evaluate(() => window.scrollTo({ top: 900, behavior: 'smooth' }));
       await page.waitForTimeout(2500);
     }),
@@ -182,7 +220,7 @@ scene({
       Object.assign(facts, h.components.seekdb.counts);
       facts.seekdbVersion = h.components.seekdb.server_version;
       facts.fts = h.components.seekdb.fts_analyzer;
-      await page.goto(APP, { waitUntil: 'networkidle' });
+      await page.goto(`${APP}/verification`, { waitUntil: 'networkidle' });
       await page.waitForSelector('text=后端健康状态');
       await page.waitForTimeout(1200);
     }),
@@ -227,7 +265,7 @@ scene({
   steps: [
     step('页码用的是 PDF 的物理页号，从一开始数；空白页也保留页级身份，这样引用才对得上。', async ({ page }) => {
       await page.goto(`${APP}/knowledge`, { waitUntil: 'networkidle' });
-      await page.click('tr:has-text("seekdb_hybrid_retrieval_notes.pdf") >> text=页导航');
+      await page.click('.doc-card:has-text("seekdb_hybrid_retrieval_notes.pdf") >> text=页导航');
       await page.waitForSelector('text=共 5 个物理页');
       facts.pageNav = (await page.locator('text=共 5 个物理页').first().innerText()).replace(/\s+/g, ' ');
       await page.waitForTimeout(1500);
@@ -253,14 +291,14 @@ scene({
 scene({
   id: 'c6-workbench', kind: 'browser', label: '本地应用 · 证据问答',
   steps: [
-    step('到工作台问同一个问题。回答里的每个引用编号都能点开，看到它对应的原文页。', async ({ page }) => {
+    step('到工作台问同一个问题。输入区平时只有三个控件，高级参数收在「选项」里，非默认值会直接写在按钮上。', async ({ page }) => {
       await page.goto(`${APP}/workbench`, { waitUntil: 'networkidle' });
       await page.fill('#qa-question', QUESTION);
-      await page.selectOption('#qa-project', PROJECT);
+      await pickProject(page, PROJECT);
       await askAndWait(page);
       await page.waitForTimeout(1500);
     }),
-    step((f) => `每条论断都标注了「${f.claimLine || '资料直接支持 / 模型推断'}」；服务端会把模型给出的引用逐条回查 seekdb，编造的引用一律剔除。`, async ({ page }) => {
+    step((f) => `每条论断都标注了「${f.claimLine || '资料直接支持 / 模型推断'}」；引用编号能点开它对应的原文页，因为服务端会把模型给出的引用逐条回查 seekdb，编造的引用一律剔除。`, async ({ page }) => {
       facts.claimLine = (await page.locator('.claims-summary').innerText()).replace(/\s+/g, ' ');
       const chips = page.locator('button[aria-label^="跳转到引用"]');
       facts.citationCount = await chips.count();
@@ -276,7 +314,7 @@ scene({
       // A fresh page: the previous answer's claims block must not be read as the new one.
       await page.goto(`${APP}/workbench`, { waitUntil: 'networkidle' });
       await page.fill('#qa-question', NO_EVIDENCE_Q);
-      await page.selectOption('#qa-project', PROJECT);
+      await pickProject(page, PROJECT);
       await page.click('button:has-text("提问")');
       await page.waitForSelector('.claims-section', { timeout: 300000 });
       const claims = await page.locator('.claims-section').innerText();
@@ -347,24 +385,24 @@ scene({
 
 scene({
   id: 'c9-tests', kind: 'card', title: '真实测试结果',
-  body: () => `${facts.pytestLine}\n\n${facts.pytestLog}\n全新环境复现 20/20 · T1–T9 端到端验收全 PASS`,
+  body: () => `${facts.pytestLine}\n\n${facts.pytestLog}\n浏览器交互验收 ${facts.siteInteractions || 'n/a'} 组（与展示站 evidence.json 同源）\n全新环境复现 ${facts.freshEnvPassed}/${facts.freshEnvTotal} 步 · T1–T9 端到端验收全 PASS`,
   footer: '终端内容为该次 pytest 运行的原样输出（日志文件回放，非屏幕录制）',
   steps: [
-    step('这些行为都不是口头承诺。后端一百四十九个测试，直接打真实的 seekdb 和真实的 PowerContext。', null),
-    step('端到端验收 T1 到 T9 全部通过，还有一次在全新虚拟环境里的评审旅程，二十步全过。', null),
+    step((f) => `这些行为都不是口头承诺。后端 ${f.pytestTotal || 'n/a'} 个测试，直接打真实的 seekdb 和真实的 PowerContext。`, null),
+    step((f) => `端到端验收 T1 到 T9 全部通过，界面简化之后的浏览器交互验收 ${f.siteInteractions || 'n/a'} 组全绿，另有一次全新环境的评审旅程，${f.freshEnvTotal} 步全过，报告就是当次运行留下的 JSON。`, null),
   ],
 });
 
 scene({
-  id: 'c10-arch', kind: 'browser', label: '公开站点 · 架构与验证',
+  id: 'c10-arch', kind: 'browser', label: '展示站 · 架构与验证（线上）',
   steps: [
-    step('架构在站点的 architecture 区块：上传解析分页、seekdb 双索引、混合检索与证据门控、引用核验、PowerContext 记忆。', async ({ page }) => {
-      await page.goto(`${SITE}/#architecture`, { waitUntil: 'networkidle' });
+    step('架构区块讲整条链路：上传解析分页、seekdb 双索引、混合检索与证据门控、引用回查、PowerContext 记忆。', async ({ page }) => {
+      await page.goto(`${SITE_SRC}/#architecture`, { waitUntil: 'networkidle' });
       await page.waitForSelector('text=/架构/');
       await page.waitForTimeout(2500);
     }),
     step('验证区块贴的是真实日志和真实截图，不是渲染出来的假数据。', async ({ page }) => {
-      await page.goto(`${SITE}/#verification`, { waitUntil: 'networkidle' });
+      await page.goto(`${SITE_SRC}/#verification`, { waitUntil: 'networkidle' });
       await page.waitForSelector('text=验收');
       facts.sitePasses = (await page.locator('#pytest-passed, #acc-summary').allInnerTexts()).join(' | ').replace(/\s+/g, ' ');
       await page.waitForTimeout(2500);
@@ -374,7 +412,7 @@ scene({
 
 scene({
   id: 'c11-outro', kind: 'card', title: 'qoder/researchflow',
-  body: () => `分支 2026-competition-ecosystem\n站点 ${new URL(SITE).host}\nseekdb v${(facts.seekdbVersion || '').split('v').pop()} · PowerContext 1.4.1\n文档：README / RUN / VERIFICATION / SECURITY`,
+  body: () => `分支 2026-competition-ecosystem\n站点 ${new URL(SITE).host}（已正式发布）\nseekdb v${(facts.seekdbVersion || '').split('v').pop()} · PowerContext 1.4.1\n文档：README / RUN / VERIFICATION / SECURITY`,
   footer: '所有数字都能按 RUN.md 在当前环境复现',
   steps: [
     step('代码在比赛仓库的 qoder 目录下的 researchflow 里，所有数字都能按 RUN 文档复现。', null),
@@ -385,9 +423,12 @@ scene({
 // ------------------------------------------------------------------------ 3. record
 async function record(browser, s) {
   const webm = path.join(WORK, `${s.id}.webm`);
+  facts.wallSeconds = facts.wallSeconds || {};
   if (!FORCE_RECORD && fs.existsSync(webm) && fs.statSync(webm).size > 0) {
     console.log(`  （复用已有录屏 ${s.id}，其事实取自 facts.json）`);
-    return { video: webm, wall: durationOf(webm) };
+    // A cached clip keeps the wall time measured while it was actually recorded: the webm
+    // container runs longer than the interaction itself, so re-reading it would inflate it.
+    return { video: webm, wall: facts.wallSeconds[s.id] || durationOf(webm) };
   }
   const ctx = await browser.newContext({
     viewport: SIZE, recordVideo: { dir: WORK, size: SIZE },
@@ -403,6 +444,7 @@ async function record(browser, s) {
   await ctx.close();
   const produced = await page.video().path();
   fs.renameSync(produced, webm);
+  facts.wallSeconds[s.id] = wall;
   return { video: webm, wall };
 }
 
@@ -410,6 +452,9 @@ async function record(browser, s) {
   console.log('· 采集真实测试输出');
   collectPytest();
   console.log('  pytest:', facts.pytestLine);
+  collectFreshEnv();
+  saveFacts();
+  console.log(`  fresh-env: ${facts.freshEnvPassed}/${facts.freshEnvTotal} 步（${facts.freshEnvLog}）`);
 
   const executablePath = resolveChromium();
   const browser = await chromium.launch(executablePath ? { executablePath } : {});
@@ -542,13 +587,39 @@ async function record(browser, s) {
   }
   fs.writeFileSync(path.join(OUT, 'researchflow-demo.vtt'), vtt.join('\n'), 'utf8');
 
+  // -------------------------------------------------- keyframes: one real frame per scene
+  const KEY_DIR = path.join(OUT, 'keyframes');
+  fs.mkdirSync(KEY_DIR, { recursive: true });
+  const finalMp4 = path.join(OUT, 'researchflow-demo.mp4');
+  const keyframes = [];
+  let keyOffset = 0;
+  for (const s of scenes) {
+    const at = keyOffset + s.finalDur / 2;
+    const file = `${String(scenes.indexOf(s) + 1).padStart(2, '0')}-${s.id}.png`;
+    try {
+      ffmpeg(['-ss', at.toFixed(3), '-i', finalMp4, '-frames:v', '1', '-y', path.join(KEY_DIR, file)]);
+      keyframes.push({ scene: s.id, label: s.label, atSeconds: Number(at.toFixed(2)),
+        file: `keyframes/${file}`, kind: s.kind });
+    } catch (err) {
+      console.log(`  ! 关键帧 ${s.id} 抽帧失败: ${err.message}`);
+    }
+    keyOffset += s.finalDur;
+  }
+
   const manifest = {
     generatedAt: new Date().toISOString(),
     durationSeconds: Number(offset.toFixed(2)),
     resolution: `${SIZE.width}x${SIZE.height}`,
     sources: {
-      localApp: APP, publishedSite: SITE, python: 'backend/.venv (project venv)',
+      localApp: APP,
+      showcaseScenesRecordedFrom: SITE_SRC,
+      publishedSite: SITE,
+      publishedSiteNote: 'c2/c10 两个展示站场景录自公开 URL：线上已是简化后的最终构建，'
+        + '与本地 site/public 逐文件哈希一致（见 verification/site-public/published-site-check.json）',
+      python: 'backend/.venv (project venv)',
       pytestLog: facts.pytestLog, pytestLine: facts.pytestLine,
+      freshEnvLog: facts.freshEnvLog, freshEnvSteps: `${facts.freshEnvPassed}/${facts.freshEnvTotal}`,
+      freshEnvAt: facts.freshEnvAt,
     },
     captureMethod: {
       browserScenes: 'Playwright 无头浏览器录屏，驱动真实运行的前端 + FastAPI + seekdb + PowerContext',
@@ -557,6 +628,7 @@ async function record(browser, s) {
       retiming: '浏览器录屏按旁白时长用 setpts 等比重放（短片段放慢、长片段适度加速，系数见各场景 speedFactor），未删除或跳剪任何真实步骤',
     },
     facts,
+    keyframes,
     scenes: scenes.map((s) => ({
       id: s.id, kind: s.kind, label: s.label, finalSeconds: Number((s.finalDur || 0).toFixed(2)),
       realWallSeconds: s.wall ? Number(s.wall.toFixed(2)) : null,
@@ -565,6 +637,9 @@ async function record(browser, s) {
     })),
   };
   fs.writeFileSync(path.join(OUT, 'video-manifest.json'), JSON.stringify(manifest, null, 2), 'utf8');
+
+  // ------------------- automated delivery checks on the delivered artifacts
+  run('node', [path.join('scripts', 'check_demo_video.cjs')]);
   console.log('\nVIDEO OK', path.join(OUT, 'researchflow-demo.mp4'), `${offset.toFixed(1)}s`);
 })().catch((err) => {
   console.error('VIDEO FAILED:', err.message);

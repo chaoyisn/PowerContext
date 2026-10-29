@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import socket
 import subprocess
 import sys
 import tempfile
@@ -33,10 +34,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 BACKEND_DIR = PROJECT_ROOT / "backend"
 DEMO_DIR = PROJECT_ROOT / "demo"
 SEEKDB_IMAGE = "oceanbase/seekdb@sha256:4db4961869d554313520d6081fca29265ba6da6db7313311bd8acbed771a956b"
-SEEKDB_PORT = 2890
-PC_PORT = 17431
-API_PORT = 8790
-CONTAINER = "rf-fresh-seekdb"
+# Ports are overridable because this machine may run several competition worktrees at once;
+# a stranger already bound to one of them used to surface as a confusing KeyError later on.
+SEEKDB_PORT = int(os.environ.get("RF_FRESH_SEEKDB_PORT", "2890"))
+PC_PORT = int(os.environ.get("RF_FRESH_PC_PORT", "17431"))
+API_PORT = int(os.environ.get("RF_FRESH_API_PORT", "8790"))
+CONTAINER = os.environ.get("RF_FRESH_CONTAINER", "rf-fresh-seekdb")
 PREFIX = "rffresh_"
 
 STEPS: list[dict] = []
@@ -47,6 +50,18 @@ def record(name: str, ok: bool, detail: str = "") -> None:
     print(f"[{'PASS' if ok else 'FAIL'}] {name}" + (f" — {detail[:200]}" if detail else ""))
 
 
+def assert_ports_free() -> bool:
+    """Refuse to start when one of the three ports is already taken by something else."""
+    busy = []
+    for label, port in (("seekdb", SEEKDB_PORT), ("powercontext", PC_PORT), ("api", API_PORT)):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+            probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            if probe.connect_ex(("127.0.0.1", port)) == 0:
+                busy.append(f"{label}:{port}")
+    record("the three fresh ports are free", not busy, ", ".join(busy) or f"{SEEKDB_PORT}/{PC_PORT}/{API_PORT}")
+    return not busy
+
+
 def run(cmd: list[str], *, cwd: Path | None = None, env: dict | None = None,
         timeout: int = 900, capture: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(
@@ -55,7 +70,9 @@ def run(cmd: list[str], *, cwd: Path | None = None, env: dict | None = None,
     )
 
 
-def wait_http(url: str, timeout: float = 420.0) -> tuple[bool, str]:
+def wait_http(url: str, timeout: float = 420.0, *, require_key: str | None = None) -> tuple[bool, str]:
+    """Poll until the endpoint answers. With require_key the body must also be a JSON object
+    holding that key, so an unrelated service on the same port cannot count as ready."""
     deadline = time.time() + timeout
     last = "no attempt"
     while time.time() < deadline:
@@ -63,7 +80,14 @@ def wait_http(url: str, timeout: float = 420.0) -> tuple[bool, str]:
             response = httpx.get(url, timeout=5.0)
             last = f"HTTP {response.status_code}"
             if response.status_code < 500:
-                return True, last
+                if require_key is None:
+                    return True, last
+                try:
+                    if require_key in response.json():
+                        return True, f"{last} with {require_key}"
+                    last = f"{last} without {require_key}"
+                except Exception:
+                    last = f"{last} with a non-JSON body"
         except Exception as exc:
             last = f"{type(exc).__name__}: {exc}"
         time.sleep(2.0)
@@ -82,6 +106,10 @@ def main() -> int:
         # ---------------------------------------------------------------- 1 clone-equivalent
         record("repository checkout available", (PROJECT_ROOT / "backend" / "pyproject.toml").exists(),
                str(PROJECT_ROOT))
+        if not assert_ports_free():
+            raise RuntimeError(
+                f"ports busy — set RF_FRESH_SEEKDB_PORT / RF_FRESH_PC_PORT / RF_FRESH_API_PORT "
+                f"to free ports and re-run (seekdb {SEEKDB_PORT}, powercontext {PC_PORT}, api {API_PORT})")
 
         # ---------------------------------------------------------------- 2 fresh venvs
         backend_venv = workdir / "venv-backend"
@@ -159,7 +187,8 @@ def main() -> int:
         with api_log.open("wb") as handle:
             api_proc = subprocess.Popen([python_exe, "-m", "app.api.main"], stdout=handle,
                                         stderr=subprocess.STDOUT, env=env, cwd=str(BACKEND_DIR))
-        ok, detail = wait_http(f"http://127.0.0.1:{API_PORT}/api/health", timeout=300)
+        ok, detail = wait_http(f"http://127.0.0.1:{API_PORT}/api/health", timeout=300,
+                               require_key="components")
         record("fresh ResearchFlow API ready", ok, detail)
 
         base = f"http://127.0.0.1:{API_PORT}"

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, DragEvent, FormEvent } from 'react'
 import {
   compareModes,
@@ -25,21 +25,27 @@ import {
   formatTimestamp,
   scoreKindLabel,
 } from '../components/common'
+import { HitRows, type PageTarget } from '../components/EvidenceViews'
+import Icon from '../components/Icon'
 import PageViewer, { type PageViewerTarget } from '../components/PageViewer'
+import { EvidenceSlot, PanelSection, useShellHeader } from '../components/Shell'
 import { useErrorToast, useToast } from '../components/Toast'
-import './KnowledgePage.css'
+import '../styles/knowledge.css'
 
 const ACCEPT_EXTENSIONS = ['.pdf', '.md', '.markdown', '.txt']
 
 export default function KnowledgePage() {
   const toast = useToast()
   const toastError = useErrorToast()
+  useShellHeader('知识库', '真实物理页、chunk 与三种检索模式都在 seekdb 里')
 
   const [documents, setDocuments] = useState<DocumentRecord[]>([])
   const [docsError, setDocsError] = useState<unknown | null>(null)
   const [docsLoading, setDocsLoading] = useState(true)
-
   const [viewerTarget, setViewerTarget] = useState<PageViewerTarget | null>(null)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [expandedDetail, setExpandedDetail] = useState<DocumentDetail | null>(null)
+  const [result, setResult] = useState<RetrievalResult | null>(null)
 
   const loadDocuments = useCallback(async () => {
     setDocsLoading(true)
@@ -60,17 +66,19 @@ export default function KnowledgePage() {
 
   const openPage = (docId: string, pageNo: number, filename?: string) =>
     setViewerTarget({ docId, pageNo, filename })
+  const openTarget = (target: PageTarget) =>
+    setViewerTarget({ docId: target.docId, pageNo: target.pageNo, filename: target.filename })
 
   return (
-    <div>
-      <div className="page-title-row">
-        <h1>知识库</h1>
-        <SourceTag source="seekdb" />
+    <div className="page-inner scroll-thin">
+      <div className="kb-intro">
+        <h1>
+          文献都在这条证据通道里 <SourceTag source="seekdb" />
+        </h1>
+        <p>
+          文献按真实物理页存在 seekdb 里，向量 / 全文 / 混合三种检索都回到这些页——只有它们能产生引用。
+        </p>
       </div>
-      <p className="page-desc">
-        上传 PDF / Markdown / TXT 文献，按真实物理页存储原文与向量 chunk。检索支持
-        向量 / 全文 / 混合（RRF 融合）三种模式；只有 seekdb 中的页级证据能产生引用。
-      </p>
 
       <UploadPanel
         onUploaded={() => void loadDocuments()}
@@ -90,9 +98,91 @@ export default function KnowledgePage() {
         error={docsError}
         onRetry={() => void loadDocuments()}
         onOpenPage={openPage}
+        expandedId={expandedId}
+        onExpand={(docId, detail) => {
+          setExpandedId(docId)
+          setExpandedDetail(detail)
+        }}
       />
 
-      <SearchPanel documents={documents} onOpenPage={openPage} onError={toastError} />
+      <SearchPanel
+        documents={documents}
+        onOpenPage={openPage}
+        onError={toastError}
+        result={result}
+        setResult={setResult}
+      />
+
+      <EvidenceSlot>
+        <PanelSection title="本轮检索命中" count={result ? result.hits.length : 0}>
+          {result ? (
+            <>
+              <HitRows hits={result.hits} onOpenPage={openTarget} />
+              <p className="side-empty">
+                通过门控 {result.relevant_count} 条 · 被门控剔除 {result.dropped_by_gate} 条 ·{' '}
+                {result.elapsed_ms} ms
+              </p>
+            </>
+          ) : (
+            <p className="side-empty">还没有检索。在左侧「证据检索」输入问题，命中会实时出现在这里。</p>
+          )}
+        </PanelSection>
+
+        {expandedDetail ? (
+          <PanelSection title="展开的文献" count={`${expandedDetail.pages.length} 页`}>
+            <p className="ev-doc-name">{expandedDetail.filename}</p>
+            <ul className="ev-page-list">
+              {expandedDetail.pages.map((page) => (
+                <li key={page.page_id}>
+                  <button type="button" onClick={() => openPage(expandedDetail.doc_id, page.page_no, expandedDetail.filename)}>
+                    第 {page.page_no} 页
+                  </button>
+                  <span>{page.is_empty ? '空白页' : `${page.char_count} 字符`}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="side-empty mono">doc_id {expandedDetail.doc_id}</p>
+          </PanelSection>
+        ) : null}
+
+        {result ? (
+          <PanelSection title="检索后端（真实配置）">
+            <dl className="ev-fact-list">
+              <div>
+                <dt>collection</dt>
+                <dd>
+                  <code>{result.backend.collection}</code>
+                </dd>
+              </div>
+              <div>
+                <dt>全文分析器</dt>
+                <dd>
+                  <code>{result.backend.fts_analyzer}</code>
+                </dd>
+              </div>
+              <div>
+                <dt>embedding</dt>
+                <dd>
+                  <code>{result.backend.embedding_provider}</code>（{result.backend.embedding_dimension} 维）
+                </dd>
+              </div>
+              <div>
+                <dt>向量距离</dt>
+                <dd>
+                  <code>{result.backend.vector_distance}</code>
+                </dd>
+              </div>
+              <div>
+                <dt>门控</dt>
+                <dd>
+                  {result.gate.applied ? '已启用' : '未启用'} · min_coverage {result.gate.min_coverage} ·
+                  vector_confidence {result.gate.vector_confidence}
+                </dd>
+              </div>
+            </dl>
+          </PanelSection>
+        ) : null}
+      </EvidenceSlot>
 
       {viewerTarget ? (
         <PageViewer target={viewerTarget} onClose={() => setViewerTarget(null)} />
@@ -156,9 +246,12 @@ function UploadPanel({
   }
 
   return (
-    <Panel title="上传文献" subtitle={`接受 ${ACCEPT_EXTENSIONS.join('、')}；doc_id 为文件内容的 SHA-256，重复上传自动去重`}>
+    <Panel
+      title="上传文献"
+      subtitle={`接受 ${ACCEPT_EXTENSIONS.join('、')}；doc_id 取自文件内容，重复上传自动去重`}
+    >
       <div
-        className={dragOver ? 'dropzone dropzone-active' : 'dropzone'}
+        className={dragOver ? 'kb-drop kb-drop-active' : 'kb-drop'}
         onDragOver={(event) => {
           event.preventDefault()
           setDragOver(true)
@@ -167,28 +260,34 @@ function UploadPanel({
         onDrop={onDrop}
         role="presentation"
       >
-        <p className="dropzone-text">
-          {uploading ? '正在解析、分页并写入 seekdb…' : '将文件拖拽到此处，或'}
-        </p>
+        <span className="kb-drop-icon" aria-hidden="true">
+          <Icon name="upload" size={18} />
+        </span>
+        <div className="kb-drop-body">
+          <div className="kb-drop-text">
+            {uploading ? '正在解析、分页并写入 seekdb…' : '把文件拖到这里'}
+          </div>
+          <div className="field-hint">
+            {uploading ? 'PDF 会按真实物理页切分，空白页同样保留页级身份。' : '或选择本地文件；解析、切块、向量化都在后端完成。'}
+          </div>
+        </div>
         {!uploading ? (
-          <>
-            <button type="button" className="btn btn-primary" onClick={() => inputRef.current?.click()}>
-              选择文件
-            </button>
-            <input
-              ref={inputRef}
-              id="upload-file"
-              type="file"
-              accept={ACCEPT_EXTENSIONS.join(',')}
-              className="visually-hidden"
-              onChange={onFileChange}
-            />
-          </>
+          <button type="button" className="btn btn-primary" onClick={() => inputRef.current?.click()}>
+            选择文件
+          </button>
         ) : null}
+        <input
+          ref={inputRef}
+          id="upload-file"
+          type="file"
+          accept={ACCEPT_EXTENSIONS.join(',')}
+          className="visually-hidden"
+          onChange={onFileChange}
+        />
       </div>
 
       {uploadError ? (
-        <div style={{ marginTop: 'var(--sp-2)' }}>
+        <div style={{ marginTop: 'var(--s-3)' }}>
           <ErrorState error={uploadError} />
         </div>
       ) : null}
@@ -241,7 +340,7 @@ function UploadResultCard({ doc }: { doc: DocumentDetail }) {
   )
 }
 
-// ---------------------------------------------------------------- 文档列表 + 页导航
+// ---------------------------------------------------------------- 文档列表
 
 function DocumentListPanel({
   documents,
@@ -249,32 +348,50 @@ function DocumentListPanel({
   error,
   onRetry,
   onOpenPage,
+  expandedId,
+  onExpand,
 }: {
   documents: DocumentRecord[]
   loading: boolean
   error: unknown | null
   onRetry: () => void
   onOpenPage: (docId: string, pageNo: number, filename?: string) => void
+  expandedId: string | null
+  onExpand: (docId: string | null, detail: DocumentDetail | null) => void
 }) {
-  const [expandedDocId, setExpandedDocId] = useState<string | null>(null)
+  const [filter, setFilter] = useState('')
   const [detail, setDetail] = useState<DocumentDetail | null>(null)
   const [detailError, setDetailError] = useState<unknown | null>(null)
   const [detailLoading, setDetailLoading] = useState(false)
 
-  const toggle = async (docId: string) => {
-    if (expandedDocId === docId) {
-      setExpandedDocId(null)
+  const visible = useMemo(() => {
+    const needle = filter.trim().toLowerCase()
+    if (!needle) return documents
+    return documents.filter(
+      (doc) =>
+        doc.filename.toLowerCase().includes(needle) ||
+        doc.doc_id.toLowerCase().includes(needle) ||
+        doc.content_type.toLowerCase().includes(needle)
+    )
+  }, [documents, filter])
+
+  const toggle = async (doc: DocumentRecord) => {
+    if (expandedId === doc.doc_id) {
       setDetail(null)
+      onExpand(null, null)
       return
     }
-    setExpandedDocId(docId)
+    onExpand(doc.doc_id, null)
     setDetail(null)
     setDetailError(null)
     setDetailLoading(true)
     try {
-      setDetail(await getDocument(docId))
+      const data = await getDocument(doc.doc_id)
+      setDetail(data)
+      onExpand(doc.doc_id, data)
     } catch (err) {
       setDetailError(err)
+      onExpand(doc.doc_id, null)
     } finally {
       setDetailLoading(false)
     }
@@ -283,56 +400,55 @@ function DocumentListPanel({
   return (
     <Panel
       title="文档列表"
-      subtitle={`共 ${documents.length} 个文档；展开可查看每一个物理页（含空白页）`}
+      subtitle={`共 ${documents.length} 篇；展开任意一篇可以看到每一个物理页（含空白页）`}
       tags={<SourceTag source="seekdb" />}
       actions={
-        <button type="button" className="btn btn-sm" onClick={onRetry}>
-          刷新
-        </button>
+        <>
+          <input
+            id="kb-filter"
+            className="input kb-filter"
+            value={filter}
+            maxLength={120}
+            onChange={(event) => setFilter(event.target.value)}
+            placeholder="按文件名 / doc_id 过滤"
+            aria-label="按文件名过滤文档列表"
+          />
+          <button type="button" className="btn btn-sm" onClick={onRetry}>
+            <Icon name="refresh" size={13} /> 刷新
+          </button>
+        </>
       }
     >
-      {loading ? <LoadingState text="正在加载文档列表…" /> : null}
+      {loading ? <LoadingState text="正在读取 seekdb 中的文档表…" /> : null}
       {!loading && error ? <ErrorState error={error} onRetry={onRetry} /> : null}
       {!loading && !error && documents.length === 0 ? (
         <EmptyState text="知识库为空。先上传一篇 PDF / Markdown / TXT 文献。" />
       ) : null}
-      {!loading && !error && documents.length > 0 ? (
-        <table className="data-table doc-table">
-          <thead>
-            <tr>
-              <th scope="col">文件名</th>
-              <th scope="col">类型</th>
-              <th scope="col">doc_id</th>
-              <th scope="col">页数</th>
-              <th scope="col">chunks</th>
-              <th scope="col">空白页</th>
-              <th scope="col">更新时间</th>
-              <th scope="col">
-                <span className="visually-hidden">操作</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {documents.map((doc) => (
-              <DocumentRow
-                key={doc.doc_id}
-                doc={doc}
-                expanded={expandedDocId === doc.doc_id}
-                detail={expandedDocId === doc.doc_id ? detail : null}
-                detailLoading={expandedDocId === doc.doc_id && detailLoading}
-                detailError={expandedDocId === doc.doc_id ? detailError : null}
-                onToggle={() => void toggle(doc.doc_id)}
-                onOpenPage={onOpenPage}
-              />
-            ))}
-          </tbody>
-        </table>
+      {!loading && !error && documents.length > 0 && visible.length === 0 ? (
+        <EmptyState text={`没有文件名匹配「${filter}」的文献。`} />
+      ) : null}
+
+      {!loading && !error && visible.length > 0 ? (
+        <ul className="doc-grid">
+          {visible.map((doc) => (
+            <DocumentCard
+              key={doc.doc_id}
+              doc={doc}
+              expanded={expandedId === doc.doc_id}
+              detail={expandedId === doc.doc_id ? detail : null}
+              detailLoading={expandedId === doc.doc_id && detailLoading}
+              detailError={expandedId === doc.doc_id ? detailError : null}
+              onToggle={() => void toggle(doc)}
+              onOpenPage={onOpenPage}
+            />
+          ))}
+        </ul>
       ) : null}
     </Panel>
   )
 }
 
-function DocumentRow({
+function DocumentCard({
   doc,
   expanded,
   detail,
@@ -350,43 +466,68 @@ function DocumentRow({
   onOpenPage: (docId: string, pageNo: number, filename?: string) => void
 }) {
   return (
-    <>
-      <tr className={expanded ? 'doc-row doc-row-expanded' : 'doc-row'}>
-        <td>
-          <span className="doc-filename">{doc.filename}</span>
+    <li className={expanded ? 'doc-card doc-card-expanded' : 'doc-card'}>
+      <div className="doc-card-head">
+        <span className="doc-card-icon" aria-hidden="true">
+          <Icon name={doc.content_type === 'pdf' ? 'page' : 'docs'} size={16} />
+        </span>
+        <div className="doc-card-name">
+          <strong title={doc.filename}>{doc.filename}</strong>
+          <span className="doc-card-title">{doc.title || '（无标题）'}</span>
+        </div>
+        <div className="doc-card-badges">
+          <span className="badge">{doc.content_type}</span>
           {doc.status !== 'ready' ? <span className="badge badge-red">状态：{doc.status}</span> : null}
           {doc.deduplicated ? <span className="badge badge-amber">去重命中</span> : null}
-        </td>
-        <td>{doc.content_type}</td>
-        <td className="mono doc-id-cell" title={doc.doc_id}>
-          {doc.doc_id.slice(0, 12)}…
-        </td>
-        <td>{doc.page_count}</td>
-        <td>{doc.chunk_count}</td>
-        <td>{doc.empty_pages.length > 0 ? doc.empty_pages.join('、') : '—'}</td>
-        <td>{formatTimestamp(doc.updated_at)}</td>
-        <td>
-          <button
-            type="button"
-            className="btn btn-sm"
-            onClick={onToggle}
-            aria-expanded={expanded}
-            aria-label={`${expanded ? '收起' : '展开'} ${doc.filename} 的页导航`}
-          >
-            {expanded ? '收起' : '页导航'}
-          </button>
-        </td>
-      </tr>
-      {expanded ? (
-        <tr className="doc-detail-row">
-          <td colSpan={8}>
-            {detailLoading ? <LoadingState text="正在读取页级身份列表…" /> : null}
-            {detailError ? <ErrorState error={detailError} /> : null}
-            {detail ? <PageNavigator detail={detail} onOpenPage={onOpenPage} /> : null}
-          </td>
-        </tr>
+        </div>
+      </div>
+
+      <div className="doc-stats">
+        <span className="doc-stat">
+          <strong>{doc.page_count}</strong> 页
+        </span>
+        <span className="doc-stat">
+          <strong>{doc.chunk_count}</strong> chunks
+        </span>
+        <span className="doc-stat">
+          <strong>{(doc.size_bytes / 1024).toFixed(1)}</strong> KB
+        </span>
+        <span className="doc-stat">
+          空白页 <strong>{doc.empty_pages.length > 0 ? doc.empty_pages.join('、') : '无'}</strong>
+        </span>
+        <span className="doc-stat doc-stat-time">{formatTimestamp(doc.updated_at)}</span>
+      </div>
+
+      <div className="doc-card-foot">
+        <span className="doc-card-id mono" title={doc.doc_id}>
+          {doc.doc_id.slice(0, 16)}…
+        </span>
+        <button
+          type="button"
+          className="btn btn-sm"
+          onClick={onToggle}
+          aria-expanded={expanded}
+          aria-label={`${expanded ? '收起' : '展开'} ${doc.filename} 的页导航`}
+        >
+          {expanded ? '收起' : '页导航'}
+          <Icon name={expanded ? 'chevronLeft' : 'chevronRight'} size={13} />
+        </button>
+      </div>
+
+      {doc.error_message ? (
+        <div className="banner banner-red" role="alert">
+          {doc.error_message}
+        </div>
       ) : null}
-    </>
+
+      {expanded ? (
+        <div className="doc-card-body">
+          {detailLoading ? <LoadingState text="正在读取页级身份列表…" /> : null}
+          {detailError ? <ErrorState error={detailError} /> : null}
+          {detail ? <PageNavigator detail={detail} onOpenPage={onOpenPage} /> : null}
+        </div>
+      ) : null}
+    </li>
   )
 }
 
@@ -455,14 +596,17 @@ function SearchPanel({
   documents,
   onOpenPage,
   onError,
+  result,
+  setResult,
 }: {
   documents: DocumentRecord[]
   onOpenPage: (docId: string, pageNo: number, filename?: string) => void
   onError: (err: unknown, title?: string) => void
+  result: RetrievalResult | null
+  setResult: (result: RetrievalResult | null) => void
 }) {
   const [form, setForm] = useState<SearchFormState>(INITIAL_FORM)
   const [searching, setSearching] = useState(false)
-  const [result, setResult] = useState<RetrievalResult | null>(null)
   const [searchError, setSearchError] = useState<unknown | null>(null)
   const [hasSearched, setHasSearched] = useState(false)
 
@@ -506,7 +650,12 @@ function SearchPanel({
     setComparing(true)
     setCompareError(null)
     try {
-      setCompare(await compareModes({ query: form.query.trim(), top_k: Number.parseInt(form.topK, 10) || 8 }))
+      setCompare(
+        await compareModes({
+          query: form.query.trim(),
+          top_k: Number.parseInt(form.topK, 10) || 8,
+        })
+      )
     } catch (err) {
       setCompare(null)
       setCompareError(err)
@@ -520,22 +669,26 @@ function SearchPanel({
 
   return (
     <>
-      <Panel title="证据检索" subtitle="POST /api/retrieval/search — 三种检索模式，score 语义随 score_kind 标注" tags={<SourceTag source="seekdb" />}>
+      <Panel
+        title="证据检索"
+        subtitle="三种模式的分数语义不同，每条命中都随 score_kind 显式标注"
+        tags={<SourceTag source="seekdb" />}
+      >
         <form onSubmit={runSearch}>
           <div className="field">
             <label htmlFor="search-query">检索内容</label>
             <textarea
               id="search-query"
-              className="textarea"
+              className="textarea kb-query"
               value={form.query}
               maxLength={2000}
               rows={2}
               onChange={(e) => set('query', e.target.value)}
-              placeholder="输入要检索的问题或关键词"
+              placeholder="输入要检索的问题或关键词，例如：RRF 融合分数怎么算"
             />
           </div>
 
-          <div className="form-row" style={{ marginTop: 'var(--sp-2)' }}>
+          <div className="kb-controls">
             <div className="field">
               <label htmlFor="search-mode">检索模式</label>
               <select
@@ -571,16 +724,21 @@ function SearchPanel({
                 />
                 启用证据门控（apply_gate）
               </label>
-              <span className="field-hint">开启后仅保留通过相关性与覆盖率门控的证据</span>
+              <span className="field-hint">开启后只保留通过相关性与覆盖率门控的证据</span>
             </div>
           </div>
 
-          <details className="collapsible" style={{ marginTop: 'var(--sp-1)' }}>
+          <details className="collapsible">
             <summary>可选过滤条件（doc_id / content_type / 页码范围）</summary>
-            <div className="form-row" style={{ marginTop: 'var(--sp-1)' }}>
+            <div className="kb-controls" style={{ marginTop: 'var(--s-2)' }}>
               <div className="field">
                 <label htmlFor="filter-doc">doc_id</label>
-                <select id="filter-doc" className="select" value={form.docId} onChange={(e) => set('docId', e.target.value)}>
+                <select
+                  id="filter-doc"
+                  className="select"
+                  value={form.docId}
+                  onChange={(e) => set('docId', e.target.value)}
+                >
                   <option value="">全部文档</option>
                   {documents.map((doc) => (
                     <option key={doc.doc_id} value={doc.doc_id}>
@@ -630,7 +788,7 @@ function SearchPanel({
             </div>
           </details>
 
-          <div className="search-actions">
+          <div className="kb-actions">
             <button type="submit" className="btn btn-primary" disabled={searching || !form.query.trim()}>
               {searching ? '检索中…' : '检索'}
             </button>
@@ -642,16 +800,23 @@ function SearchPanel({
             >
               {comparing ? '对比中…' : '对比三种检索方式'}
             </button>
+            <span className="field-hint kb-actions-hint">
+              同一条查询可以只切换模式再检索一次，也可以直接并排对比三种模式与它们的重叠。
+            </span>
           </div>
         </form>
 
         {searchError ? (
-          <div style={{ marginTop: 'var(--sp-2)' }}>
+          <div style={{ marginTop: 'var(--s-3)' }}>
             <ErrorState error={searchError} />
           </div>
         ) : null}
 
-        {searching ? <LoadingState text="正在检索 seekdb…" /> : null}
+        {searching ? (
+          <div style={{ marginTop: 'var(--s-3)' }}>
+            <LoadingState text="正在检索 seekdb…" />
+          </div>
+        ) : null}
 
         {result && !searching ? (
           <div className="search-result">
@@ -671,7 +836,7 @@ function SearchPanel({
                 }
               />
             ) : (
-              <ul className="hit-list">
+              <ul className="hit-stack">
                 {result.hits.map((hit) => (
                   <HitCard key={hit.chunk_id} hit={hit} onOpenPage={onOpenPage} />
                 ))}
@@ -698,22 +863,37 @@ function SearchPanel({
 function ResultMeta({ result }: { result: RetrievalResult }) {
   return (
     <div className="result-meta">
-      <span className="badge badge-accent">模式：{MODE_LABELS[result.mode] ?? result.mode}</span>
-      <span>
-        命中 <strong>{result.hits.length}</strong> 条 · 通过门控{' '}
-        <strong>{result.relevant_count}</strong> 条 · 被门控剔除{' '}
-        <strong>{result.dropped_by_gate}</strong> 条 · 耗时 {result.elapsed_ms} ms
-      </span>
-      <span className="meta-mono">
+      <div className="kb-pills">
+        <span className="kb-pill">
+          模式 <strong>{MODE_LABELS[result.mode] ?? result.mode}</strong>
+        </span>
+        <span className="kb-pill">
+          命中 <strong>{result.hits.length}</strong>
+        </span>
+        <span className="kb-pill kb-pill-green">
+          通过门控 <strong>{result.relevant_count}</strong>
+        </span>
+        {result.dropped_by_gate > 0 ? (
+          <span className="kb-pill kb-pill-amber">
+            门控剔除 <strong>{result.dropped_by_gate}</strong>
+          </span>
+        ) : null}
+        <span className="kb-pill">
+          耗时 <strong>{result.elapsed_ms}</strong> ms
+        </span>
+        {result.gate.applied ? (
+          <span className="kb-pill">
+            门控 <strong>已启用</strong> · min_coverage {result.gate.min_coverage}
+          </span>
+        ) : (
+          <span className="kb-pill">门控未启用</span>
+        )}
+      </div>
+      <div className="kb-backend mono">
         collection <code>{result.backend.collection}</code> · fts_analyzer{' '}
-        <code>{result.backend.fts_analyzer}</code> · embedding{' '}
-        <code>{result.backend.embedding_provider}</code>（{result.backend.embedding_dimension} 维）·
-        距离 <code>{result.backend.vector_distance}</code>
-      </span>
-      <span className="meta-mono">
-        门控：{result.gate.applied ? '已启用' : '未启用'} · min_coverage{' '}
-        {result.gate.min_coverage} · vector_confidence {result.gate.vector_confidence}
-      </span>
+        <code>{result.backend.fts_analyzer}</code> · embedding <code>{result.backend.embedding_provider}</code>（
+        {result.backend.embedding_dimension} 维）· 距离 <code>{result.backend.vector_distance}</code>
+      </div>
     </div>
   )
 }
@@ -728,8 +908,12 @@ function HitCard({
   return (
     <li className="hit-card">
       <div className="hit-card-head">
-        <span className="hit-filename">{hit.filename || hit.title || hit.doc_id}</span>
-        <span className="badge badge-accent">第 {hit.page_no} 页</span>
+        <span className="hit-filename" title={hit.filename || hit.doc_id}>
+          {hit.filename || hit.title || hit.doc_id}
+        </span>
+        <span className="badge badge-accent">
+          <Icon name="page" size={12} />第 {hit.page_no} 页
+        </span>
         {hit.gate_passed ? (
           <span className="badge badge-green">通过门控</span>
         ) : (
@@ -758,18 +942,15 @@ function HitCard({
           relevance <strong>{formatScore(hit.relevance)}</strong>
         </span>
       </div>
-      <div className="hit-ids">
+      <p className="hit-text">{hit.text}</p>
+      <div className="hit-ids mono">
         <span>
           chunk_id <code>{hit.chunk_id}</code>
-        </span>
-        <span>
-          doc_id <code>{hit.doc_id}</code>
         </span>
         <span>
           page_id <code>{hit.page_id}</code>
         </span>
       </div>
-      <p className="hit-text">{hit.text}</p>
     </li>
   )
 }
@@ -788,7 +969,7 @@ function ComparePanel({
   return (
     <Panel
       title="对比三种检索方式"
-      subtitle={`查询：${compare.query}`}
+      subtitle={`同一条查询：${compare.query}`}
       tags={<SourceTag source="seekdb" />}
     >
       {warning ? (
@@ -805,7 +986,9 @@ function ComparePanel({
             <div className="compare-column" key={mode}>
               <div className="compare-column-head">
                 <h3>{MODE_LABELS[mode]}（{mode}）</h3>
-                <span className="badge">{result.hits.length} 条 · {result.elapsed_ms} ms</span>
+                <span className="badge">
+                  {result.hits.length} 条 · {result.elapsed_ms} ms
+                </span>
               </div>
               {result.hits.length === 0 ? (
                 <EmptyState text="该模式没有命中" />
@@ -860,11 +1043,9 @@ function ComparePanel({
 function OverlapIds({ ids, emptyText }: { ids: string[]; emptyText: string }) {
   if (ids.length === 0) return <p className="overlap-empty">{emptyText}</p>
   return (
-    <ul className="overlap-id-list">
+    <ul className="overlap-id-list mono">
       {ids.map((id) => (
-        <li key={id} className="mono">
-          {id}
-        </li>
+        <li key={id}>{id}</li>
       ))}
     </ul>
   )

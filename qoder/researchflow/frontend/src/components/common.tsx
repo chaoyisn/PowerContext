@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { describeError } from '../api/client'
+import Icon from './Icon'
 
 /** 状态圆点：green / amber / red / grey。 */
 export function StatusDot({ level, label }: { level: 'green' | 'amber' | 'red' | 'grey'; label?: string }) {
@@ -9,9 +10,62 @@ export function StatusDot({ level, label }: { level: 'green' | 'amber' | 'red' |
 /** 通道标签：文献证据（seekdb）与历史记忆（PowerContext）在 UI 中永远显式区分。 */
 export function SourceTag({ source }: { source: 'seekdb' | 'powercontext' }) {
   if (source === 'seekdb') {
-    return <span className="source-tag source-tag-seekdb">文献证据 · seekdb</span>
+    return (
+      <span className="source-tag source-tag-seekdb">
+        <Icon name="book" size={13} />
+        文献证据 · seekdb
+      </span>
+    )
   }
-  return <span className="source-tag source-tag-powercontext">历史记忆 · PowerContext</span>
+  return (
+    <span className="source-tag source-tag-powercontext">
+      <Icon name="brain" size={13} />
+      历史记忆 · PowerContext
+    </span>
+  )
+}
+
+export function Spinner({ label = '处理中' }: { label?: string }) {
+  return <span className="spinner" role="status" aria-label={label} />
+}
+
+export function Skeleton({ width = '100%', height = 14 }: { width?: number | string; height?: number }) {
+  return <span className="skeleton" style={{ display: 'block', width, height }} aria-hidden="true" />
+}
+
+/** 骨架行：用于检索/回答生成中的占位，避免空白跳动。 */
+export function SkeletonLines({ lines = 3 }: { lines?: number }) {
+  return (
+    <div className="loading-state" role="status" style={{ textAlign: 'left', padding: 0 }}>
+      {Array.from({ length: lines }, (_, index) => (
+        <Skeleton
+          key={index}
+          height={12}
+          width={index === lines - 1 ? '62%' : `${88 - index * 6}%`}
+        />
+      ))}
+    </div>
+  )
+}
+
+export function Metric({
+  label,
+  value,
+  hint,
+  tone = 'default',
+}: {
+  label: ReactNode
+  value: ReactNode
+  hint?: ReactNode
+  tone?: 'default' | 'accent' | 'memory' | 'warn' | 'bad'
+}) {
+  return (
+    <div className={`metric${tone === 'default' ? '' : ` metric-${tone}`}`}>
+      <div className="metric-label">{label}</div>
+      <div className="metric-value">{value}</div>
+      {hint ? <div className="metric-hint">{hint}</div> : null}
+    </div>
+  )
 }
 
 export function Panel({
@@ -33,7 +87,7 @@ export function Panel({
     <section className={`panel ${className}`.trim()}>
       <div className="panel-header">
         <div className="panel-title">
-          {title}
+          <span className="panel-name">{title}</span>
           {tags}
           {subtitle ? <span className="panel-subtitle">{subtitle}</span> : null}
         </div>

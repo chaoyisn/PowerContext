@@ -54,6 +54,8 @@ function resolveExecutable() {
 
   const accSummary = await page.textContent('#acc-summary');
   const pytest = await page.textContent('#pytest-passed');
+  const interactions = await page.textContent('#int-summary');
+  const interactionDetail = await page.textContent('#int-detail');
   const rows = await page.locator('#acc-table tbody tr').count();
   const shots = await page.locator('.shot img').count();
   const brokenShots = await page.evaluate(() =>
@@ -63,6 +65,7 @@ function resolveExecutable() {
 
   console.log('acc summary   :', accSummary.trim());
   console.log('pytest        :', pytest.trim());
+  console.log('browser itx   :', interactions.trim(), '·', interactionDetail.trim().slice(0, 90));
   console.log('acceptance rows:', rows);
   console.log('screenshots   :', shots, 'broken:', brokenShots);
   console.log('seekdb fact   :', factSeekdb.trim().slice(0, 90));
@@ -90,7 +93,7 @@ function resolveExecutable() {
 
   await browser.close();
   console.log('failed requests (>=400):', badResponses.length, badResponses.slice(0, 5).join(' | '));
-  if (brokenShots > 0 || rows < 9 || errors.length || badResponses.length) {
+  if (brokenShots > 0 || rows < 9 || errors.length || badResponses.length || !/PASS/.test(interactions)) {
     console.error('SITE VERIFY FAILED', errors, badResponses);
     process.exit(1);
   }

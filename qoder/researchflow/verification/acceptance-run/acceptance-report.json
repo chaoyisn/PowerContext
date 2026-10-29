@@ -1,6 +1,6 @@
 {
-  "run_id": "20261029-100634",
-  "generated_at": "2026-10-29T10:08:33+08:00",
+  "run_id": "20261029-213920",
+  "generated_at": "2026-10-29T21:40:59+08:00",
   "context": {
     "seekdb_endpoint": "127.0.0.1:2881",
     "seekdb_version": "5.7.25-OceanBase seekdb-v1.4.0.0",
@@ -14,7 +14,7 @@
     "llm_enabled": true,
     "llm_model": "deepseek-chat",
     "api_url": "http://127.0.0.1:8788",
-    "run_tag": "c83a126f",
+    "run_tag": "6aa01781",
     "documents_ingested": [
       "4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e",
       "60aa394c2a53076681d95ea42589fc6111112a26277395b306dd82efa0e49bcc",
@@ -160,8 +160,8 @@
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T1.log",
-      "duration_ms": 9365.6,
+      "log": "logs\\acceptance-20261029-213920\\T1.log",
+      "duration_ms": 9200.0,
       "notes": []
     },
     {
@@ -352,8 +352,8 @@
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T2.log",
-      "duration_ms": 4211.5,
+      "log": "logs\\acceptance-20261029-213920\\T2.log",
+      "duration_ms": 5198.5,
       "notes": []
     },
     {
@@ -495,8 +495,8 @@
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T3.log",
-      "duration_ms": 4647.5,
+      "log": "logs\\acceptance-20261029-213920\\T3.log",
+      "duration_ms": 4833.1,
       "notes": []
     },
     {
@@ -504,7 +504,7 @@
       "title": "新建项目并保存已确认决策与 next_steps，PowerContext 实际写入",
       "inputs": {},
       "expected": "",
-      "actual": "project acc-c83a126f bound to scope scp_1pdehwady4r7zmyvxhhka53vak; 6 bullets plus 1 snapshot written to PowerContext and read back through its own API",
+      "actual": "project acc-6aa01781 bound to scope scp_70md0bda4wqap2g3mdaht7aqcs; 6 bullets plus 1 snapshot written to PowerContext and read back through its own API",
       "status": "PASS",
       "checks": [
         {
@@ -533,8 +533,8 @@
         },
         {
           "name": "saved scope matches",
-          "expected": "scp_1pdehwady4r7zmyvxhhka53vak",
-          "actual": "scp_1pdehwady4r7zmyvxhhka53vak",
+          "expected": "scp_70md0bda4wqap2g3mdaht7aqcs",
+          "actual": "scp_70md0bda4wqap2g3mdaht7aqcs",
           "ok": true
         },
         {
@@ -562,25 +562,25 @@
           "ok": true
         },
         {
-          "name": "persisted in PowerContext: D-c83a126f: 默认检索模式为 hybrid（RRF 融合）",
+          "name": "persisted in PowerContext: D-6aa01781: 默认检索模式为 hybrid（RRF 融合）",
           "expected": true,
           "actual": true,
           "ok": true
         },
         {
-          "name": "persisted in PowerContext: D-c83a126f: 文档主键使用内容 SHA-256",
+          "name": "persisted in PowerContext: D-6aa01781: 文档主键使用内容 SHA-256",
           "expected": true,
           "actual": true,
           "ok": true
         },
         {
-          "name": "persisted in PowerContext: N-c83a126f: 跑通 T1-T8",
+          "name": "persisted in PowerContext: N-6aa01781: 跑通 T1-T8",
           "expected": true,
           "actual": true,
           "ok": true
         },
         {
-          "name": "persisted in PowerContext: N-c83a126f: 输出 Qoder Sites 部署可行性分析",
+          "name": "persisted in PowerContext: N-6aa01781: 输出 Qoder Sites 部署可行性分析",
           "expected": true,
           "actual": true,
           "ok": true
@@ -610,15 +610,15 @@
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T4.log",
-      "duration_ms": 1016.4,
+      "log": "logs\\acceptance-20261029-213920\\T4.log",
+      "duration_ms": 2569.7,
       "notes": []
     },
     {
       "case_id": "T5",
       "title": "结束并重建会话后恢复之前的决策与 next_steps",
       "inputs": {
-        "project_id": "acc-c83a126f",
+        "project_id": "acc-6aa01781",
         "new_session": "fresh HTTP client + restarted backend process"
       },
       "expected": "仅凭 project_id 就能恢复 decisions 与 next_steps，并生成「上次做到了哪里、接下来该做什么」",
@@ -633,14 +633,14 @@
         },
         {
           "name": "restored decisions",
-          "expected": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
-          "actual": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
+          "expected": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
+          "actual": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
           "ok": true
         },
         {
           "name": "restored next_steps",
-          "expected": "[\"N-c83a126f: 跑通 T1-T8\", \"N-c83a126f: 输出 Qoder Sites 部署可行性分析\"]",
-          "actual": "[\"N-c83a126f: 跑通 T1-T8\", \"N-c83a126f: 输出 Qoder Sites 部署可行性分析\"]",
+          "expected": "[\"N-6aa01781: 跑通 T1-T8\", \"N-6aa01781: 输出 Qoder Sites 部署可行性分析\"]",
+          "actual": "[\"N-6aa01781: 跑通 T1-T8\", \"N-6aa01781: 输出 Qoder Sites 部署可行性分析\"]",
           "ok": true
         },
         {
@@ -650,25 +650,25 @@
           "ok": true
         },
         {
-          "name": "brief mentions D-c83a126f: 默认检索模式为 hybrid（RRF 融合）",
+          "name": "brief mentions D-6aa01781: 默认检索模式为 hybrid（RRF 融合）",
           "expected": true,
           "actual": true,
           "ok": true
         },
         {
-          "name": "brief mentions D-c83a126f: 文档主键使用内容 SHA-256",
+          "name": "brief mentions D-6aa01781: 文档主键使用内容 SHA-256",
           "expected": true,
           "actual": true,
           "ok": true
         },
         {
-          "name": "brief mentions N-c83a126f: 跑通 T1-T8",
+          "name": "brief mentions N-6aa01781: 跑通 T1-T8",
           "expected": true,
           "actual": true,
           "ok": true
         },
         {
-          "name": "brief mentions N-c83a126f: 输出 Qoder Sites 部署可行性分析",
+          "name": "brief mentions N-6aa01781: 输出 Qoder Sites 部署可行性分析",
           "expected": true,
           "actual": true,
           "ok": true
@@ -699,19 +699,19 @@
         },
         {
           "name": "new process restored decisions",
-          "expected": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
-          "actual": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
+          "expected": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
+          "actual": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
           "ok": true
         },
         {
           "name": "new process restored next_steps",
-          "expected": "[\"N-c83a126f: 跑通 T1-T8\", \"N-c83a126f: 输出 Qoder Sites 部署可行性分析\"]",
-          "actual": "[\"N-c83a126f: 跑通 T1-T8\", \"N-c83a126f: 输出 Qoder Sites 部署可行性分析\"]",
+          "expected": "[\"N-6aa01781: 跑通 T1-T8\", \"N-6aa01781: 输出 Qoder Sites 部署可行性分析\"]",
+          "actual": "[\"N-6aa01781: 跑通 T1-T8\", \"N-6aa01781: 输出 Qoder Sites 部署可行性分析\"]",
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T5.log",
-      "duration_ms": 2083.6,
+      "log": "logs\\acceptance-20261029-213920\\T5.log",
+      "duration_ms": 2146.6,
       "notes": []
     },
     {
@@ -768,8 +768,8 @@
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T9-LLM.log",
-      "duration_ms": 3546.4,
+      "log": "logs\\acceptance-20261029-213920\\T9-LLM.log",
+      "duration_ms": 3816.9,
       "notes": []
     },
     {
@@ -810,8 +810,8 @@
         },
         {
           "name": "decisions survived the restart",
-          "expected": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
-          "actual": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
+          "expected": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
+          "actual": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
           "ok": true
         },
         {
@@ -851,8 +851,8 @@
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T6.log",
-      "duration_ms": 16942.1,
+      "log": "logs\\acceptance-20261029-213920\\T6.log",
+      "duration_ms": 15834.5,
       "notes": [
         "seekdb 容器未重启：contest-seekdb 与其他赛题共用，自动重启会影响他人。其数据在 Docker volume contest-seekdb-data-20261027 中持久化；用 --restart-seekdb 可显式执行该项验证。"
       ]
@@ -862,7 +862,7 @@
       "title": "断开 PowerContext，对比任务恢复能力，证明其真实作用",
       "inputs": {
         "action": "kill the PowerContext server process",
-        "project_id": "acc-c83a126f"
+        "project_id": "acc-6aa01781"
       },
       "expected": "断开后：记忆接口报真实错误、恢复返回 memory_available=false 且无快照；而检索与问答照常工作（因为它们只依赖 seekdb）。恢复服务后记忆立即回来。",
       "actual": "with PowerContext killed, memory endpoints reported the real outage and returned no snapshot, while retrieval and QA kept working off seekdb; after restart the same decisions were recovered",
@@ -876,8 +876,8 @@
         },
         {
           "name": "decisions BEFORE disconnect",
-          "expected": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
-          "actual": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
+          "expected": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
+          "actual": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
           "ok": true
         },
         {
@@ -978,13 +978,13 @@
         },
         {
           "name": "decisions recovered AFTER reconnect",
-          "expected": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
-          "actual": "[\"D-c83a126f: 默认检索模式为 hybrid（RRF 融合）\", \"D-c83a126f: 文档主键使用内容 SHA-256\"]",
+          "expected": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
+          "actual": "[\"D-6aa01781: 默认检索模式为 hybrid（RRF 融合）\", \"D-6aa01781: 文档主键使用内容 SHA-256\"]",
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T7.log",
-      "duration_ms": 41559.8,
+      "log": "logs\\acceptance-20261029-213920\\T7.log",
+      "duration_ms": 23842.4,
       "notes": []
     },
     {
@@ -1083,8 +1083,8 @@
           "ok": true
         }
       ],
-      "log": "logs\\acceptance-20261029-100634\\T8.log",
-      "duration_ms": 17487.4,
+      "log": "logs\\acceptance-20261029-213920\\T8.log",
+      "duration_ms": 17277.7,
       "notes": []
     }
   ]

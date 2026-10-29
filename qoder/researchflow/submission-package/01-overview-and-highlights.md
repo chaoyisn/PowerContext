@@ -38,19 +38,20 @@ OceanBase × Qoder 2026 数据库比赛 · Qoder 赛道参赛作品，代码位�
    并在响应里用 `search_backend_used` 明示这一条究竟是谁答的。
 7. **可复现的验收。** 149 个自动化测试直接打真实依赖；T1–T9 端到端验收
    （含真实服务重启、真实断连）150 项校验全 PASS；另有一次全新 venv / 全新容器 /
-   全新数据目录的评审旅程 20 步全过，跑完自动清理不影响同机其他赛题。
+   全新数据目录的评审旅程 **23/23 步**全过（2026-10-29 22:20 重跑），跑完自动清理不影响同机其他赛题。
 
 ## 3. 规模与形态（实测）
 
 | 维度 | 值 |
 | --- | --- |
-| 页面 | 4 个（项目总览 / 知识库 / AI 工作台 / 任务记忆），React 18 + Vite + TS，中文为主，响应式 |
-| 后端 | FastAPI + 4 个领域模块（ingestion / retrieval / agent / memory），OpenAPI 在 `/docs` |
+| 页面 | 6 个路由（`/` 对话首页 · `/workbench` 证据问答 · `/knowledge` 知识库 · `/memory` 研究进度 · `/verification` 验证 · `/architecture` 架构与接口），三段式外壳（左 Sidebar / 中主区 / 右 Evidence·Context 面板），React 18 + Vite + TS，中文为主，桌面优先 + 移动端抽屉，浅色/深色双主题 |
+| 后端 | FastAPI + 4 个领域模块（ingestion / retrieval / agent / memory），OpenAPI 在 `/docs`（SPA 路由不与它同名） |
 | 演示语料 | 3 份文档 / 7 个物理页（含 1 个刻意留空页）/ 13 个 chunk |
 | 自动化测试 | `149 passed`（`backend/.venv`，真实 seekdb + 真实 PowerContext） |
 | 端到端验收 | T1–T9 全 PASS，150 项校验，报告与逐用例日志在 `verification/acceptance-run/` |
-| 公开站点 | 纯静态 14 文件 / 1.7 MB，匿名可达已验证 |
-| 演示视频 | `demo/researchflow-demo.mp4`，由真实运行的产品录屏 + 真实日志卡合成 |
+| 真实浏览器交互验收 | 30 组全绿（Playwright 驱动真实 Chromium 打真实后端，渲染文本与接口 JSON 逐条比对；48 张四宽度截图 0 溢出），见 `verification/browser-acceptance/` |
+| 公开站点 | 纯静态 15 文件 / 1.4 MB，**21:46 已更新发布为简化后的冻结构建**；15/15 文件与本地最终构建一致（无凭据抓取 + SHA-256 比对；HTML 需先剥掉平台自动注入的水印脚本，其余资源原样一致），见 `verification/site-public/` |
+| 演示视频 | `demo/researchflow-demo.mp4`，**2 分 15 秒 / 6.5 MB / 1280×800**，11 场景一次真实运行录完；展示站两个场景直接录自线上地址；25 项交付自动检查全 PASS（`demo/video-check.json`） |
 
 ## 4. 与其它参赛作品的差异（一句话）
 

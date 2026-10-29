@@ -54,7 +54,7 @@
 **V1 最终结果：pytest 88 通过；验收 T1–T8 + T9-LLM 全部 PASS（150 项校验 0 失败）；浏览器四页实测通过。**
 
 **V3 现状（最终交付）：pytest 149 通过；验收 T1–T9 全部 PASS（150 项校验 0 失败）；
-全新环境复现 20/20；比赛展示站已正式发布并公开访问
+全新环境复现 23/23；比赛展示站已正式发布并公开访问
 （<https://researchflow-5esfsogn38f.qoder.zone>），详见 `SUBMISSION.md` 与 `SITE_DEPLOYMENT.md` §5。**
 
 ---

@@ -23,7 +23,7 @@
 | 7 | Qoder Sites 发布过程 | [`../SITE_DEPLOYMENT.md`](../SITE_DEPLOYMENT.md) §2.3 实际参数、§5 真实结果；`QODER_LOG.md` V2 09:00（阻塞如实记录）与 V3 10:40（解除并发布） | 提交 `a1a84e8e`、`ff67da60`；[`../verification/site-public/PUBLISH_VERIFICATION.md`](../verification/site-public/PUBLISH_VERIFICATION.md) |
 
 > 补充：安全审计（`../SECURITY.md` 9 个领域）、性能与提效基准（`../BENCHMARK.md` + `logs/bench-*.json`）、
-> 全新环境复现（`logs/fresh-env-20261029-094431.json`，20/20）。
+> 全新环境复现（`logs/fresh-env-20261029-222030.json`，23/23；同日 09:44 那次为 22/22）。
 
 ---
 

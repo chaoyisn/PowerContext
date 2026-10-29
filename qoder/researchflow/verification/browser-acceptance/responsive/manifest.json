@@ -1,0 +1,439 @@
+{
+  "captured_at": "2026-10-29T11:03:43.640Z",
+  "target": "http://127.0.0.1:8787",
+  "session": "/workbench?s=local-20261029110341-6809v",
+  "shots": [
+    {
+      "file": "home-390-light.png",
+      "width": 390,
+      "theme": "light",
+      "route": "/",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "chat-390-light.png",
+      "width": 390,
+      "theme": "light",
+      "route": "/workbench",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "knowledge-390-light.png",
+      "width": 390,
+      "theme": "light",
+      "route": "/knowledge",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "memory-390-light.png",
+      "width": 390,
+      "theme": "light",
+      "route": "/memory",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "verification-390-light.png",
+      "width": 390,
+      "theme": "light",
+      "route": "/verification",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "architecture-390-light.png",
+      "width": 390,
+      "theme": "light",
+      "route": "/architecture",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "home-390-dark.png",
+      "width": 390,
+      "theme": "dark",
+      "route": "/",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "chat-390-dark.png",
+      "width": 390,
+      "theme": "dark",
+      "route": "/workbench",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "knowledge-390-dark.png",
+      "width": 390,
+      "theme": "dark",
+      "route": "/knowledge",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "memory-390-dark.png",
+      "width": 390,
+      "theme": "dark",
+      "route": "/memory",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "verification-390-dark.png",
+      "width": 390,
+      "theme": "dark",
+      "route": "/verification",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "architecture-390-dark.png",
+      "width": 390,
+      "theme": "dark",
+      "route": "/architecture",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "overflow_px": 0
+    },
+    {
+      "file": "home-768-light.png",
+      "width": 768,
+      "theme": "light",
+      "route": "/",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "chat-768-light.png",
+      "width": 768,
+      "theme": "light",
+      "route": "/workbench",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "knowledge-768-light.png",
+      "width": 768,
+      "theme": "light",
+      "route": "/knowledge",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "memory-768-light.png",
+      "width": 768,
+      "theme": "light",
+      "route": "/memory",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "verification-768-light.png",
+      "width": 768,
+      "theme": "light",
+      "route": "/verification",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "architecture-768-light.png",
+      "width": 768,
+      "theme": "light",
+      "route": "/architecture",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "home-768-dark.png",
+      "width": 768,
+      "theme": "dark",
+      "route": "/",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "chat-768-dark.png",
+      "width": 768,
+      "theme": "dark",
+      "route": "/workbench",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "knowledge-768-dark.png",
+      "width": 768,
+      "theme": "dark",
+      "route": "/knowledge",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "memory-768-dark.png",
+      "width": 768,
+      "theme": "dark",
+      "route": "/memory",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "verification-768-dark.png",
+      "width": 768,
+      "theme": "dark",
+      "route": "/verification",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "architecture-768-dark.png",
+      "width": 768,
+      "theme": "dark",
+      "route": "/architecture",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "overflow_px": 0
+    },
+    {
+      "file": "home-1280-light.png",
+      "width": 1280,
+      "theme": "light",
+      "route": "/",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "chat-1280-light.png",
+      "width": 1280,
+      "theme": "light",
+      "route": "/workbench",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "knowledge-1280-light.png",
+      "width": 1280,
+      "theme": "light",
+      "route": "/knowledge",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "memory-1280-light.png",
+      "width": 1280,
+      "theme": "light",
+      "route": "/memory",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "verification-1280-light.png",
+      "width": 1280,
+      "theme": "light",
+      "route": "/verification",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "architecture-1280-light.png",
+      "width": 1280,
+      "theme": "light",
+      "route": "/architecture",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "home-1280-dark.png",
+      "width": 1280,
+      "theme": "dark",
+      "route": "/",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "chat-1280-dark.png",
+      "width": 1280,
+      "theme": "dark",
+      "route": "/workbench",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "knowledge-1280-dark.png",
+      "width": 1280,
+      "theme": "dark",
+      "route": "/knowledge",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "memory-1280-dark.png",
+      "width": 1280,
+      "theme": "dark",
+      "route": "/memory",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "verification-1280-dark.png",
+      "width": 1280,
+      "theme": "dark",
+      "route": "/verification",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "architecture-1280-dark.png",
+      "width": 1280,
+      "theme": "dark",
+      "route": "/architecture",
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "overflow_px": 0
+    },
+    {
+      "file": "home-1920-light.png",
+      "width": 1920,
+      "theme": "light",
+      "route": "/",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "chat-1920-light.png",
+      "width": 1920,
+      "theme": "light",
+      "route": "/workbench",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "knowledge-1920-light.png",
+      "width": 1920,
+      "theme": "light",
+      "route": "/knowledge",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "memory-1920-light.png",
+      "width": 1920,
+      "theme": "light",
+      "route": "/memory",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "verification-1920-light.png",
+      "width": 1920,
+      "theme": "light",
+      "route": "/verification",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "architecture-1920-light.png",
+      "width": 1920,
+      "theme": "light",
+      "route": "/architecture",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "home-1920-dark.png",
+      "width": 1920,
+      "theme": "dark",
+      "route": "/",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "chat-1920-dark.png",
+      "width": 1920,
+      "theme": "dark",
+      "route": "/workbench",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "knowledge-1920-dark.png",
+      "width": 1920,
+      "theme": "dark",
+      "route": "/knowledge",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "memory-1920-dark.png",
+      "width": 1920,
+      "theme": "dark",
+      "route": "/memory",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "verification-1920-dark.png",
+      "width": 1920,
+      "theme": "dark",
+      "route": "/verification",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    },
+    {
+      "file": "architecture-1920-dark.png",
+      "width": 1920,
+      "theme": "dark",
+      "route": "/architecture",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "overflow_px": 0
+    }
+  ]
+}

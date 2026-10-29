@@ -1,14 +1,15 @@
 # 10 · 人工交接（只剩 5 项，每项含步骤 / 存放位置 / 完成标准）
 
 自动部分已完成：演示视频、站点发布与匿名验证、测试与验收证据、提交包文档、交付审计。
-下面 5 项是 Agent 无法代做的。**前 4 项阻塞提交，第 5 项是可选加分项。**
+下面 5 项是 Agent 无法代做的。**第 2 / 3 / 4 项阻塞提交；第 1、5 项是可选加分项。**
 
 ---
 
 ## 1. 演示视频（可选覆盖，默认无需操作）
 
-- **现状**：`submission-package/demo/researchflow-demo.mp4` 已存在（2:05，真实产品录屏 +
-  中文合成语音 + 烧录字幕），可直接提交。
+- **现状**：`submission-package/demo/researchflow-demo.mp4` 已存在（**2 分 15 秒 / 6.5 MB**，
+  2026-10-29 22:21 定稿；真实产品录屏 + 中文合成语音 + 烧录字幕，展示站两个场景录自线上地址），
+  25 项成片自动检查全 PASS，可直接提交。
 - **只有在这两种情况下才需要人工**：① 想要真人配音；② 想要真人出镜口播。
 - **步骤**：按 [`../DEMO_SCRIPT.md`](../DEMO_SCRIPT.md) §1 准备环境 → §2 分镜逐段录屏
   （1440×900、1080p/30fps、浅色主题、关通知）→ 照读 §3 旁白稿录音 → 拼接加字幕。
@@ -49,7 +50,8 @@
      `git fetch origin && git rev-parse HEAD origin/2026-competition-ecosystem`
      确认两个 SHA 相同（本文不写死 tip）。
   2. 在线站点填 <https://researchflow-5esfsogn38f.qoder.zone>（先无痕窗口打开一次确认可访问）。
-  3. 演示视频上传 `submission-package/demo/researchflow-demo.mp4`（1280×800 / 2:05 / 6.2 MB）。
+  3. 演示视频上传 `submission-package/demo/researchflow-demo.mp4`（1280×800 / 2:15 / 6.5 MB，
+     2026-10-29 22:21 定稿，展示站场景录自线上地址）。
   4. 文字说明可直接粘贴 `submission-package/01-overview-and-highlights.md` 的 §1–§2
      与 `05-acceptance-index.md` 的结果表。
   5. 若平台要求单文件附件：用 `FINAL_SUBMISSION.md` + `submission-package/` 打包 ZIP
