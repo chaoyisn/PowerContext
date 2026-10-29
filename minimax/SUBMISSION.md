@@ -57,14 +57,27 @@
 > `d647275c`，因此满足基线历史要求。基线分支 `2026-competition-ecosystem` 上
 > `minimax/` 只有一个 `.gitkeep`，本实现即填入该目录。
 
-**最终 Commit Hash（40 位）**：
+**被测试的代码提交（完整 40 位 SHA）**：
 
 ```
-c1362c7ec76d7175d08e44c532d84985d428215f
+aa56990683e778badbc6d11f3e7972e4c9181358
+```
+
+六项官方验收、全新检出复现、全新虚拟环境验证均在该提交上运行。
+
+**最终交付提交**：本分支 `competition/minimax-sdd-context` 的 tip。
+它相对上面那个提交只增加了本文件与刷新后的证据文件，**代码内容完全一致**。
+
+由于一个提交无法在自身的文件内容里写下自己的哈希（会自我引用），最终提交的
+完整 40 位 SHA 记录在仓库的**附注标签** `submission-v3` 上，
+该标签在提交之后创建，不属于提交内容，因此没有循环引用：
+
+```bash
+git tag -n submission-v3          # 查看标签注释，其中写明最终提交的完整 SHA
+git rev-parse submission-v3       # 直接取出最终提交的完整 SHA
 ```
 
 分支链接：<https://github.com/chaoyisn/PowerContext/tree/competition/minimax-sdd-context>
-Commit 链接：<https://github.com/chaoyisn/PowerContext/commit/c1362c7ec76d7175d08e44c532d84985d428215f>
 
 > 报告中的 `commit` / `git_version` 字段记录的是**本次运行所测试的代码提交**。
 > 把报告本身提交进仓库的那次提交会更新报告文件，但不改变被测试的代码——

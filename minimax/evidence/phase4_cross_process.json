@@ -27,27 +27,27 @@
       "phase4: 写入进程退出码 0"
     ]
   },
-  "marker": "10A1B92A",
+  "marker": "26D8842C",
   "passed": true,
   "read_process": {
-    "pid": 2972,
+    "pid": 13920,
     "returncode": 0,
     "stderr": ""
   },
   "recovered_state": {
     "artifact_ids": {
-      "sdd-completed": "art_7027f39b71784ee48c6126dfb319d14e",
-      "sdd-task-description": "art_2fbab9cfbd934033a5e1b45308ea18f2",
-      "sdd-todo": "art_ab107f60cd264cbbbf73f2eb7d24e93d",
-      "sdd-verification": "art_9a3367546d564de39b497921a3610187"
+      "sdd-completed": "art_02a796c30c524a93bc6fd82b82fbb9a9",
+      "sdd-task-description": "art_fe47cad433d145dba48c66f636e3f8be",
+      "sdd-todo": "art_cf7d1f1c217445c5af6dab7f497a8bd9",
+      "sdd-verification": "art_db77dcb0b0aa45fc9f1f876cc6fc1c62"
     },
     "completed": [
       "phase4: 状态已在独立进程中写入"
     ],
-    "description": "phase4: 跨进程恢复验证任务 10A1B92A",
+    "description": "phase4: 跨进程恢复验证任务 26D8842C",
     "has_state": true,
     "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
-    "task_id": "TASK-SPEC-REQ-001-PHASE4-11C1ACE3",
+    "task_id": "TASK-SPEC-REQ-001-PHASE4-409A50BE",
     "todos": [
       "phase4: 验证跨进程读取"
     ],
@@ -61,21 +61,21 @@
     "description": null,
     "has_state": false,
     "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
-    "task_id": "TASK-SPEC-REQ-001-PHASE4-11C1ACE3",
+    "task_id": "TASK-SPEC-REQ-001-PHASE4-409A50BE",
     "todos": [],
     "verifications": []
   },
   "state_record_ids": {
-    "sdd-completed": "art_7027f39b71784ee48c6126dfb319d14e",
-    "sdd-task-description": "art_2fbab9cfbd934033a5e1b45308ea18f2",
-    "sdd-todo": "art_ab107f60cd264cbbbf73f2eb7d24e93d",
-    "sdd-verification": "art_9a3367546d564de39b497921a3610187"
+    "sdd-completed": "art_02a796c30c524a93bc6fd82b82fbb9a9",
+    "sdd-task-description": "art_fe47cad433d145dba48c66f636e3f8be",
+    "sdd-todo": "art_cf7d1f1c217445c5af6dab7f497a8bd9",
+    "sdd-verification": "art_db77dcb0b0aa45fc9f1f876cc6fc1c62"
   },
-  "task_id": "TASK-SPEC-REQ-001-PHASE4-11C1ACE3",
+  "task_id": "TASK-SPEC-REQ-001-PHASE4-409A50BE",
   "write_process": {
-    "pid": 24364,
+    "pid": 41672,
     "returncode": 0,
     "stderr": "",
-    "stdout": "{\"pid\": 24364, \"marker\": \"10A1B92A\"}"
+    "stdout": "{\"pid\": 41672, \"marker\": \"26D8842C\"}"
   }
 }

@@ -201,7 +201,7 @@
         "commit": "14959429",
         "patched_matches_committed_version": true,
         "pytest_exit_code": 0,
-        "pytest_summary": "4 passed in 0.03s",
+        "pytest_summary": "4 passed in 0.02s",
         "status": "PASS",
         "target_test": "minimax/tests/test_list_tasks_status_wildcard.py",
         "target_test_introduced_by_this_round": true
