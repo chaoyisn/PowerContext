@@ -12,6 +12,7 @@
     "completed": [
       "phase4: 状态已在独立进程中写入",
       "phase4: 状态已在独立进程中写入",
+      "phase4: 状态已在独立进程中写入",
       "已导入规格 SPEC-REQ-001",
       "phase4: 状态已在独立进程中写入"
     ],
@@ -19,9 +20,11 @@
       "phase4: 验证跨进程读取",
       "phase4: 验证跨进程读取",
       "phase4: 验证跨进程读取",
-      "实现 status 筛选"
+      "实现 status 筛选",
+      "phase4: 验证跨进程读取"
     ],
     "verifications": [
+      "phase4: 写入进程退出码 0",
       "phase4: 写入进程退出码 0",
       "phase4: 写入进程退出码 0",
       "修改前目标测试失败 (exit 1)",
@@ -37,10 +40,11 @@
     "artifact_ids": {
       "sdd-completed": "art_e5cf4dea4ef645a5a2ad73bf17ef6095",
       "sdd-task-description": "art_e32e4055cfbb45828d984b2be98b806e",
-      "sdd-todo": "art_d5e476065aae4a33a17702876f0d8b5f",
+      "sdd-todo": "art_ec767778a3da46518f01f151a9d5e759",
       "sdd-verification": "art_f2ebe1c6a7894bd183b2ae3a052704ea"
     },
     "completed": [
+      "phase4: 状态已在独立进程中写入",
       "phase4: 状态已在独立进程中写入",
       "phase4: 状态已在独立进程中写入",
       "已导入规格 SPEC-REQ-001",
@@ -54,9 +58,11 @@
       "phase4: 验证跨进程读取",
       "phase4: 验证跨进程读取",
       "phase4: 验证跨进程读取",
-      "实现 status 筛选"
+      "实现 status 筛选",
+      "phase4: 验证跨进程读取"
     ],
     "verifications": [
+      "phase4: 写入进程退出码 0",
       "phase4: 写入进程退出码 0",
       "phase4: 写入进程退出码 0",
       "修改前目标测试失败 (exit 1)",

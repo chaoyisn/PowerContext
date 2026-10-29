@@ -37,7 +37,7 @@ class TaskStore:
         ``status`` optionally filters tasks by exact, case-sensitive status match.
         """
 
-        tasks = filter_by_status(self.tasks, status)
+        tasks = filter_by_status(self.tasks, None if status == "*" else status)
         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]
 
     def find_by_id(self, task_id: int) -> Task | None:

@@ -1,6 +1,6 @@
 {
   "branch": "competition/minimax-sdd-context",
-  "commit": "1495942912b11c01df9e449f845f21f7d0cdaec7",
+  "commit": "daa60b555868eda4d22f4bd60b8f43c232dd6476",
   "generated_by": "minimax/scripts/verify.py",
   "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
   "overall": "PASS",
@@ -26,7 +26,7 @@
           "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
           "exit_code": 0,
           "stderr": "",
-          "stdout": "......................                                                   [100%]\n22 passed in 0.04s\n"
+          "stdout": "......................                                                   [100%]\n22 passed in 0.03s\n"
         }
       },
       "item": "TEST-01",
@@ -119,7 +119,7 @@
       "title": "数据库真实参与"
     },
     {
-      "detail": "进程退出后由全新进程读回 3 条完成项、3 条待办、3 条验证结果，并合并进新构建的上下文",
+      "detail": "进程退出后由全新进程读回 4 条完成项、4 条待办、4 条验证结果，并合并进新构建的上下文",
       "evidence": {
         "checks": {
           "context_resolves_code": true,
@@ -143,6 +143,7 @@
           },
           "completed": [
             "verify-restart-1793284525:completed",
+            "verify-restart-1793284613:completed",
             "verify-restart-1793284346:completed",
             "verify-restart-1793284490:completed"
           ],
@@ -152,12 +153,14 @@
           "task_id": "TASK-SPEC-REQ-001-RESTART",
           "todos": [
             "verify-restart-1793284525:todo",
+            "verify-restart-1793284613:todo",
             "verify-restart-1793284346:todo",
             "verify-restart-1793284490:todo"
           ],
           "verifications": [
             "verify-restart-1793284525:verification",
             "verify-restart-1793284346:verification",
+            "verify-restart-1793284613:verification",
             "verify-restart-1793284490:verification"
           ]
         },

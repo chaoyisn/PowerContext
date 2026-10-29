@@ -1,0 +1,455 @@
+{
+  "code": [
+    {
+      "content": "VALID_STATUSES = (\"active\", \"done\", \"archived\")",
+      "content_hash": "6ebf0bb4f4cf2c8a3874084d486eacb61a5fcca4e0c520a99727e30c986d650a",
+      "end_line": 12,
+      "file_path": "sample/taskmanager.py",
+      "kind": "variable",
+      "language": "python",
+      "qualified_name": "VALID_STATUSES",
+      "signature": "VALID_STATUSES = <expression>",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 12,
+      "symbol_name": "VALID_STATUSES"
+    },
+    {
+      "content": "class Task:\n    id: int\n    title: str\n    status: str\n    priority: int = 0\n\n    def as_dict(self) -> dict[str, object]:\n        return {\"id\": self.id, \"title\": self.title, \"status\": self.status, \"priority\": self.priority}",
+      "content_hash": "a549f7c2b67f080c7ce20a9dde3432b1198d357dc0ffe535e52797aa13a7b088",
+      "end_line": 23,
+      "file_path": "sample/taskmanager.py",
+      "kind": "class",
+      "language": "python",
+      "qualified_name": "Task",
+      "signature": "class Task()",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 16,
+      "symbol_name": "Task"
+    },
+    {
+      "content": "    def as_dict(self) -> dict[str, object]:\n        return {\"id\": self.id, \"title\": self.title, \"status\": self.status, \"priority\": self.priority}",
+      "content_hash": "64ce232146d45224503a60cd3ebf3ca2291b02e3671a199ed7c7312636bc27c0",
+      "end_line": 23,
+      "file_path": "sample/taskmanager.py",
+      "kind": "function",
+      "language": "python",
+      "qualified_name": "Task.as_dict",
+      "signature": "def as_dict(self)",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 22,
+      "symbol_name": "as_dict"
+    },
+    {
+      "content": "class TaskStore:\n    tasks: list[Task] = field(default_factory=list)\n\n    def add(self, task: Task) -> Task:\n        self.tasks.append(task)\n        return task\n\n    def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n        \"\"\"Return tasks ordered by descending priority then ascending id.\n\n        ``status`` optionally filters tasks by exact, case-sensitive status match.\n        \"\"\"\n\n        tasks = filter_by_status(self.tasks, status)\n        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n\n    def find_by_id(self, task_id: int) -> Task | None:\n        for task in self.tasks:\n            if task.id == task_id:\n                return task\n        return None",
+      "content_hash": "e581cd7acf1058509d7b760201ff0ce250e2bc37d7f211020bb65339171aa01b",
+      "end_line": 47,
+      "file_path": "sample/taskmanager.py",
+      "kind": "class",
+      "language": "python",
+      "qualified_name": "TaskStore",
+      "signature": "class TaskStore()",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 27,
+      "symbol_name": "TaskStore"
+    },
+    {
+      "content": "    def add(self, task: Task) -> Task:\n        self.tasks.append(task)\n        return task",
+      "content_hash": "987d314b3806b9fefb3fd2e9042eae99ec51911e61486a27dbfb9321a1e0f33d",
+      "end_line": 32,
+      "file_path": "sample/taskmanager.py",
+      "kind": "function",
+      "language": "python",
+      "qualified_name": "TaskStore.add",
+      "signature": "def add(self, task)",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 30,
+      "symbol_name": "add"
+    },
+    {
+      "content": "    def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n        \"\"\"Return tasks ordered by descending priority then ascending id.\n\n        ``status`` optionally filters tasks by exact, case-sensitive status match.\n        \"\"\"\n\n        tasks = filter_by_status(self.tasks, status)\n        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]",
+      "content_hash": "67420716cf5f5c1fe805934e51ad7c5697858c558dd8c6c7ae947daab732f7ef",
+      "end_line": 41,
+      "file_path": "sample/taskmanager.py",
+      "kind": "function",
+      "language": "python",
+      "qualified_name": "TaskStore.list_tasks",
+      "signature": "def list_tasks(self, status)",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 34,
+      "symbol_name": "list_tasks"
+    },
+    {
+      "content": "        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)",
+      "content_hash": "dc35d95490f3c592ff6759ad76d00cf86e1f528e54d92026f39cc694abf08228",
+      "end_line": 40,
+      "file_path": "sample/taskmanager.py",
+      "kind": "variable",
+      "language": "python",
+      "qualified_name": "TaskStore.list_tasks.tasks",
+      "signature": "tasks = <expression>",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 40,
+      "symbol_name": "tasks"
+    },
+    {
+      "content": "    def find_by_id(self, task_id: int) -> Task | None:\n        for task in self.tasks:\n            if task.id == task_id:\n                return task\n        return None",
+      "content_hash": "f4cd3583046102595595721083b39c64c49198efc2983aaadd26a4e5d401ebce",
+      "end_line": 47,
+      "file_path": "sample/taskmanager.py",
+      "kind": "function",
+      "language": "python",
+      "qualified_name": "TaskStore.find_by_id",
+      "signature": "def find_by_id(self, task_id)",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 43,
+      "symbol_name": "find_by_id"
+    },
+    {
+      "content": "def build_default_store() -> TaskStore:\n    store = TaskStore()\n    store.add(Task(id=1, title=\"Write specification\", status=\"active\", priority=5))\n    store.add(Task(id=2, title=\"Implement feature\", status=\"done\", priority=3))\n    store.add(Task(id=3, title=\"Archive old notes\", status=\"archived\", priority=1))\n    return store",
+      "content_hash": "d4620f973431db340607a910520d598fd6c07238afd343218ed8aad30c0cf428",
+      "end_line": 55,
+      "file_path": "sample/taskmanager.py",
+      "kind": "function",
+      "language": "python",
+      "qualified_name": "build_default_store",
+      "signature": "def build_default_store()",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 50,
+      "symbol_name": "build_default_store"
+    },
+    {
+      "content": "    store = TaskStore()",
+      "content_hash": "dbbe0b139ca9cd1749dc536705362ecb06824e0278522aa13e9b32f0ec3a6335",
+      "end_line": 51,
+      "file_path": "sample/taskmanager.py",
+      "kind": "variable",
+      "language": "python",
+      "qualified_name": "build_default_store.store",
+      "signature": "store = <expression>",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 51,
+      "symbol_name": "store"
+    },
+    {
+      "content": "def filter_by_status(tasks: Iterable[Task], status: str | None) -> list[Task]:\n    \"\"\"Return the tasks whose status equals ``status``; ``None`` keeps every task.\"\"\"\n\n    if status is None:\n        return list(tasks)\n    return [task for task in tasks if task.status == status]",
+      "content_hash": "0b9a28bae24e2292fb6ebe3df13ad629cc61ace72f8b326e71a812100112ca73",
+      "end_line": 63,
+      "file_path": "sample/taskmanager.py",
+      "kind": "function",
+      "language": "python",
+      "qualified_name": "filter_by_status",
+      "signature": "def filter_by_status(tasks, status)",
+      "source_path": "sample/taskmanager.py",
+      "start_line": 58,
+      "symbol_name": "filter_by_status"
+    }
+  ],
+  "retrieval": {
+    "database": "sdd_context",
+    "database_counts": {
+      "sdd_code_symbol": 11,
+      "sdd_relation": 8,
+      "sdd_specification": 2,
+      "sdd_test": 20
+    },
+    "repository_root": "E:\\OceanBaseContest\\powercontext-minimax",
+    "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0",
+    "state_records_found": true,
+    "terms": [
+      "为工单查询函数增加按",
+      "status",
+      "筛选工单的功能",
+      "list_tasks",
+      "active"
+    ]
+  },
+  "sources": {
+    "code": [
+      "sample/taskmanager.py"
+    ],
+    "specifications": [
+      "specs/SPEC-REQ-001.md"
+    ],
+    "state": {
+      "artifact_ids": {
+        "sdd-completed": "art_e5cf4dea4ef645a5a2ad73bf17ef6095",
+        "sdd-task-description": "art_e32e4055cfbb45828d984b2be98b806e",
+        "sdd-todo": "art_d5e476065aae4a33a17702876f0d8b5f",
+        "sdd-verification": "art_f2ebe1c6a7894bd183b2ae3a052704ea"
+      },
+      "powercontext_url": "http://127.0.0.1:8790",
+      "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0"
+    },
+    "tests": [
+      "tests/test_list_tasks_status_filter.py",
+      "tests/test_list_tasks_status_wildcard.py",
+      "tests/test_taskmanager_regression.py"
+    ]
+  },
+  "specifications": [
+    {
+      "content": "# SPEC-REQ-001 — Filter tasks by status\n\n| Field | Value |\n| --- | --- |\n| Requirement ID | SPEC-REQ-001 |\n| Title | 工单查询函数支持按 status 筛选 |\n| Spec version | 1.1.0 |\n| Revision | r2 |\n| Status | approved |\n| Applies to | `minimax/sample/taskmanager.py` |\n\n## 1. Functional requirement\n\n`TaskStore.list_tasks` MUST accept an optional `status` keyword argument. When a\nstatus value is supplied, only the tasks whose `status` equals that value are\nreturned. When the argument is omitted, every task is returned exactly as before.\n\n## 2. Input and output\n\n- Input: `status: str | None = None`.\n  - `None` (or omitted) means \"no filter\".\n  - A non-empty string means \"exact, case-sensitive match on `Task.status`\".\n  - **Revision r2 (v1.1.0)**: the wildcard `\"*\"` means \"no filter\" as well.\n- Output: `list[dict[str, object]]` — unchanged shape.\n  Each element keeps exactly the keys `id`, `title`, `status`, `priority`.\n\n## 3. Applicable code files and symbols\n\n| File | Symbol | Role |\n| --- | --- | --- |\n| `minimax/sample/taskmanager.py` | `TaskStore.list_tasks` | primary edit target |\n| `minimax/sample/taskmanager.py` | `Task` | value object, must not change |\n| `minimax/sample/taskmanager.py` | `TaskStore.find_by_id` | must not change |\n| `minimax/sample/taskmanager.py` | `filter_by_status` | existing helper that performs the predicate |\n| `minimax/sample/taskmanager.py` | `build_default_store` | fixture used by tests |\n\n## 4. Boundary conditions\n\n1. `status=None` and the argument being absent are equivalent.\n2. An empty string is a valid filter value and matches only tasks whose status is\n   the empty string (normally none).\n3. A status that matches no task returns an empty list, not an error.\n4. Matching is case sensitive: `\"Active\"` does not match `\"active\"`.\n5. The `status` argument is keyword-only in practice; positional use is not required.\n6. **Revision r2 (v1.1.0)**: the filter must also accept the wildcard value `\"*\"`\n   and treat it as \"every task\", equivalent to `status=None`.\n\n## 5. Compatibility constraints\n\n1. `list_tasks()` with no arguments MUST keep returning every task.\n2. The returned data structure MUST keep the same keys and value types.\n3. The ordering rule MUST stay \"descending priority, then ascending id\".\n4. No other query logic may change: `find_by_id`, `Task`, `build_default_store`\n   and `filter_by_status` keep their current behaviour and signature.\n5. The module MUST keep working without any third-party dependency.\n\n## 6. Target test and regression tests\n\n- Target functional test: `minimax/tests/test_list_tasks_status_filter.py`\n  (`test_list_tasks_filters_by_active_status`) — MUST fail before implementation\n  and MUST pass afterwards, with identical assertions.\n- Target functional test for revision r2: `minimax/tests/test_list_tasks_status_wildcard.py`\n  (`test_list_tasks_wildcard_returns_every_task`) — MUST fail before the r2\n  implementation and MUST pass afterwards, with identical assertions.\n- Regression tests: `minimax/tests/test_taskmanager_regression.py` — MUST keep\n  passing before and after the change.\n- Contract test: `minimax/tests/test_list_tasks_status_filter.py`\n  (`test_list_tasks_without_status_returns_all_tasks`).\n\n## 7. Acceptance criteria\n\n1. `list_tasks(status=\"active\")` on the default fixture returns exactly the ids\n   `[1]`.\n2. `list_tasks(status=\"done\")` returns exactly the ids `[2]`.\n3. `list_tasks(status=\"archived\")` returns exactly the ids `[3]`.\n4. `list_tasks(status=\"unknown\")` returns `[]`.\n5. `list_tasks()` still returns all three tasks in the order `[1, 2, 3]`.\n6. Each returned dictionary still carries the keys `id`, `title`, `status`,\n   `priority`.\n7. The regression suite passes unchanged.\n8. **Revision r2 (v1.1.0)**: `list_tasks(status=\"*\")` returns every task, in the\n   same order as `list_tasks()`.\n",
+      "content_hash": "e9ffc2806e19a5c135a2f2dbea7db01633d29a1e155fee1fe0a97a33fab6a771",
+      "revision": "r2",
+      "source_path": "specs/SPEC-REQ-001.md",
+      "spec_id": "SPEC-REQ-001",
+      "status": "approved",
+      "title": "工单查询函数支持按 status 筛选",
+      "version": "1.1.0"
+    }
+  ],
+  "state": {
+    "artifact_ids": {
+      "sdd-completed": "art_e5cf4dea4ef645a5a2ad73bf17ef6095",
+      "sdd-task-description": "art_e32e4055cfbb45828d984b2be98b806e",
+      "sdd-todo": "art_d5e476065aae4a33a17702876f0d8b5f",
+      "sdd-verification": "art_f2ebe1c6a7894bd183b2ae3a052704ea"
+    },
+    "completed": [
+      "phase4: 状态已在独立进程中写入",
+      "phase4: 状态已在独立进程中写入",
+      "已导入规格 SPEC-REQ-001",
+      "phase4: 状态已在独立进程中写入"
+    ],
+    "description": "为工单查询函数增加按 status 筛选工单的功能 list_tasks(status='active')",
+    "has_state": true,
+    "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
+    "task_id": "TASK-SPEC-REQ-001",
+    "todos": [
+      "phase4: 验证跨进程读取",
+      "phase4: 验证跨进程读取",
+      "phase4: 验证跨进程读取",
+      "实现 status 筛选"
+    ],
+    "verifications": [
+      "phase4: 写入进程退出码 0",
+      "phase4: 写入进程退出码 0",
+      "修改前目标测试失败 (exit 1)",
+      "phase4: 写入进程退出码 0"
+    ]
+  },
+  "task": "为工单查询函数增加按 status 筛选工单的功能 list_tasks(status='active')",
+  "task_id": "TASK-SPEC-REQ-001",
+  "tests": [
+    {
+      "content": "def test_list_tasks_filter_is_case_sensitive() -> None:\n    \"\"\"SPEC-REQ-001 boundary condition 4.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"Active\")\n\n    assert result == []",
+      "content_hash": "00bd14c1c71dc28178b345b8548165a7792580d45fb402e2c16d637dab87bb11",
+      "file_path": "tests/test_list_tasks_status_filter.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_filter.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_filter_is_case_sensitive"
+    },
+    {
+      "content": "def test_list_tasks_filtered_result_keeps_priority_order(status: str) -> None:\n    \"\"\"Compatibility constraint 3: ordering stays priority desc, id asc.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=status)\n\n    ids = [item[\"id\"] for item in result]\n    assert ids == sorted(ids, key=lambda value: (-store.find_by_id(value).priority, value))",
+      "content_hash": "eda3fb1a41c65c7dee5d044f1ed6401d7286ff8b0088c62f17ac0131572e579a",
+      "file_path": "tests/test_list_tasks_status_filter.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_filter.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_filtered_result_keeps_priority_order"
+    },
+    {
+      "content": "def test_list_tasks_filters_by_active_status() -> None:\n    \"\"\"SPEC-REQ-001 acceptance criterion 1: only `active` tasks are returned.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"active\")\n\n    assert [item[\"id\"] for item in result] == [1]",
+      "content_hash": "71603c0a31e67e6d644862dadd7dc10974f9aef2eba96516d4b799bc9b551aad",
+      "file_path": "tests/test_list_tasks_status_filter.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_filter.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_filters_by_active_status"
+    },
+    {
+      "content": "def test_list_tasks_filters_by_archived_status() -> None:\n    \"\"\"SPEC-REQ-001 acceptance criterion 3.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"archived\")\n\n    assert [item[\"id\"] for item in result] == [3]",
+      "content_hash": "53c6cadd3dbcaad3f9ded2c48e116450941f760627d54b8f3a5847f65e5a3b19",
+      "file_path": "tests/test_list_tasks_status_filter.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_filter.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_filters_by_archived_status"
+    },
+    {
+      "content": "def test_list_tasks_filters_by_done_status() -> None:\n    \"\"\"SPEC-REQ-001 acceptance criterion 2.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"done\")\n\n    assert [item[\"id\"] for item in result] == [2]",
+      "content_hash": "acfc05212c10554828977d47d2e95ecb863bbdd6d0d50597da98351e8ae4f121",
+      "file_path": "tests/test_list_tasks_status_filter.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_filter.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_filters_by_done_status"
+    },
+    {
+      "content": "def test_list_tasks_filters_by_unknown_status_returns_empty() -> None:\n    \"\"\"SPEC-REQ-001 boundary condition 3 and acceptance criterion 4.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"unknown\")\n\n    assert result == []",
+      "content_hash": "40166de78ec711f658f5ed2daa15c9ee21dcc403edb14294112a35b1c148ba64",
+      "file_path": "tests/test_list_tasks_status_filter.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_filter.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_filters_by_unknown_status_returns_empty"
+    },
+    {
+      "content": "def test_list_tasks_preserves_return_structure() -> None:\n    \"\"\"Compatibility constraint 2 and acceptance criterion 6.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"active\")\n\n    assert len(result) == 1\n    assert set(result[0]) == {\"id\", \"title\", \"status\", \"priority\"}\n    assert result[0][\"title\"] == \"Write specification\"\n    assert result[0][\"status\"] == \"active\"\n    assert result[0][\"priority\"] == 5",
+      "content_hash": "c0336ade97abe734fab0af7b5f9882a8ea3f13d87ff8ae80cfdda9100376f854",
+      "file_path": "tests/test_list_tasks_status_filter.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_filter.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_preserves_return_structure"
+    },
+    {
+      "content": "def test_list_tasks_without_status_returns_all_tasks() -> None:\n    \"\"\"Compatibility constraint 1 and acceptance criterion 5.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks()\n\n    assert [item[\"id\"] for item in result] == [1, 2, 3]",
+      "content_hash": "f85a5d1995d7d8b31de32ac4c7ac76c6ec30b37918d760c9d945f481fa5f3bdc",
+      "file_path": "tests/test_list_tasks_status_filter.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_filter.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_without_status_returns_all_tasks"
+    },
+    {
+      "content": "def test_list_tasks_wildcard_does_not_affect_other_filters() -> None:\n    \"\"\"Boundary condition 4 stays true: matching remains case sensitive.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"Active\")\n\n    assert result == []",
+      "content_hash": "01a421202af4bbce0efb0a6b382dd007317b00c90a3e4fa89b0db6e405358016",
+      "file_path": "tests/test_list_tasks_status_wildcard.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_wildcard.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_wildcard_does_not_affect_other_filters"
+    },
+    {
+      "content": "def test_list_tasks_wildcard_keeps_return_structure() -> None:\n    \"\"\"Compatibility constraint 2 still holds for the wildcard filter.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"*\")\n\n    assert len(result) == 3\n    for item in result:\n        assert set(item) == {\"id\", \"title\", \"status\", \"priority\"}",
+      "content_hash": "59dcdfd504813c1854b62310cab5b64dbd0053e8d7bcdb7e027bfc27501cd11f",
+      "file_path": "tests/test_list_tasks_status_wildcard.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_wildcard.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_wildcard_keeps_return_structure"
+    },
+    {
+      "content": "def test_list_tasks_wildcard_matches_unfiltered_result() -> None:\n    \"\"\"Revision r2 boundary condition 6: the wildcard is equivalent to no filter.\"\"\"\n\n    store = build_default_store()\n\n    wildcard = store.list_tasks(status=\"*\")\n    unfiltered = store.list_tasks()\n\n    assert wildcard == unfiltered",
+      "content_hash": "44a59f32fc462b965ab85a49f40055b91019c9e5a417da303f7015464d59652c",
+      "file_path": "tests/test_list_tasks_status_wildcard.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_wildcard.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_wildcard_matches_unfiltered_result"
+    },
+    {
+      "content": "def test_list_tasks_wildcard_returns_every_task() -> None:\n    \"\"\"Revision r2 acceptance criterion 8: the wildcard matches every task.\"\"\"\n\n    store = build_default_store()\n\n    result = store.list_tasks(status=\"*\")\n\n    assert [item[\"id\"] for item in result] == [1, 2, 3]",
+      "content_hash": "8eb92436d82f8681ca706d75e5f5aed019ca9a80dbb10d691bd9b3cb4ac0b229",
+      "file_path": "tests/test_list_tasks_status_wildcard.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_list_tasks_status_wildcard.py",
+      "test_kind": "functional",
+      "test_name": "test_list_tasks_wildcard_returns_every_task"
+    },
+    {
+      "content": "def test_default_store_fixture_contents() -> None:\n    store = build_default_store()\n\n    assert [(task.id, task.status) for task in store.tasks] == [\n        (1, \"active\"),\n        (2, \"done\"),\n        (3, \"archived\"),\n    ]",
+      "content_hash": "43a8d62611e5020773bf1c2a4e016ac9eb301b396e62963d3f1f61f1364acb50",
+      "file_path": "tests/test_taskmanager_regression.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_taskmanager_regression.py",
+      "test_kind": "regression",
+      "test_name": "test_default_store_fixture_contents"
+    },
+    {
+      "content": "def test_filter_by_status_helper_keeps_none_semantics() -> None:\n    store = build_default_store()\n\n    assert len(filter_by_status(store.tasks, None)) == 3\n    assert [task.id for task in filter_by_status(store.tasks, \"done\")] == [2]",
+      "content_hash": "a7aa9c25deefa7004b8356c9543d9b7533e75f29a4adc4bd355551ef6dcb8e52",
+      "file_path": "tests/test_taskmanager_regression.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_taskmanager_regression.py",
+      "test_kind": "regression",
+      "test_name": "test_filter_by_status_helper_keeps_none_semantics"
+    },
+    {
+      "content": "def test_find_by_id_returns_matching_task() -> None:\n    store = build_default_store()\n\n    found = store.find_by_id(2)\n\n    assert found is not None\n    assert found.title == \"Implement feature\"",
+      "content_hash": "8b5f0e49324de5fbaf052481824af2c38aa22b3144603f31ee1c9d51f7d5ac50",
+      "file_path": "tests/test_taskmanager_regression.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_taskmanager_regression.py",
+      "test_kind": "regression",
+      "test_name": "test_find_by_id_returns_matching_task"
+    },
+    {
+      "content": "def test_find_by_id_returns_none_for_unknown_id() -> None:\n    store = build_default_store()\n\n    assert store.find_by_id(999) is None",
+      "content_hash": "157ac0fc15e2c50b838ee4af0ba174b00c57f58a53aee00bf51417272ac6edf7",
+      "file_path": "tests/test_taskmanager_regression.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_taskmanager_regression.py",
+      "test_kind": "regression",
+      "test_name": "test_find_by_id_returns_none_for_unknown_id"
+    },
+    {
+      "content": "def test_list_tasks_on_empty_store_returns_empty_list() -> None:\n    store = TaskStore()\n\n    assert store.list_tasks() == []",
+      "content_hash": "8746d810060c0baeda401130a4dc2f228de58a2d997778ae0676a58f5e0e0f9c",
+      "file_path": "tests/test_taskmanager_regression.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_taskmanager_regression.py",
+      "test_kind": "regression",
+      "test_name": "test_list_tasks_on_empty_store_returns_empty_list"
+    },
+    {
+      "content": "def test_list_tasks_orders_by_priority_then_id() -> None:\n    store = TaskStore()\n    store.add(Task(id=9, title=\"low\", status=\"active\", priority=1))\n    store.add(Task(id=4, title=\"high b\", status=\"active\", priority=7))\n    store.add(Task(id=2, title=\"high a\", status=\"active\", priority=7))\n\n    result = store.list_tasks()\n\n    assert [item[\"id\"] for item in result] == [2, 4, 9]",
+      "content_hash": "b1854a5df22aa451f43f246bdefffb5495657aaf1cbbf0f11886eee3ce1e5a1a",
+      "file_path": "tests/test_taskmanager_regression.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_taskmanager_regression.py",
+      "test_kind": "regression",
+      "test_name": "test_list_tasks_orders_by_priority_then_id"
+    },
+    {
+      "content": "def test_task_as_dict_shape_is_stable() -> None:\n    task = Task(id=5, title=\"shape\", status=\"active\", priority=2)\n\n    assert task.as_dict() == {\"id\": 5, \"title\": \"shape\", \"status\": \"active\", \"priority\": 2}",
+      "content_hash": "1f239a9be4d3cd1b5a5a97a54b9aa2b9bf9d0ad98c7f518de1ecb326fc90369e",
+      "file_path": "tests/test_taskmanager_regression.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_taskmanager_regression.py",
+      "test_kind": "regression",
+      "test_name": "test_task_as_dict_shape_is_stable"
+    },
+    {
+      "content": "def test_valid_statuses_constant_is_unchanged() -> None:\n    from sample.taskmanager import VALID_STATUSES\n\n    assert VALID_STATUSES == (\"active\", \"done\", \"archived\")",
+      "content_hash": "8d1e6736c10d81cf918c59a579b40a9fbeb4645faa9f76103f645f02f822f781",
+      "file_path": "tests/test_taskmanager_regression.py",
+      "requirement_ids": [
+        "SPEC-REQ-001"
+      ],
+      "source_path": "tests/test_taskmanager_regression.py",
+      "test_kind": "regression",
+      "test_name": "test_valid_statuses_constant_is_unchanged"
+    }
+  ]
+}

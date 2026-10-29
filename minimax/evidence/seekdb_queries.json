@@ -1,0 +1,350 @@
+{
+  "database": "sdd_context",
+  "host": "127.0.0.1:2881",
+  "queries": [
+    {
+      "parameters": [],
+      "row_count": 1,
+      "rows": [
+        {
+          "version": "5.7.25-OceanBase seekdb-v1.4.0.0"
+        }
+      ],
+      "sql": "SELECT VERSION() AS version",
+      "title": "服务器版本"
+    },
+    {
+      "parameters": [],
+      "row_count": 4,
+      "rows": [
+        {
+          "rows_count": 2,
+          "table_name": "sdd_specification"
+        },
+        {
+          "rows_count": 11,
+          "table_name": "sdd_code_symbol"
+        },
+        {
+          "rows_count": 20,
+          "table_name": "sdd_test"
+        },
+        {
+          "rows_count": 8,
+          "table_name": "sdd_relation"
+        }
+      ],
+      "sql": "SELECT 'sdd_specification' AS table_name, COUNT(*) AS rows_count FROM sdd_specification UNION ALL SELECT 'sdd_code_symbol', COUNT(*) FROM sdd_code_symbol UNION ALL SELECT 'sdd_test', COUNT(*) FROM sdd_test UNION ALL SELECT 'sdd_relation', COUNT(*) FROM sdd_relation",
+      "title": "四张表行数"
+    },
+    {
+      "parameters": [
+        "SPEC-REQ-001"
+      ],
+      "row_count": 2,
+      "rows": [
+        {
+          "content_hash": "631e9881cf7ee7ad4d195066513addbe70be636d7ae270f2e4ecebc1183397cb",
+          "revision": "r1",
+          "source_path": "specs/SPEC-REQ-001.md",
+          "spec_id": "SPEC-REQ-001",
+          "status": "approved",
+          "title": "工单查询函数支持按 status 筛选",
+          "version": "1.0.0"
+        },
+        {
+          "content_hash": "e9ffc2806e19a5c135a2f2dbea7db01633d29a1e155fee1fe0a97a33fab6a771",
+          "revision": "r2",
+          "source_path": "specs/SPEC-REQ-001.md",
+          "spec_id": "SPEC-REQ-001",
+          "status": "approved",
+          "title": "工单查询函数支持按 status 筛选",
+          "version": "1.1.0"
+        }
+      ],
+      "sql": "SELECT spec_id, version, revision, title, status, content_hash, source_path FROM sdd_specification WHERE spec_id = %s ORDER BY version",
+      "title": "规格的全部版本"
+    },
+    {
+      "parameters": [
+        "SPEC-REQ-001"
+      ],
+      "row_count": 8,
+      "rows": [
+        {
+          "relation_type": "applies-to",
+          "spec_id": "SPEC-REQ-001",
+          "spec_version": "1.0.0",
+          "target_id": "sample/taskmanager.py",
+          "target_kind": "code"
+        },
+        {
+          "relation_type": "verified-by",
+          "spec_id": "SPEC-REQ-001",
+          "spec_version": "1.0.0",
+          "target_id": "tests/test_list_tasks_status_filter.py",
+          "target_kind": "test"
+        },
+        {
+          "relation_type": "verified-by",
+          "spec_id": "SPEC-REQ-001",
+          "spec_version": "1.0.0",
+          "target_id": "tests/test_list_tasks_status_wildcard.py",
+          "target_kind": "test"
+        },
+        {
+          "relation_type": "verified-by",
+          "spec_id": "SPEC-REQ-001",
+          "spec_version": "1.0.0",
+          "target_id": "tests/test_taskmanager_regression.py",
+          "target_kind": "test"
+        },
+        {
+          "relation_type": "applies-to",
+          "spec_id": "SPEC-REQ-001",
+          "spec_version": "1.1.0",
+          "target_id": "sample/taskmanager.py",
+          "target_kind": "code"
+        },
+        {
+          "relation_type": "verified-by",
+          "spec_id": "SPEC-REQ-001",
+          "spec_version": "1.1.0",
+          "target_id": "tests/test_list_tasks_status_filter.py",
+          "target_kind": "test"
+        },
+        {
+          "relation_type": "verified-by",
+          "spec_id": "SPEC-REQ-001",
+          "spec_version": "1.1.0",
+          "target_id": "tests/test_list_tasks_status_wildcard.py",
+          "target_kind": "test"
+        },
+        {
+          "relation_type": "verified-by",
+          "spec_id": "SPEC-REQ-001",
+          "spec_version": "1.1.0",
+          "target_id": "tests/test_taskmanager_regression.py",
+          "target_kind": "test"
+        }
+      ],
+      "sql": "SELECT spec_id, spec_version, target_kind, target_id, relation_type FROM sdd_relation WHERE spec_id = %s ORDER BY spec_version, target_kind, target_id",
+      "title": "规格的绑定关系"
+    },
+    {
+      "parameters": [
+        "%status%"
+      ],
+      "row_count": 2,
+      "rows": [
+        {
+          "revision": "r1",
+          "spec_id": "SPEC-REQ-001",
+          "title": "工单查询函数支持按 status 筛选",
+          "version": "1.0.0"
+        },
+        {
+          "revision": "r2",
+          "spec_id": "SPEC-REQ-001",
+          "title": "工单查询函数支持按 status 筛选",
+          "version": "1.1.0"
+        }
+      ],
+      "sql": "SELECT spec_id, version, revision, title FROM sdd_specification WHERE LOWER(content) LIKE %s ORDER BY version",
+      "title": "按任务词检索规格"
+    },
+    {
+      "parameters": [
+        "sample/taskmanager.py"
+      ],
+      "row_count": 11,
+      "rows": [
+        {
+          "end_line": 12,
+          "file_path": "sample/taskmanager.py",
+          "kind": "variable",
+          "qualified_name": "VALID_STATUSES",
+          "signature": "VALID_STATUSES = <expression>",
+          "start_line": 12,
+          "symbol_name": "VALID_STATUSES"
+        },
+        {
+          "end_line": 23,
+          "file_path": "sample/taskmanager.py",
+          "kind": "class",
+          "qualified_name": "Task",
+          "signature": "class Task()",
+          "start_line": 16,
+          "symbol_name": "Task"
+        },
+        {
+          "end_line": 23,
+          "file_path": "sample/taskmanager.py",
+          "kind": "function",
+          "qualified_name": "Task.as_dict",
+          "signature": "def as_dict(self)",
+          "start_line": 22,
+          "symbol_name": "as_dict"
+        },
+        {
+          "end_line": 47,
+          "file_path": "sample/taskmanager.py",
+          "kind": "class",
+          "qualified_name": "TaskStore",
+          "signature": "class TaskStore()",
+          "start_line": 27,
+          "symbol_name": "TaskStore"
+        },
+        {
+          "end_line": 32,
+          "file_path": "sample/taskmanager.py",
+          "kind": "function",
+          "qualified_name": "TaskStore.add",
+          "signature": "def add(self, task)",
+          "start_line": 30,
+          "symbol_name": "add"
+        },
+        {
+          "end_line": 41,
+          "file_path": "sample/taskmanager.py",
+          "kind": "function",
+          "qualified_name": "TaskStore.list_tasks",
+          "signature": "def list_tasks(self, status)",
+          "start_line": 34,
+          "symbol_name": "list_tasks"
+        },
+        {
+          "end_line": 40,
+          "file_path": "sample/taskmanager.py",
+          "kind": "variable",
+          "qualified_name": "TaskStore.list_tasks.tasks",
+          "signature": "tasks = <expression>",
+          "start_line": 40,
+          "symbol_name": "tasks"
+        },
+        {
+          "end_line": 47,
+          "file_path": "sample/taskmanager.py",
+          "kind": "function",
+          "qualified_name": "TaskStore.find_by_id",
+          "signature": "def find_by_id(self, task_id)",
+          "start_line": 43,
+          "symbol_name": "find_by_id"
+        },
+        {
+          "end_line": 55,
+          "file_path": "sample/taskmanager.py",
+          "kind": "function",
+          "qualified_name": "build_default_store",
+          "signature": "def build_default_store()",
+          "start_line": 50,
+          "symbol_name": "build_default_store"
+        },
+        {
+          "end_line": 51,
+          "file_path": "sample/taskmanager.py",
+          "kind": "variable",
+          "qualified_name": "build_default_store.store",
+          "signature": "store = <expression>",
+          "start_line": 51,
+          "symbol_name": "store"
+        },
+        {
+          "end_line": 63,
+          "file_path": "sample/taskmanager.py",
+          "kind": "function",
+          "qualified_name": "filter_by_status",
+          "signature": "def filter_by_status(tasks, status)",
+          "start_line": 58,
+          "symbol_name": "filter_by_status"
+        }
+      ],
+      "sql": "SELECT file_path, symbol_name, qualified_name, kind, start_line, end_line, signature FROM sdd_code_symbol WHERE file_path = %s ORDER BY start_line",
+      "title": "样例代码的符号索引"
+    },
+    {
+      "parameters": [
+        "tests/test_list_tasks_status_filter.py",
+        "tests/test_list_tasks_status_wildcard.py"
+      ],
+      "row_count": 12,
+      "rows": [
+        {
+          "file_path": "tests/test_list_tasks_status_filter.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_filter_is_case_sensitive"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_filter.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_filtered_result_keeps_priority_order"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_filter.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_filters_by_active_status"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_filter.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_filters_by_archived_status"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_filter.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_filters_by_done_status"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_filter.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_filters_by_unknown_status_returns_empty"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_filter.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_preserves_return_structure"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_filter.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_without_status_returns_all_tasks"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_wildcard.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_wildcard_does_not_affect_other_filters"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_wildcard.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_wildcard_keeps_return_structure"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_wildcard.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_wildcard_matches_unfiltered_result"
+        },
+        {
+          "file_path": "tests/test_list_tasks_status_wildcard.py",
+          "requirement_ids": "SPEC-REQ-001",
+          "test_kind": "functional",
+          "test_name": "test_list_tasks_wildcard_returns_every_task"
+        }
+      ],
+      "sql": "SELECT file_path, test_name, test_kind, requirement_ids FROM sdd_test WHERE file_path IN (%s, %s) ORDER BY file_path, test_name",
+      "title": "测试索引"
+    }
+  ],
+  "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0"
+}
