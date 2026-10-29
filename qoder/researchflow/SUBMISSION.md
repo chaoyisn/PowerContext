@@ -2,6 +2,7 @@
 
 提交对象：OceanBase × Qoder 2026 数据库比赛 · Qoder 赛道 · ResearchFlow
 分支：`2026-competition-ecosystem`（基线 `d647275c308e09b7b623f322a26f5c4e85734fb0`）
+远端已推送至 `2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a`（fast-forward，13 个提交）
 代码与材料位置：`qoder/researchflow/`
 **在线展示站（已正式发布、公开访问）**：<https://researchflow-5esfsogn38f.qoder.zone>
 
@@ -81,7 +82,7 @@ node scripts/verify_site.cjs https://researchflow-5esfsogn38f.qoder.zone/ <outDi
 
 | # | 提交要求 | 状态 | 位置 / 说明 |
 | --- | --- | --- | --- |
-| 1 | Git 仓库与提交 SHA | ⚠️ 待推送 | 分支 `2026-competition-ecosystem`，基线 `d647275c…`；本地领先、远端未分叉。推送前需处理历史中的运行期凭据与个人 UID，见 `PUSH_PRECHECK.md`（已获授权按方案 A 执行，推送后回填最终 SHA） |
+| 1 | Git 仓库与提交 SHA | ✅ 已完成 | 分支 `2026-competition-ecosystem` 已 fast-forward 推送（`d647275c..2e0e61cc`，13 个提交，无 force）；远端 SHA `2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a` 与本地一致；历史中的运行期凭据与完整 UID 已按授权方案清除，核对记录见 `PUSH_PRECHECK.md` |
 | 2 | Sites 站点 URL | ✅ 已完成 | <https://researchflow-5esfsogn38f.qoder.zone>，`published=true`、`access_mode=public`、`lifecycle=active` |
 | 3 | README / RUN / VERIFICATION | ✅ 已完成 | 三份文档齐备并互链；README 顶部给出线上入口 |
 | 4 | seekdb 与 PowerContext 真实使用证据 | ✅ 已完成 | `VERIFICATION.md`、`verification/acceptance-run/`（含 9 个用例日志与服务日志）、`ARCHITECTURE.md` 运行期实测补充 |
@@ -101,17 +102,19 @@ node scripts/verify_site.cjs https://researchflow-5esfsogn38f.qoder.zone/ <outDi
 3. **Qoder UID / 账号信息**：本地遥测中可见 `creator_uid`（前缀 `01a175e3-…`）；完整 UID 属个人信息，
    **不写入公开仓库**，请在 Qoder Desktop 账号页确认后填入报名表，并以截图作为归属证明。
 4. **真实用户反馈与人工使用效果**：如邀请同学/同事试用，保留原始反馈文本、时间与操作记录。
-5. **仓库推送**：已获授权按 `PUSH_PRECHECK.md` §2 方案 A 执行（改写未推送历史后正常推送，不 force）；
-   推送完成后请把最终远端 SHA 回填本文件 §5 第 1 项。
+5. ~~**仓库推送**~~ ✅ 已完成：已获授权按 `PUSH_PRECHECK.md` §2 方案 A 执行
+   （改写 13 个未推送提交后正常 fast-forward 推送，无 force），远端 SHA
+   `2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a` 与本地一致。
 
 ## 7. 提交前自检
 
 - [x] 分支与基线正确，改动仅限 `qoder/researchflow/**`（其他赛题目录与 worktree 零改动）
 - [x] HEAD 树无密钥/凭据/个人 UID；`.gitignore` 已补齐运行期产物与站点描述符规则
-- [x] 历史中的运行期凭据与完整 UID 已按授权方案处理（见 `PUSH_PRECHECK.md`，推送后核对远端搜索无命中）
+- [x] 历史中的运行期凭据与完整 UID 已按授权方案清除（`filter-branch --index-filter`，
+      逐提交扫描零命中；最终内容与清除前逐字节一致；核对与推送记录见 `PUSH_PRECHECK.md`）
 - [x] 无 Mock 冒充真实能力（所有数字来自真实运行产物；脚本代理数据单独标注）
 - [x] 测试与验收全部真实执行，失败项如实记录（B2 的 2 条未覆盖正例、W1 的 1 条排序失败）
 - [x] Sites 已正式发布并公开访问，发布与验证证据随仓库提交，未伪造任何发布状态
 - [x] 在线展示站不含任何模拟查询，体验边界在页面与文档中明确标注
-- [ ] 仓库推送（已授权，待执行/回填最终 SHA）
+- [x] 仓库推送：`d647275c..2e0e61cc` fast-forward，远端 SHA 与本地一致，`master` 未被触碰
 - [ ] 演示视频、开发过程截图、UID、真实用户反馈（人工项，见 §6）

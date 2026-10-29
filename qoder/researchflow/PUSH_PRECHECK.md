@@ -3,7 +3,12 @@
 检查时间：2026-10-29
 分支：`2026-competition-ecosystem`
 远端：`origin/2026-competition-ecosystem` = `d647275c308e09b7b623f322a26f5c4e85734fb0`（基线，未变）
-本地：领先 12 个提交、落后 0 个提交 → **远端未分叉**，正常推送即为 fast-forward，不需要也不允许 force。
+本地：领先 13 个提交、落后 0 个提交 → **远端未分叉**，正常推送即为 fast-forward，不需要也不允许 force。
+
+**推送结果（2026-10-29 11:40 本地时间）**：`git push origin 2026-competition-ecosystem` 成功，
+`d647275c..2e0e61cc`（fast-forward，无 `--force`）。推送后 `git ls-remote` 与 `git rev-parse HEAD`
+均为 `2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a` → **远端与本地一致**。
+`refs/heads/master` 仍为 `aedf7beb…`，未被触碰；8 个 worktree 全部在线。
 
 ---
 
@@ -120,13 +125,24 @@ git log --stat d647275c..origin/2026-competition-ecosystem --name-only | grep -v
 # 5) 清理本地改写残留（确认远端无误后）
 git update-ref -d refs/original/refs/heads/2026-competition-ecosystem
 git branch -D backup/pre-clean-researchflow
-git reflog expire --expire=now --all && git gc --prune=now --quiet
+# 注意：不要在此仓库执行 `git reflog expire --all` + `git gc --prune=now`。
+# 该 object database 由 8 个 worktree 共享，而各 worktree 的 index 不是可达性根，
+# 立即硬回收可能删掉其他 worktree「已 git add 但尚未提交」的 blob。
+# 旧提交在本地只会留在 reflog 中，由默认两周宽限期的常规 gc 自然回收；它们从未被推送。
 ```
 
-- [ ] 远端 SHA == 本地 HEAD SHA
-- [ ] 远端提交涉及的路径全部以 `qoder/researchflow/` 开头
-- [ ] 在远端网页端搜索 `powercontext-acceptance-data`：无结果
-- [ ] 在远端网页端搜索本人完整 UID：无结果（只应能搜到截断证据 `01a175e3-…`）
-- [ ] 其他 worktree 的分支与暂存内容未被改动（`git worktree list` + 各 worktree `git status`）
-- [ ] `refs/original/` 与备份分支已清理，含敏感 blob 的旧提交在本地被回收
-- [ ] 把最终远端 SHA 回填 `SUBMISSION.md` §5 第 1 项
+- [x] 远端 SHA == 本地 HEAD SHA（`2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a`）
+- [x] 远端提交涉及的路径全部以 `qoder/researchflow/` 开头（`git diff --name-only d647275c..HEAD` 无越界路径）
+- [x] 全部未推送提交中已无 `services/powercontext-acceptance-data` 任何文件（逐提交 `ls-tree` 扫描零命中）
+- [x] 全部未推送提交中已无完整 UID 及其长片段（逐提交 `git grep` 扫描零命中；仓库内仅保留 8 位前缀证据）
+- [x] 其他 worktree 的分支未被改动（`git worktree list` 8 项齐全，`refs/heads/master` 远端仍为 `aedf7beb…`）
+- [x] `refs/original/` 与本次自建的 `backup/pre-clean-researchflow` 已删除；
+      其余 `backup-*` 分支属他人既有分支，未触碰
+- [x] 最终远端 SHA 已回填 `SUBMISSION.md` §5 第 1 项
+
+### 3.1 推送范围
+
+`d647275c..2e0e61cc`，13 个提交，全部位于 `qoder/researchflow/`：
+P0 审计 → seekdb 证据库 + PowerContext 记忆 → 证据问答/HTTP API/四页工作台 →
+P4 交付文档 → 展示站 → 中文召回与多语 embedding → B/C/D 基准与安全 → V2 交付文档 →
+运行时凭据清理 → 发布文档 → 站点发布 → V3 交付材料 → 历史清理记录。

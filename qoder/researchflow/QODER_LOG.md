@@ -466,3 +466,22 @@ Markdown 链接零失效；`site/public` 的 10 个资源被 `index.html` / `app
 备份分支 `backup/pre-clean-researchflow` 与 `refs/original/` 在推送核对完成后清理，
 避免含敏感 blob 的旧提交残留在本地。
 
+踩坑二：第一次改写只处理了 `SUBMISSION.md`，`PUSH_PRECHECK.md` 里的示例命令仍带着
+完整 UID；第二次改写把 UID 整体换掉后，逐提交扫描又查出文档里独立出现的 12 位十六进制
+片段（校验命令的匹配串）。于是补跑第三次 `--index-filter`，把 UID 与其长片段一并替换为
+占位符，最终对 `d647275c..HEAD` 全部 13 个提交逐个 `git grep` 才做到零命中。
+**结论：脱敏必须按「全部提交 × 全部字面变体」扫描，只看 HEAD 或只看主文件都会漏。**
+
+## 11:40 推送完成
+
+`git fetch` 后确认 `0 13`（落后 0）→ 无分叉，执行 `git push origin 2026-competition-ecosystem`，
+结果 `d647275c..2e0e61cc`（fast-forward，未使用 `--force`）。
+`git ls-remote` 与 `git rev-parse HEAD` 均为 `2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a`，
+`refs/heads/master` 仍为 `aedf7beb…` 未被触碰，8 个 worktree 全部在线。
+推送前再跑一次 `pytest tests/ -q` → **149 passed in 48.60s**，确认历史改写未影响交付内容。
+
+**没有执行** `git reflog expire --all` 与 `git gc --prune=now`：该仓库的 object database 由
+8 个 worktree 共享，而各 worktree 的 index 不是可达性根，硬回收可能删掉其他 worktree
+「已 `git add` 但尚未提交」的 blob。旧提交只留在本地 reflog，由默认两周宽限的常规 gc 自然回收，
+且从未被推送。
+
