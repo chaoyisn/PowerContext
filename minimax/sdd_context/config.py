@@ -70,6 +70,18 @@ class Settings:
         return Path(override) if override else self.root / "evidence"
 
     @property
+    def committed_evidence_dir(self) -> Path:
+        """Where the committed evidence files live.
+
+        The Red/Green logs are **inputs** of the acceptance suite: they are
+        produced by real commits and shipped with the repository. They are
+        always read from the committed directory, even when the run writes
+        its own output elsewhere.
+        """
+
+        return self.root / "evidence"
+
+    @property
     def spec_dir(self) -> Path:
         return self.root / "specs"
 

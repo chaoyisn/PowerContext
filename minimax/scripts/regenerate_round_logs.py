@@ -254,7 +254,9 @@ def main(argv: list[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
 
     settings = load_settings()
-    evidence_dir = settings.evidence_dir
+    # This script regenerates the committed Red/Green logs from real commits,
+    # so it always writes to the committed directory by design.
+    evidence_dir = settings.committed_evidence_dir
     evidence_dir.mkdir(parents=True, exist_ok=True)
 
     rounds = {

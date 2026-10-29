@@ -239,13 +239,15 @@ def test_02_minimax_participated(settings: Settings) -> dict[str, Any]:
     ``minimax/scripts/live_minimax_check.py``.
     """
 
-    records = load_archive(settings.evidence_dir)
+    # The call archive is committed with the repository, so it is always
+    # read from the committed directory.
+    records = load_archive(settings.committed_evidence_dir)
     if not records:
         return _result(
             "TEST-02",
             "MiniMax 真实参与代码修改",
             BLOCKED,
-            f"缺少调用归档 {archive_directory(settings.evidence_dir)}",
+            f"缺少调用归档 {archive_directory(settings.committed_evidence_dir)}",
         )
 
     audits = [audit_record(record) for record in records]
@@ -297,7 +299,7 @@ def test_02_minimax_participated(settings: Settings) -> dict[str, Any]:
         "current_sample_contains_implementation": "filter_by_status" in sample_text,
     }
 
-    stored_diff_path = settings.evidence_dir / "phase3_git_diff.patch"
+    stored_diff_path = settings.committed_evidence_dir / "phase3_git_diff.patch"
     checks["stored_diff_evidence_exists"] = stored_diff_path.is_file()
     if stored_diff_path.is_file():
         stored_diff = stored_diff_path.read_text(encoding="utf-8")
@@ -752,10 +754,12 @@ def test_05_state_reusable(settings: Settings) -> dict[str, Any]:
 def test_06_code_change_effective(settings: Settings) -> dict[str, Any]:
     """The same target test must fail before the change and pass after it."""
 
-    before_log = settings.evidence_dir / "phase1_before.log"
-    after_log = settings.evidence_dir / "phase3_after.log"
-    r2_before_log = settings.evidence_dir / "phase4_r2_before.log"
-    r2_after_log = settings.evidence_dir / "phase4_r2_after.log"
+    # The Red/Green logs are produced by real commits and shipped with the
+    # repository, so they are read from the committed directory.
+    before_log = settings.committed_evidence_dir / "phase1_before.log"
+    after_log = settings.committed_evidence_dir / "phase3_after.log"
+    r2_before_log = settings.committed_evidence_dir / "phase4_r2_before.log"
+    r2_after_log = settings.committed_evidence_dir / "phase4_r2_after.log"
 
     missing = [
         str(path)

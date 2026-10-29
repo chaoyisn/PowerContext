@@ -356,9 +356,13 @@ def main(argv: list[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
 
     settings = load_settings()
+    # The Red/Green logs, the snapshots and the call archive are committed
+    # with the repository, so they are always read from the committed
+    # directory; only the report is written to the output directory.
+    input_dir = settings.committed_evidence_dir
     evidence_dir = settings.evidence_dir
-    rounds = {name: _audit_round(name, info, evidence_dir) for name, info in ROUNDS.items()}
-    snapshots = _audit_snapshots(evidence_dir)
+    rounds = {name: _audit_round(name, info, input_dir) for name, info in ROUNDS.items()}
+    snapshots = _audit_snapshots(input_dir)
 
     # The rounds must not share their counts or their target tests.
     target_tests = {name: report["target_test"] for name, report in rounds.items()}

@@ -273,8 +273,12 @@ def main(argv: list[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
 
     settings = load_settings()
+    # The call archive is committed with the repository, so it is always read
+    # from the committed directory; only the report is written to the
+    # configured output directory.
+    input_dir = settings.committed_evidence_dir
     evidence_dir = settings.evidence_dir
-    directory = archive_directory(evidence_dir)
+    directory = archive_directory(input_dir)
 
     if not directory.is_dir() or not [p for p in directory.glob("*.json") if p.name != "index.json"]:
         payload = {
@@ -286,7 +290,7 @@ def main(argv: list[str] | None = None) -> int:
         print(_dump(payload))
         return 1
 
-    records = load_archive(evidence_dir)
+    records = load_archive(input_dir)
     audits = [audit_record(record) for record in records]
     development_audits = [
         audit for audit in audits if audit["round"] in ROUNDS
@@ -294,7 +298,7 @@ def main(argv: list[str] | None = None) -> int:
     live_audits = [audit for audit in audits if audit["round"] not in ROUNDS]
 
     # The legacy single-record file must agree with the archive.
-    legacy_path = evidence_dir / "minimax_call.json"
+    legacy_path = input_dir / "minimax_call.json"
     legacy_checks: dict[str, Any] = {"legacy_file_exists": legacy_path.is_file()}
     if legacy_path.is_file():
         legacy = json.loads(legacy_path.read_text(encoding="utf-8"))
