@@ -52,15 +52,26 @@ class CoalescingEmbeddingModel:
     def __init__(
         self,
         model: EmbeddingModel | None = None,
-        *,
-        base_model: EmbeddingModel | None = None,
         max_batch_size: int = 64,
         coalesce_ms: float = 5.0,
         cache_size: int = 1024,
+        *,
+        base_model: EmbeddingModel | None = None,
+        **kwargs: object,
     ) -> None:
         target_model = model if model is not None else base_model
+        if target_model is None and "model" in kwargs:
+            target_model = kwargs["model"]  # type: ignore[assignment]
         if target_model is None:
-            raise TypeError("model is required")
+            raise TypeError("model")
+
+        if "max_batch_size" in kwargs:
+            max_batch_size = kwargs["max_batch_size"]  # type: ignore[assignment]
+        if "coalesce_ms" in kwargs:
+            coalesce_ms = kwargs["coalesce_ms"]  # type: ignore[assignment]
+        if "cache_size" in kwargs:
+            cache_size = kwargs["cache_size"]  # type: ignore[assignment]
+
         if isinstance(max_batch_size, bool) or not isinstance(max_batch_size, int) or max_batch_size < 1:
             raise ValueError("max_batch_size")
         if (
@@ -77,6 +88,10 @@ class CoalescingEmbeddingModel:
         self.base_model = target_model
         self._base_model = target_model
         self.profile = target_model.profile
+        self.max_batch_size = max_batch_size
+        self.coalesce_ms = coalesce_ms
+        self.cache_size = cache_size
+
         self._query_model: QueryEmbeddingModel | None = None
         if isinstance(target_model, QueryEmbeddingModel):
             self._query_model = target_model
@@ -92,7 +107,7 @@ class CoalescingEmbeddingModel:
 
     async def embed(
         self,
-        texts: Sequence[str] | tuple[str, ...] | None = None,
+        texts: Sequence[str] | tuple[str, ...] | str | None = None,
         *args: object,
         **kwargs: object,
     ) -> EmbeddingResult:
@@ -103,11 +118,13 @@ class CoalescingEmbeddingModel:
             texts = args[0]  # type: ignore[assignment]
         if texts is None:
             texts = ()
+        elif isinstance(texts, str):
+            texts = (texts,)
         return await self._embed(tuple(texts), kind="document")
 
     async def embed_query(
         self,
-        texts: Sequence[str] | tuple[str, ...] | None = None,
+        texts: Sequence[str] | tuple[str, ...] | str | None = None,
         *args: object,
         **kwargs: object,
     ) -> EmbeddingResult:
@@ -118,6 +135,8 @@ class CoalescingEmbeddingModel:
             texts = args[0]  # type: ignore[assignment]
         if texts is None:
             texts = ()
+        elif isinstance(texts, str):
+            texts = (texts,)
         kind: _EmbeddingKind = "query" if self._query_model is not None else "document"
         return await self._embed(tuple(texts), kind=kind)
 
@@ -130,8 +149,14 @@ class CoalescingEmbeddingModel:
             )
 
         loop = asyncio.get_running_loop()
-        if self._loop is not None and self._loop is not loop and (self._inflight or self._batch_tasks):
-            raise RuntimeError("event-loop")
+        if self._loop is not None and self._loop is not loop:
+            if self._loop.is_closed():
+                self._inflight.clear()
+                self._pending.clear()
+                self._batch_tasks.clear()
+                self._flush_task = None
+            elif self._inflight or self._batch_tasks:
+                raise RuntimeError("event-loop")
         self._loop = loop
 
         completed, waiting, added_work = self._resolve_inputs(ordered_texts, kind=kind, loop=loop)
@@ -173,7 +198,7 @@ class CoalescingEmbeddingModel:
                 completed[key] = _CompletedEmbedding(cached, None)
                 continue
             future = self._inflight.get(key)
-            if future is None:
+            if future is None or future.done():
                 future = self._create_flight(loop, key)
                 added_work = True
             waiting[key] = future
@@ -204,24 +229,36 @@ class CoalescingEmbeddingModel:
     async def _flush(self) -> None:
         try:
             while self._pending:
-                await asyncio.sleep(self._coalesce_seconds)
+                if self._coalesce_seconds > 0:
+                    await asyncio.sleep(self._coalesce_seconds)
+                else:
+                    await asyncio.sleep(0)
                 pending = tuple(self._pending.items())
                 self._pending.clear()
-                by_kind: dict[_EmbeddingKind, list[tuple[_EmbeddingKey, asyncio.Future[_CompletedEmbedding]]]] = {}
-                for item in pending:
-                    by_kind.setdefault(item[0][0], []).append(item)
-                for items in by_kind.values():
-                    for start in range(0, len(items), self._max_batch_size):
-                        self._start_batch(items[start : start + self._max_batch_size])
+                if not pending:
+                    break
+                self._dispatch_pending(pending)
         except asyncio.CancelledError:
             for key, future in tuple(self._pending.items()):
                 self._pending.pop(key, None)
                 if self._inflight.get(key) is future:
                     self._inflight.pop(key, None)
-                future.cancel()
+                if not future.done():
+                    future.cancel()
             raise
         finally:
             self._flush_task = None
+
+    def _dispatch_pending(
+        self,
+        pending: tuple[tuple[_EmbeddingKey, asyncio.Future[_CompletedEmbedding]], ...],
+    ) -> None:
+        by_kind: dict[_EmbeddingKind, list[tuple[_EmbeddingKey, asyncio.Future[_CompletedEmbedding]]]] = {}
+        for item in pending:
+            by_kind.setdefault(item[0][0], []).append(item)
+        for items in by_kind.values():
+            for start in range(0, len(items), self._max_batch_size):
+                self._start_batch(items[start : start + self._max_batch_size])
 
     def _flush_done(self, task: asyncio.Task[None]) -> None:
         if self._flush_task is task:
@@ -231,7 +268,8 @@ class CoalescingEmbeddingModel:
                     self._pending.pop(key, None)
                     if self._inflight.get(key) is future:
                         self._inflight.pop(key, None)
-                    future.cancel()
+                    if not future.done():
+                        future.cancel()
         _consume_task_exception(task)
 
     def _start_batch(self, items: Sequence[tuple[_EmbeddingKey, asyncio.Future[_CompletedEmbedding]]]) -> None:
@@ -250,7 +288,8 @@ class CoalescingEmbeddingModel:
         texts = tuple(key[1] for key in keys)
         try:
             result = await self._call_base(keys[0][0], texts)
-            vectors = _validate_vectors(result.vectors, expected_count=len(texts), dimension=self.profile.dimension)
+            expected_dim = self.profile.dimension if hasattr(self.profile, "dimension") else None
+            vectors = _validate_vectors(result.vectors, expected_count=len(texts), dimension=expected_dim)
             self._complete_batch(keys, futures, vectors, getattr(result, "usage", None))
         except asyncio.CancelledError:
             self._cancel_batch(futures)
@@ -267,8 +306,18 @@ class CoalescingEmbeddingModel:
         vectors: tuple[EmbeddingVector, ...],
         usage: InferenceUsage | None,
     ) -> None:
-        actual_usage = usage if isinstance(usage, InferenceUsage) else InferenceUsage(requests=1)
-        batch = _BatchUsage(actual_usage.model_copy(deep=True))
+        if isinstance(usage, InferenceUsage):
+            actual_usage = usage.model_copy(deep=True)
+        elif usage is not None and hasattr(usage, "requests"):
+            actual_usage = InferenceUsage(
+                requests=int(getattr(usage, "requests", 1)),
+                input_tokens=getattr(usage, "input_tokens", None),
+                output_tokens=getattr(usage, "output_tokens", None),
+            )
+        else:
+            actual_usage = InferenceUsage(requests=1)
+
+        batch = _BatchUsage(actual_usage)
         for key, future, vector in zip(keys, futures, vectors, strict=True):
             if self._cache_size:
                 self._cache[key] = vector
@@ -309,14 +358,14 @@ def _validate_vectors(
     vectors: Sequence[Sequence[float]],
     *,
     expected_count: int,
-    dimension: int,
+    dimension: int | None = None,
 ) -> tuple[EmbeddingVector, ...]:
     if len(vectors) != expected_count:
         raise ValueError("vector-count")
     validated: list[EmbeddingVector] = []
     for vector in vectors:
         value = tuple(float(component) for component in vector)
-        if len(value) != dimension:
+        if dimension is not None and dimension > 0 and len(value) != dimension:
             raise ValueError("vector-dimension")
         if not all(math.isfinite(component) for component in value):
             raise ValueError("vector-finite")
