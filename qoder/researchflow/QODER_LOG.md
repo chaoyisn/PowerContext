@@ -485,3 +485,20 @@ Markdown 链接零失效；`site/public` 的 10 个资源被 `index.html` / `app
 「已 `git add` 但尚未提交」的 blob。旧提交只留在本地 reflog，由默认两周宽限的常规 gc 自然回收，
 且从未被推送。
 
+## 推送收尾：回填提交与「不要写死 tip」的教训
+
+把推送结果写回 `PUSH_PRECHECK.md` / `SUBMISSION.md` 之后，才意识到一个自找的坑：
+**回填提交本身会让远端 tip 前移，于是文档里那句"远端 SHA = X"在写完的那一刻就过期了。**
+第一轮回填确实制造了 3 处不一致（同一仓库里同时存在 `2e0e61cc` 与更新的 tip）。
+
+修正方式不是再补一个 SHA，而是改口径：
+
+- 只记录**不会变的事实**——首次推送范围 `d647275c..2e0e61cc`（13 个提交）、推送方式
+  （fast-forward、无 `--force`）、`master` 未被触碰；
+- 把"当前 tip"一律交回命令本身：`git rev-parse origin/2026-competition-ecosystem`；
+- 后续每次推送前重复同一套检查（`git fetch` → 落后必须为 0 → 推送 → 两侧 SHA 相同），
+  这样文档不需要随 tip 变化而改写。
+
+随后追加的文档提交同样先 `git fetch` 确认零落后再 fast-forward 推送，并在推送后核对
+本地 HEAD 与远端 tip 相同。**结论：交付文档里凡是会被自己的写入动作改变的量，都不该写成字面值。**
+

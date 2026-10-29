@@ -2,13 +2,18 @@
 
 检查时间：2026-10-29
 分支：`2026-competition-ecosystem`
-远端：`origin/2026-competition-ecosystem` = `d647275c308e09b7b623f322a26f5c4e85734fb0`（基线，未变）
+远端：`origin/2026-competition-ecosystem` = `d647275c308e09b7b623f322a26f5c4e85734fb0`（**推送前**状态 = 基线）
 本地：领先 13 个提交、落后 0 个提交 → **远端未分叉**，正常推送即为 fast-forward，不需要也不允许 force。
 
 **推送结果（2026-10-29 11:40 本地时间）**：`git push origin 2026-competition-ecosystem` 成功，
-`d647275c..2e0e61cc`（fast-forward，无 `--force`）。推送后 `git ls-remote` 与 `git rev-parse HEAD`
+`d647275c..2e0e61cc`（13 个提交，fast-forward，无 `--force`）。推送后 `git ls-remote` 与 `git rev-parse HEAD`
 均为 `2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a` → **远端与本地一致**。
 `refs/heads/master` 仍为 `aedf7beb…`，未被触碰；8 个 worktree 全部在线。
+
+**后续推送**：回填本文件与 `SUBMISSION.md` 核对结果后，再追加提交并再次 fast-forward 推送
+（同样先 `git fetch` 确认零落后、无分叉，未使用 `--force`；记录见 §3.2 与 `QODER_LOG.md` V3 日志）。
+本文档刻意不写死"当前 tip 的 SHA"——每次回填都会产生新提交，任何写死的 tip 在写完那一刻就已过期。
+需要当前远端 tip 时执行：`git rev-parse origin/2026-competition-ecosystem`。
 
 ---
 
@@ -131,14 +136,14 @@ git branch -D backup/pre-clean-researchflow
 # 旧提交在本地只会留在 reflog 中，由默认两周宽限期的常规 gc 自然回收；它们从未被推送。
 ```
 
-- [x] 远端 SHA == 本地 HEAD SHA（`2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a`）
+- [x] 远端 SHA == 本地 HEAD SHA（首次推送后两侧同为 `2e0e61cc6dd7d0888245eaf0fd9ff32a8ad2d82a`；后续推送后再次核对仍一致）
 - [x] 远端提交涉及的路径全部以 `qoder/researchflow/` 开头（`git diff --name-only d647275c..HEAD` 无越界路径）
 - [x] 全部未推送提交中已无 `services/powercontext-acceptance-data` 任何文件（逐提交 `ls-tree` 扫描零命中）
 - [x] 全部未推送提交中已无完整 UID 及其长片段（逐提交 `git grep` 扫描零命中；仓库内仅保留 8 位前缀证据）
 - [x] 其他 worktree 的分支未被改动（`git worktree list` 8 项齐全，`refs/heads/master` 远端仍为 `aedf7beb…`）
 - [x] `refs/original/` 与本次自建的 `backup/pre-clean-researchflow` 已删除；
       其余 `backup-*` 分支属他人既有分支，未触碰
-- [x] 最终远端 SHA 已回填 `SUBMISSION.md` §5 第 1 项
+- [x] `SUBMISSION.md` 的推送结论已改为"每次推送后核对一致"的口径，不再写死会过期的 tip SHA
 
 ### 3.1 推送范围
 
@@ -146,3 +151,13 @@ git branch -D backup/pre-clean-researchflow
 P0 审计 → seekdb 证据库 + PowerContext 记忆 → 证据问答/HTTP API/四页工作台 →
 P4 交付文档 → 展示站 → 中文召回与多语 embedding → B/C/D 基准与安全 → V2 交付文档 →
 运行时凭据清理 → 发布文档 → 站点发布 → V3 交付材料 → 历史清理记录。
+
+### 3.2 后续推送（结果回填）
+
+首次推送后需要把推送结论写回本文件与 `SUBMISSION.md`，因此追加文档提交，
+再次 `git fetch` 确认 `0 落后` → 无分叉 → `git push origin 2026-competition-ecosystem`
+（fast-forward，无 `--force`），推送后 `git rev-parse HEAD` 与
+`git rev-parse origin/2026-competition-ecosystem` 相同。
+
+回填文档本身会让"当前 tip"再次前移，所以这一系列文档统一只记录**推送方式与核对方法**，
+不记录 tip SHA。这就是为什么后续再追加文档提交时，本节内容不需要改动。
