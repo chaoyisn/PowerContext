@@ -3,7 +3,7 @@
   "checks": {
     "git": {
       "branch": "competition/minimax-sdd-context",
-      "head": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+      "head": "8419c022aabcc1723c2a9accbd37e37561d72175",
       "reason": "healthy",
       "status": "PASS"
     },

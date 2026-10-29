@@ -1,6 +1,6 @@
 {
   "branch": "competition/minimax-sdd-context",
-  "commit": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+  "commit": "8419c022aabcc1723c2a9accbd37e37561d72175",
   "generated_by": "minimax/scripts/verify.py",
   "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
   "module_root_relative": "minimax",
@@ -44,7 +44,7 @@
       "evidence_paths": [
         "minimax/sample/taskmanager.py"
       ],
-      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+      "git_version": "8419c022aabcc1723c2a9accbd37e37561d72175",
       "item": "TEST-01",
       "status": "PASS",
       "title": "流程可在干净环境运行"
@@ -175,7 +175,7 @@
               "commit": "e66ae7f7",
               "patched_matches_committed_version": true,
               "pytest_exit_code": 0,
-              "pytest_summary": "10 passed in 0.03s",
+              "pytest_summary": "10 passed in 0.04s",
               "status": "PASS",
               "target_test": "minimax/tests/test_list_tasks_status_filter.py",
               "target_test_introduced_by_this_round": false
@@ -221,7 +221,7 @@
               "commit": "14959429",
               "patched_matches_committed_version": true,
               "pytest_exit_code": 0,
-              "pytest_summary": "4 passed in 0.02s",
+              "pytest_summary": "4 passed in 0.03s",
               "status": "PASS",
               "target_test": "minimax/tests/test_list_tasks_status_wildcard.py",
               "target_test_introduced_by_this_round": true
@@ -243,7 +243,7 @@
         "minimax/evidence/minimax_evidence_audit.json",
         "minimax/evidence/phase3_git_diff.patch"
       ],
-      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+      "git_version": "8419c022aabcc1723c2a9accbd37e37561d72175",
       "item": "TEST-02",
       "status": "PASS",
       "title": "MiniMax 真实参与代码修改"
@@ -277,7 +277,7 @@
       "evidence_paths": [
         "minimax/evidence/context_snapshot.json"
       ],
-      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+      "git_version": "8419c022aabcc1723c2a9accbd37e37561d72175",
       "item": "TEST-03",
       "status": "PASS",
       "title": "上下文内容正确且来源真实"
@@ -312,7 +312,7 @@
       "evidence_paths": [
         "minimax/evidence/seekdb_queries.json"
       ],
-      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+      "git_version": "8419c022aabcc1723c2a9accbd37e37561d72175",
       "item": "TEST-04",
       "status": "PASS",
       "title": "数据库真实参与"
@@ -348,22 +348,22 @@
         },
         "recovered_state": {
           "artifact_ids": {
-            "sdd-completed": "art_8f45503e92ff4e9cabb71c595e53e7a0",
-            "sdd-todo": "art_40a23d40cd404dfdaafd27ab3d263fb1",
-            "sdd-verification": "art_4be5319e74a34052ab48bb153f9b61f9"
+            "sdd-completed": "art_e0052e0d880a4d57ac29a6f4ca18d02f",
+            "sdd-todo": "art_894543bc9eab4bfa9ad00e3178fc9ca1",
+            "sdd-verification": "art_904a6e8823734106955a0bee3ddba804"
           },
           "completed": [
-            "verify-restart-1793287021:completed"
+            "verify-restart-1793287108:completed"
           ],
           "description": null,
           "has_state": true,
-          "scope_id": "scp_440c18sa6w96g13w5eze6r95fw",
+          "scope_id": "scp_2dxjs0ag9bsz5nxft9vkj736a3",
           "task_id": "TASK-SPEC-REQ-001-RESTART",
           "todos": [
-            "verify-restart-1793287021:todo"
+            "verify-restart-1793287108:todo"
           ],
           "verifications": [
-            "verify-restart-1793287021:verification"
+            "verify-restart-1793287108:verification"
           ]
         },
         "write_process": {
@@ -375,7 +375,7 @@
       "evidence_paths": [
         "minimax/evidence/phase4_cross_process.json"
       ],
-      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+      "git_version": "8419c022aabcc1723c2a9accbd37e37561d72175",
       "item": "TEST-05",
       "status": "PASS",
       "title": "任务状态可复用"
@@ -438,7 +438,7 @@
           "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
           "exit_code": 0,
           "stderr": "",
-          "stdout": "......................                                                   [100%]\n22 passed in 0.04s\n"
+          "stdout": "......................                                                   [100%]\n22 passed in 0.08s\n"
         },
         "git_diff": "diff --git a/minimax/sample/taskmanager.py b/minimax/sample/taskmanager.py\nindex 8f482216..4d57d400 100644\n--- a/minimax/sample/taskmanager.py\n+++ b/minimax/sample/taskmanager.py\n@@ -32,14 +32,13 @@ class TaskStore:\n         return task\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:",
         "r1_after": {
@@ -468,7 +468,7 @@
         "minimax/evidence/phase3_git_diff.patch",
         "minimax/evidence/red_green_audit.json"
       ],
-      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+      "git_version": "8419c022aabcc1723c2a9accbd37e37561d72175",
       "item": "TEST-06",
       "status": "PASS",
       "title": "代码改动生效"
