@@ -9,10 +9,11 @@ produced.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -57,20 +58,28 @@ class MiniMaxResult:
     applied: bool
     applied_files: list[str]
     error: str | None = None
+    request_ids: dict[str, str] = field(default_factory=dict)
+    prompt: str = ""
+    prompt_sha256: str = ""
+    usage: dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "model": self.model,
             "base_url": self.base_url,
             "request_id": self.request_id,
+            "request_ids": self.request_ids,
             "input_tokens": self.input_tokens,
             "output_tokens": self.output_tokens,
+            "usage": self.usage,
             "elapsed_seconds": round(self.elapsed_seconds, 3),
             "applied": self.applied,
             "applied_files": self.applied_files,
             "error": self.error,
             "patch": self.patch,
             "raw_response": self.raw_response,
+            "prompt": self.prompt,
+            "prompt_sha256": self.prompt_sha256,
         }
 
 
@@ -211,6 +220,7 @@ class MiniMaxAgent:
         raw = ""
         usage: dict[str, Any] = {}
         request_id: str | None = None
+        request_ids: dict[str, str] = {}
         error: str | None = None
         try:
             with httpx.Client(timeout=self.settings.minimax_timeout) as client:
@@ -219,12 +229,21 @@ class MiniMaxAgent:
                     headers=headers,
                     json=body,
                 )
-            request_id = response.headers.get("x-request-id")
+            # The gateway returns the request identity under several header
+            # names; collect them all so the call can be traced afterwards.
+            for header in ("x-request-id", "x-mm-request-id", "trace-id", "alb_request_id", "x-session-id"):
+                value = response.headers.get(header)
+                if value:
+                    request_ids[header] = value
+            request_id = request_ids.get("x-request-id") or request_ids.get("x-mm-request-id") or request_ids.get("trace-id")
             if response.status_code >= 400:
                 error = f"HTTP {response.status_code}: {response.text[:600]}"
             else:
                 payload = response.json()
                 usage = payload.get("usage", {}) or {}
+                body_id = payload.get("id")
+                if body_id:
+                    request_ids["body_id"] = str(body_id)
                 raw = "".join(
                     block.get("text", "")
                     for block in payload.get("content", [])
@@ -251,6 +270,7 @@ class MiniMaxAgent:
             model=self.settings.minimax_model,
             base_url=self.settings.minimax_base_url,
             request_id=request_id,
+            request_ids=request_ids,
             input_tokens=int(usage.get("input_tokens", 0)),
             output_tokens=int(usage.get("output_tokens", 0)),
             elapsed_seconds=elapsed,
@@ -259,6 +279,14 @@ class MiniMaxAgent:
             applied=applied,
             applied_files=applied_files,
             error=error,
+            prompt=prompt,
+            prompt_sha256=hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+            usage={
+                "input_tokens": int(usage.get("input_tokens", 0)),
+                "output_tokens": int(usage.get("output_tokens", 0)),
+                "cache_creation_input_tokens": int(usage.get("cache_creation_input_tokens", 0)),
+                "cache_read_input_tokens": int(usage.get("cache_read_input_tokens", 0)),
+            },
         )
 
     @staticmethod

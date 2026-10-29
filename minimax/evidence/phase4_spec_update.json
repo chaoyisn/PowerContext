@@ -50,12 +50,22 @@
     "version": "1.0.0"
   },
   "checks": {
+    "code_binding_inherited": true,
     "code_still_resolved": true,
     "content_hash_changed": true,
+    "context_resolves_exactly_one_specification": true,
+    "context_uses_the_revised_revision": true,
     "expected_new_version": true,
+    "old_revision_not_the_effective_one": true,
+    "old_revision_still_stored": true,
     "revised_text_present": true,
+    "test_binding_inherited": true,
     "tests_still_resolved": true,
     "version_advanced": true
   },
-  "passed": true
+  "passed": true,
+  "stored_versions": [
+    "1.0.0",
+    "1.1.0"
+  ]
 }

@@ -1,101 +1,101 @@
-============================= test session starts =============================
-platform win32 -- Python 3.12.13, pytest-9.0.2, pluggy-1.6.0 -- D:\OceanBase\venv312\Scripts\python.exe
-cachedir: .pytest_cache
-rootdir: E:\OceanBaseContest\powercontext-minimax
-plugins: anyio-4.15.1, platformdirs-4.14.0, asyncio-1.4.0
-asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
-collecting ... collected 18 items
-
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_active_status FAILED [  5%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_done_status FAILED [ 11%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_archived_status FAILED [ 16%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_unknown_status_returns_empty FAILED [ 22%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_without_status_returns_all_tasks PASSED [ 27%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_preserves_return_structure FAILED [ 33%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filter_is_case_sensitive FAILED [ 38%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filtered_result_keeps_priority_order[active] PASSED [ 44%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filtered_result_keeps_priority_order[done] PASSED [ 50%]
-minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filtered_result_keeps_priority_order[archived] PASSED [ 55%]
-minimax/tests/test_taskmanager_regression.py::test_default_store_fixture_contents PASSED [ 61%]
-minimax/tests/test_taskmanager_regression.py::test_list_tasks_orders_by_priority_then_id PASSED [ 66%]
-minimax/tests/test_taskmanager_regression.py::test_list_tasks_on_empty_store_returns_empty_list PASSED [ 72%]
-minimax/tests/test_taskmanager_regression.py::test_find_by_id_returns_matching_task PASSED [ 77%]
-minimax/tests/test_taskmanager_regression.py::test_find_by_id_returns_none_for_unknown_id PASSED [ 83%]
-minimax/tests/test_taskmanager_regression.py::test_task_as_dict_shape_is_stable PASSED [ 88%]
-minimax/tests/test_taskmanager_regression.py::test_filter_by_status_helper_keeps_none_semantics PASSED [ 94%]
-minimax/tests/test_taskmanager_regression.py::test_valid_statuses_constant_is_unchanged PASSED [100%]
-
+FFFF.FF...........                                                       [100%]
 ================================== FAILURES ===================================
 __________________ test_list_tasks_filters_by_active_status ___________________
-minimax\tests\test_list_tasks_status_filter.py:27: in test_list_tasks_filters_by_active_status
-    assert [item["id"] for item in result] == [1]
-E   assert [1, 2, 3] == [1]
-E     
-E     Left contains 2 more items, first extra item: 2
-E     
-E     Full diff:
-E       [
-E           1,
-E     +     2,
-E     +     3,
-E       ]
+
+    def test_list_tasks_filters_by_active_status() -> None:
+        """SPEC-REQ-001 acceptance criterion 1: only `active` tasks are returned."""
+    
+        store = build_default_store()
+    
+        result = store.list_tasks(status="active")
+    
+>       assert [item["id"] for item in result] == [1]
+E       assert [1, 2, 3] == [1]
+E         
+E         Left contains 2 more items, first extra item: 2
+E         Use -v to get more diff
+
+minimax\tests\test_list_tasks_status_filter.py:27: AssertionError
 ___________________ test_list_tasks_filters_by_done_status ____________________
-minimax\tests\test_list_tasks_status_filter.py:37: in test_list_tasks_filters_by_done_status
-    assert [item["id"] for item in result] == [2]
-E   AssertionError: assert [1, 2, 3] == [2]
-E     
-E     At index 0 diff: 1 != 2
-E     Left contains 2 more items, first extra item: 2
-E     
-E     Full diff:
-E       [
-E     +     1,...
-E     
-E     ...Full output truncated (3 lines hidden), use '-vv' to show
+
+    def test_list_tasks_filters_by_done_status() -> None:
+        """SPEC-REQ-001 acceptance criterion 2."""
+    
+        store = build_default_store()
+    
+        result = store.list_tasks(status="done")
+    
+>       assert [item["id"] for item in result] == [2]
+E       assert [1, 2, 3] == [2]
+E         
+E         At index 0 diff: 1 != 2
+E         Left contains 2 more items, first extra item: 2
+E         Use -v to get more diff
+
+minimax\tests\test_list_tasks_status_filter.py:37: AssertionError
 _________________ test_list_tasks_filters_by_archived_status __________________
-minimax\tests\test_list_tasks_status_filter.py:47: in test_list_tasks_filters_by_archived_status
-    assert [item["id"] for item in result] == [3]
-E   AssertionError: assert [1, 2, 3] == [3]
-E     
-E     At index 0 diff: 1 != 3
-E     Left contains 2 more items, first extra item: 2
-E     
-E     Full diff:
-E       [
-E     +     1,...
-E     
-E     ...Full output truncated (3 lines hidden), use '-vv' to show
+
+    def test_list_tasks_filters_by_archived_status() -> None:
+        """SPEC-REQ-001 acceptance criterion 3."""
+    
+        store = build_default_store()
+    
+        result = store.list_tasks(status="archived")
+    
+>       assert [item["id"] for item in result] == [3]
+E       assert [1, 2, 3] == [3]
+E         
+E         At index 0 diff: 1 != 3
+E         Left contains 2 more items, first extra item: 2
+E         Use -v to get more diff
+
+minimax\tests\test_list_tasks_status_filter.py:47: AssertionError
 ___________ test_list_tasks_filters_by_unknown_status_returns_empty ___________
-minimax\tests\test_list_tasks_status_filter.py:57: in test_list_tasks_filters_by_unknown_status_returns_empty
-    assert result == []
-E   AssertionError: assert [{'id': 1, 'p...e old notes'}] == []
-E     
-E     Left contains 3 more items, first extra item: {'id': 1, 'priority': 5, 'status': 'active', 'title': 'Write specification'}
-E     
-E     Full diff:
-E     - []
-E     + [
-E     +     {...
-E     
-E     ...Full output truncated (18 lines hidden), use '-vv' to show
+
+    def test_list_tasks_filters_by_unknown_status_returns_empty() -> None:
+        """SPEC-REQ-001 boundary condition 3 and acceptance criterion 4."""
+    
+        store = build_default_store()
+    
+        result = store.list_tasks(status="unknown")
+    
+>       assert result == []
+E       AssertionError: assert [{'id': 1, 'p...e old notes'}] == []
+E         
+E         Left contains 3 more items, first extra item: {'id': 1, 'priority': 5, 'status': 'active', 'title': 'Write specification'}
+E         Use -v to get more diff
+
+minimax\tests\test_list_tasks_status_filter.py:57: AssertionError
 _________________ test_list_tasks_preserves_return_structure __________________
-minimax\tests\test_list_tasks_status_filter.py:77: in test_list_tasks_preserves_return_structure
-    assert len(result) == 1
-E   AssertionError: assert 3 == 1
-E    +  where 3 = len([{'id': 1, 'priority': 5, 'status': 'active', 'title': 'Write specification'}, {'id': 2, 'priority': 3, 'status': 'done', 'title': 'Implement feature'}, {'id': 3, 'priority': 1, 'status': 'archived', 'title': 'Archive old notes'}])
+
+    def test_list_tasks_preserves_return_structure() -> None:
+        """Compatibility constraint 2 and acceptance criterion 6."""
+    
+        store = build_default_store()
+    
+        result = store.list_tasks(status="active")
+    
+>       assert len(result) == 1
+E       AssertionError: assert 3 == 1
+E        +  where 3 = len([{'id': 1, 'priority': 5, 'status': 'active', 'title': 'Write specification'}, {'id': 2, 'priority': 3, 'status': 'done', 'title': 'Implement feature'}, {'id': 3, 'priority': 1, 'status': 'archived', 'title': 'Archive old notes'}])
+
+minimax\tests\test_list_tasks_status_filter.py:77: AssertionError
 __________________ test_list_tasks_filter_is_case_sensitive ___________________
-minimax\tests\test_list_tasks_status_filter.py:91: in test_list_tasks_filter_is_case_sensitive
-    assert result == []
-E   AssertionError: assert [{'id': 1, 'p...e old notes'}] == []
-E     
-E     Left contains 3 more items, first extra item: {'id': 1, 'priority': 5, 'status': 'active', 'title': 'Write specification'}
-E     
-E     Full diff:
-E     - []
-E     + [
-E     +     {...
-E     
-E     ...Full output truncated (18 lines hidden), use '-vv' to show
+
+    def test_list_tasks_filter_is_case_sensitive() -> None:
+        """SPEC-REQ-001 boundary condition 4."""
+    
+        store = build_default_store()
+    
+        result = store.list_tasks(status="Active")
+    
+>       assert result == []
+E       AssertionError: assert [{'id': 1, 'p...e old notes'}] == []
+E         
+E         Left contains 3 more items, first extra item: {'id': 1, 'priority': 5, 'status': 'active', 'title': 'Write specification'}
+E         Use -v to get more diff
+
+minimax\tests\test_list_tasks_status_filter.py:91: AssertionError
 =========================== short test summary info ===========================
 FAILED minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_active_status
 FAILED minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_done_status
@@ -103,5 +103,12 @@ FAILED minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_b
 FAILED minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_unknown_status_returns_empty
 FAILED minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_preserves_return_structure
 FAILED minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filter_is_case_sensitive
-======================== 6 failed, 12 passed in 0.37s =========================
+6 failed, 12 passed in 0.12s
+
+COMMAND=python -m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_taskmanager_regression.py
 EXITCODE=1
+COMMIT=f8be46eb0082b1d1279d99cd8814dc5739118b64
+TARGET_TEST=minimax/tests/test_list_tasks_status_filter.py
+TARGET_TEST_SHA256=8be75f1a6e40d659d4a99d6ca2d8e0771f1cc7f076148f27716367c88d8b87de
+SPEC_VERSION=1.0.0
+SPEC_REVISION=r1

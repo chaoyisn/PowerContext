@@ -1,0 +1,82 @@
+{
+  "description": "从真实 Git 提交重新生成 Red/Green 日志；测试文件逐字取自提交，断言未被修改。",
+  "rounds": {
+    "r1": {
+      "round": "r1",
+      "runs": [
+        {
+          "commit": "f8be46eb",
+          "exit_code": 1,
+          "expected_exit_code": 1,
+          "log": "minimax\\evidence\\phase1_before.log",
+          "matches_expectation": true,
+          "phase": "before",
+          "scope": [
+            "minimax/tests/test_list_tasks_status_filter.py",
+            "minimax/tests/test_taskmanager_regression.py"
+          ],
+          "status": "PASS",
+          "summary": "6 failed, 12 passed in 0.12s",
+          "target_test_introduced_by_this_round": false,
+          "target_test_source_commit": "f8be46eb"
+        },
+        {
+          "commit": "e66ae7f7",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "minimax\\evidence\\phase3_after.log",
+          "matches_expectation": true,
+          "phase": "after",
+          "scope": [
+            "minimax/tests/test_list_tasks_status_filter.py",
+            "minimax/tests/test_taskmanager_regression.py"
+          ],
+          "status": "PASS",
+          "summary": "18 passed in 0.05s",
+          "target_test_introduced_by_this_round": false,
+          "target_test_source_commit": "e66ae7f7"
+        }
+      ],
+      "status": "PASS"
+    },
+    "r2": {
+      "round": "r2",
+      "runs": [
+        {
+          "commit": "14959429~1",
+          "exit_code": 1,
+          "expected_exit_code": 1,
+          "log": "minimax\\evidence\\phase4_r2_before.log",
+          "matches_expectation": true,
+          "phase": "before",
+          "scope": [
+            "minimax/tests/test_list_tasks_status_wildcard.py"
+          ],
+          "status": "PASS",
+          "summary": "3 failed, 1 passed, 1 warning in 0.10s",
+          "target_test_introduced_by_this_round": true,
+          "target_test_source_commit": "14959429"
+        },
+        {
+          "commit": "14959429",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "minimax\\evidence\\phase4_r2_after.log",
+          "matches_expectation": true,
+          "phase": "after",
+          "scope": [
+            "minimax/tests/test_list_tasks_status_filter.py",
+            "minimax/tests/test_list_tasks_status_wildcard.py",
+            "minimax/tests/test_taskmanager_regression.py"
+          ],
+          "status": "PASS",
+          "summary": "22 passed in 0.06s",
+          "target_test_introduced_by_this_round": false,
+          "target_test_source_commit": "14959429"
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "status": "PASS"
+}

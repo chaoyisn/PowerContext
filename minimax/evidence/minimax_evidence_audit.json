@@ -1,0 +1,210 @@
+{
+  "archive_directory": "minimax\\evidence\\minimax_calls",
+  "checks": {
+    "archive_not_empty": true,
+    "both_development_rounds_covered": true,
+    "development_rounds_pass": true,
+    "legacy_record_consistent": true
+  },
+  "covered_rounds": [
+    "r1",
+    "r2"
+  ],
+  "description": "核验仓库中保存的真实历史开发证据；本脚本不调用模型，不消耗任何额度。",
+  "development_record_count": 2,
+  "legacy_record_checks": {
+    "legacy_applied": true,
+    "legacy_file_exists": true,
+    "legacy_has_patch": true,
+    "legacy_model_is_minimax": true
+  },
+  "live_record_count": 3,
+  "live_records_not_audited_here": [
+    {
+      "note": "在线验证记录，不属于历史开发轮次，审计结论见 evidence/minimax_live_check.json",
+      "request_id": "2113154684427440325_17932855705nyy5k",
+      "round": "live-verification",
+      "task_id": "TASK-SPEC-REQ-001-LIVE"
+    },
+    {
+      "note": "在线验证记录，不属于历史开发轮次，审计结论见 evidence/minimax_live_check.json",
+      "request_id": "2113154684427440325_1793285552iv1jto",
+      "round": "live-verification",
+      "task_id": "TASK-SPEC-REQ-001-LIVE"
+    },
+    {
+      "note": "在线验证记录，不属于历史开发轮次，审计结论见 evidence/minimax_live_check.json",
+      "request_id": "2113154684427440325_1793285586zb5pa1",
+      "round": "live-verification",
+      "task_id": "TASK-SPEC-REQ-001-LIVE"
+    }
+  ],
+  "mode": "HISTORICAL",
+  "record_count": 5,
+  "records": [
+    {
+      "call": {
+        "applied": true,
+        "applied_files": [
+          "minimax/sample/taskmanager.py",
+          "minimax/sdd_context/cli.py",
+          "minimax/sdd_context/minimax_agent.py"
+        ],
+        "elapsed_seconds": 12.203,
+        "error": null,
+        "input_tokens": 183,
+        "model": "MiniMax-M3.1-Flash",
+        "output_tokens": 519,
+        "patch": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 8f2b1a4..c3d7e9f 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -33,11 +33,11 @@ class TaskStore:\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:\n",
+        "raw_response": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 8f2b1a4..c3d7e9f 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -33,11 +33,11 @@ class TaskStore:\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:",
+        "request_id": null,
+        "request_ids": {}
+      },
+      "checks": {
+        "has_context_code_files": true,
+        "has_context_specifications": true,
+        "has_context_test_files": true,
+        "has_generated_patch": true,
+        "has_model_identity": true,
+        "has_task_input": true,
+        "model_is_minimax": true,
+        "no_error": true,
+        "patch_replays_onto_pre_change_code": true,
+        "patch_touches_business_code": true,
+        "patch_was_applied": true,
+        "patched_code_matches_committed_version": true,
+        "patched_code_passes_round_target_test": true,
+        "record_matches_round_commit": true,
+        "recorded_tokens": true,
+        "round_identified": true
+      },
+      "context": {
+        "code_files": [
+          "sample/taskmanager.py"
+        ],
+        "round": "r1",
+        "source": "git:e66ae7f7:minimax/evidence/minimax_call.json",
+        "specifications": [
+          "SPEC-REQ-001"
+        ],
+        "state_completed": [],
+        "state_todos": [
+          "实现 status 筛选"
+        ],
+        "state_verifications": [],
+        "test_files": [
+          "tests/test_list_tasks_status_filter.py",
+          "tests/test_taskmanager_regression.py"
+        ]
+      },
+      "passed": true,
+      "patch_added_lines": [
+        "        \"\"\"Return tasks ordered by descending priority then ascending id.",
+        "        ``status`` optionally filters tasks by exact, case-sensitive status match.",
+        "        tasks = filter_by_status(self.tasks, status)",
+        "        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]"
+      ],
+      "patch_removed_lines": [
+        "        \"\"\"Return every task ordered by descending priority then ascending id.",
+        "        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter",
+        "        is not implemented yet.",
+        "        del status",
+        "        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]"
+      ],
+      "replay": {
+        "commit": "e66ae7f7",
+        "patched_matches_committed_version": true,
+        "pytest_exit_code": 0,
+        "pytest_summary": "",
+        "status": "PASS",
+        "target_test": "minimax/tests/test_list_tasks_status_filter.py",
+        "target_test_introduced_by_this_round": false
+      },
+      "repository_commit": "e66ae7f7",
+      "round": "r1",
+      "task": "为工单查询函数增加按 status 筛选工单的功能 list_tasks(status='active')",
+      "task_id": "TASK-SPEC-REQ-001"
+    },
+    {
+      "call": {
+        "applied": true,
+        "applied_files": [
+          "minimax/sample/taskmanager.py",
+          "minimax/sdd_context/cli.py",
+          "minimax/sdd_context/importer.py",
+          "minimax/specs/SPEC-REQ-001.md"
+        ],
+        "elapsed_seconds": 2.469,
+        "error": null,
+        "input_tokens": 5579,
+        "model": "MiniMax-M3.1-Flash",
+        "output_tokens": 271,
+        "patch": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 0000000..0000000 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -37,7 +37,7 @@ class TaskStore:\n         ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        tasks = filter_by_status(self.tasks, status)\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n",
+        "raw_response": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 0000000..0000000 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -37,7 +37,7 @@ class TaskStore:\n         ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        tasks = filter_by_status(self.tasks, status)\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n",
+        "request_id": null,
+        "request_ids": {}
+      },
+      "checks": {
+        "has_context_code_files": true,
+        "has_context_specifications": true,
+        "has_context_test_files": true,
+        "has_generated_patch": true,
+        "has_model_identity": true,
+        "has_task_input": true,
+        "model_is_minimax": true,
+        "no_error": true,
+        "patch_replays_onto_pre_change_code": true,
+        "patch_touches_business_code": true,
+        "patch_was_applied": true,
+        "patched_code_matches_committed_version": true,
+        "patched_code_passes_round_target_test": true,
+        "record_matches_round_commit": true,
+        "recorded_tokens": true,
+        "round_identified": true
+      },
+      "context": {
+        "code_files": [
+          "sample/taskmanager.py"
+        ],
+        "round": "r2",
+        "source": "git:14959429:minimax/evidence/minimax_call.json",
+        "specifications": [
+          "SPEC-REQ-001"
+        ],
+        "state_completed": [],
+        "state_todos": [
+          "phase4: 验证跨进程读取",
+          "phase4: 验证跨进程读取",
+          "实现 status 筛选"
+        ],
+        "state_verifications": [],
+        "test_files": [
+          "tests/test_list_tasks_status_filter.py",
+          "tests/test_list_tasks_status_wildcard.py",
+          "tests/test_taskmanager_regression.py"
+        ]
+      },
+      "passed": true,
+      "patch_added_lines": [
+        "        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)"
+      ],
+      "patch_removed_lines": [
+        "        tasks = filter_by_status(self.tasks, status)"
+      ],
+      "replay": {
+        "commit": "14959429",
+        "patched_matches_committed_version": true,
+        "pytest_exit_code": 0,
+        "pytest_summary": "4 passed in 0.02s",
+        "status": "PASS",
+        "target_test": "minimax/tests/test_list_tasks_status_wildcard.py",
+        "target_test_introduced_by_this_round": true
+      },
+      "repository_commit": "14959429",
+      "round": "r2",
+      "task": "根据 SPEC-REQ-001 v1.1.0 (r2) 实现 status 通配符筛选 list_tasks(status='*') 返回全部工单",
+      "task_id": "TASK-SPEC-REQ-001"
+    }
+  ],
+  "status": "PASS"
+}

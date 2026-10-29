@@ -62,6 +62,18 @@ def _build_stores(settings: Settings) -> tuple[SeekDBStore, PowerContextStateSto
     return store, state_store
 
 
+def _git_head(settings: Settings) -> str:
+    """Return the commit the working tree is based on, or ``unknown``."""
+
+    import subprocess
+
+    root = _repository_root(settings)
+    completed = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=str(root), capture_output=True, text=True
+    )
+    return completed.stdout.strip() if completed.returncode == 0 else "unknown"
+
+
 def command_init(settings: Settings, args: argparse.Namespace) -> int:
     settings.ensure_directories()
     store, state_store = _build_stores(settings)
@@ -191,6 +203,7 @@ def command_state(settings: Settings, args: argparse.Namespace) -> int:
 
 
 def command_apply(settings: Settings, args: argparse.Namespace) -> int:
+    from .call_archive import record_call
     from .minimax_agent import MiniMaxAgent
 
     store, state_store = _build_stores(settings)
@@ -206,15 +219,47 @@ def command_apply(settings: Settings, args: argparse.Namespace) -> int:
         "task_id": args.task_id,
         "task": args.task,
         "context_specifications": [item["spec_id"] for item in context.specifications],
+        "context_specification_versions": [
+            f"{item['spec_id']}@{item['version']}({item['revision']})" for item in context.specifications
+        ],
         "context_code_files": sorted({item["file_path"] for item in context.code}),
         "context_test_files": sorted({item["file_path"] for item in context.tests}),
         "context_state_todos": context.state.get("todos", []),
+        "context_state_completed": context.state.get("completed", []),
+        "context_state_verifications": context.state.get("verifications", []),
         "minimax": result.to_dict(),
     }
     output = settings.evidence_dir / "minimax_call.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(_dump(evidence), encoding="utf-8")
-    print(_dump({k: v for k, v in evidence.items() if k != "minimax"} | {"evidence_file": str(output)}))
+
+    # Keep every real call in an append-only archive so the historical
+    # development work stays auditable without a new model call.
+    archive_entry = record_call(
+        settings.evidence_dir,
+        task_id=args.task_id,
+        task=args.task,
+        call=result.to_dict(),
+        context_summary={
+            "specifications": evidence["context_specification_versions"],
+            "code_files": evidence["context_code_files"],
+            "test_files": evidence["context_test_files"],
+            "state_todos": evidence["context_state_todos"],
+            "state_completed": evidence["context_state_completed"],
+            "state_verifications": evidence["context_state_verifications"],
+        },
+        repository_commit=_git_head(settings),
+    )
+    print(
+        _dump(
+            {k: v for k, v in evidence.items() if k != "minimax"}
+            | {
+                "evidence_file": str(output),
+                "archive_file": archive_entry["file"],
+                "archive_path": archive_entry["path"],
+            }
+        )
+    )
     return 0 if result.error is None else 1
 
 

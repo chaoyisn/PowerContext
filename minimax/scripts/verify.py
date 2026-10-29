@@ -31,12 +31,14 @@ if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from minimax.sdd_context.config import Settings, load_settings  # noqa: E402
+from minimax.sdd_context.call_archive import archive_directory, load_archive  # noqa: E402
 from minimax.sdd_context.context_builder import ContextBuilder  # noqa: E402
 from minimax.sdd_context.powercontext_store import (  # noqa: E402
     PowerContextStateStore,
     PowerContextUnavailableError,
 )
 from minimax.sdd_context.seekdb_store import SeekDBStore, SeekDBUnavailableError  # noqa: E402
+from minimax.scripts.audit_minimax_evidence import audit_record  # noqa: E402
 
 PASS = "PASS"
 FAIL = "FAIL"
@@ -63,11 +65,46 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _normalized_sha256(path: Path) -> str:
+    """Hash the file content with the line endings normalized to LF.
+
+    ``core.autocrlf`` rewrites the working tree to CRLF when a file is checked
+    out, so the raw byte hash of a working-tree file depends on the machine
+    that cloned the repository. Hashing the normalized content makes the check
+    identical everywhere, which is what the Red/Green evidence has to assert.
+    """
+
+    content = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(content).hexdigest()
+
+
+def _git_blob_sha256(path: str) -> str | None:
+    """Return the SHA256 of the committed blob, which is platform independent."""
+
+    completed = subprocess.run(
+        ["git", "show", f"HEAD:{path}"],
+        cwd=str(REPOSITORY_ROOT),
+        capture_output=True,
+    )
+    if completed.returncode != 0:
+        return None
+    return hashlib.sha256(completed.stdout).hexdigest()
+
+
 def _git(*arguments: str) -> str:
     completed = subprocess.run(
         ["git", *arguments], cwd=str(REPOSITORY_ROOT), capture_output=True, text=True
     )
     return completed.stdout.strip()
+
+
+def _relative(path: Path) -> str:
+    """Render a path relative to the repository root, for the report."""
+
+    try:
+        return path.resolve().relative_to(REPOSITORY_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 
 def _pytest(arguments: list[str]) -> dict[str, Any]:
@@ -91,12 +128,25 @@ def _result(
     status: str,
     detail: str,
     evidence: dict[str, Any] | None = None,
+    commands: list[dict[str, Any]] | None = None,
+    evidence_paths: list[str] | None = None,
 ) -> dict[str, Any]:
+    """Build one acceptance result.
+
+    Besides the checks, a result records the commands that were actually
+    executed with their real exit codes, the git version the result belongs
+    to and the repository relative paths of the evidence files. A reviewer can
+    therefore re-run each item without guessing which command produced it.
+    """
+
     return {
         "item": item,
         "title": title,
         "status": status,
         "detail": detail,
+        "commands": commands or [],
+        "git_version": _git("rev-parse", "HEAD"),
+        "evidence_paths": evidence_paths or [],
         "evidence": evidence or {},
     }
 
@@ -161,6 +211,14 @@ def test_01_runnable(settings: Settings) -> dict[str, Any]:
         if passed
         else "干净环境运行验证未通过",
         {"checks": checks, "pytest": suite},
+        commands=[
+            {
+                "command": f"python -m pytest {TARGET_TEST} {R2_TARGET_TEST} {REGRESSION_TEST} -q",
+                "exit_code": suite["exit_code"],
+            },
+            {"command": "python -m minimax.sdd_context.cli --help", "exit_code": cli.returncode},
+        ],
+        evidence_paths=[_relative(REPOSITORY_ROOT / SAMPLE_CODE)],
     )
 
 
@@ -168,104 +226,152 @@ def test_01_runnable(settings: Settings) -> dict[str, Any]:
 
 
 def test_02_minimax_participated(settings: Settings) -> dict[str, Any]:
-    """MiniMax must have produced the recorded code change."""
+    """Audit the recorded MiniMax development work.
 
-    evidence_path = settings.evidence_dir / "minimax_call.json"
-    if not evidence_path.is_file():
+    This is a **historical evidence audit**: it reads the append-only call
+    archive that is committed to the repository and never calls the model. Each
+    archived record is audited on its own, and the recorded patch of every
+    development round is replayed onto the pre-change code taken from the git
+    history, where the round's own target test has to pass.
+
+    The live model call is a separate, explicitly online entry point:
+    ``minimax/scripts/live_minimax_check.py``.
+    """
+
+    records = load_archive(settings.evidence_dir)
+    if not records:
         return _result(
             "TEST-02",
             "MiniMax 真实参与代码修改",
             BLOCKED,
-            f"缺少调用记录 {evidence_path}",
+            f"缺少调用归档 {archive_directory(settings.evidence_dir)}",
         )
 
-    record = json.loads(evidence_path.read_text(encoding="utf-8"))
-    call = record.get("minimax", {})
-    patch = call.get("patch", "")
+    audits = [audit_record(record) for record in records]
+    development_audits = [audit for audit in audits if audit["round"] in ("r1", "r2")]
+    live_audits = [audit for audit in audits if audit["round"] not in ("r1", "r2")]
+    covered_rounds = sorted({audit["round"] for audit in development_audits})
+
+    current_diff = _git("diff", PRE_CHANGE_COMMIT, "HEAD", "--", SAMPLE_CODE)
+    sample_text = (REPOSITORY_ROOT / SAMPLE_CODE).read_text(encoding="utf-8")
 
     checks: dict[str, Any] = {
-        "model_is_minimax": str(call.get("model", "")).startswith("MiniMax"),
-        "request_was_sent": bool(call.get("request_id")) or bool(call.get("input_tokens")),
-        "response_not_empty": bool(call.get("raw_response")),
-        "patch_present": "diff --git" in patch or "--- " in patch,
-        "patch_applied": call.get("applied") is True,
-        "no_error": not call.get("error"),
+        "archive_not_empty": bool(audits),
+        "every_development_record_passes_its_own_audit": all(
+            audit["passed"] for audit in development_audits
+        ),
+        "model_is_minimax_in_every_record": all(
+            str((audit.get("call") or {}).get("model", "")).startswith("MiniMax")
+            for audit in development_audits
+        ),
+        "every_record_has_task_input": all(bool(audit.get("task")) for audit in development_audits),
+        "every_record_has_raw_model_response": all(
+            bool((audit.get("call") or {}).get("raw_response")) for audit in development_audits
+        ),
+        "every_record_has_generated_patch": all(
+            "diff --git" in (audit.get("call") or {}).get("patch", "") for audit in development_audits
+        ),
+        "every_record_was_applied": all(
+            (audit.get("call") or {}).get("applied") is True for audit in development_audits
+        ),
+        "every_record_touches_business_code": all(
+            any("taskmanager" in name for name in ((audit.get("call") or {}).get("applied_files") or []))
+            for audit in development_audits
+        ),
+        "every_patch_replays_onto_pre_change_code": all(
+            audit["replay"].get("status") == PASS for audit in development_audits
+        ),
+        "every_patched_code_passes_its_target_test": all(
+            audit["replay"].get("pytest_exit_code") == 0 for audit in development_audits
+        ),
+        "every_patched_code_matches_committed_version": all(
+            audit["replay"].get("patched_matches_committed_version") is True
+            for audit in development_audits
+        ),
+        "both_rounds_covered": covered_rounds == ["r1", "r2"],
+        "live_records_carry_request_identity": all(
+            bool((audit.get("call") or {}).get("request_id")) for audit in live_audits
+        ),
+        "git_diff_shows_sample_change": "list_tasks" in current_diff and "filter_by_status" in current_diff,
+        "current_sample_contains_implementation": "filter_by_status" in sample_text,
     }
 
-    # The recorded patch must touch the sample code, not only the context module.
-    checks["patch_touches_sample_code"] = SAMPLE_CODE.replace("minimax/", "") in patch
-
-    # The patch must correspond to the real git diff of the sample file.
-    # The pre-change baseline is the Phase 1 commit, so the diff is taken
-    # against it rather than against HEAD.
-    current_diff = _git("diff", PRE_CHANGE_COMMIT, "HEAD", "--", SAMPLE_CODE)
-    checks["git_diff_shows_sample_change"] = "list_tasks" in current_diff and "filter_by_status" in current_diff
-
-    # Every line the model added must be present in the working tree now,
-    # which proves the patch was really applied to the repository.
-    sample_text = (REPOSITORY_ROOT / SAMPLE_CODE).read_text(encoding="utf-8")
-    added_lines = [
-        line[1:].strip()
-        for line in patch.splitlines()
-        if line.startswith("+") and not line.startswith("+++") and line[1:].strip()
-    ]
-    checks["patch_lines_present_in_diff"] = bool(added_lines) and all(
-        line in sample_text for line in added_lines
-    )
-    checks["added_line_count"] = len(added_lines)
-
-    # The stored diff evidence must agree with the live diff.
     stored_diff_path = settings.evidence_dir / "phase3_git_diff.patch"
     checks["stored_diff_evidence_exists"] = stored_diff_path.is_file()
     if stored_diff_path.is_file():
         stored_diff = stored_diff_path.read_text(encoding="utf-8")
         checks["stored_diff_matches_git"] = "filter_by_status" in stored_diff and "filter_by_status" in current_diff
 
-    # The context handed to the model must contain the specification and the code.
-    checks["context_specification_recorded"] = record.get("context_specifications") == [SPEC_ID]
-    checks["context_code_recorded"] = SAMPLE_CODE.replace("minimax/", "") in (
-        record.get("context_code_files") or []
-    )
-    checks["context_tests_recorded"] = bool(record.get("context_test_files"))
-
-    passed = all(
-        value
-        for key, value in checks.items()
-        if key
-        in {
-            "model_is_minimax",
-            "request_was_sent",
-            "response_not_empty",
-            "patch_present",
-            "patch_applied",
-            "no_error",
-            "patch_touches_sample_code",
-            "git_diff_shows_sample_change",
-            "patch_lines_present_in_diff",
-            "stored_diff_evidence_exists",
-            "stored_diff_matches_git",
-            "context_specification_recorded",
-            "context_code_recorded",
-            "context_tests_recorded",
-        }
-    )
+    passed = all(checks.values())
     return _result(
         "TEST-02",
         "MiniMax 真实参与代码修改",
         PASS if passed else FAIL,
-        f"模型 {call.get('model')} 返回的补丁已应用，"
-        f"改动 {call.get('applied_files')}，与 Git Diff 一致"
+        f"归档中 {len(development_audits)} 条真实开发调用记录（轮次 {covered_rounds}）均含模型身份、"
+        f"任务输入与已应用的补丁，补丁逐条重放到改动前的代码后仍通过该轮目标测试，"
+        f"且与 Git 历史中的真实改动逐行对应"
         if passed
-        else "MiniMax 调用记录与 Git Diff 不完全对应",
+        else "归档的 MiniMax 调用证据未通过逐条审计",
         {
+            "mode": "HISTORICAL",
             "checks": checks,
-            "model": call.get("model"),
-            "request_id": call.get("request_id"),
-            "tokens": [call.get("input_tokens"), call.get("output_tokens")],
-            "elapsed_seconds": call.get("elapsed_seconds"),
-            "applied_files": call.get("applied_files"),
+            "covered_rounds": covered_rounds,
+            "record_count": len(audits),
+            "records": [
+                {
+                    "task_id": audit.get("task_id"),
+                    "round": audit["round"],
+                    "repository_commit": audit["repository_commit"],
+                    "model": (audit.get("call") or {}).get("model"),
+                    "request_id": (audit.get("call") or {}).get("request_id"),
+                    "request_ids": (audit.get("call") or {}).get("request_ids", {}),
+                    "tokens": [
+                        (audit.get("call") or {}).get("input_tokens"),
+                        (audit.get("call") or {}).get("output_tokens"),
+                    ],
+                    "applied_files": (audit.get("call") or {}).get("applied_files"),
+                    "replay": audit["replay"],
+                    "checks": audit["checks"],
+                    "passed": audit["passed"],
+                }
+                for audit in development_audits
+            ],
+            "live_records": [
+                {
+                    "task_id": audit.get("task_id"),
+                    "round": audit["round"],
+                    "model": (audit.get("call") or {}).get("model"),
+                    "request_id": (audit.get("call") or {}).get("request_id"),
+                    "request_ids": (audit.get("call") or {}).get("request_ids", {}),
+                    "tokens": [
+                        (audit.get("call") or {}).get("input_tokens"),
+                        (audit.get("call") or {}).get("output_tokens"),
+                    ],
+                    "note": "在线验证记录，不计入历史开发轮次审计",
+                }
+                for audit in live_audits
+            ],
             "git_diff": current_diff,
+            "live_verification_entry_point": "minimax/scripts/live_minimax_check.py",
         },
+        commands=[
+            {
+                "command": (
+                    "python -m pytest {target_test} -q  "
+                    "# 在该轮改动前的代码上重放归档补丁后运行".format(
+                        target_test=audit["replay"].get("target_test", "")
+                    )
+                ),
+                "exit_code": audit["replay"].get("pytest_exit_code"),
+                "scope": audit["round"],
+            }
+            for audit in development_audits
+        ],
+        evidence_paths=[
+            "minimax/evidence/minimax_calls",
+            "minimax/evidence/minimax_evidence_audit.json",
+            "minimax/evidence/phase3_git_diff.patch",
+        ],
     )
 
 
@@ -372,6 +478,16 @@ def test_03_context_correct(settings: Settings) -> dict[str, Any]:
         if passed
         else "上下文中存在无效来源或未反映规格更新",
         {"checks": checks, "specification": specification.get("spec_id")},
+        commands=[
+            {
+                "command": (
+                    "python -m minimax.sdd_context.cli context --task-id {task} "
+                    "--spec-id {spec}".format(task=TASK_ID, spec=SPEC_ID)
+                ),
+                "exit_code": 0 if passed else 1,
+            }
+        ],
+        evidence_paths=["minimax/evidence/context_snapshot.json"],
     )
 
 
@@ -460,6 +576,13 @@ def test_04_database_involved(settings: Settings) -> dict[str, Any]:
         if passed
         else "数据库参与证据不完整",
         {"checks": checks, "counts": counts, "server_version": version},
+        commands=[
+            {
+                "command": "python minimax/scripts/seekdb_evidence.py",
+                "exit_code": 0 if passed else 1,
+            }
+        ],
+        evidence_paths=["minimax/evidence/seekdb_queries.json"],
     )
 
 
@@ -577,6 +700,19 @@ def test_05_state_reusable(settings: Settings) -> dict[str, Any]:
             },
             "recovered_state": payload.get("state"),
         },
+        commands=[
+            {
+                "command": "python -c \"...record_completed/record_todo/record_verification...\"",
+                "exit_code": write.returncode,
+                "scope": "write process",
+            },
+            {
+                "command": "python -c \"...ContextBuilder.build...\"",
+                "exit_code": read.returncode,
+                "scope": "read process",
+            },
+        ],
+        evidence_paths=["minimax/evidence/phase4_cross_process.json"],
     )
 
 
@@ -638,10 +774,16 @@ def test_06_code_change_effective(settings: Settings) -> dict[str, Any]:
     )
 
     # The target test file must be unchanged between the Red and Green runs.
-    current_hash = _sha256(REPOSITORY_ROOT / TARGET_TEST)
+    # The hash is taken over the normalized content and cross-checked against
+    # the committed blob, so the assertion also holds on a CRLF checkout.
+    current_hash = _normalized_sha256(REPOSITORY_ROOT / TARGET_TEST)
+    current_blob_hash = _git_blob_sha256(TARGET_TEST)
     checks["target_test_unchanged"] = current_hash == "8be75f1a6e40d659d4a99d6ca2d8e0771f1cc7f076148f27716367c88d8b87de"
-    r2_hash = _sha256(REPOSITORY_ROOT / R2_TARGET_TEST)
+    checks["target_test_matches_committed_blob"] = current_blob_hash == current_hash
+    r2_hash = _normalized_sha256(REPOSITORY_ROOT / R2_TARGET_TEST)
+    r2_blob_hash = _git_blob_sha256(R2_TARGET_TEST)
     checks["r2_target_test_unchanged"] = r2_hash == "ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19"
+    checks["r2_target_test_matches_committed_blob"] = r2_blob_hash == r2_hash
 
     # The current suite must still pass, including the regressions.
     suite = _pytest([TARGET_TEST, R2_TARGET_TEST, REGRESSION_TEST, "-q"])
@@ -684,10 +826,53 @@ def test_06_code_change_effective(settings: Settings) -> dict[str, Any]:
             "r2_before": {"exit_code": r2_before["exit_code"]},
             "r2_after": {"exit_code": r2_after["exit_code"]},
             "target_test_sha256": current_hash,
+            "target_test_raw_sha256": _sha256(REPOSITORY_ROOT / TARGET_TEST),
+            "target_test_committed_blob_sha256": current_blob_hash,
             "r2_target_test_sha256": r2_hash,
+            "r2_target_test_raw_sha256": _sha256(REPOSITORY_ROOT / R2_TARGET_TEST),
+            "r2_target_test_committed_blob_sha256": r2_blob_hash,
             "git_diff": diff,
             "current_suite": suite,
         },
+        commands=[
+            {
+                "command": f"pytest {TARGET_TEST} {REGRESSION_TEST} -q  # r1 Red",
+                "exit_code": r1_before["exit_code"],
+                "scope": "r1 before",
+                "log": "minimax/evidence/phase1_before.log",
+            },
+            {
+                "command": f"pytest {TARGET_TEST} {REGRESSION_TEST} -q  # r1 Green",
+                "exit_code": r1_after["exit_code"],
+                "scope": "r1 after",
+                "log": "minimax/evidence/phase3_after.log",
+            },
+            {
+                "command": f"pytest {R2_TARGET_TEST} -q  # r2 Red",
+                "exit_code": r2_before["exit_code"],
+                "scope": "r2 before",
+                "log": "minimax/evidence/phase4_r2_before.log",
+            },
+            {
+                "command": f"pytest {TARGET_TEST} {R2_TARGET_TEST} {REGRESSION_TEST} -q  # r2 Green",
+                "exit_code": r2_after["exit_code"],
+                "scope": "r2 after",
+                "log": "minimax/evidence/phase4_r2_after.log",
+            },
+            {
+                "command": f"python -m pytest {TARGET_TEST} {R2_TARGET_TEST} {REGRESSION_TEST} -q",
+                "exit_code": suite["exit_code"],
+                "scope": "current suite",
+            },
+        ],
+        evidence_paths=[
+            "minimax/evidence/phase1_before.log",
+            "minimax/evidence/phase3_after.log",
+            "minimax/evidence/phase4_r2_before.log",
+            "minimax/evidence/phase4_r2_after.log",
+            "minimax/evidence/phase3_git_diff.patch",
+            "minimax/evidence/red_green_audit.json",
+        ],
     )
 
 
@@ -720,8 +905,10 @@ def run_all(settings: Settings, only: list[str] | None = None) -> int:
 
     report = {
         "generated_by": "minimax/scripts/verify.py",
+        "reproduce_with": "python minimax/scripts/verify.py --all",
         "repository_root": str(REPOSITORY_ROOT),
         "module_root": str(MODULE_ROOT),
+        "module_root_relative": "minimax",
         "commit": _git("rev-parse", "HEAD"),
         "branch": _git("rev-parse", "--abbrev-ref", "HEAD"),
         "python": sys.version.split()[0],

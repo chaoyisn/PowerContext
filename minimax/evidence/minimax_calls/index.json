@@ -1,0 +1,56 @@
+[
+  {
+    "applied": false,
+    "applied_files": [],
+    "file": "TASK-SPEC-REQ-001-LIVE-69f97e2b1a4c.json",
+    "model": "MiniMax-M3.1-Flash",
+    "repository_commit": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+    "request_id": "2113154684427440325_17932855705nyy5k",
+    "task_id": "TASK-SPEC-REQ-001-LIVE"
+  },
+  {
+    "applied": false,
+    "applied_files": [],
+    "file": "TASK-SPEC-REQ-001-LIVE-d809b26b1c46.json",
+    "model": "MiniMax-M3.1-Flash",
+    "repository_commit": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+    "request_id": "2113154684427440325_1793285552iv1jto",
+    "task_id": "TASK-SPEC-REQ-001-LIVE"
+  },
+  {
+    "applied": false,
+    "applied_files": [],
+    "file": "TASK-SPEC-REQ-001-LIVE-f0ededd7a4e2.json",
+    "model": "MiniMax-M3.1-Flash",
+    "repository_commit": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+    "request_id": "2113154684427440325_1793285586zb5pa1",
+    "task_id": "TASK-SPEC-REQ-001-LIVE"
+  },
+  {
+    "applied": true,
+    "applied_files": [
+      "minimax/sample/taskmanager.py",
+      "minimax/sdd_context/cli.py",
+      "minimax/sdd_context/minimax_agent.py"
+    ],
+    "file": "TASK-SPEC-REQ-001-e38b4c7ae32d.json",
+    "model": "MiniMax-M3.1-Flash",
+    "repository_commit": "e66ae7f7",
+    "request_id": null,
+    "task_id": "TASK-SPEC-REQ-001"
+  },
+  {
+    "applied": true,
+    "applied_files": [
+      "minimax/sample/taskmanager.py",
+      "minimax/sdd_context/cli.py",
+      "minimax/sdd_context/importer.py",
+      "minimax/specs/SPEC-REQ-001.md"
+    ],
+    "file": "TASK-SPEC-REQ-001-f7a013258266.json",
+    "model": "MiniMax-M3.1-Flash",
+    "repository_commit": "14959429",
+    "request_id": null,
+    "task_id": "TASK-SPEC-REQ-001"
+  }
+]

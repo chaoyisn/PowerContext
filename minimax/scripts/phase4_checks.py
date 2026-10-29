@@ -4,11 +4,17 @@ Two checks are performed here:
 
 1. **Specification update** — import the specification, query the development
    context, revise the same specification file, re-import it, and query again.
-   The second context must contain the revised version and the revised text.
+   The second context must contain the revised version and the revised text,
+   the code and test bindings must still resolve, and the superseded revision
+   must not be treated as the current effective specification.
 
-2. **Cross-process recovery** — write task state from one process, close it,
-   start a brand new process, read the state back and prove the recovered
-   records are merged into the newly built development context.
+2. **Cross-process recovery** — write the task state from one process, let
+   that process exit completely, then read the state back in a brand new
+   process and prove the recovered records are merged into the newly built
+   development context. The task id is unique per run and starts from an
+   empty state, so a record from an earlier run can never be mistaken for a
+   recovery. The operating system process id of every step is recorded, which
+   proves the read happened in a different process than the write.
 
 The script writes its evidence to ``minimax/evidence/phase4_*.json``.
 """
@@ -16,8 +22,10 @@ The script writes its evidence to ``minimax/evidence/phase4_*.json``.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -117,6 +125,38 @@ def check_specification_update(settings: Settings) -> dict[str, Any]:
     after_spec = context_after.specifications[0] if context_after.specifications else {}
     revised_marker_present = "Revision r2 (v1.1.0)" in after_spec.get("content", "")
 
+    # The superseded revision must still be readable, but it must not be the
+    # specification the context resolves to.
+    all_versions = [
+        row["version"]
+        for row in store.query(
+            "SELECT version FROM sdd_specification WHERE spec_id = %s ORDER BY version",
+            (SPEC_ID,),
+        )
+    ]
+    superseded_still_stored = "1.0.0" in all_versions
+
+    checks = {
+        "version_advanced": before_spec.get("version") != after_spec.get("version"),
+        "expected_new_version": after_spec.get("version") == "1.1.0",
+        "content_hash_changed": before_spec.get("content_hash") != after_spec.get("content_hash"),
+        "revised_text_present": revised_marker_present,
+        "code_still_resolved": bool(context_after.code),
+        "tests_still_resolved": bool(context_after.tests),
+        "old_revision_still_stored": superseded_still_stored,
+        "old_revision_not_the_effective_one": after_spec.get("version") != "1.0.0",
+        "context_resolves_exactly_one_specification": len(context_after.specifications) == 1,
+        "context_uses_the_revised_revision": after_spec.get("revision") == "r2",
+        "code_binding_inherited": sorted(
+            {item["file_path"] for item in context_before.code}
+        )
+        == sorted({item["file_path"] for item in context_after.code}),
+        "test_binding_inherited": sorted(
+            {item["file_path"] for item in context_before.tests}
+        )
+        == sorted({item["file_path"] for item in context_after.tests}),
+    }
+
     report = {
         "before": {
             "spec_id": before_spec.get("spec_id"),
@@ -136,51 +176,61 @@ def check_specification_update(settings: Settings) -> dict[str, Any]:
             "test_files": sorted({item["file_path"] for item in context_after.tests}),
             "spec_import": second,
         },
-        "checks": {
-            "version_advanced": before_spec.get("version") != after_spec.get("version"),
-            "expected_new_version": after_spec.get("version") == "1.1.0",
-            "content_hash_changed": before_spec.get("content_hash") != after_spec.get("content_hash"),
-            "revised_text_present": revised_marker_present,
-            "code_still_resolved": bool(context_after.code),
-            "tests_still_resolved": bool(context_after.tests),
-        },
+        "stored_versions": all_versions,
+        "checks": checks,
     }
-    report["passed"] = all(report["checks"].values())
+    report["passed"] = all(checks.values())
     return report
 
 
-def _write_state_subprocess(settings: Settings) -> dict[str, Any]:
-    """Write task state from a brand new process."""
+def _write_state_subprocess(settings: Settings, task_id: str, marker: str) -> dict[str, Any]:
+    """Write the task state from a brand new process."""
 
     script = (
+        "import json, os\n"
         "from minimax.sdd_context.config import load_settings\n"
         "from minimax.sdd_context.powercontext_store import PowerContextStateStore\n"
         "settings = load_settings()\n"
         "store = PowerContextStateStore(settings)\n"
-        "store.record_completed('TASK-SPEC-REQ-001', 'phase4: 状态已在独立进程中写入')\n"
-        "store.record_todo('TASK-SPEC-REQ-001', 'phase4: 验证跨进程读取')\n"
-        "store.record_verification('TASK-SPEC-REQ-001', 'phase4: 写入进程退出码 0')\n"
-        "print('written')\n"
+        "store.create_task(\n"
+        f"    {task_id!r},\n"
+        f"    'phase4: 跨进程恢复验证任务 {marker}',\n"
+        "    in_scope=['sample/taskmanager.py'],\n"
+        "    criteria=['跨进程读回状态'],\n"
+        ")\n"
+        f"store.record_completed({task_id!r}, 'phase4: 状态已在独立进程中写入')\n"
+        f"store.record_todo({task_id!r}, 'phase4: 验证跨进程读取')\n"
+        f"store.record_verification({task_id!r}, 'phase4: 写入进程退出码 0')\n"
+        "print(json.dumps({'pid': os.getpid(), 'marker': " + repr(marker) + "}))\n"
     )
     completed = subprocess.run(
         [sys.executable, "-c", script],
         cwd=str(REPOSITORY_ROOT),
         capture_output=True,
         text=True,
-        env={**__import__("os").environ, "PYTHONPATH": str(REPOSITORY_ROOT)},
+        encoding="utf-8",
+        errors="replace",
+        env={**os.environ, "PYTHONPATH": str(REPOSITORY_ROOT)},
     )
+    payload: dict[str, Any] = {}
+    if completed.returncode == 0 and completed.stdout.strip():
+        try:
+            payload = json.loads(completed.stdout.strip().splitlines()[-1])
+        except json.JSONDecodeError:
+            payload = {}
     return {
         "returncode": completed.returncode,
         "stdout": completed.stdout.strip(),
         "stderr": completed.stderr.strip()[:2000],
+        "pid": payload.get("pid"),
     }
 
 
-def _read_state_subprocess(settings: Settings) -> dict[str, Any]:
-    """Read task state from a brand new process and rebuild the context there."""
+def _read_state_subprocess(settings: Settings, task_id: str, marker: str) -> dict[str, Any]:
+    """Read the task state from a brand new process and rebuild the context there."""
 
     script = (
-        "import json\n"
+        "import json, os\n"
         "from minimax.sdd_context.config import load_settings\n"
         "from minimax.sdd_context.context_builder import ContextBuilder\n"
         "from minimax.sdd_context.powercontext_store import PowerContextStateStore\n"
@@ -189,14 +239,16 @@ def _read_state_subprocess(settings: Settings) -> dict[str, Any]:
         "store = SeekDBStore(settings)\n"
         "state_store = PowerContextStateStore(settings)\n"
         "builder = ContextBuilder(store, state_store, settings.root)\n"
-        "context = builder.build('TASK-SPEC-REQ-001', 'status filter task', 'SPEC-REQ-001')\n"
+        f"context = builder.build({task_id!r}, 'status filter task', 'SPEC-REQ-001')\n"
         "payload = {\n"
+        "    'pid': os.getpid(),\n"
         "    'state': context.state,\n"
         "    'context_todos': context.state.get('todos', []),\n"
         "    'context_completed': context.state.get('completed', []),\n"
         "    'context_verifications': context.state.get('verifications', []),\n"
         "    'specifications': [s['version'] for s in context.specifications],\n"
         "    'code_files': sorted({c['file_path'] for c in context.code}),\n"
+        "    'test_files': sorted({t['file_path'] for t in context.tests}),\n"
         "}\n"
         "print(json.dumps(payload, ensure_ascii=False))\n"
     )
@@ -205,14 +257,20 @@ def _read_state_subprocess(settings: Settings) -> dict[str, Any]:
         cwd=str(REPOSITORY_ROOT),
         capture_output=True,
         text=True,
-        env={**__import__("os").environ, "PYTHONPATH": str(REPOSITORY_ROOT)},
+        encoding="utf-8",
+        errors="replace",
+        env={**os.environ, "PYTHONPATH": str(REPOSITORY_ROOT)},
     )
     payload: dict[str, Any] = {}
     if completed.returncode == 0 and completed.stdout.strip():
-        payload = json.loads(completed.stdout.strip().splitlines()[-1])
+        try:
+            payload = json.loads(completed.stdout.strip().splitlines()[-1])
+        except json.JSONDecodeError:
+            payload = {}
     return {
         "returncode": completed.returncode,
         "stderr": completed.stderr.strip()[:2000],
+        "pid": payload.get("pid"),
         "payload": payload,
     }
 
@@ -220,26 +278,61 @@ def _read_state_subprocess(settings: Settings) -> dict[str, Any]:
 def check_cross_process_recovery(settings: Settings) -> dict[str, Any]:
     """Prove the state survives a process restart and reaches the context."""
 
-    write = _write_state_subprocess(settings)
-    read = _read_state_subprocess(settings)
+    # An isolated task id, so a record written by an earlier run can never be
+    # mistaken for a recovered record.
+    task_id = f"TASK-SPEC-REQ-001-PHASE4-{uuid.uuid4().hex[:8].upper()}"
+    marker = uuid.uuid4().hex[:8].upper()
+
+    # The task has to start from an empty state.
+    state_store = PowerContextStateStore(settings)
+    before_state = state_store.load_task_state(task_id)
+
+    write = _write_state_subprocess(settings, task_id, marker)
+    # The writing process has exited by now: it was a separate process, and
+    # this call already returned.
+    read = _read_state_subprocess(settings, task_id, marker)
     payload = read.get("payload", {})
 
     recovered = payload.get("state", {}).get("completed", [])
     todos = payload.get("context_todos", [])
     verifications = payload.get("context_verifications", [])
+    artifact_ids = payload.get("state", {}).get("artifact_ids", {})
+
     checks = {
+        "task_started_from_empty_state": not before_state.get("has_state"),
         "write_process_succeeded": write["returncode"] == 0,
         "read_process_succeeded": read["returncode"] == 0,
+        "write_process_pid_recorded": bool(write.get("pid")),
+        "read_process_pid_recorded": bool(read.get("pid")),
+        "read_ran_in_a_different_process": bool(write.get("pid"))
+        and bool(read.get("pid"))
+        and write["pid"] != read["pid"],
+        "read_process_is_not_the_parent": read.get("pid") != os.getpid(),
         "state_recovered": any("phase4" in item for item in recovered),
         "todos_merged_into_context": any("phase4" in item for item in todos),
         "verifications_merged_into_context": any("phase4" in item for item in verifications),
+        "recovered_content_belongs_to_this_run": any(
+            marker in item
+            for item in (
+                recovered
+                + todos
+                + verifications
+                + [str(payload.get("state", {}).get("description") or "")]
+            )
+        ),
+        "artifact_ids_recorded": bool(artifact_ids),
         "context_still_resolves_spec": bool(payload.get("specifications")),
         "context_still_resolves_code": bool(payload.get("code_files")),
+        "context_still_resolves_tests": bool(payload.get("test_files")),
     }
     return {
-        "write_process": write,
+        "task_id": task_id,
+        "marker": marker,
+        "state_before_write": before_state,
+        "write_process": {key: value for key, value in write.items()},
         "read_process": {key: value for key, value in read.items() if key != "payload"},
         "recovered_state": payload.get("state"),
+        "state_record_ids": artifact_ids,
         "context_merged": {
             "completed": payload.get("context_completed"),
             "todos": payload.get("context_todos"),
@@ -267,12 +360,12 @@ def main() -> int:
         "specification_update": {
             "passed": specification["passed"],
             "checks": specification["checks"],
-            "evidence": str(evidence_dir / "phase4_spec_update.json"),
+            "evidence": "minimax/evidence/phase4_spec_update.json",
         },
         "cross_process_recovery": {
             "passed": recovery["passed"],
             "checks": recovery["checks"],
-            "evidence": str(evidence_dir / "phase4_cross_process.json"),
+            "evidence": "minimax/evidence/phase4_cross_process.json",
         },
     }
     print(_dump(summary))

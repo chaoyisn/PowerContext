@@ -1,0 +1,76 @@
+{
+  "blocked_checks": [],
+  "checks": {
+    "git": {
+      "branch": "competition/minimax-sdd-context",
+      "head": "05eea305c5bb99060e2cd87c6036134ad3a48686",
+      "reason": "healthy",
+      "status": "PASS"
+    },
+    "materials": {
+      "counts": {
+        "sdd_code_symbol": 9,
+        "sdd_relation": 8,
+        "sdd_specification": 2,
+        "sdd_test": 20
+      },
+      "material_present": true,
+      "note": "数据库中已有物料；空库复现前请先执行 python -m minimax.sdd_context.cli reset。",
+      "reason": "healthy",
+      "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0",
+      "status": "PASS"
+    },
+    "minimax": {
+      "api_key_configured": true,
+      "endpoint": "http://127.0.0.1:15721",
+      "model": "MiniMax-M3.1-Flash",
+      "reason": "reachable",
+      "required_by_acceptance_suite": false,
+      "required_for": [
+        "minimax/scripts/live_minimax_check.py",
+        "cli apply"
+      ],
+      "service": "minimax",
+      "status": "PASS"
+    },
+    "powercontext": {
+      "endpoint": "http://127.0.0.1:8790",
+      "reason": "healthy",
+      "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
+      "service": "powercontext",
+      "status": "PASS"
+    },
+    "python": {
+      "detail": "Python 3.12.13（官方要求 3.12）",
+      "reason": "healthy",
+      "status": "PASS"
+    },
+    "seekdb": {
+      "database": "sdd_context",
+      "database_exists": true,
+      "endpoint": "127.0.0.1:2881",
+      "reason": "healthy",
+      "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0",
+      "service": "seekdb",
+      "status": "PASS",
+      "user": "root"
+    },
+    "task_state": {
+      "known_task_ids": [
+        "TASK-SPEC-REQ-001",
+        "TASK-SPEC-REQ-001-PHASE4-3A17ED93",
+        "TASK-SPEC-REQ-001-PHASE4-CC407D48",
+        "TASK-SPEC-REQ-001-RESTART"
+      ],
+      "note": "存在历史任务状态；跨进程恢复验证会使用独立任务 ID，不会与历史状态混淆。",
+      "reason": "healthy",
+      "sample_task_has_state": true,
+      "status": "PASS"
+    }
+  },
+  "description": "区分服务未启动 / 凭据错误 / 库不存在 / 业务测试失败四类问题。",
+  "failed_checks": [],
+  "mode": "DIAGNOSTIC",
+  "repository_root": "E:\\OceanBaseContest\\powercontext-minimax",
+  "status": "PASS"
+}

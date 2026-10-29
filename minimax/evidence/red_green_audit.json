@@ -1,0 +1,158 @@
+{
+  "description": "逐轮核验 r1 与 r2 的 Red→Green 证据链；两轮的目标测试、用例数与版本各自独立。",
+  "mode": "HISTORICAL",
+  "rounds": {
+    "r1": {
+      "checks": {
+        "after_log_exists": true,
+        "after_log_exit_code_is_0": true,
+        "after_log_names_the_round_commit": true,
+        "after_log_reports_expected_pass_count": true,
+        "after_log_scope_matches": true,
+        "before_log_exists": true,
+        "before_log_exit_code_is_1": true,
+        "before_log_failure_is_assertion": true,
+        "before_log_reports_expected_failure_count": true,
+        "before_log_reports_expected_pass_count": true,
+        "before_log_scope_matches": true,
+        "git_diff_shows_the_same_change": true,
+        "git_diff_touches_the_business_function": true,
+        "observed_target_failure_count_matches": true,
+        "observed_target_pass_count_after_matches": true,
+        "patch_added_lines_present_in_committed_code": true,
+        "regression_passed_before": true,
+        "regression_passes_after": true,
+        "round_has_recorded_patch": true,
+        "target_test_failed_before": true,
+        "target_test_failure_is_assertion": true,
+        "target_test_failure_is_functional": true,
+        "target_test_identical_before_and_after": true,
+        "target_test_passed_after": true
+      },
+      "commit": "e66ae7f7",
+      "details": {
+        "target_test_introduced_by_this_round": false,
+        "target_test_sha256_after": "8be75f1a6e40d659d4a99d6ca2d8e0771f1cc7f076148f27716367c88d8b87de",
+        "target_test_sha256_before": "8be75f1a6e40d659d4a99d6ca2d8e0771f1cc7f076148f27716367c88d8b87de"
+      },
+      "expected_counts": {
+        "log_after_passed": 18,
+        "log_before_failed": 6,
+        "log_before_passed": 12,
+        "target_only_after_passed": 10,
+        "target_only_before_failed": 6,
+        "target_only_before_passed": 4
+      },
+      "git_diff": "diff --git a/minimax/sample/taskmanager.py b/minimax/sample/taskmanager.py\nindex 8f482216..d8921bc3 100644\n--- a/minimax/sample/taskmanager.py\n+++ b/minimax/sample/taskmanager.py\n@@ -32,14 +32,13 @@ class TaskStore:\n         return task\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:\n",
+      "log_scope": {
+        "after": [
+          "minimax/tests/test_list_tasks_status_filter.py",
+          "minimax/tests/test_taskmanager_regression.py"
+        ],
+        "before": [
+          "minimax/tests/test_list_tasks_status_filter.py",
+          "minimax/tests/test_taskmanager_regression.py"
+        ]
+      },
+      "observed": {
+        "regression_after": "8 passed in 0.02s",
+        "regression_before": "8 passed in 0.02s",
+        "target_after": "10 passed in 0.02s",
+        "target_before": "6 failed, 4 passed in 0.11s"
+      },
+      "passed": true,
+      "pre_change_commit": "e66ae7f7~1",
+      "recorded_patch": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 8f2b1a4..c3d7e9f 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -33,11 +33,11 @@ class TaskStore:\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:\n",
+      "round": "r1",
+      "spec_revision": "r1",
+      "spec_version": "1.0.0",
+      "status": "PASS",
+      "target_test": "minimax/tests/test_list_tasks_status_filter.py"
+    },
+    "r2": {
+      "checks": {
+        "after_log_exists": true,
+        "after_log_exit_code_is_0": true,
+        "after_log_names_the_round_commit": true,
+        "after_log_reports_expected_pass_count": true,
+        "after_log_scope_matches": true,
+        "before_log_exists": true,
+        "before_log_exit_code_is_1": true,
+        "before_log_failure_is_assertion": true,
+        "before_log_reports_expected_failure_count": true,
+        "before_log_reports_expected_pass_count": true,
+        "before_log_scope_matches": true,
+        "git_diff_shows_the_same_change": true,
+        "git_diff_touches_the_business_function": true,
+        "observed_target_failure_count_matches": true,
+        "observed_target_pass_count_after_matches": true,
+        "patch_added_lines_present_in_committed_code": true,
+        "regression_passed_before": true,
+        "regression_passes_after": true,
+        "round_has_recorded_patch": true,
+        "target_test_failed_before": true,
+        "target_test_failure_is_assertion": true,
+        "target_test_failure_is_functional": true,
+        "target_test_identical_before_and_after": true,
+        "target_test_passed_after": true
+      },
+      "commit": "14959429",
+      "details": {
+        "target_test_introduced_by_this_round": true,
+        "target_test_sha256_after": "ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19",
+        "target_test_sha256_before": "ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19"
+      },
+      "expected_counts": {
+        "log_after_passed": 22,
+        "log_before_failed": 3,
+        "log_before_passed": 1,
+        "target_only_after_passed": 4,
+        "target_only_before_failed": 3,
+        "target_only_before_passed": 1
+      },
+      "git_diff": "diff --git a/minimax/sample/taskmanager.py b/minimax/sample/taskmanager.py\nindex d8921bc3..4d57d400 100644\n--- a/minimax/sample/taskmanager.py\n+++ b/minimax/sample/taskmanager.py\n@@ -37,7 +37,7 @@ class TaskStore:\n         ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        tasks = filter_by_status(self.tasks, status)\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n",
+      "log_scope": {
+        "after": [
+          "minimax/tests/test_list_tasks_status_filter.py",
+          "minimax/tests/test_list_tasks_status_wildcard.py",
+          "minimax/tests/test_taskmanager_regression.py"
+        ],
+        "before": [
+          "minimax/tests/test_list_tasks_status_wildcard.py"
+        ]
+      },
+      "observed": {
+        "regression_after": "8 passed in 0.02s",
+        "regression_before": "8 passed in 0.03s",
+        "target_after": "4 passed in 0.02s",
+        "target_before": "3 failed, 1 passed in 0.09s"
+      },
+      "passed": true,
+      "pre_change_commit": "14959429~1",
+      "recorded_patch": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 0000000..0000000 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -37,7 +37,7 @@ class TaskStore:\n         ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        tasks = filter_by_status(self.tasks, status)\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n",
+      "round": "r2",
+      "spec_revision": "r2",
+      "spec_version": "1.1.0",
+      "status": "PASS",
+      "target_test": "minimax/tests/test_list_tasks_status_wildcard.py"
+    }
+  },
+  "separation_checks": {
+    "all_rounds_passed": true,
+    "each_round_has_its_own_counts": true,
+    "each_round_has_its_own_log_files": true,
+    "each_round_has_its_own_target_test": true,
+    "snapshots_passed": true
+  },
+  "snapshots": {
+    "baseline_commit": "f8be46eb",
+    "checks": {
+      "after_snapshot_exists": true,
+      "after_snapshot_matches_final_commit": true,
+      "before_snapshot_exists": true,
+      "before_snapshot_matches_baseline_commit": true
+    },
+    "status": "PASS"
+  },
+  "status": "PASS"
+}

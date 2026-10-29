@@ -1,13 +1,25 @@
 {
   "branch": "competition/minimax-sdd-context",
-  "commit": "6000a6696d293f9dbb5d098795b7059bab621508",
+  "commit": "05eea305c5bb99060e2cd87c6036134ad3a48686",
   "generated_by": "minimax/scripts/verify.py",
   "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
+  "module_root_relative": "minimax",
   "overall": "PASS",
   "python": "3.12.13",
   "repository_root": "E:\\OceanBaseContest\\powercontext-minimax",
+  "reproduce_with": "python minimax/scripts/verify.py --all",
   "results": [
     {
+      "commands": [
+        {
+          "command": "python -m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
+          "exit_code": 0
+        },
+        {
+          "command": "python -m minimax.sdd_context.cli --help",
+          "exit_code": 0
+        }
+      ],
       "detail": "样例、目标测试、回归测试与 CLI 均可在无第三方依赖的干净环境运行",
       "evidence": {
         "checks": {
@@ -26,50 +38,223 @@
           "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
           "exit_code": 0,
           "stderr": "",
-          "stdout": "......................                                                   [100%]\n22 passed in 0.03s\n"
+          "stdout": "......................                                                   [100%]\n22 passed in 0.04s\n"
         }
       },
+      "evidence_paths": [
+        "minimax/sample/taskmanager.py"
+      ],
+      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
       "item": "TEST-01",
       "status": "PASS",
       "title": "流程可在干净环境运行"
     },
     {
-      "detail": "模型 MiniMax-M3.1-Flash 返回的补丁已应用，改动 ['minimax/sample/taskmanager.py']，与 Git Diff 一致",
+      "commands": [
+        {
+          "command": "python -m pytest minimax/tests/test_list_tasks_status_filter.py -q  # 在该轮改动前的代码上重放归档补丁后运行",
+          "exit_code": 0,
+          "scope": "r1"
+        },
+        {
+          "command": "python -m pytest minimax/tests/test_list_tasks_status_wildcard.py -q  # 在该轮改动前的代码上重放归档补丁后运行",
+          "exit_code": 0,
+          "scope": "r2"
+        }
+      ],
+      "detail": "归档中 2 条真实开发调用记录（轮次 ['r1', 'r2']）均含模型身份、任务输入与已应用的补丁，补丁逐条重放到改动前的代码后仍通过该轮目标测试，且与 Git 历史中的真实改动逐行对应",
       "evidence": {
-        "applied_files": [
-          "minimax/sample/taskmanager.py"
-        ],
         "checks": {
-          "added_line_count": 1,
-          "context_code_recorded": true,
-          "context_specification_recorded": true,
-          "context_tests_recorded": true,
+          "archive_not_empty": true,
+          "both_rounds_covered": true,
+          "current_sample_contains_implementation": true,
+          "every_development_record_passes_its_own_audit": true,
+          "every_patch_replays_onto_pre_change_code": true,
+          "every_patched_code_matches_committed_version": true,
+          "every_patched_code_passes_its_target_test": true,
+          "every_record_has_generated_patch": true,
+          "every_record_has_raw_model_response": true,
+          "every_record_has_task_input": true,
+          "every_record_touches_business_code": true,
+          "every_record_was_applied": true,
           "git_diff_shows_sample_change": true,
-          "model_is_minimax": true,
-          "no_error": true,
-          "patch_applied": true,
-          "patch_lines_present_in_diff": true,
-          "patch_present": true,
-          "patch_touches_sample_code": true,
-          "request_was_sent": true,
-          "response_not_empty": true,
+          "live_records_carry_request_identity": true,
+          "model_is_minimax_in_every_record": true,
           "stored_diff_evidence_exists": true,
           "stored_diff_matches_git": true
         },
-        "elapsed_seconds": 2.656,
+        "covered_rounds": [
+          "r1",
+          "r2"
+        ],
         "git_diff": "diff --git a/minimax/sample/taskmanager.py b/minimax/sample/taskmanager.py\nindex 8f482216..4d57d400 100644\n--- a/minimax/sample/taskmanager.py\n+++ b/minimax/sample/taskmanager.py\n@@ -32,14 +32,13 @@ class TaskStore:\n         return task\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:",
-        "model": "MiniMax-M3.1-Flash",
-        "request_id": null,
-        "tokens": [
-          3662,
-          256
+        "live_records": [
+          {
+            "model": "MiniMax-M3.1-Flash",
+            "note": "在线验证记录，不计入历史开发轮次审计",
+            "request_id": "2113154684427440325_17932855705nyy5k",
+            "request_ids": {
+              "alb_request_id": "e831ca174661178d60155ea35f44a19ecb8f8f38",
+              "trace-id": "073290c2436ff69470a975cc653d5943",
+              "x-mm-request-id": "2113154684427440325_17932855705nyy5k",
+              "x-session-id": "9a1b27a43bdabb1b795801609258e8c3"
+            },
+            "round": "live-verification",
+            "task_id": "TASK-SPEC-REQ-001-LIVE",
+            "tokens": [
+              1,
+              583
+            ]
+          },
+          {
+            "model": "MiniMax-M3.1-Flash",
+            "note": "在线验证记录，不计入历史开发轮次审计",
+            "request_id": "2113154684427440325_1793285552iv1jto",
+            "request_ids": {
+              "alb_request_id": "9fbe10d1ef82cb5fe6972c7892a4d6527c84b151",
+              "trace-id": "073290b03146912528e15ac806c6e1b3",
+              "x-mm-request-id": "2113154684427440325_1793285552iv1jto",
+              "x-session-id": "9a1b27a43bdabb1b795801609258e8c3"
+            },
+            "round": "live-verification",
+            "task_id": "TASK-SPEC-REQ-001-LIVE",
+            "tokens": [
+              5225,
+              576
+            ]
+          },
+          {
+            "model": "MiniMax-M3.1-Flash",
+            "note": "在线验证记录，不计入历史开发轮次审计",
+            "request_id": "2113154684427440325_1793285586zb5pa1",
+            "request_ids": {
+              "alb_request_id": "bb5eb3dee962fcfce64006eecf529191ded7c39c",
+              "trace-id": "073290d2ff042981297d1df4e1586d9c",
+              "x-mm-request-id": "2113154684427440325_1793285586zb5pa1",
+              "x-session-id": "9a1b27a43bdabb1b795801609258e8c3"
+            },
+            "round": "live-verification",
+            "task_id": "TASK-SPEC-REQ-001-LIVE",
+            "tokens": [
+              1,
+              1162
+            ]
+          }
+        ],
+        "live_verification_entry_point": "minimax/scripts/live_minimax_check.py",
+        "mode": "HISTORICAL",
+        "record_count": 5,
+        "records": [
+          {
+            "applied_files": [
+              "minimax/sample/taskmanager.py",
+              "minimax/sdd_context/cli.py",
+              "minimax/sdd_context/minimax_agent.py"
+            ],
+            "checks": {
+              "has_context_code_files": true,
+              "has_context_specifications": true,
+              "has_context_test_files": true,
+              "has_generated_patch": true,
+              "has_model_identity": true,
+              "has_task_input": true,
+              "model_is_minimax": true,
+              "no_error": true,
+              "patch_replays_onto_pre_change_code": true,
+              "patch_touches_business_code": true,
+              "patch_was_applied": true,
+              "patched_code_matches_committed_version": true,
+              "patched_code_passes_round_target_test": true,
+              "record_matches_round_commit": true,
+              "recorded_tokens": true,
+              "round_identified": true
+            },
+            "model": "MiniMax-M3.1-Flash",
+            "passed": true,
+            "replay": {
+              "commit": "e66ae7f7",
+              "patched_matches_committed_version": true,
+              "pytest_exit_code": 0,
+              "pytest_summary": "10 passed in 0.03s",
+              "status": "PASS",
+              "target_test": "minimax/tests/test_list_tasks_status_filter.py",
+              "target_test_introduced_by_this_round": false
+            },
+            "repository_commit": "e66ae7f7",
+            "request_id": null,
+            "request_ids": {},
+            "round": "r1",
+            "task_id": "TASK-SPEC-REQ-001",
+            "tokens": [
+              183,
+              519
+            ]
+          },
+          {
+            "applied_files": [
+              "minimax/sample/taskmanager.py",
+              "minimax/sdd_context/cli.py",
+              "minimax/sdd_context/importer.py",
+              "minimax/specs/SPEC-REQ-001.md"
+            ],
+            "checks": {
+              "has_context_code_files": true,
+              "has_context_specifications": true,
+              "has_context_test_files": true,
+              "has_generated_patch": true,
+              "has_model_identity": true,
+              "has_task_input": true,
+              "model_is_minimax": true,
+              "no_error": true,
+              "patch_replays_onto_pre_change_code": true,
+              "patch_touches_business_code": true,
+              "patch_was_applied": true,
+              "patched_code_matches_committed_version": true,
+              "patched_code_passes_round_target_test": true,
+              "record_matches_round_commit": true,
+              "recorded_tokens": true,
+              "round_identified": true
+            },
+            "model": "MiniMax-M3.1-Flash",
+            "passed": true,
+            "replay": {
+              "commit": "14959429",
+              "patched_matches_committed_version": true,
+              "pytest_exit_code": 0,
+              "pytest_summary": "4 passed in 0.02s",
+              "status": "PASS",
+              "target_test": "minimax/tests/test_list_tasks_status_wildcard.py",
+              "target_test_introduced_by_this_round": true
+            },
+            "repository_commit": "14959429",
+            "request_id": null,
+            "request_ids": {},
+            "round": "r2",
+            "task_id": "TASK-SPEC-REQ-001",
+            "tokens": [
+              5579,
+              271
+            ]
+          }
         ]
       },
+      "evidence_paths": [
+        "minimax/evidence/minimax_calls",
+        "minimax/evidence/minimax_evidence_audit.json",
+        "minimax/evidence/phase3_git_diff.patch"
+      ],
+      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
       "item": "TEST-02",
       "status": "PASS",
       "title": "MiniMax 真实参与代码修改"
     },
     {
+      "commands": [
+        {
+          "command": "python -m minimax.sdd_context.cli context --task-id TASK-SPEC-REQ-001 --spec-id SPEC-REQ-001",
+          "exit_code": 0
+        }
+      ],
       "detail": "上下文包含规格 1.1.0 (r2)、9 个代码符号、20 个测试，全部来源文件真实存在",
       "evidence": {
         "checks": {
@@ -89,11 +274,21 @@
         },
         "specification": "SPEC-REQ-001"
       },
+      "evidence_paths": [
+        "minimax/evidence/context_snapshot.json"
+      ],
+      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
       "item": "TEST-03",
       "status": "PASS",
       "title": "上下文内容正确且来源真实"
     },
     {
+      "commands": [
+        {
+          "command": "python minimax/scripts/seekdb_evidence.py",
+          "exit_code": 0
+        }
+      ],
       "detail": "seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 34 行，写入后立即可读回，内容与磁盘文件一致",
       "evidence": {
         "checks": {
@@ -114,12 +309,28 @@
         },
         "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0"
       },
+      "evidence_paths": [
+        "minimax/evidence/seekdb_queries.json"
+      ],
+      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
       "item": "TEST-04",
       "status": "PASS",
       "title": "数据库真实参与"
     },
     {
-      "detail": "进程退出后由全新进程读回 8 条完成项、8 条待办、8 条验证结果，并合并进新构建的上下文",
+      "commands": [
+        {
+          "command": "python -c \"...record_completed/record_todo/record_verification...\"",
+          "exit_code": 0,
+          "scope": "write process"
+        },
+        {
+          "command": "python -c \"...ContextBuilder.build...\"",
+          "exit_code": 0,
+          "scope": "read process"
+        }
+      ],
+      "detail": "进程退出后由全新进程读回 1 条完成项、1 条待办、1 条验证结果，并合并进新构建的上下文",
       "evidence": {
         "checks": {
           "context_resolves_code": true,
@@ -137,43 +348,22 @@
         },
         "recovered_state": {
           "artifact_ids": {
-            "sdd-completed": "art_ca8d97e8bb7b407891bb20c763307c3a",
-            "sdd-todo": "art_c293d19719d14f56975bfb599cf35784",
-            "sdd-verification": "art_c991be1a60014740ac9c647a45070a19"
+            "sdd-completed": "art_8f45503e92ff4e9cabb71c595e53e7a0",
+            "sdd-todo": "art_40a23d40cd404dfdaafd27ab3d263fb1",
+            "sdd-verification": "art_4be5319e74a34052ab48bb153f9b61f9"
           },
           "completed": [
-            "verify-restart-1793284525:completed",
-            "verify-restart-1793284660:completed",
-            "verify-restart-1793284613:completed",
-            "verify-restart-1793284652:completed",
-            "verify-restart-1793284638:completed",
-            "verify-restart-1793284346:completed",
-            "verify-restart-1793284648:completed",
-            "verify-restart-1793284490:completed"
+            "verify-restart-1793287021:completed"
           ],
           "description": null,
           "has_state": true,
-          "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
+          "scope_id": "scp_440c18sa6w96g13w5eze6r95fw",
           "task_id": "TASK-SPEC-REQ-001-RESTART",
           "todos": [
-            "verify-restart-1793284652:todo",
-            "verify-restart-1793284648:todo",
-            "verify-restart-1793284525:todo",
-            "verify-restart-1793284613:todo",
-            "verify-restart-1793284638:todo",
-            "verify-restart-1793284346:todo",
-            "verify-restart-1793284490:todo",
-            "verify-restart-1793284660:todo"
+            "verify-restart-1793287021:todo"
           ],
           "verifications": [
-            "verify-restart-1793284525:verification",
-            "verify-restart-1793284346:verification",
-            "verify-restart-1793284613:verification",
-            "verify-restart-1793284660:verification",
-            "verify-restart-1793284490:verification",
-            "verify-restart-1793284638:verification",
-            "verify-restart-1793284652:verification",
-            "verify-restart-1793284648:verification"
+            "verify-restart-1793287021:verification"
           ]
         },
         "write_process": {
@@ -182,11 +372,46 @@
           "stdout": "written"
         }
       },
+      "evidence_paths": [
+        "minimax/evidence/phase4_cross_process.json"
+      ],
+      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
       "item": "TEST-05",
       "status": "PASS",
       "title": "任务状态可复用"
     },
     {
+      "commands": [
+        {
+          "command": "pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_taskmanager_regression.py -q  # r1 Red",
+          "exit_code": 1,
+          "log": "minimax/evidence/phase1_before.log",
+          "scope": "r1 before"
+        },
+        {
+          "command": "pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_taskmanager_regression.py -q  # r1 Green",
+          "exit_code": 0,
+          "log": "minimax/evidence/phase3_after.log",
+          "scope": "r1 after"
+        },
+        {
+          "command": "pytest minimax/tests/test_list_tasks_status_wildcard.py -q  # r2 Red",
+          "exit_code": 1,
+          "log": "minimax/evidence/phase4_r2_before.log",
+          "scope": "r2 before"
+        },
+        {
+          "command": "pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q  # r2 Green",
+          "exit_code": 0,
+          "log": "minimax/evidence/phase4_r2_after.log",
+          "scope": "r2 after"
+        },
+        {
+          "command": "python -m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
+          "exit_code": 0,
+          "scope": "current suite"
+        }
+      ],
       "detail": "同一目标测试在改动前以 AssertionError 失败、改动后通过，回归测试保持通过，且目标测试文件哈希前后一致",
       "evidence": {
         "checks": {
@@ -202,9 +427,11 @@
           "r2_failed_with_assertion": true,
           "r2_failure_is_functional": true,
           "r2_passed_after": true,
+          "r2_target_test_matches_committed_blob": true,
           "r2_target_test_unchanged": true,
           "regression_passed_before": true,
           "regression_passes_now": true,
+          "target_test_matches_committed_blob": true,
           "target_test_unchanged": true
         },
         "current_suite": {
@@ -226,9 +453,22 @@
         "r2_before": {
           "exit_code": 1
         },
+        "r2_target_test_committed_blob_sha256": "ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19",
+        "r2_target_test_raw_sha256": "ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19",
         "r2_target_test_sha256": "ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19",
+        "target_test_committed_blob_sha256": "8be75f1a6e40d659d4a99d6ca2d8e0771f1cc7f076148f27716367c88d8b87de",
+        "target_test_raw_sha256": "8be75f1a6e40d659d4a99d6ca2d8e0771f1cc7f076148f27716367c88d8b87de",
         "target_test_sha256": "8be75f1a6e40d659d4a99d6ca2d8e0771f1cc7f076148f27716367c88d8b87de"
       },
+      "evidence_paths": [
+        "minimax/evidence/phase1_before.log",
+        "minimax/evidence/phase3_after.log",
+        "minimax/evidence/phase4_r2_before.log",
+        "minimax/evidence/phase4_r2_after.log",
+        "minimax/evidence/phase3_git_diff.patch",
+        "minimax/evidence/red_green_audit.json"
+      ],
+      "git_version": "05eea305c5bb99060e2cd87c6036134ad3a48686",
       "item": "TEST-06",
       "status": "PASS",
       "title": "代码改动生效"

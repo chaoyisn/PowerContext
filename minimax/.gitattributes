@@ -1,0 +1,12 @@
+# The Red/Green evidence asserts the SHA256 of the target test files. A
+# checkout that rewrites LF to CRLF would change those bytes and make the
+# assertion depend on the machine that cloned the repository, so the line
+# endings are pinned here.
+* text=auto eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.env text eol=lf
+*.txt text eol=lf
+*.log text eol=lf
+*.patch text eol=lf

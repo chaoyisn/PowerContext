@@ -82,6 +82,8 @@
 Red 阶段的样例代码接受 `status` 参数但显式忽略它（`del status`），因此失败是
 `AssertionError` 而不是 `TypeError`；测试文件在 Red 与 Green 之间逐字节一致
 （SHA256 记录在日志和验收报告里），杜绝"改断言换通过"。
+哈希取自**行尾归一化后**的内容，并与 git 中的 blob 哈希交叉比对，
+因此在任何平台、任何 `core.autocrlf` 设置下结果一致。
 
 ## 一次完整运行的实测数据
 
@@ -94,19 +96,30 @@ Red 阶段的样例代码接受 `status` 参数但显式忽略它（`del status`
 | 规格更新 | v1.0.0 → v1.1.0，`content_hash` 变化，继承绑定 3 条 |
 | MiniMax r2 | 补丁落地，生成 `None if status == "*" else status` |
 | Green (r2) | `22 passed`，`EXITCODE=0` |
-| seekdb | `5.7.25-OceanBase seekdb-v1.4.0.0`，四表共 41 行 |
-| PowerContext | 跨进程写 3 类记录 → 新进程读回 3/3/3 并合入上下文 |
-| 验收 | TEST-01..06 全部 PASS |
+| seekdb | `5.7.25-OceanBase seekdb-v1.4.0.0`，四表共 39 行 |
+| PowerContext | 跨进程写 3 类记录 → 新进程读回并合入上下文（读取进程 PID 与写入进程 PID 不同） |
+| 验收 | TEST-01..06 全部 PASS（`minimax/evidence/acceptance_report.json`） |
 
 ## 可复现的验证入口
 
 ```bash
-python minimax/scripts/verify.py --all          # 六项官方验收
-python -m minimax.scripts.phase4_checks          # 规格更新 + 跨进程恢复
+python minimax/scripts/verify.py --all              # 六项官方验收（退出码 0 = 全过）
+python minimax/scripts/diagnose.py                   # 环境诊断：服务未起 / 密码错 / 库不存在 / 业务失败
+python minimax/scripts/audit_minimax_evidence.py     # 历史调用证据审计（离线，不调用模型）
+python minimax/scripts/live_minimax_check.py         # 在线真实调用验证（单独入口）
+python minimax/scripts/audit_red_green.py            # r1 / r2 逐轮 Red→Green 审计
+python minimax/scripts/regenerate_round_logs.py      # 从真实提交重生成 Red/Green 日志
+python -m minimax.scripts.phase4_checks              # 规格更新 + 跨进程恢复
+python minimax/scripts/reproduce_clean.py            # 隔离环境端到端复现
 ```
 
-两个入口都只做真实操作：真实 pytest 子进程、真实 SQL、真实 HTTP。
+这些入口都只做真实操作：真实 pytest 子进程、真实 SQL、真实 HTTP。
 依赖不可用时对应项判 `BLOCKED`，不会伪装成 `PASS`。
+
+**历史审计与在线验证严格分离。** 六项验收中的 TEST-02 只读仓库里已归档的真实调用记录，
+把每轮的补丁重放到改动前的代码上并跑该轮自己的目标测试，全程不消耗模型额度；
+需要一次真实在线调用时使用 `live_minimax_check.py`，其结果单独存档，
+不会与历史开发轮次混在一起。
 
 ## 边界与后续
 

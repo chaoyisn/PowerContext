@@ -1,77 +1,81 @@
 {
   "checks": {
+    "artifact_ids_recorded": true,
     "context_still_resolves_code": true,
     "context_still_resolves_spec": true,
+    "context_still_resolves_tests": true,
+    "read_process_is_not_the_parent": true,
+    "read_process_pid_recorded": true,
     "read_process_succeeded": true,
+    "read_ran_in_a_different_process": true,
+    "recovered_content_belongs_to_this_run": true,
     "state_recovered": true,
+    "task_started_from_empty_state": true,
     "todos_merged_into_context": true,
     "verifications_merged_into_context": true,
+    "write_process_pid_recorded": true,
     "write_process_succeeded": true
   },
   "context_merged": {
     "completed": [
-      "phase4: 状态已在独立进程中写入",
-      "phase4: 状态已在独立进程中写入",
-      "phase4: 状态已在独立进程中写入",
-      "已导入规格 SPEC-REQ-001",
-      "phase4: 状态已在独立进程中写入"
+      "phase4: ״̬���ڶ���������д��"
     ],
     "todos": [
-      "phase4: 验证跨进程读取",
-      "phase4: 验证跨进程读取",
-      "phase4: 验证跨进程读取",
-      "实现 status 筛选",
-      "phase4: 验证跨进程读取"
+      "phase4: ��֤����̶�ȡ"
     ],
     "verifications": [
-      "phase4: 写入进程退出码 0",
-      "phase4: 写入进程退出码 0",
-      "phase4: 写入进程退出码 0",
-      "修改前目标测试失败 (exit 1)",
-      "phase4: 写入进程退出码 0"
+      "phase4: д������˳��� 0"
     ]
   },
+  "marker": "4C5344B3",
   "passed": true,
   "read_process": {
+    "pid": 40736,
     "returncode": 0,
     "stderr": ""
   },
   "recovered_state": {
     "artifact_ids": {
-      "sdd-completed": "art_e5cf4dea4ef645a5a2ad73bf17ef6095",
-      "sdd-task-description": "art_e32e4055cfbb45828d984b2be98b806e",
-      "sdd-todo": "art_ec767778a3da46518f01f151a9d5e759",
-      "sdd-verification": "art_f2ebe1c6a7894bd183b2ae3a052704ea"
+      "sdd-completed": "art_69b5425e454b4aeaba1e59901a2951a3",
+      "sdd-task-description": "art_c25c3d05bfdb4d41935700ff00b7e045",
+      "sdd-todo": "art_af561f044d3540df879f6d3aac43e54f",
+      "sdd-verification": "art_fd48466d6ab64ea8b4d741e7ad35575a"
     },
     "completed": [
-      "phase4: 状态已在独立进程中写入",
-      "phase4: 状态已在独立进程中写入",
-      "phase4: 状态已在独立进程中写入",
-      "已导入规格 SPEC-REQ-001",
-      "phase4: 状态已在独立进程中写入"
+      "phase4: ״̬���ڶ���������д��"
     ],
-    "description": "为工单查询函数增加按 status 筛选工单的功能 list_tasks(status='active')",
+    "description": "phase4: ����ָ̻���֤���� 4C5344B3",
     "has_state": true,
-    "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
-    "task_id": "TASK-SPEC-REQ-001",
+    "scope_id": "scp_440c18sa6w96g13w5eze6r95fw",
+    "task_id": "TASK-SPEC-REQ-001-PHASE4-C51225C8",
     "todos": [
-      "phase4: 验证跨进程读取",
-      "phase4: 验证跨进程读取",
-      "phase4: 验证跨进程读取",
-      "实现 status 筛选",
-      "phase4: 验证跨进程读取"
+      "phase4: ��֤����̶�ȡ"
     ],
     "verifications": [
-      "phase4: 写入进程退出码 0",
-      "phase4: 写入进程退出码 0",
-      "phase4: 写入进程退出码 0",
-      "修改前目标测试失败 (exit 1)",
-      "phase4: 写入进程退出码 0"
+      "phase4: д������˳��� 0"
     ]
   },
+  "state_before_write": {
+    "artifact_ids": {},
+    "completed": [],
+    "description": null,
+    "has_state": false,
+    "scope_id": "scp_440c18sa6w96g13w5eze6r95fw",
+    "task_id": "TASK-SPEC-REQ-001-PHASE4-C51225C8",
+    "todos": [],
+    "verifications": []
+  },
+  "state_record_ids": {
+    "sdd-completed": "art_69b5425e454b4aeaba1e59901a2951a3",
+    "sdd-task-description": "art_c25c3d05bfdb4d41935700ff00b7e045",
+    "sdd-todo": "art_af561f044d3540df879f6d3aac43e54f",
+    "sdd-verification": "art_fd48466d6ab64ea8b4d741e7ad35575a"
+  },
+  "task_id": "TASK-SPEC-REQ-001-PHASE4-C51225C8",
   "write_process": {
+    "pid": 29608,
     "returncode": 0,
     "stderr": "",
-    "stdout": "written"
+    "stdout": "{\"pid\": 29608, \"marker\": \"4C5344B3\"}"
   }
 }
