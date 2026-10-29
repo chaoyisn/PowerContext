@@ -293,7 +293,8 @@ pytest 88 通过。浏览器四页实测通过。
 
 ## 08:20 状态核对与 Sites 能力实测
 
-分支 `2026-competition-ecosystem` @ `745f9561`，工作区干净；seekdb / PowerContext / API 三服务在线。
+分支 `2026-competition-ecosystem` @ `745f9561`（V3 历史清理后为 `e1e79cea`，见 `PUSH_PRECHECK.md` §2.3），
+工作区干净；seekdb / PowerContext / API 三服务在线。
 不再只信 V1 文档：用真实 MCP 工具复核 Sites 能力——`get_context` 返回
 `projectRoot=D:\OceanBase`、`sites=[]`、CN prod、Desktop 宿主；`list_sites` 正常（服务可达、账号已认证）。
 
@@ -374,10 +375,10 @@ SECURITY/BENCHMARK/SITE_DEPLOYMENT 更新到 V2 状态；分三次提交（站�
 
 1. `services/powercontext-acceptance-data/` 下 5 个 PowerContext **运行期产物**被提交进历史
    （`.powercontext.db.cursor-key`、`.cursor-key.lock`、`powercontext.db-shm`、`-wal`、
-   `pc-migration-state/maintenance.json`），自 `e5df155d` 起存在于 6 个提交的树中。
+   `pc-migration-state/maintenance.json`），自 `f2bf83ba`（改写前 `e5df155d`）起存在于 6 个提交的树中。
    根因：`.gitignore` 只写了 `services/powercontext-data/` 与 `*.db`，没覆盖 `-wal`/`-shm`
    与验收专用目录。
-2. 完整 Qoder UID 被写进 `SUBMISSION.md`（`bbd42ce4`），属个人资料。
+2. 完整 Qoder UID 被写进 `SUBMISSION.md`（`ad91dd1e`，改写前 `bbd42ce4`），属个人资料。
 
 处理：文件**转存不删除**（移到已忽略的 `services/powercontext-data/acceptance-backup/`），
 `.gitignore` 补 `services/powercontext-acceptance-data/`、`*.db-wal`、`*.db-shm`、`*.db-journal`、
@@ -438,4 +439,30 @@ D 工作流基准写进 §6 诚实约束，明确要求口播时必须同时说�
 新增 §5「提交包完整性清单」12 项逐条标注状态与位置，缺项如实写 ❌（演示视频、对话截图与 UID、
 真实用户反馈）；§7 自检区分「HEAD 树干净」与「历史需按授权方案处理」。
 同步修正 README/RUN 中已过期的数字与状态（测试数 88→149、T1-T8→T1-T9、站点由「阻塞」改为「已发布」）。
+
+## 11:10 最终质检
+
+`pytest tests/ -q` → **149 passed in 50.83s**（对真实 seekdb `contest-seekdb:2881` 与真实
+PowerContext `:17429`，无 mock）。文档一致性用一次性脚本核查：
+Markdown 链接零失效；`site/public` 的 10 个资源被 `index.html` / `app.js` / `evidence.json`
+引用的全部存在；`.env.example` 与 `backend/app/config.py` 的配置项一一比对，
+补上遗漏的 `RF_SEEKDB_PATH` 与 `RF_SEEKDB_CONNECT_TIMEOUT`（42 项全对齐）。
+未放宽任何检索阈值、未重训 embedding、未迁移 PowerContext 存储、未新增 Agent 能力。
+
+## 11:20 历史清理与推送
+
+用户授权方案 A 后执行 `git filter-branch --index-filter`（而非 `--tree-filter`：不检出工作树，
+12 个提交约 6 秒）。脚本对每个提交做两件事：从索引移除运行期产物目录；
+若 `SUBMISSION.md` 含完整 UID 则取 blob 替换后 `hash-object -w` + `update-index --cacheinfo` 写回。
+
+改写后四项校验全部通过：与改写前 HEAD `git diff --stat` 为空（**最终内容逐字节一致**）、
+工作区干净、敏感路径在 `d647275c..HEAD` 全部提交的树中零命中、完整 UID 零命中。
+
+踩坑：改写后自查发现 **`PUSH_PRECHECK.md` 自己把完整 UID 写进了示例命令**（`sed` 的匹配串），
+等于把刚清掉的东西又带进 3 个提交。教训：清理脚本里的敏感字面量不能原样抄进交付文档。
+处理：把该文档改写为「已执行记录」，命令改为不含字面量的等价写法，UID 只保留 8 位前缀；
+再跑一次同样的 index-filter 覆盖历史，并把文档里引用的旧 SHA 全部换成改写后的 SHA
+（`745f9561→e1e79cea`、`e5df155d→f2bf83ba`、`bbd42ce4→ad91dd1e` 等，对照表在 `PUSH_PRECHECK.md` §2.3）。
+备份分支 `backup/pre-clean-researchflow` 与 `refs/original/` 在推送核对完成后清理，
+避免含敏感 blob 的旧提交残留在本地。
 
