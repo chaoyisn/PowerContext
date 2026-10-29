@@ -18,6 +18,7 @@
 | 基准 | `BENCHMARK.md` | B1 中文记忆 / B2 中英检索 / D 工作流提效，含方法与原始数据位置 |
 | 安全 | `SECURITY.md` | 15 项审计结论、SDK 层过滤绕过缺陷的实测与修复、公网前置条件 |
 | 站点部署 | `SITE_DEPLOYMENT.md` | Sites 能力复核、阻塞证据、重试参数、发布步骤、匿名验证清单 |
+| 推送前检查 | `PUSH_PRECHECK.md` | 远端分叉核对、敏感内容扫描结论、待授权的推送方案与校验命令 |
 | 开发日志 | `QODER_LOG.md` | P0–P4 与 V2 全过程、踩坑与修复、人工截图取证清单 |
 | 计划 | `PLAN.md` | 分阶段计划与验收映射（已全部勾选完成） |
 | 配置 | `.env.example` | 全部配置项与安全占位值，含多语 embedding 与阈值标定说明 |
@@ -59,8 +60,11 @@ python scripts/build_site_data.py && python scripts/verify_site.cjs   # 站点�
    确认后填入报名表，并以截图作为归属证明。
 2. **Sites 权益核验与发布**：在 Qoder Desktop 中确认账号的 Sites 服务状态；恢复后按
    `SITE_DEPLOYMENT.md` §4 执行 prepare → publish；**切换公开访问前需本人确认**。
-3. **仓库推送**：`git push origin 2026-competition-ecosystem`（当前 6 个新提交仅在本地；
-   推送属共享状态变更，需本人执行或明确授权）。
+3. **仓库推送**：当前 9 个新提交仅在本地，远端仍在基线（未分叉，可 fast-forward）。
+   推送前检查发现历史提交 `e5df155d..bbd42ce4` 含 PowerContext 运行期产物（本地
+   cursor-key、SQLite WAL/SHM）与完整 Qoder UID；HEAD 已清理（提交 `29c2cf06`），但
+   **历史未清理**，直接推送会把这些 blob 一并公开。请先在 `PUSH_PRECHECK.md` §2
+   三选一并由本人执行或明确授权，推送属共享状态变更，不由 Agent 自行完成。
 4. **演示视频**：建议录制 3–5 分钟，覆盖「上传 → 检索 → 页级引用 → 保存进度 → 新会话恢复」；
    分镜可直接用 `QODER_LOG.md` 末尾的 15 项截图清单。
 5. **开发过程截图**：Qoder 对话窗口、测试运行终端、浏览器四页面（清单同上）。
@@ -70,7 +74,7 @@ python scripts/build_site_data.py && python scripts/verify_site.cjs   # 站点�
 ## 5. 提交前自检（Agent 已完成部分）
 
 - [x] 分支与基线正确，改动仅限 `qoder/researchflow/**`
-- [x] 无密钥/凭据进入仓库（每次提交前扫描）
+- [x] HEAD 树无密钥/凭据/个人 UID（提交 `29c2cf06` 清理；**历史提交仍含 6 个运行期文件与 1 处完整 UID，需按 `PUSH_PRECHECK.md` 处理后才可推送**）
 - [x] 无 Mock 冒充真实能力（所有数字来自运行产物）
 - [x] 测试与验收全部真实执行，失败项如实记录（B2 的 2 条未覆盖正例、W1 的 1 条排序失败）
 - [x] 其他赛题目录与 worktree 零改动（`git status` 逐 worktree 核对）
