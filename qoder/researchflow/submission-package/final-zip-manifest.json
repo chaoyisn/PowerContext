@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-29T22:55:57+08:00",
+  "generated_at": "2026-10-29T22:58:28+08:00",
   "archive": "D:\\OceanBase\\deliverables\\researchflow-final\\ResearchFlow-Qoder-Final.zip",
-  "archive_bytes": 32753499,
-  "archive_sha256": "0b76d3a71ffb94e7aeb05c5504b1e80c033342b0a95aa7b3b03e6798c9ca906d",
+  "archive_bytes": 32754353,
+  "archive_sha256": "a193a8b69bc14326bec501e01b4ff17ac6f4d5ed76995da48cb0573b91ba83a7",
   "members": 303,
-  "raw_bytes": 34916402,
-  "compression_ratio": 0.9381,
+  "raw_bytes": 34918334,
+  "compression_ratio": 0.938,
   "scan_hits": [],
   "extract_ok": true,
   "privacy_skipped": {
@@ -14,7 +14,7 @@
   "tree": {
     "ResearchFlow": {
       "files": 13,
-      "bytes": 214824
+      "bytes": 216756
     },
     "ResearchFlow/backend": {
       "files": 45,

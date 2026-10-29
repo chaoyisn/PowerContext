@@ -899,3 +899,31 @@ missing / differing / unexpected = 0 / 0 / 0**。交付目录同时放一份成�
 22:51 那次构建实测：32 748 059 B / 原始 34 905 046 B / 压缩比 0.9382 /
 SHA-256 `5931a1a07991d8b87e53e74f8db2c5577b730c678ced4b08bb1fcf9e28c82600`。
 此后每改一个字的文档都会让这两个值变化，因此以交付目录里的 sidecar 为唯一权威。
+
+### 阶段六 Git 安全提交与推送
+
+提交前的四项检查（真实输出）：
+
+```
+git status --porcelain | awk '{print $NF}' | grep -v '^qoder/researchflow/'   → 无输出（范围仍在作品目录内）
+按打包器同一套 7 条正则扫描 212 个待提交文件                                    → 1 命中，见下
+git log -p --all | grep -Ec "01a175e3-…{12}"                                  → 0
+git worktree list                                                              → 9 个工作树，master 仍在 aedf7beb，未触碰
+```
+
+唯一命中是 `verification/browser-acceptance/interactions-run.log` 第 2 行的本机 Chromium
+安装路径（含本人 Windows 用户名）。判断：这是本人自己机器上的路径、不含凭据，且它是
+30/30 交互验收的运行转写，**不改写证据**，因此照常入库；同一理由使它不进交付 ZIP
+（`build_final_zip.py` 的 `PRIVACY_SKIPPED`），两处口径都在文档里写明。
+该文件其余部分单独扫过 `token|key|secret|password|uid|cookie|authorization`，无命中。
+
+封版提交：**`ada5be24bc08a7b3bc7db527f8c5638c81b3d045`**
+（`feat(qoder/researchflow): 封版交付 — 界面冻结、站点更新发布、成片重录与最终提交包`，
+217 个文件 / +13 634 −4 422），父提交是推送前已核对一致的远端 tip
+`fe8c14c7a7621638622235bbbde0920c36fd529b`，官方基线 `d647275c…` 仍是其祖先。
+
+推送方式与前几轮相同：`git fetch origin` 确认无分叉后普通 fast-forward push，
+**未** `--force`、**未**改写已推送历史、**未** `--no-verify`；推送后
+`git rev-parse HEAD origin/2026-competition-ecosystem` 两个完整 SHA 必须相同。
+本条本身是紧随其后的第二个提交，所以这里点名的 SHA 是**封版提交**而不是"当前 tip"；
+当前 tip 一律交回 `git rev-parse` 现取，避免文档与远端各留一个"真值"。
