@@ -3,3 +3,7 @@ __pycache__/
 .pytest_cache/
 .state/
 .env
+
+# 隔离复现运行的产物：可由 reproduce_clean.py 随时重新生成，不随仓库提交。
+# 正式证据在 evidence/ 根目录，由针对正式数据库的运行产生。
+evidence/reproduction/

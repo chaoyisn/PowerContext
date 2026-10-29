@@ -1,7 +1,8 @@
 {
   "branch": "competition/minimax-sdd-context",
-  "commit": "52c8434801f3b2039c7b665b51a2f4c9ebdf42a1",
+  "commit": "7d0939cbbb995ddcfe52112f5b56dfc94d2e2597",
   "generated_by": "minimax/scripts/verify.py",
+  "git_version_note": "commit / git_version 是本次运行所测试的代码提交；把本报告提交进仓库的那次提交会更新本文件本身，但不改变被测试的代码。",
   "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
   "module_root_relative": "minimax",
   "overall": "PASS",
@@ -38,13 +39,13 @@
           "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
           "exit_code": 0,
           "stderr": "",
-          "stdout": "......................                                                   [100%]\n22 passed in 0.06s\n"
+          "stdout": "......................                                                   [100%]\n22 passed in 0.03s\n"
         }
       },
       "evidence_paths": [
         "minimax/sample/taskmanager.py"
       ],
-      "git_version": "52c8434801f3b2039c7b665b51a2f4c9ebdf42a1",
+      "git_version": "7d0939cbbb995ddcfe52112f5b56dfc94d2e2597",
       "item": "TEST-01",
       "status": "PASS",
       "title": "流程可在干净环境运行"
@@ -261,7 +262,7 @@
         "minimax/evidence/minimax_evidence_audit.json",
         "minimax/evidence/phase3_git_diff.patch"
       ],
-      "git_version": "52c8434801f3b2039c7b665b51a2f4c9ebdf42a1",
+      "git_version": "7d0939cbbb995ddcfe52112f5b56dfc94d2e2597",
       "item": "TEST-02",
       "status": "PASS",
       "title": "MiniMax 真实参与代码修改"
@@ -295,7 +296,7 @@
       "evidence_paths": [
         "minimax/evidence/context_snapshot.json"
       ],
-      "git_version": "52c8434801f3b2039c7b665b51a2f4c9ebdf42a1",
+      "git_version": "7d0939cbbb995ddcfe52112f5b56dfc94d2e2597",
       "item": "TEST-03",
       "status": "PASS",
       "title": "上下文内容正确且来源真实"
@@ -307,7 +308,7 @@
           "exit_code": 0
         }
       ],
-      "detail": "seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 39 行，写入后立即可读回，内容与磁盘文件一致",
+      "detail": "seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 34 行，写入后立即可读回，内容与磁盘文件一致",
       "evidence": {
         "checks": {
           "code_rows_match_files": true,
@@ -321,8 +322,8 @@
         },
         "counts": {
           "sdd_code_symbol": 9,
-          "sdd_relation": 8,
-          "sdd_specification": 2,
+          "sdd_relation": 4,
+          "sdd_specification": 1,
           "sdd_test": 20
         },
         "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0"
@@ -330,7 +331,7 @@
       "evidence_paths": [
         "minimax/evidence/seekdb_queries.json"
       ],
-      "git_version": "52c8434801f3b2039c7b665b51a2f4c9ebdf42a1",
+      "git_version": "7d0939cbbb995ddcfe52112f5b56dfc94d2e2597",
       "item": "TEST-04",
       "status": "PASS",
       "title": "数据库真实参与"
@@ -348,7 +349,7 @@
           "scope": "read process"
         }
       ],
-      "detail": "进程退出后由全新进程读回 30 条完成项、30 条待办、30 条验证结果，并合并进新构建的上下文",
+      "detail": "进程退出后由全新进程读回 1 条完成项、1 条待办、1 条验证结果，并合并进新构建的上下文",
       "evidence": {
         "checks": {
           "context_resolves_code": true,
@@ -366,109 +367,22 @@
         },
         "recovered_state": {
           "artifact_ids": {
-            "sdd-completed": "art_f58f5928b33e48f69b5e9e5d7532ab8b",
-            "sdd-todo": "art_f930bbfb81a441a687a36bcb743ed94a",
-            "sdd-verification": "art_fc8e9ff1c9a94f468ddacd234731d59e"
+            "sdd-completed": "art_3d413c7f547741a986597cada40e6f86",
+            "sdd-todo": "art_423067d287b440af922dc665ca185dfb",
+            "sdd-verification": "art_488eeec5b97b47d98d4efae4ed75db9d"
           },
           "completed": [
-            "verify-restart-1793286220:completed",
-            "verify-restart-1793286889:completed",
-            "verify-restart-1793285906:completed",
-            "verify-restart-1793286247:completed",
-            "verify-restart-1793285881:completed",
-            "verify-restart-1793286369:completed",
-            "verify-restart-1793284525:completed",
-            "verify-restart-1793284660:completed",
-            "verify-restart-1793287451:completed",
-            "verify-restart-1793285870:completed",
-            "verify-restart-1793284613:completed",
-            "verify-restart-1793287498:completed",
-            "verify-restart-1793286688:completed",
-            "verify-restart-1793284652:completed",
-            "verify-restart-1793287250:completed",
-            "verify-restart-1793284638:completed",
-            "verify-restart-1793285852:completed",
-            "verify-restart-1793284681:completed",
-            "verify-restart-1793287164:completed",
-            "verify-restart-1793287427:completed",
-            "verify-restart-1793284346:completed",
-            "verify-restart-1793284648:completed",
-            "verify-restart-1793284490:completed",
-            "verify-restart-1793286819:completed",
-            "verify-restart-1793285732:completed",
-            "verify-restart-1793286332:completed",
-            "verify-restart-1793287389:completed",
-            "verify-restart-1793286571:completed",
-            "verify-restart-1793286998:completed",
-            "verify-restart-1793287322:completed"
+            "verify-restart-1793293003:completed"
           ],
           "description": null,
           "has_state": true,
-          "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
-          "task_id": "TASK-SPEC-REQ-001-RESTART",
+          "scope_id": "scp_71x66qsskbk0z495be9nnxhbbw",
+          "task_id": "TASK-SPEC-REQ-001-RESTART-C53D3304",
           "todos": [
-            "verify-restart-1793286369:todo",
-            "verify-restart-1793287389:todo",
-            "verify-restart-1793284652:todo",
-            "verify-restart-1793286332:todo",
-            "verify-restart-1793284648:todo",
-            "verify-restart-1793284681:todo",
-            "verify-restart-1793286247:todo",
-            "verify-restart-1793284525:todo",
-            "verify-restart-1793284613:todo",
-            "verify-restart-1793287451:todo",
-            "verify-restart-1793284638:todo",
-            "verify-restart-1793284346:todo",
-            "verify-restart-1793286889:todo",
-            "verify-restart-1793285870:todo",
-            "verify-restart-1793285881:todo",
-            "verify-restart-1793286819:todo",
-            "verify-restart-1793286220:todo",
-            "verify-restart-1793287498:todo",
-            "verify-restart-1793284490:todo",
-            "verify-restart-1793287322:todo",
-            "verify-restart-1793287164:todo",
-            "verify-restart-1793286688:todo",
-            "verify-restart-1793285732:todo",
-            "verify-restart-1793284660:todo",
-            "verify-restart-1793287250:todo",
-            "verify-restart-1793285906:todo",
-            "verify-restart-1793286571:todo",
-            "verify-restart-1793285852:todo",
-            "verify-restart-1793286998:todo",
-            "verify-restart-1793287427:todo"
+            "verify-restart-1793293003:todo"
           ],
           "verifications": [
-            "verify-restart-1793286332:verification",
-            "verify-restart-1793287250:verification",
-            "verify-restart-1793284525:verification",
-            "verify-restart-1793284346:verification",
-            "verify-restart-1793285906:verification",
-            "verify-restart-1793286247:verification",
-            "verify-restart-1793286220:verification",
-            "verify-restart-1793286571:verification",
-            "verify-restart-1793287389:verification",
-            "verify-restart-1793286688:verification",
-            "verify-restart-1793287498:verification",
-            "verify-restart-1793286369:verification",
-            "verify-restart-1793285881:verification",
-            "verify-restart-1793285732:verification",
-            "verify-restart-1793284613:verification",
-            "verify-restart-1793284660:verification",
-            "verify-restart-1793284490:verification",
-            "verify-restart-1793287427:verification",
-            "verify-restart-1793284638:verification",
-            "verify-restart-1793284652:verification",
-            "verify-restart-1793286998:verification",
-            "verify-restart-1793287322:verification",
-            "verify-restart-1793285870:verification",
-            "verify-restart-1793285852:verification",
-            "verify-restart-1793287451:verification",
-            "verify-restart-1793286889:verification",
-            "verify-restart-1793284648:verification",
-            "verify-restart-1793286819:verification",
-            "verify-restart-1793287164:verification",
-            "verify-restart-1793284681:verification"
+            "verify-restart-1793293003:verification"
           ]
         },
         "write_process": {
@@ -480,7 +394,7 @@
       "evidence_paths": [
         "minimax/evidence/phase4_cross_process.json"
       ],
-      "git_version": "52c8434801f3b2039c7b665b51a2f4c9ebdf42a1",
+      "git_version": "7d0939cbbb995ddcfe52112f5b56dfc94d2e2597",
       "item": "TEST-05",
       "status": "PASS",
       "title": "任务状态可复用"
@@ -573,7 +487,7 @@
         "minimax/evidence/phase3_git_diff.patch",
         "minimax/evidence/red_green_audit.json"
       ],
-      "git_version": "52c8434801f3b2039c7b665b51a2f4c9ebdf42a1",
+      "git_version": "7d0939cbbb995ddcfe52112f5b56dfc94d2e2597",
       "item": "TEST-06",
       "status": "PASS",
       "title": "代码改动生效"
