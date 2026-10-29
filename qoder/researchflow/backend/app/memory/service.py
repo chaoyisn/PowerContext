@@ -35,6 +35,11 @@ from .models import (
 
 logger = get_logger(__name__)
 
+# Minimum token overlap for a memory entry to count as lexically relevant. Below this a
+# shared generic word (实验 / 结果) would recall unrelated bullets (measured on the
+# zh-negative-1 case of backend/tests/data/memory_queries_zh.json).
+MIN_MEMORY_OVERLAP = 0.2
+
 _PROJECT_ID = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 
 
@@ -448,6 +453,71 @@ def build_resume_brief(snapshot: dict[str, Any] | None, entries: Sequence[Memory
     return "\n".join(lines)
 
 
+def infer_kind_hint(query: str) -> str | None:
+    """Map a recall query onto the memory kind it is most likely asking about."""
+    rules = (
+        (("决策", "决定", "定了", "decision"), "decision"),
+        (("下一步", "接下来", "计划", "todo", "next"), "next_step"),
+        (("未解决", "没有解决", "没解决", "待解决", "遗留", "疑问", "还有哪些问题", "open"), "open_question"),
+        (("做完", "完成", "实验结果", "进展", "completed"), "completed_work"),
+        (("目标", "目的", "objective", "goal"), "goal"),
+    )
+    lowered = query.lower()
+    for needles, kind in rules:
+        if any(needle in lowered for needle in needles):
+            return kind
+    return None
+
+
+def local_memory_search(
+    entries: Sequence[MemoryEntry], query: str, *, top_k: int = 5
+) -> list[dict[str, Any]]:
+    """CJK-aware recall over entries already read from PowerContext.
+
+    PowerContext 1.4.1's SQLite index tokenizes with fts5 unicode61, which treats a run of
+    Chinese characters as one token, so Chinese recall there is near zero (measured). The
+    entries themselves are still authoritative - they were read from PowerContext - so we do
+    the matching here with the same CJK bigram tokenizer the evidence gate uses. Results are
+    labelled with their backend so nobody mistakes them for PowerContext's own ranking.
+    """
+    from ..retrieval.relevance import content_tokens
+
+    query_tokens = content_tokens(query)
+    if not query_tokens:
+        return []
+    kind_hint = infer_kind_hint(query)
+    scored: list[tuple[float, int, MemoryEntry]] = []
+    for entry in entries:
+        if entry.kind == "progress_snapshot":
+            continue
+        entry_tokens = content_tokens(entry.text)
+        overlap = len(query_tokens & entry_tokens) / len(query_tokens) if query_tokens and entry_tokens else 0.0
+        kind_match = bool(kind_hint) and entry.kind == kind_hint
+        # A single generic shared word (实验/结果) is not evidence of relevance; require a
+        # real overlap floor, or an explicit kind-directed read for meta questions.
+        if overlap >= MIN_MEMORY_OVERLAP:
+            score = overlap + (0.15 if kind_match else 0.0)
+        elif kind_match:
+            score = 0.15
+        else:
+            continue
+        scored.append((score, entry.seq, entry))
+    scored.sort(key=lambda item: (-item[0], item[1]))
+    return [
+        {
+            "kind": entry.kind,
+            "text": entry.text,
+            "score": round(score, 4),
+            "seq": entry.seq,
+            "artifact_id": entry.artifact_id,
+            "matched_by": "researchflow-local-cjk" if score > 0.15 else "researchflow-kind-directed",
+            "kind_hint": kind_hint,
+            "source": "memory",
+        }
+        for score, _, entry in scored[:top_k]
+    ]
+
+
 def build_recall_query(
     user_query: str, project: Project, snapshot: dict[str, Any] | None
 ) -> tuple[str, bool]:
@@ -569,6 +639,21 @@ async def restore_progress(
             "而是通过 list_memory_entries 全量读取。"
         ),
     }
+    # PowerContext's own FTS cannot tokenize Chinese, so when it returns nothing we fall back
+    # to a CJK-aware match over the entries we already read from PowerContext. The data source
+    # is unchanged; only the matching is ours, and the backend used is reported explicitly.
+    # Snapshot entries are excluded from search hits: they are the whole state, already exposed
+    # as ``snapshot``, and letting them rank first would crowd out the actual bullets.
+    powercontext_hits = [
+        hit for hit in result.prepared_context["search_hits"] if hit.get("kind") != SNAPSHOT_KIND
+    ]
+    result.prepared_context["search_hits"] = powercontext_hits
+    local_hits = local_memory_search(entries, recall_query, top_k=8)
+    result.prepared_context["local_hits"] = local_hits
+    result.prepared_context["search_backend_used"] = (
+        "powercontext" if powercontext_hits else ("researchflow-local-cjk" if local_hits else "none")
+    )
+    result.prepared_context["effective_hits"] = powercontext_hits or local_hits
     logger.info(
         "progress restored",
         fields={

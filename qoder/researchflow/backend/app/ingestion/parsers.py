@@ -17,6 +17,11 @@ logger = get_logger(__name__)
 
 _MAGIC_PDF = b"%PDF-"
 
+# Parsing is a DoS surface: a hostile PDF can declare thousands of pages or gigabytes of
+# text. Caps are far above any legitimate research document and far below exhaustion.
+MAX_PDF_PAGES = 1000
+MAX_EXTRACTED_CHARS = 8_000_000
+
 
 @dataclass
 class PageText:
@@ -81,10 +86,23 @@ def parse_pdf(data: bytes, filename: str) -> ParsedDocument:
                 raise DocumentParseError(
                     "PDF is password protected", detail={"filename": filename}
                 )
+            if document.page_count > MAX_PDF_PAGES:
+                raise DocumentParseError(
+                    f"PDF has {document.page_count} pages, limit is {MAX_PDF_PAGES}",
+                    detail={"filename": filename, "pages": document.page_count},
+                )
             pages: list[PageText] = []
+            extracted = 0
             for page in document:
+                text = page.get_text("text")
+                extracted += len(text)
+                if extracted > MAX_EXTRACTED_CHARS:
+                    raise DocumentParseError(
+                        f"PDF text exceeds {MAX_EXTRACTED_CHARS} extracted characters",
+                        detail={"filename": filename, "extracted": extracted},
+                    )
                 # page.number is 0-based; ResearchFlow always exposes 1-based physical pages.
-                pages.append(PageText(page_no=page.number + 1, text=page.get_text("text")))
+                pages.append(PageText(page_no=page.number + 1, text=text))
             meta_title = (document.metadata or {}).get("title") or ""
     except DocumentParseError:
         raise

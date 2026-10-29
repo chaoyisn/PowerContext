@@ -7,6 +7,7 @@ back from the seekdb row.
 
 from __future__ import annotations
 
+import re
 import time
 from dataclasses import asdict, dataclass, field
 from typing import Any, Literal, Sequence
@@ -15,7 +16,7 @@ import numpy as np
 
 from ..config import Settings, get_settings
 from ..db.seekdb import SeekDBStore
-from ..errors import ResearchFlowError
+from ..errors import RequestValidationError, ResearchFlowError
 from ..logging_setup import get_logger
 from .embeddings import EmbeddingBackend
 from .relevance import combined_relevance, lexical_coverage, normalize_score, passes_gate
@@ -104,15 +105,38 @@ class RetrievalResult:
         return payload
 
 
+_DOC_ID_RE = re.compile(r"^[0-9a-f]{64}$")
+_VALID_CONTENT_TYPES = {"pdf", "markdown", "text"}
+
+
 def build_where(filters: dict[str, Any] | None) -> dict[str, Any] | None:
-    """Translate API filters into a pyseekdb metadata ``where`` clause."""
+    """Translate API filters into a pyseekdb metadata ``where`` clause.
+
+    Filter values are validated fail-closed. Measured on seekdb v1.4.0.0 / pyseekdb
+    1.4.0.post1: the vector leg parameterises metadata values correctly, but the full-text
+    leg of ``hybrid_search`` silently DROPS a ``where`` clause whose value contains SQL
+    metacharacters (a hostile value behaved exactly like no filter at all). Since filters are
+    a scoping boundary, an invalid value must reject the request rather than widen it.
+    """
     if not filters:
         return None
     where: dict[str, Any] = {}
     if filters.get("doc_id"):
-        where["doc_id"] = {"$eq": str(filters["doc_id"])}
+        value = str(filters["doc_id"])
+        if not _DOC_ID_RE.match(value):
+            raise RequestValidationError(
+                "doc_id filter must be a 64-character hex sha256",
+                detail={"received_length": len(value)},
+            )
+        where["doc_id"] = {"$eq": value}
     if filters.get("content_type"):
-        where["content_type"] = {"$eq": str(filters["content_type"])}
+        value = str(filters["content_type"])
+        if value not in _VALID_CONTENT_TYPES:
+            raise RequestValidationError(
+                f"content_type filter must be one of {sorted(_VALID_CONTENT_TYPES)}",
+                detail={"received": value},
+            )
+        where["content_type"] = {"$eq": value}
     page_conditions: list[dict[str, Any]] = []
     if filters.get("page_from") is not None:
         page_conditions.append({"page_no": {"$gte": int(filters["page_from"])}})

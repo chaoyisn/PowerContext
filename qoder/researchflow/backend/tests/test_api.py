@@ -210,6 +210,18 @@ def test_search_filters_by_document(api_client):
     assert all(hit["doc_id"] == doc_id for hit in response.json()["hits"])
 
 
+def test_search_rejects_malformed_filter_values(api_client):
+    """The seekdb full-text leg silently drops where clauses with SQL metacharacters, so the
+    API must reject such values instead of widening the result set."""
+    for hostile in ["' OR '1'='1", "not-a-sha", "4d5da56c0b76197b"]:
+        response = api_client.post(
+            "/api/retrieval/search",
+            json={"query": "analyzer", "mode": "fulltext", "top_k": 5, "doc_id": hostile},
+        )
+        assert response.status_code == 422, response.text
+        assert response.json()["error"]["code"] == "validation_error"
+
+
 def test_compare_endpoint_returns_all_three_modes(api_client):
     response = api_client.post(
         "/api/retrieval/compare",

@@ -12,7 +12,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 PROJECT_ROOT = BACKEND_DIR.parent
 
-EmbeddingProvider = Literal["minilm", "hashing", "openai"]
+EmbeddingProvider = Literal["minilm", "hashing", "openai", "multilingual"]
 RetrievalMode = Literal["vector", "fulltext", "hybrid"]
 FtsAnalyzer = Literal["ik", "ngram", "ngram2", "space", "beng"]
 
@@ -50,6 +50,8 @@ class Settings(BaseSettings):
     embedding_model: str = ""
     embedding_base_url: str = ""
     embedding_api_key: str = ""
+    # Optional cache directory for the multilingual ONNX model; defaults to <data>/models.
+    embedding_multilingual_dir: str = ""
 
     # --- powercontext ---
     powercontext_url: str = "http://127.0.0.1:17429"

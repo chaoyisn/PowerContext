@@ -19,6 +19,7 @@ import hashlib
 import re
 import threading
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable, Sequence
 
 import numpy as np
@@ -102,6 +103,81 @@ class _MiniLMBackend:
         return [list(map(float, v)) for v in fn(list(texts))]
 
 
+_MULTILINGUAL_MODEL_URL = (
+    "https://huggingface.co/Xenova/paraphrase-multilingual-MiniLM-L12-v2/"
+    "resolve/main/onnx/model_quantized.onnx"
+)
+_MULTILINGUAL_TOKENIZER_URL = (
+    "https://huggingface.co/Xenova/paraphrase-multilingual-MiniLM-L12-v2/"
+    "resolve/main/tokenizer.json"
+)
+_MULTILINGUAL_MAX_TOKENS = 128
+
+
+class _MultilingualBackend:
+    """paraphrase-multilingual-MiniLM-L12-v2 via ONNX Runtime (384-d, 50+ languages).
+
+    Optional enhancement: all-MiniLM-L6-v2 uses an English WordPiece vocabulary, so a Chinese
+    query against English text scores poorly. This model closes that gap. It is downloaded
+    once (~120 MB quantized) into the data directory and never blocks startup, because
+    ``build_embedding_backend`` falls back to ``hashing`` when it cannot initialise.
+    """
+
+    def __init__(self, directory: Path, dimension: int) -> None:
+        import httpx
+        import onnxruntime as ort
+        from tokenizers import Tokenizer
+
+        directory.mkdir(parents=True, exist_ok=True)
+        model_path = directory / "model_quantized.onnx"
+        tokenizer_path = directory / "tokenizer.json"
+        for target, url in ((model_path, _MULTILINGUAL_MODEL_URL), (tokenizer_path, _MULTILINGUAL_TOKENIZER_URL)):
+            if not target.exists() or target.stat().st_size == 0:
+                logger.info("downloading multilingual embedding asset", fields={"url": url})
+                with httpx.Client(timeout=600.0, follow_redirects=True) as client:
+                    with client.stream("GET", url) as response:
+                        response.raise_for_status()
+                        with target.open("wb") as handle:
+                            for chunk in response.iter_bytes():
+                                handle.write(chunk)
+
+        self._tokenizer = Tokenizer.from_file(str(tokenizer_path))
+        self._tokenizer.enable_truncation(max_length=_MULTILINGUAL_MAX_TOKENS)
+        pad_id = self._tokenizer.token_to_id("[PAD]")
+        self._tokenizer.enable_padding(pad_id=pad_id if pad_id is not None else 0, pad_token="[PAD]")
+        self._session = ort.InferenceSession(
+            str(model_path), providers=["CPUExecutionProvider"]
+        )
+        self._input_names = {inp.name for inp in self._session.get_inputs()}
+        self._dimension = dimension
+        probe = self(["multilingual warmup 多语预热"])
+        if len(probe[0]) != dimension:
+            raise ValueError(
+                f"multilingual model produced {len(probe[0])}-d vectors, expected {dimension}"
+            )
+
+    @property
+    def dimension(self) -> int:
+        return self._dimension
+
+    def __call__(self, texts: Sequence[str]) -> list[list[float]]:
+        encoded = self._tokenizer.encode_batch([t or " " for t in texts])
+        ids = [e.ids for e in encoded]
+        mask = [e.attention_mask for e in encoded]
+        feeds: dict[str, list[list[int]]] = {"input_ids": ids, "attention_mask": mask}
+        if "token_type_ids" in self._input_names:
+            feeds["token_type_ids"] = [[0] * len(row) for row in ids]
+        (hidden,) = self._session.run(None, feeds)
+        array = np.asarray(hidden, dtype=np.float32)
+        weights = np.asarray(mask, dtype=np.float32)[..., None]
+        summed = (array * weights).sum(axis=1)
+        counts = np.maximum(weights.sum(axis=1), 1e-9)
+        pooled = summed / counts
+        norms = np.linalg.norm(pooled, axis=1, keepdims=True)
+        pooled = pooled / np.maximum(norms, 1e-9)
+        return [row.astype(np.float32).tolist() for row in pooled]
+
+
 def _openai_backend(settings: Settings) -> EmbedFn:
     from openai import OpenAI
 
@@ -143,6 +219,28 @@ def build_embedding_backend(settings: Settings) -> EmbeddingBackend:
             return EmbeddingBackend(
                 "hashing", dimension, lambda texts: hashing_embed(texts, dimension),
                 note=f"fallback from openai: {type(exc).__name__}",
+            )
+
+    if requested == "multilingual":
+        directory = (
+            Path(settings.embedding_multilingual_dir)
+            if settings.embedding_multilingual_dir
+            else settings.data_path / "models" / "multilingual-minilm-l12-v2"
+        )
+        try:
+            backend = _MultilingualBackend(directory, dimension)
+            return EmbeddingBackend(
+                "multilingual", dimension, backend,
+                note="paraphrase-multilingual-MiniLM-L12-v2 ONNX (quantized)",
+            )
+        except Exception as exc:
+            logger.warning(
+                "multilingual embedding provider unavailable, falling back to hashing",
+                fields={"error": f"{type(exc).__name__}: {exc}"},
+            )
+            return EmbeddingBackend(
+                "hashing", dimension, lambda texts: hashing_embed(texts, dimension),
+                note=f"fallback from multilingual: {type(exc).__name__}",
             )
 
     # minilm
