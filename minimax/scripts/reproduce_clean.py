@@ -212,6 +212,9 @@ def _module_env(base: dict[str, str], settings: Settings, scope_id: str | None) 
         env["SDD_POWERCONTEXT_SCOPE_ID"] = scope_id
     # Make sure the module is importable from a fresh checkout as well.
     env["PYTHONPATH"] = str(REPOSITORY_ROOT)
+    # The run uses an isolated namespace, so the evidence it produces must not
+    # overwrite the committed evidence of the regular database.
+    env["SDD_EVIDENCE_DIR"] = str(settings.evidence_dir / "reproduction")
     return env
 
 
@@ -311,7 +314,12 @@ def main(argv: list[str] | None = None) -> int:
     # 3. diagnostics on the isolated namespace, now that it is populated
     step(
         "diagnose-isolated-environment",
-        [sys.executable, "minimax/scripts/diagnose.py", "--output", "minimax/evidence/repro_diagnostics.json"],
+        [
+            sys.executable,
+            "minimax/scripts/diagnose.py",
+            "--output",
+            str(settings.evidence_dir / "reproduction" / "repro_diagnostics.json"),
+        ],
     )
     # 4. real seekdb retrieval
     step(
@@ -326,7 +334,7 @@ def main(argv: list[str] | None = None) -> int:
             "--spec-id",
             "SPEC-REQ-001",
             "--output",
-            "minimax/evidence/repro_context.json",
+            str(settings.evidence_dir / "reproduction" / "repro_context.json"),
         ],
     )
     # 5. task state written into the isolated scope
@@ -370,6 +378,9 @@ def main(argv: list[str] | None = None) -> int:
                 clone_env = dict(env)
                 clone_env["PYTHONPATH"] = str(checkout)
                 clone_env["SDD_SEEKDB_DATABASE"] = f"{isolated.seekdb_database}_clone"
+                clone_env["SDD_EVIDENCE_DIR"] = str(
+                    settings.evidence_dir / "reproduction" / "fresh_checkout"
+                )
                 clone_scope, clone_scope_report = _create_isolated_scope(isolated)
                 if clone_scope:
                     clone_env["SDD_POWERCONTEXT_SCOPE_ID"] = clone_scope

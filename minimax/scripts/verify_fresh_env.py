@@ -362,6 +362,9 @@ def main(argv: list[str] | None = None) -> int:
         "SDD_SEEKDB_DATABASE": database,
         "SDD_POWERCONTEXT_URL": pc_url,
         "SDD_POWERCONTEXT_SCOPE_ID": scope_id or "",
+        # The run uses an isolated namespace, so its evidence must not
+        # overwrite the committed evidence of the regular database.
+        "SDD_EVIDENCE_DIR": str(workdir / "evidence"),
     }
 
     init = step(

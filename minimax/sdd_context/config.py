@@ -59,7 +59,15 @@ class Settings:
 
     @property
     def evidence_dir(self) -> Path:
-        return self.root / "evidence"
+        """Where the evidence files are written.
+
+        ``SDD_EVIDENCE_DIR`` redirects the output to a separate directory, so
+        a run against an isolated namespace cannot overwrite the committed
+        evidence of the regular database.
+        """
+
+        override = os.environ.get("SDD_EVIDENCE_DIR")
+        return Path(override) if override else self.root / "evidence"
 
     @property
     def spec_dir(self) -> Path:
