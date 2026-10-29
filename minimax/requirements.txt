@@ -2,8 +2,9 @@
 #
 # Python 3.12
 #
-# PowerContext Server 需从官方仓库安装：
-#   pip install -e . --no-deps
+# 本赛题分支（2026-competition-ecosystem）的仓库里只有各赛题子目录，
+# 没有 PowerContext 的 Python 源码，所以 `pip install -e .` 不可用；
+# 官方服务端从 PyPI 安装到同一环境。
 #
 # seekdb / OceanBase 通过 MySQL 协议访问，不需要 Python 驱动以外的组件。
 
@@ -17,6 +18,9 @@ uvicorn==0.53.0
 SQLAlchemy==2.0.54
 aiosqlite==0.22.1
 pydantic==2.13.5
+
+# --- 官方 PowerContext Server（CLI + 服务端） ---
+powercontext[cli,server]==1.4.1
 
 # --- 测试 ---
 pytest==9.0.2

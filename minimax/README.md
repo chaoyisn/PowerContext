@@ -10,7 +10,7 @@
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r minimax/requirements.txt
-pip install -e . --no-deps        # 官方 PowerContext Server
+pip install "powercontext[cli,server]==1.4.1"   # 官方 PowerContext Server（见 3.3）
 
 # 1) 启动依赖服务（见第 3 节）
 # 2) 体检：区分"服务没起/密码错/库不存在/业务测试失败"
@@ -98,11 +98,19 @@ source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r minimax/requirements.txt
 ```
 
-PowerContext Server 需要从官方仓库安装到同一环境：
+PowerContext Server 从 **PyPI** 安装到同一环境：
 
 ```bash
-pip install -e . --no-deps
+pip install "powercontext[cli,server]==1.4.1"
 ```
+
+> **为什么不是 `pip install -e .`？** 本赛题分支 `2026-competition-ecosystem` 的仓库里
+> **只有各赛题的子目录，没有 PowerContext 的 Python 源码**（官方源码在 `master` 分支）。
+> 因此 `pip install -e .` 会报
+> `does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found`。
+> 从 PyPI 安装官方发布的同名发行版是本分支上唯一可用的方式，
+> 其 API 与官方仓库一致（`/v1/scopes`、`/v1/work/contracts/create`、
+> `/v1/memory/remember`、`/v1/memory/entries/list`、`/v1/work/outcomes/record`）。
 
 ### 3.2 seekdb / OceanBase
 
@@ -120,12 +128,28 @@ docker run -d --name contest-seekdb -p 2881:2881 \
 
 ### 3.3 PowerContext Server
 
-从官方仓库启动服务（示例）：
+用 3.1 安装好的官方 CLI 启动服务（**实测可用**的命令）：
 
 ```bash
-export POWERCONTEXT_SERVER_DATABASE_URL="sqlite+aiosqlite:///$PWD/pc.db"
-python -m powercontext.server --host 127.0.0.1 --port 8790
+# Linux / macOS
+POWERCONTEXT_HOME="$PWD/.pc-data" powercontext server run --host 127.0.0.1 --port 8790 --no-env-file
+
+# Windows（PowerShell）
+$env:POWERCONTEXT_HOME = "$PWD\.pc-data"
+powercontext server run --host 127.0.0.1 --port 8790 --no-env-file
 ```
+
+`POWERCONTEXT_HOME` 决定 SQLite 数据库文件的位置，因此可以用它把不同实验隔离开
+（默认落在 `~/.powercontext`）。启动后自检：
+
+```bash
+curl http://127.0.0.1:8790/health/ready
+# {"status":"ready","checks":{"runtime":"ready","database":"ready", ...}}
+```
+
+> `python -m powercontext.server` **不可用**：PyPI 发行包里 `powercontext.server` 是包，
+> 没有 `__main__.py`，直接执行会报
+> `No module named powercontext.server.__main__`。请使用上面的 `powercontext` CLI。
 
 ### 3.4 MiniMax 接入
 
@@ -310,6 +334,23 @@ python minimax/scripts/reproduce_clean.py --fresh-checkout # 另加全新 git cl
 
 `--fresh-checkout` 还会把仓库 clone 到临时目录，用它自己的库名与 scope 重跑一遍，
 证明"从全新检出开始按 README 执行"同样成立。
+
+### 7.1 全新的 Python 环境验证
+
+上一条证明的是"数据是空的"，这一条证明的是**环境也是新的**——在一个从未装过本项目
+依赖的虚拟环境里，从零安装依赖、启动官方 PowerContext Server，再跑完整套验收：
+
+```bash
+python minimax/scripts/verify_fresh_env.py
+```
+
+该脚本会新建一个 `include-system-site-packages = false` 的虚拟环境、
+执行 `pip install -r minimax/requirements.txt`、用该环境里的 `powercontext` CLI
+在独立端口与独立 `POWERCONTEXT_HOME` 上启动服务端，然后在新环境里跑
+六项验收、三个审计脚本、pytest 与 phase4 检查。
+
+结果写入 `minimax/evidence/fresh_env_report.json`，其中记录了每一条命令、
+真实退出码、Python 版本、隔离性检查结果与解析到的全部依赖版本。
 
 ## 8. 已知限制
 

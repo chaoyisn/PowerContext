@@ -145,6 +145,20 @@ python minimax/scripts/reproduce_clean.py --fresh-checkout
 
 结果：`minimax/evidence/clean_reproduction.json`。
 
+### 3.1 全新的 Python 环境
+
+```bash
+python minimax/scripts/verify_fresh_env.py
+```
+
+新建一个**看不到系统包**的虚拟环境（`include-system-site-packages = false`），
+从零安装 `minimax/requirements.txt`，用该环境里的 `powercontext` CLI 在独立端口、
+独立 `POWERCONTEXT_HOME` 上启动官方服务端，再在新环境里跑六项验收、三个审计脚本、
+pytest 与 phase4 检查。
+
+结果：`minimax/evidence/fresh_env_report.json`——含每条命令、真实退出码、
+Python 版本、隔离性检查与解析到的全部依赖版本。
+
 ## 4. 怎么判断"没有作弊"
 
 | 检查 | 做法 |
