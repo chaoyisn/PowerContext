@@ -19,6 +19,7 @@
       <a href="#architecture">技术架构</a>
       <a href="#demo">功能演示</a>
       <a href="#verification">验证结果</a>
+      <a href="#benchmark">效果测量</a>
       <a href="#try">体验说明</a>
       <a href="#repo">仓库与复现</a>
     </nav>
@@ -183,6 +184,36 @@
       </ul>
       <h3 class="sub">已知限制（如实披露）</h3>
       <ul class="plain-list" id="limitations"></ul>
+    </div>
+  </section>
+
+  <!-- ============================ benchmark ============================ -->
+  <section id="benchmark" class="section">
+    <div class="wrap">
+      <h2>效果测量（真实运行，基线为脚本代理）</h2>
+      <p class="section-lede">
+        两条科研工作流的实测对比。基线是<strong>可复现的脚本代理</strong>（全文关键词扫描 / 手工笔记正则扫描），
+        其耗时不含人工阅读与核对，因此只作为下界对照；完整方法与原始数据见仓库 <code>BENCHMARK.md</code>。
+      </p>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>工作流一：定位问题并给出引用页</h3>
+          <ul class="plain-list" id="bench-w1">读取中…</ul>
+        </div>
+        <div class="card">
+          <h3>工作流二：保存进度并跨会话恢复</h3>
+          <ul class="plain-list" id="bench-w2">读取中…</ul>
+        </div>
+      </div>
+      <h3 class="sub">中文记忆召回（10 条查询）</h3>
+      <ul class="plain-list" id="bench-memory">读取中…</ul>
+      <h3 class="sub">中英混合检索（Recall / MRR / 延迟）</h3>
+      <table class="table" id="bench-retrieval" aria-label="中英混合检索基准">
+        <thead><tr><th>embedding</th><th>模式</th><th>R@1</th><th>R@5</th><th>MRR</th><th>页码准确@1</th><th>延迟 ms</th><th>负例误报</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <h3 class="sub">耗时对比图</h3>
+      <img id="bench-chart" src="shots/bench-workflow.svg" alt="工作流耗时对比柱状图" style="max-width:100%;border:1px solid var(--line);border-radius:10px" />
     </div>
   </section>
 

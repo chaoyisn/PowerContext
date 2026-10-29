@@ -97,6 +97,60 @@ def live_health() -> dict:
     }
 
 
+def latest_json(pattern: str) -> dict | None:
+    candidates = sorted(glob.glob(str(PROJECT_ROOT / "logs" / pattern)), key=os.path.getmtime)
+    if not candidates:
+        return None
+    return json.loads(Path(candidates[-1]).read_text(encoding="utf-8"))
+
+
+def benchmarks() -> dict:
+    memory = latest_json("bench-memory-zh-*.json")
+    retrieval = latest_json("bench-retrieval-*.json")
+    workflow = latest_json("bench-workflow-*.json")
+    out: dict = {}
+    if memory:
+        out["memory_zh"] = {
+            "summary": memory["summary"],
+            "generated_at": memory["generated_at"],
+        }
+    if retrieval:
+        table = []
+        for provider, body in retrieval["providers"].items():
+            for mode, r in body["modes"].items():
+                table.append({
+                    "provider": provider, "mode": mode,
+                    "recall@1": r["recall@1"], "recall@5": r["recall@5"], "mrr": r["mrr"],
+                    "page_acc@1": r["page_acc@1"], "latency_ms": r["latency_ms_mean"],
+                    "false_positives": r["negative_false_positives"],
+                })
+        out["retrieval"] = {"generated_at": retrieval["generated_at"], "table": table}
+    if workflow:
+        out["workflow"] = {
+            "generated_at": workflow["generated_at"],
+            "w1": {
+                "baseline_correct": workflow["w1"]["baseline_correct"],
+                "baseline_citations": workflow["w1"]["baseline_citations"],
+                "rf_top1_correct": workflow["w1"]["researchflow_top1_correct"],
+                "rf_top5_correct": workflow["w1"]["researchflow_top5_correct"],
+                "rf_citations": workflow["w1"]["researchflow_citations"],
+                "rf_ms_total": workflow["w1"]["researchflow_ms_total"],
+                "questions": len(workflow["w1"]["rows"]),
+            },
+            "w2": {
+                "baseline_recovered": workflow["w2_baseline"]["recovered"],
+                "baseline_total": workflow["w2_baseline"]["total"],
+                "baseline_corrections": workflow["w2_baseline"]["manual_corrections"],
+                "rf_corrections": workflow["w2"]["manual_corrections"],
+                "rf_total_ms": workflow["w2"]["total_ms"],
+                "rf_exact": workflow["w2"]["decisions_exact"] and workflow["w2"]["next_steps_exact"],
+            },
+            "chart": "shots/bench-workflow.svg",
+            "caveat": workflow.get("baseline_caveat", ""),
+        }
+    return out
+
+
 def main() -> int:
     acceptance = latest_acceptance()
     cases = [
@@ -133,6 +187,7 @@ def main() -> int:
         "pytest": pytest_summary(),
         "live": live_health(),
         "screenshots": shots,
+        "benchmarks": benchmarks(),
         "limitations": LIMITATIONS,
     }
     SITE_DATA.mkdir(parents=True, exist_ok=True)

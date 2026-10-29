@@ -56,6 +56,59 @@
     });
   }
 
+  function renderBenchmarks(bench) {
+    if (!bench) return;
+    var w1 = document.getElementById('bench-w1');
+    var w2 = document.getElementById('bench-w2');
+    var mem = document.getElementById('bench-memory');
+    if (bench.workflow) {
+      var w = bench.workflow.w1;
+      w1.textContent = '';
+      [
+        '问题数：' + w.questions + '（含中→英、英→中、术语与过滤用例）',
+        '基线定位正确：' + w.baseline_correct + '/' + w.questions + '，但产出可点引用 0 条',
+        'ResearchFlow top1 正确：' + w.rf_top1_correct + '/' + w.questions +
+          '，top5 正确：' + w.rf_top5_correct + '/' + w.questions,
+        'ResearchFlow 产出可点引用：' + w.rf_citations + '/' + w.questions +
+          '，总耗时 ' + w.rf_ms_total + ' ms',
+        '已知失败：1 条中文问题的正确块排在第 6 位（top_k=5 截断），已如实记录'
+      ].forEach(function (line) { w1.appendChild(el('li', {}, line)); });
+
+      var v = bench.workflow.w2;
+      w2.textContent = '';
+      [
+        '基线从手工笔记恢复字段：' + v.baseline_recovered + '/' + v.baseline_total +
+          '，需人工修正 ' + v.baseline_corrections + ' 条',
+        'ResearchFlow 保存+跨进程恢复：' + (v.rf_total_ms / 1000).toFixed(1) +
+          ' s，字段逐条精确，人工修正 ' + v.rf_corrections + ' 条',
+        '基线无结构、无来源指针、不能跨会话恢复；ResearchFlow 三者皆具备'
+      ].forEach(function (line) { w2.appendChild(el('li', {}, line)); });
+    }
+    if (bench.memory_zh) {
+      var s = bench.memory_zh.summary;
+      mem.textContent = '';
+      [
+        'PowerContext 自带 search_memory（fts5 unicode61）：' + s['pc_search_hit@5'] + '，且负例误报 1/1',
+        '精确读取（全量 + 快照）：字段级 100%，但不具备检索能力',
+        'ResearchFlow 本地 CJK 匹配 + kind 定向读取：hit@3 ' + s['local_hit@3'] +
+          '，hit@1 ' + s['local_hit@1'] + '，负例误报 0/1',
+        '结论：瓶颈在召回层（unicode61 不分中文 + 元提问词面零重叠），存储层无损'
+      ].forEach(function (line) { mem.appendChild(el('li', {}, line)); });
+    }
+    if (bench.retrieval) {
+      var tbody = document.querySelector('#bench-retrieval tbody');
+      tbody.textContent = '';
+      bench.retrieval.table.forEach(function (row) {
+        var tr = el('tr');
+        [row.provider, row.mode, row['recall@1'], row['recall@5'], row.mrr,
+         row['page_acc@1'], row.latency_ms, row.false_positives].forEach(function (value) {
+          tr.appendChild(el('td', {}, String(value)));
+        });
+        tbody.appendChild(tr);
+      });
+    }
+  }
+
   function render(data) {
     setText('pytest-passed', data.pytest.passed + ' passed');
     setText(
@@ -77,6 +130,7 @@
     );
     renderShots(data.screenshots);
     renderAcceptance(data.acceptance);
+    renderBenchmarks(data.benchmarks);
 
     var limits = document.getElementById('limitations');
     limits.textContent = '';

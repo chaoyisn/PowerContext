@@ -169,8 +169,9 @@ a:hover { text-decoration: underline; }
   .wrap { padding: 0 16px; }
   .hero { padding: 48px 0 40px; }
   .grid-3, .grid-2, .verify-grid, .shots { grid-template-columns: 1fr; }
-  .table { font-size: 13px; }
+  .table { font-size: 13px; display: block; overflow-x: auto; white-space: nowrap; }
   .table th, .table td { padding: 8px 10px; }
+  #bench-chart { width: 100%; height: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
