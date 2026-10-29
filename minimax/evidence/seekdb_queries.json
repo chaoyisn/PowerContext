@@ -18,7 +18,7 @@
       "row_count": 4,
       "rows": [
         {
-          "rows_count": 2,
+          "rows_count": 1,
           "table_name": "sdd_specification"
         },
         {
@@ -30,7 +30,7 @@
           "table_name": "sdd_test"
         },
         {
-          "rows_count": 8,
+          "rows_count": 4,
           "table_name": "sdd_relation"
         }
       ],
@@ -41,17 +41,8 @@
       "parameters": [
         "SPEC-REQ-001"
       ],
-      "row_count": 2,
+      "row_count": 1,
       "rows": [
-        {
-          "content_hash": "631e9881cf7ee7ad4d195066513addbe70be636d7ae270f2e4ecebc1183397cb",
-          "revision": "r1",
-          "source_path": "specs/SPEC-REQ-001.md",
-          "spec_id": "SPEC-REQ-001",
-          "status": "approved",
-          "title": "工单查询函数支持按 status 筛选",
-          "version": "1.0.0"
-        },
         {
           "content_hash": "e9ffc2806e19a5c135a2f2dbea7db01633d29a1e155fee1fe0a97a33fab6a771",
           "revision": "r2",
@@ -69,36 +60,8 @@
       "parameters": [
         "SPEC-REQ-001"
       ],
-      "row_count": 8,
+      "row_count": 4,
       "rows": [
-        {
-          "relation_type": "applies-to",
-          "spec_id": "SPEC-REQ-001",
-          "spec_version": "1.0.0",
-          "target_id": "sample/taskmanager.py",
-          "target_kind": "code"
-        },
-        {
-          "relation_type": "verified-by",
-          "spec_id": "SPEC-REQ-001",
-          "spec_version": "1.0.0",
-          "target_id": "tests/test_list_tasks_status_filter.py",
-          "target_kind": "test"
-        },
-        {
-          "relation_type": "verified-by",
-          "spec_id": "SPEC-REQ-001",
-          "spec_version": "1.0.0",
-          "target_id": "tests/test_list_tasks_status_wildcard.py",
-          "target_kind": "test"
-        },
-        {
-          "relation_type": "verified-by",
-          "spec_id": "SPEC-REQ-001",
-          "spec_version": "1.0.0",
-          "target_id": "tests/test_taskmanager_regression.py",
-          "target_kind": "test"
-        },
         {
           "relation_type": "applies-to",
           "spec_id": "SPEC-REQ-001",
@@ -135,14 +98,8 @@
       "parameters": [
         "%status%"
       ],
-      "row_count": 2,
+      "row_count": 1,
       "rows": [
-        {
-          "revision": "r1",
-          "spec_id": "SPEC-REQ-001",
-          "title": "工单查询函数支持按 status 筛选",
-          "version": "1.0.0"
-        },
         {
           "revision": "r2",
           "spec_id": "SPEC-REQ-001",

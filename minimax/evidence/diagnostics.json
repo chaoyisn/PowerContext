@@ -3,15 +3,15 @@
   "checks": {
     "git": {
       "branch": "competition/minimax-sdd-context",
-      "head": "c6f614def34825e6f76f536ecb0694bf7eb20939",
+      "head": "8f8a275f427eee17e1334a6da75e64d2f85d5f36",
       "reason": "healthy",
       "status": "PASS"
     },
     "materials": {
       "counts": {
         "sdd_code_symbol": 9,
-        "sdd_relation": 8,
-        "sdd_specification": 2,
+        "sdd_relation": 4,
+        "sdd_specification": 1,
         "sdd_test": 20
       },
       "material_present": true,
@@ -34,9 +34,9 @@
       "status": "PASS"
     },
     "powercontext": {
-      "endpoint": "http://127.0.0.1:8791",
+      "endpoint": "http://127.0.0.1:8790",
       "reason": "healthy",
-      "scope_id": "scp_71x66qsskbk0z495be9nnxhbbw",
+      "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
       "service": "powercontext",
       "status": "PASS"
     },
@@ -57,24 +57,22 @@
     },
     "task_state": {
       "known_task_ids": [
-        "TASK-SPEC-REQ-001-PHASE4-0B9560E0",
-        "TASK-SPEC-REQ-001-PHASE4-1CF6F530",
-        "TASK-SPEC-REQ-001-PHASE4-C7B095C8",
-        "TASK-SPEC-REQ-001-PHASE4-CAF16F52",
-        "TASK-SPEC-REQ-001-PHASE4-CEFA82D0",
-        "TASK-SPEC-REQ-001-PHASE4-E19C54A5",
+        "TASK-SPEC-REQ-001",
+        "TASK-SPEC-REQ-001-PHASE4-0CE40B8C",
+        "TASK-SPEC-REQ-001-PHASE4-3A17ED93",
+        "TASK-SPEC-REQ-001-PHASE4-44A5DFE1",
+        "TASK-SPEC-REQ-001-PHASE4-4EFBE863",
+        "TASK-SPEC-REQ-001-PHASE4-7E0A5E42",
+        "TASK-SPEC-REQ-001-PHASE4-93461BB4",
+        "TASK-SPEC-REQ-001-PHASE4-CC407D48",
+        "TASK-SPEC-REQ-001-PHASE4-F6EBCBDC",
         "TASK-SPEC-REQ-001-RESTART",
-        "TASK-SPEC-REQ-001-RESTART-0C30609A",
-        "TASK-SPEC-REQ-001-RESTART-7E26B82C",
-        "TASK-SPEC-REQ-001-RESTART-8EB7BD6A",
-        "TASK-SPEC-REQ-001-RESTART-A7CDDF5B",
-        "TASK-SPEC-REQ-001-RESTART-BA37B4A0",
-        "TASK-SPEC-REQ-001-RESTART-C53D3304",
-        "TASK-SPEC-REQ-001-RESTART-E2328797"
+        "TASK-SPEC-REQ-001-RESTART-34D95372",
+        "TASK-SPEC-REQ-001-RESTART-394F6FF9"
       ],
       "note": "存在历史任务状态；跨进程恢复验证会使用独立任务 ID，不会与历史状态混淆。",
       "reason": "healthy",
-      "sample_task_has_state": false,
+      "sample_task_has_state": true,
       "status": "PASS"
     }
   },

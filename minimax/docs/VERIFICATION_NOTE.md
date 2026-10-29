@@ -106,6 +106,10 @@ python -m minimax.scripts.phase4_checks
 
 证据：`minimax/evidence/phase4_cross_process.json`。
 
+规格更新的重放在**独立库名**（`sdd_context_phase4`）与**独立 scope** 下进行，
+结束后删除隔离库——正式数据库不留下被取代的 r1 行，
+因此六项验收报告的行数与脚本执行顺序无关。
+
 ### 规格变更是否真的进入上下文
 
 ```bash

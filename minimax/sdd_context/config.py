@@ -12,6 +12,22 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = DEFAULT_ROOT.parent
+
+
+def _resolve_root(value: str) -> Path:
+    """Resolve the module root.
+
+    A relative ``SDD_CONTEXT_ROOT`` is resolved against the **repository
+    root**, not against the current working directory. Otherwise the same
+    configuration template would point at different places depending on
+    where the command was started from.
+    """
+
+    candidate = Path(value)
+    if candidate.is_absolute():
+        return candidate
+    return (REPOSITORY_ROOT / candidate).resolve()
 
 
 def _env(name: str, default: str) -> str:
@@ -35,7 +51,7 @@ def _env_bool(name: str, default: bool) -> bool:
 class Settings:
     """Resolved settings for one SDD context module instance."""
 
-    root: Path = field(default_factory=lambda: Path(_env("SDD_CONTEXT_ROOT", str(DEFAULT_ROOT))))
+    root: Path = field(default_factory=lambda: _resolve_root(_env("SDD_CONTEXT_ROOT", str(DEFAULT_ROOT))))
 
     seekdb_host: str = field(default_factory=lambda: _env("SDD_SEEKDB_HOST", "127.0.0.1"))
     seekdb_port: int = field(default_factory=lambda: _env_int("SDD_SEEKDB_PORT", 2881))
@@ -67,7 +83,10 @@ class Settings:
         """
 
         override = os.environ.get("SDD_EVIDENCE_DIR")
-        return Path(override) if override else self.root / "evidence"
+        if not override:
+            return self.root / "evidence"
+        candidate = Path(override)
+        return candidate if candidate.is_absolute() else (REPOSITORY_ROOT / candidate).resolve()
 
     @property
     def committed_evidence_dir(self) -> Path:

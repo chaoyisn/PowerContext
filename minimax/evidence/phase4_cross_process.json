@@ -18,41 +18,41 @@
   },
   "context_merged": {
     "completed": [
-      "phase4: ״̬���ڶ���������д��"
+      "phase4: 状态已在独立进程中写入"
     ],
     "todos": [
-      "phase4: ��֤����̶�ȡ"
+      "phase4: 验证跨进程读取"
     ],
     "verifications": [
-      "phase4: д������˳��� 0"
+      "phase4: 写入进程退出码 0"
     ]
   },
-  "marker": "634D67FD",
+  "marker": "10A1B92A",
   "passed": true,
   "read_process": {
-    "pid": 3808,
+    "pid": 2972,
     "returncode": 0,
     "stderr": ""
   },
   "recovered_state": {
     "artifact_ids": {
-      "sdd-completed": "art_989ac90a5ddd453aa2f9b7f9e2b599db",
-      "sdd-task-description": "art_e6edfc2619f44f22877a4c38f19accf8",
-      "sdd-todo": "art_95cc68a784084f3480c10ad3c6791aca",
-      "sdd-verification": "art_3bd1a2ffaf184bc9b17c4d2c23b5f78b"
+      "sdd-completed": "art_7027f39b71784ee48c6126dfb319d14e",
+      "sdd-task-description": "art_2fbab9cfbd934033a5e1b45308ea18f2",
+      "sdd-todo": "art_ab107f60cd264cbbbf73f2eb7d24e93d",
+      "sdd-verification": "art_9a3367546d564de39b497921a3610187"
     },
     "completed": [
-      "phase4: ״̬���ڶ���������д��"
+      "phase4: 状态已在独立进程中写入"
     ],
-    "description": "phase4: ����ָ̻���֤���� 634D67FD",
+    "description": "phase4: 跨进程恢复验证任务 10A1B92A",
     "has_state": true,
-    "scope_id": "scp_71x66qsskbk0z495be9nnxhbbw",
-    "task_id": "TASK-SPEC-REQ-001-PHASE4-E19C54A5",
+    "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
+    "task_id": "TASK-SPEC-REQ-001-PHASE4-11C1ACE3",
     "todos": [
-      "phase4: ��֤����̶�ȡ"
+      "phase4: 验证跨进程读取"
     ],
     "verifications": [
-      "phase4: д������˳��� 0"
+      "phase4: 写入进程退出码 0"
     ]
   },
   "state_before_write": {
@@ -60,22 +60,22 @@
     "completed": [],
     "description": null,
     "has_state": false,
-    "scope_id": "scp_71x66qsskbk0z495be9nnxhbbw",
-    "task_id": "TASK-SPEC-REQ-001-PHASE4-E19C54A5",
+    "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
+    "task_id": "TASK-SPEC-REQ-001-PHASE4-11C1ACE3",
     "todos": [],
     "verifications": []
   },
   "state_record_ids": {
-    "sdd-completed": "art_989ac90a5ddd453aa2f9b7f9e2b599db",
-    "sdd-task-description": "art_e6edfc2619f44f22877a4c38f19accf8",
-    "sdd-todo": "art_95cc68a784084f3480c10ad3c6791aca",
-    "sdd-verification": "art_3bd1a2ffaf184bc9b17c4d2c23b5f78b"
+    "sdd-completed": "art_7027f39b71784ee48c6126dfb319d14e",
+    "sdd-task-description": "art_2fbab9cfbd934033a5e1b45308ea18f2",
+    "sdd-todo": "art_ab107f60cd264cbbbf73f2eb7d24e93d",
+    "sdd-verification": "art_9a3367546d564de39b497921a3610187"
   },
-  "task_id": "TASK-SPEC-REQ-001-PHASE4-E19C54A5",
+  "task_id": "TASK-SPEC-REQ-001-PHASE4-11C1ACE3",
   "write_process": {
-    "pid": 13716,
+    "pid": 24364,
     "returncode": 0,
     "stderr": "",
-    "stdout": "{\"pid\": 13716, \"marker\": \"634D67FD\"}"
+    "stdout": "{\"pid\": 24364, \"marker\": \"10A1B92A\"}"
   }
 }

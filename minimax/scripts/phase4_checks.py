@@ -67,6 +67,76 @@ def _restore_baseline_spec() -> None:
     SPEC_PATH.write_text(SPEC_BASELINE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
 
 
+def _drop_isolated_database(settings: Settings) -> dict[str, Any]:
+    """Remove the isolated database so the replay starts from an empty one."""
+
+    import pymysql
+
+    try:
+        connection = pymysql.connect(
+            host=settings.seekdb_host,
+            port=settings.seekdb_port,
+            user=settings.seekdb_user,
+            password=settings.seekdb_password,
+            connect_timeout=10,
+            autocommit=True,
+        )
+    except Exception as error:
+        return {"status": "BLOCKED", "detail": f"{type(error).__name__}: {error}"}
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(f"DROP DATABASE IF EXISTS `{settings.seekdb_database}`")
+        return {"status": "PASS", "dropped": settings.seekdb_database}
+    except Exception as error:
+        return {"status": "BLOCKED", "detail": str(error)[:300]}
+    finally:
+        connection.close()
+
+
+def _create_isolated_scope(url: str) -> tuple[str | None, dict[str, Any]]:
+    """Create a PowerContext scope that holds no task state before the replay."""
+
+    import httpx
+
+    idempotency_key = f"sdd-phase4-{uuid.uuid4().hex[:16]}"
+    try:
+        with httpx.Client(timeout=30) as client:
+            response = client.post(
+                f"{url.rstrip('/')}/v1/scopes",
+                json={
+                    "title": idempotency_key,
+                    "summary": "规格更新重放验证",
+                    "idempotency_key": idempotency_key,
+                },
+            )
+    except Exception as error:
+        return None, {"status": "BLOCKED", "detail": f"{type(error).__name__}: {error}"}
+    if response.status_code >= 400:
+        return None, {"status": "BLOCKED", "detail": f"HTTP {response.status_code}: {response.text[:300]}"}
+    payload = response.json()
+    return payload.get("scope_id"), {"status": "PASS", "scope_id": payload.get("scope_id")}
+
+
+def _isolated_settings(settings: Settings) -> tuple[Settings, dict[str, Any]]:
+    """Build settings for an isolated database namespace and scope.
+
+    The specification update replay imports the superseded r1 revision, so it
+    must not write into the regular database: otherwise the regular database
+    would keep an extra specification row and the acceptance report would
+    depend on the order in which the scripts were run.
+    """
+
+    scope_id, scope_report = _create_isolated_scope(settings.powercontext_url)
+    isolated = Settings(
+        **{
+            **settings.__dict__,
+            "seekdb_database": f"{settings.seekdb_database}_phase4",
+            "powercontext_scope_id": scope_id or "",
+        }
+    )
+    return isolated, scope_report
+
+
 def _current_revision_spec() -> str:
     """Read the revised specification from the git working tree."""
 
@@ -109,21 +179,29 @@ def _import_all_materials(settings: Settings, importer: MaterialImporter, store:
 def check_specification_update(settings: Settings) -> dict[str, Any]:
     """Import, revise, re-import and prove the context follows the revision."""
 
-    _restore_baseline_spec()
-    store = SeekDBStore(settings)
-    store.initialize()
-    importer = MaterialImporter(store, settings.root)
+    isolated, scope_report = _isolated_settings(settings)
+    drop_report = _drop_isolated_database(isolated)
+    committed_spec = SPEC_PATH.read_text(encoding="utf-8")
 
-    first = importer.import_specification(SPEC_PATH, SPEC_ID)
-    _import_all_materials(settings, importer, store)
-    state_store = PowerContextStateStore(settings)
-    builder = ContextBuilder(store, state_store, settings.root)
-    context_before = builder.build(TASK_ID, TASK_TEXT, SPEC_ID)
+    try:
+        _restore_baseline_spec()
+        store = SeekDBStore(isolated)
+        store.initialize()
+        importer = MaterialImporter(store, isolated.root)
 
-    revised_content = _current_revision_spec()
-    SPEC_PATH.write_text(revised_content, encoding="utf-8")
-    second = importer.import_specification(SPEC_PATH, SPEC_ID)
-    context_after = builder.build(TASK_ID, TASK_TEXT, SPEC_ID)
+        first = importer.import_specification(SPEC_PATH, SPEC_ID)
+        _import_all_materials(isolated, importer, store)
+        state_store = PowerContextStateStore(isolated)
+        builder = ContextBuilder(store, state_store, isolated.root)
+        context_before = builder.build(TASK_ID, TASK_TEXT, SPEC_ID)
+
+        revised_content = _current_revision_spec()
+        SPEC_PATH.write_text(revised_content, encoding="utf-8")
+        second = importer.import_specification(SPEC_PATH, SPEC_ID)
+        context_after = builder.build(TASK_ID, TASK_TEXT, SPEC_ID)
+    finally:
+        # The working tree must look exactly as it did before the replay.
+        SPEC_PATH.write_text(committed_spec, encoding="utf-8")
 
     before_spec = context_before.specifications[0] if context_before.specifications else {}
     after_spec = context_after.specifications[0] if context_after.specifications else {}
@@ -181,9 +259,16 @@ def check_specification_update(settings: Settings) -> dict[str, Any]:
             "spec_import": second,
         },
         "stored_versions": all_versions,
+        "isolation": {
+            "database": isolated.seekdb_database,
+            "database_reset": drop_report,
+            "scope": scope_report,
+            "note": "规格更新重放在独立库名与独立 scope 下进行，正式数据库不受影响。",
+        },
         "checks": checks,
     }
     report["passed"] = all(checks.values())
+    report["isolation"]["database_cleanup"] = _drop_isolated_database(isolated)
     return report
 
 
