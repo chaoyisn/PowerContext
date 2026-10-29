@@ -16,6 +16,15 @@ from powercontext.builtin.runtime import GetMemoryEntryRequest, SearchMemoryRequ
 from powercontext.sources.models import Source, SourceMaterialization
 from powercontext.sources.projections import TextEvidence
 
+__all__ = [
+    "PDF_PAGE_SOURCE_DEFINITION",
+    "PDFDocumentInput",
+    "PDFPageInput",
+    "PDFPageSource",
+    "parse_pdf_document",
+    "search_pdf_pages",
+]
+
 
 class PDFDocumentInput(BaseModel):
     document_id: str
@@ -137,13 +146,13 @@ _BASE_STOP = frozenset([
 ])
 
 
-def _build_financial_statement_queries(
+def _build_statement_queries(
     term_set: set[str],
     q_lower: str,
-    weighted_queries: list[tuple[str, float]],
+    weighted: list[tuple[str, float]],
 ) -> None:
     if "cash" in term_set and ("flow" in term_set or "flows" in term_set):
-        weighted_queries.extend([
+        weighted.extend([
             ("consolidated statements of cash flows", 3.0),
             ("consolidated statement of cash flows", 3.0),
             ("statement of cash flows", 2.0),
@@ -151,7 +160,7 @@ def _build_financial_statement_queries(
             ("operating activities", 1.5),
         ])
     elif "cash" in term_set:
-        weighted_queries.extend([
+        weighted.extend([
             ("consolidated statement of cash flows", 2.5),
             ("statement of cash flows", 2.0),
             ("cash flows", 1.5),
@@ -162,52 +171,42 @@ def _build_financial_statement_queries(
         or "p&l" in q_lower
         or ("statement" in term_set and "operations" in term_set)
         or "ebitda" in term_set
-        or "margin" in term_set
+        or "earnings" in term_set
     ):
-        weighted_queries.extend([
+        weighted.extend([
             ("consolidated statement of income", 3.0),
             ("consolidated statements of income", 3.0),
-            ("statement of income", 2.0),
-            ("statements of income", 2.0),
-            ("consolidated statement of operations", 2.5),
             ("consolidated statements of operations", 2.5),
-            ("statement of operations", 2.0),
+            ("consolidated statement of operations", 2.5),
+            ("consolidated statements of earnings", 2.5),
             ("operating income", 1.5),
             ("operating profit", 1.5),
         ])
 
     if "balance" in term_set and "sheet" in term_set:
-        weighted_queries.extend([
+        weighted.extend([
             ("consolidated balance sheets", 3.0),
             ("consolidated balance sheet", 3.0),
             ("balance sheets", 2.0),
             ("balance sheet", 2.0),
         ])
     elif "sheet" in term_set:
-        weighted_queries.extend([
+        weighted.extend([
             ("consolidated balance sheets", 2.5),
             ("consolidated balance sheet", 2.5),
             ("balance sheet", 1.5),
         ])
 
 
-def _build_domain_item_queries(
+def _build_sec_section_queries(
     term_set: set[str],
-    weighted_queries: list[tuple[str, float]],
+    weighted: list[tuple[str, float]],
 ) -> None:
-    if "legal" in term_set or "battles" in term_set or "litigation" in term_set or "lawsuit" in term_set:
-        weighted_queries.extend([
+    if any(k in term_set for k in ["legal", "battles", "litigation", "lawsuit", "lawsuits"]):
+        weighted.extend([
             ("item 3 legal proceedings", 3.0),
             ("legal proceedings", 2.0),
             ("litigation", 1.5),
-        ])
-
-    if "restructuring" in term_set:
-        weighted_queries.extend([
-            ("restructuring", 2.0),
-            ("restructuring charges", 2.5),
-            ("restructuring costs", 2.5),
-            ("restructuring and impairment", 2.5),
         ])
 
     if any(
@@ -217,7 +216,7 @@ def _build_domain_item_queries(
             "services", "customers", "segment", "segments", "divisions",
         ]
     ):
-        weighted_queries.extend([
+        weighted.extend([
             ("item 1 business", 3.0),
             ("our operations", 2.0),
             ("reportable segments", 2.0),
@@ -226,8 +225,28 @@ def _build_domain_item_queries(
             ("geographic", 1.5),
         ])
 
+    if any(k in term_set for k in ["drove", "driver", "drivers", "growth", "margin", "margins"]):
+        weighted.extend([
+            ("item 7 management discussion and analysis", 3.0),
+            ("management discussion and analysis", 2.5),
+            ("results of operations", 2.5),
+            ("gross margin", 2.0),
+            ("operating margin", 2.0),
+        ])
+
+    if "risk" in term_set or "risks" in term_set:
+        weighted.extend([
+            ("item 1a risk factors", 3.0),
+            ("risk factors", 2.0),
+        ])
+
+
+def _build_financial_metric_queries(
+    term_set: set[str],
+    weighted: list[tuple[str, float]],
+) -> None:
     if "ebitda" in term_set:
-        weighted_queries.extend([
+        weighted.extend([
             ("operating income", 2.0),
             ("operating profit", 2.0),
             ("depreciation and amortization", 2.5),
@@ -237,24 +256,23 @@ def _build_domain_item_queries(
 
     if (
         "capex" in term_set
-        or ("capital" in term_set and "expenditure" in term_set)
-        or ("capital" in term_set and "expenditures" in term_set)
+        or ("capital" in term_set and ("expenditure" in term_set or "expenditures" in term_set))
     ):
-        weighted_queries.extend([
+        weighted.extend([
             ("capital expenditures", 2.5),
             ("additions to property", 2.0),
             ("property plant and equipment", 2.0),
         ])
 
     if "inventory" in term_set or "inventories" in term_set:
-        weighted_queries.extend([
+        weighted.extend([
             ("inventories", 2.5),
             ("inventory", 2.0),
             ("cost of sales", 1.5),
         ])
 
-    if "quick" in term_set and "ratio" in term_set:
-        weighted_queries.extend([
+    if ("quick" in term_set and "ratio" in term_set) or "liquidity" in term_set:
+        weighted.extend([
             ("quick ratio", 3.0),
             ("current assets", 2.0),
             ("current liabilities", 2.0),
@@ -262,18 +280,40 @@ def _build_domain_item_queries(
             ("balance sheet", 2.0),
         ])
 
-    if "debt" in term_set and "securities" in term_set:
-        weighted_queries.extend([
-            ("debt securities", 3.0),
-            ("registered to trade", 2.5),
-            ("national securities exchange", 2.5),
+    if "debt" in term_set or "borrow" in term_set or "borrowings" in term_set:
+        weighted.extend([
+            ("debt securities", 2.5),
+            ("long-term debt", 2.5),
+            ("short-term borrowings", 2.0),
+            ("consolidated balance sheets", 2.0),
         ])
 
     if "tax" in term_set or "taxes" in term_set:
-        weighted_queries.extend([
+        weighted.extend([
             ("effective tax rate", 3.0),
             ("provision for income taxes", 2.5),
             ("income taxes", 2.0),
+        ])
+
+    if "restructuring" in term_set:
+        weighted.extend([
+            ("restructuring", 2.0),
+            ("restructuring charges", 2.5),
+            ("restructuring costs", 2.5),
+            ("restructuring and impairment", 2.5),
+        ])
+
+    if any(k in term_set for k in ["acquisition", "acquisitions", "acquired", "divestitures"]):
+        weighted.extend([
+            ("acquisitions and divestitures", 2.5),
+            ("business combinations", 2.0),
+        ])
+
+    if "dividend" in term_set or "dividends" in term_set:
+        weighted.extend([
+            ("dividends paid", 2.5),
+            ("cash dividends", 2.0),
+            ("consolidated statement of cash flows", 2.0),
         ])
 
 
@@ -281,8 +321,9 @@ def _generate_weighted_queries(terms: list[str], q_lower: str) -> list[tuple[str
     term_set = set(terms)
     weighted_queries: list[tuple[str, float]] = []
 
-    _build_financial_statement_queries(term_set, q_lower, weighted_queries)
-    _build_domain_item_queries(term_set, weighted_queries)
+    _build_statement_queries(term_set, q_lower, weighted_queries)
+    _build_sec_section_queries(term_set, weighted_queries)
+    _build_financial_metric_queries(term_set, weighted_queries)
 
     for i in range(len(terms) - 1):
         weighted_queries.append((f"{terms[i]} {terms[i + 1]}", 1.0))
