@@ -21,6 +21,7 @@ import re
 import subprocess
 import sys
 import time
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -616,7 +617,10 @@ def test_05_state_reusable(settings: Settings) -> dict[str, Any]:
         passed_dependencies = False
         dependency_detail = f"seekdb 不可用: {error}"
 
-    task_id = f"{TASK_ID}-RESTART"
+    # The task id is unique per run, so a record written by an earlier run can
+    # never be mistaken for a recovered one. The scope therefore stays clean
+    # across repeated verifications.
+    task_id = f"{TASK_ID}-RESTART-{uuid.uuid4().hex[:8].upper()}"
     marker = f"verify-restart-{int(time.time())}"
 
     write_script = (
