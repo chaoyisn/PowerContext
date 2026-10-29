@@ -1,0 +1,14 @@
+[
+  {
+    "filename": "seekdb-hybrid.md",
+    "content": "seekdb hybrid search combines vector similarity and full text search. The database ranks the candidate sets internally with reciprocal rank fusion. The application calls the seekdb JavaScript SDK hybridSearch method and does not merge result lists in JavaScript."
+  },
+  {
+    "filename": "browser-embedding.md",
+    "content": "Document and query embeddings run in a browser Web Worker with Transformers.js and ONNX Runtime Web. WebGPU is preferred when available; WASM is used as the CPU fallback. The Node API receives ready vectors and never loads an embedding model."
+  },
+  {
+    "filename": "incremental-import.md",
+    "content": "Text documents are deduplicated by SHA-256 before embedding. New chunks are upserted into seekdb, the vector index is refreshed, and the API reads vectors back to confirm visibility before marking a document imported."
+  }
+]
