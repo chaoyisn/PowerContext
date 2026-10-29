@@ -3,6 +3,8 @@
 > OceanBase × Qoder 2026 数据库比赛 · Qoder 赛道参赛作品
 > 基线分支：`2026-competition-ecosystem` @ `d647275c308e09b7b623f322a26f5c4e85734fb0`
 > 代码位置：`qoder/researchflow/`
+> **在线展示站（已公开发布）**：<https://researchflow-5esfsogn38f.qoder.zone>
+> 静态展示版，含真实运行截图与真实验证数据；不连接数据库、不提供模拟查询。完整可交互系统按 [RUN.md](./RUN.md) 本地启动。
 
 ResearchFlow 是一个「带证据的知识库 + 长期任务记忆 + 科研进度恢复」的科研工作台，
 面向研究生、科研人员与 AI Infra 工程师。它不是 ChatPDF：
@@ -102,7 +104,8 @@ python scripts/seed_demo.py
   数据目录）20/20 步通过，结束自动清理。
 - `scripts/bench_memory_zh.py` / `bench_retrieval.py` / `bench_workflow.py`：中文记忆、中英检索、
   工作流提效三项基准，结果见 [BENCHMARK.md](./BENCHMARK.md)。
-- 比赛网站：`site/public/`（静态展示版，含真实运行截图与真实验证数据），见 [SITE_DEPLOYMENT.md](./SITE_DEPLOYMENT.md)。
+- 比赛网站：`site/public/`（静态展示版，含真实运行截图与真实验证数据），**已公开发布**于
+  <https://researchflow-5esfsogn38f.qoder.zone>，发布与匿名验证证据见 [SITE_DEPLOYMENT.md](./SITE_DEPLOYMENT.md)。
 - 全部证据与失败案例见 [VERIFICATION.md](./VERIFICATION.md) 与 [SECURITY.md](./SECURITY.md)。
 
 ---
@@ -117,12 +120,14 @@ qoder/researchflow/
 ├── VERIFICATION.md        seekdb / PowerContext 真实使用证据、T1-T9、部署可行性、风险
 ├── BENCHMARK.md           中文记忆 / 中英检索 / 工作流提效的方法与原始结果
 ├── SECURITY.md            安全审计结论与公网部署前置条件
-├── SITE_DEPLOYMENT.md     Sites 能力复核、阻塞证据、发布步骤与验证清单
+├── SITE_DEPLOYMENT.md     Sites 能力复核、发布结果（真实 URL）、匿名验证清单
+├── PUSH_PRECHECK.md       推送前检查结论、敏感内容处理与待授权方案
+├── DEMO_SCRIPT.md         2–3 分钟演示视频分镜、旁白稿、录制步骤与截图清单
 ├── SUBMISSION.md          提交材料清单与需人工补充项
 ├── RUN.md                 启动、演示、验证命令（Windows 与 Linux/WSL）
 ├── .env.example           全部配置项（不含真实密钥）
 ├── site/public/           比赛展示网站（静态，真实截图与真实验证数据）
-├── verification/          已提交的验收运行原始记录
+├── verification/          已提交的验收运行原始记录 + 线上站点发布验证记录
 ├── backend/
 │   ├── pyproject.toml     固定兼容版本
 │   └── app/
@@ -133,7 +138,7 @@ qoder/researchflow/
 │       ├── memory/                models / client / service（PowerContext）
 │       ├── agent/                 llm / prompts / service（证据问答）
 │       └── api/                   FastAPI 路由 + schemas + OpenAPI
-│   └── tests/                     88 个测试（单元 + 集成 + HTTP）
+│   └── tests/                     149 个测试（单元 + seekdb/PowerContext 集成 + 安全 + 保留集 + HTTP）
 ├── frontend/              React 18 + Vite 5 + TS，四个页面
 ├── demo/                  可复现样例：多页 PDF（含空白页）/ Markdown 计划 / 结构化实验记录
 └── scripts/
@@ -142,7 +147,7 @@ qoder/researchflow/
     ├── smoke_ingest_retrieve.py / smoke_memory.py
     ├── seed_demo.py           通过 HTTP API 灌入演示数据
     ├── reset_store.py         只清理本项目的 rf_ 前缀对象
-    └── run_acceptance.py      T1-T8 验收运行器
+    └── run_acceptance.py      T1-T9 验收运行器（150 项校验）
 ```
 
 ---
@@ -159,4 +164,6 @@ qoder/researchflow/
   其召回优先阈值会引入 1/2 负例误报，故默认仍为精度优先配置，权衡见 BENCHMARK.md §2.3。
 - 中英混合检索仍有 2 条「英文改写问中文原文」在默认阈值下被门控拦下，属当前能力边界，已记录。
 - Qoder Sites **不能**托管 FastAPI / seekdb / PowerContext（无持久进程、无 Python 运行时）；
-  展示站为静态版，发布当前被平台阻塞（`sites_unavailable`），见 SITE_DEPLOYMENT.md。
+  因此线上是静态展示版（已公开发布：<https://researchflow-5esfsogn38f.qoder.zone>），
+  页面数据由真实验收报告与真实 pytest 运行导出，在线版不提供任何模拟查询，
+  能力边界与发布证据见 SITE_DEPLOYMENT.md 与 verification/site-public/PUBLISH_VERIFICATION.md。

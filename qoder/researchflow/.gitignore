@@ -42,3 +42,6 @@ Thumbs.db
 
 # Never commit model caches or demo uploads
 hf-cache/
+
+# Sites 描述符（工具生成的账号绑定状态，不入库）
+*.qoder.site

@@ -1,10 +1,10 @@
 /**
- * Verify the static showcase site renders correctly before Sites preparation.
+ * Verify the static showcase site renders correctly, locally or at its published URL.
  *
- *   NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" node scripts/verify_site.cjs [base]
+ *   NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" node scripts/verify_site.cjs [base] [outDir]
  *
  * Checks: evidence data renders, every screenshot actually loads, no console/page errors,
- * anchor navigation works, and the mobile layout does not overflow horizontally.
+ * no request answered >=400, anchor navigation works, and the mobile layout does not overflow.
  */
 const path = require('path');
 const fs = require('fs');
@@ -12,6 +12,8 @@ const os = require('os');
 const { chromium } = require('playwright-core');
 
 const BASE = process.argv[2] || 'http://127.0.0.1:4173/';
+const OUT_DIR = process.argv[3] || path.join(__dirname, '..', 'site', 'preview');
+fs.mkdirSync(OUT_DIR, { recursive: true });
 
 function resolveExecutable() {
   if (process.env.RF_CHROME_PATH) return process.env.RF_CHROME_PATH;
@@ -34,9 +36,14 @@ function resolveExecutable() {
 (async () => {
   const browser = await chromium.launch({ executablePath: resolveExecutable() });
   const errors = [];
+  const badResponses = [];
+  const watch = (target) => target.on('response', (res) => {
+    if (res.status() >= 400) badResponses.push(`${res.status()} ${res.url()}`);
+  });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   page.on('console', (msg) => { if (msg.type() === 'error') errors.push('console: ' + msg.text()); });
   page.on('pageerror', (err) => errors.push('pageerror: ' + err.message));
+  watch(page);
 
   await page.goto(BASE, { waitUntil: 'networkidle' });
   await page.waitForSelector('#acc-summary:not(:empty)');
@@ -67,10 +74,11 @@ function resolveExecutable() {
   const status = await page.evaluate(() => document.title ? 'ok' : 'missing');
   console.log('reload status :', status);
 
-  await page.screenshot({ path: path.join(__dirname, '..', 'site', 'preview', 'site-desktop.png'), fullPage: true });
+  await page.screenshot({ path: path.join(OUT_DIR, 'site-desktop.png'), fullPage: true });
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
   mobile.on('pageerror', (err) => errors.push('mobile pageerror: ' + err.message));
+  watch(mobile);
   await mobile.goto(BASE, { waitUntil: 'networkidle' });
   await mobile.waitForFunction(() => {
     const node = document.getElementById('acc-summary');
@@ -78,13 +86,13 @@ function resolveExecutable() {
   });
   const overflow = await mobile.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   console.log('mobile h-overflow px:', overflow);
-  await mobile.screenshot({ path: path.join(__dirname, '..', 'site', 'preview', 'site-mobile.png'), fullPage: true });
+  await mobile.screenshot({ path: path.join(OUT_DIR, 'site-mobile.png'), fullPage: true });
 
   await browser.close();
-  if (brokenShots > 0 || rows < 9 || errors.length) {
-    console.error('SITE VERIFY FAILED', errors);
+  console.log('failed requests (>=400):', badResponses.length, badResponses.slice(0, 5).join(' | '));
+  if (brokenShots > 0 || rows < 9 || errors.length || badResponses.length) {
+    console.error('SITE VERIFY FAILED', errors, badResponses);
     process.exit(1);
   }
-  if (errors.length) console.error('console errors:', errors);
-  console.log('SITE VERIFY OK');
+  console.log('SITE VERIFY OK', BASE);
 })().catch((err) => { console.error('SITE VERIFY ERROR:', err.message); process.exit(1); });
