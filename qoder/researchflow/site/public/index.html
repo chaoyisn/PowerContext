@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ResearchFlow — 基于 seekdb 与 PowerContext 的科研知识与任务连续性助手</title>
+<meta name="description" content="ResearchFlow：带证据的科研知识库 + 长期任务记忆 + 科研进度恢复。文献检索有页级证据，科研进度跨会话可恢复。OceanBase × Qoder 2026 数据库比赛 Qoder 赛道作品。" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <span class="brand">ResearchFlow</span>
+    <span class="brand-sub">科研知识与任务连续性助手</span>
+    <nav class="topnav" aria-label="页面导航">
+      <a href="#features">核心功能</a>
+      <a href="#architecture">技术架构</a>
+      <a href="#demo">功能演示</a>
+      <a href="#verification">验证结果</a>
+      <a href="#try">体验说明</a>
+      <a href="#repo">仓库与复现</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============================ hero ============================ -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">OceanBase × Qoder 2026 数据库比赛 · Qoder 赛道</p>
+      <h1>让每一次科研回答都带可核对的页级证据，<br />让每一个新会话都记得上次做到了哪里。</h1>
+      <p class="lede">
+        ResearchFlow 把文献、技术文档与实验记录统一存入 <strong>seekdb</strong>，用向量 + 全文 + 混合（RRF）检索给出
+        可点开原文页的引用；同时把研究目标、已确认决策与下一步计划存入 <strong>PowerContext</strong>，
+        换会话后按项目一键恢复进度。两个后端职责分离、可独立断开验证。
+      </p>
+      <ul class="pains" aria-label="真实科研痛点">
+        <li><strong>资料分散</strong>：PDF、文档、实验记录散落各处，一个问题要翻五个地方。</li>
+        <li><strong>结论不可核</strong>：AI 回答丢失来源，页码无从查起，不敢写进论文。</li>
+        <li><strong>进度会失忆</strong>：新会话忘记已完成的实验、已定的决策和下一步。</li>
+      </ul>
+      <div class="hero-badges">
+        <span class="badge badge-live">在线版 = 展示 + 真实验证证据</span>
+        <span class="badge badge-local">完整交互体验需本地运行（见「体验说明」）</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ features ============================ -->
+  <section id="features" class="section">
+    <div class="wrap">
+      <h2>核心功能</h2>
+      <div class="grid grid-3">
+        <article class="card">
+          <h3>文档入库</h3>
+          <p>PDF / Markdown / TXT 上传，文件内容 SHA-256 作为主键，重复上传自动去重；PDF 保留真实物理页号，空白页也保留页级身份记录。</p>
+          <p class="tag-line"><span class="tag tag-seekdb">seekdb</span> rf_documents / rf_pages / rf_chunks</p>
+        </article>
+        <article class="card">
+          <h3>混合检索</h3>
+          <p>向量（HNSW ANN）、全文（ik 分词）、混合（RRF 融合）三种模式可切换、可并排对比；结果带文件名、物理页码、文本片段与稳定 chunk_id。</p>
+          <p class="tag-line"><span class="tag tag-seekdb">seekdb</span> pyseekdb hybrid_search</p>
+        </article>
+        <article class="card">
+          <h3>证据回查</h3>
+          <p>每条引用都能打开 seekdb 中存储的原文页；不存在的页码返回 404。模型给出的引用还会被服务端逐条回查，编造的引用被拦截并公示。</p>
+          <p class="tag-line"><span class="tag tag-seekdb">seekdb</span> 页级原文 + citation 校验</p>
+        </article>
+        <article class="card">
+          <h3>证据问答</h3>
+          <p>回答只建立在通过证据门控的检索结果上，每条论断标注「资料直接支持 / 模型推断 / 尚无证据」；语料无答案时明确说没有，不编造来源。</p>
+          <p class="tag-line"><span class="tag tag-seekdb">seekdb</span> + <span class="tag tag-llm">LLM</span></p>
+        </article>
+        <article class="card">
+          <h3>任务记忆</h3>
+          <p>研究目标、已完成工作、已确认决策、关键证据指针、未解决问题与 next_steps 显式保存到 PowerContext；系统永不自动写入模型猜测。</p>
+          <p class="tag-line"><span class="tag tag-memory">PowerContext</span> Scope + Atomic Memory</p>
+        </article>
+        <article class="card">
+          <h3>跨会话恢复</h3>
+          <p>新会话仅凭 project_id 取回全部进度，并生成确定性的「上次做到了哪里 / 接下来该做什么」续研简报；记忆与文献证据在界面上分通道标记。</p>
+          <p class="tag-line"><span class="tag tag-memory">PowerContext</span> prepare_context + 全量读取</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ architecture ============================ -->
+  <section id="architecture" class="section section-alt">
+    <div class="wrap">
+      <h2>技术架构：两个后端，各司其职</h2>
+      <p class="section-lede">
+        seekdb 只负责文献证据，PowerContext 只负责任务记忆。断开任意一个，另一个的能力边界会被明确报告，
+        而不是静默降级——这一点在验收用例 T7 / T8 中被真实验证。
+      </p>
+      <div class="arch">
+        <div class="arch-col">
+          <h3><span class="tag tag-seekdb">seekdb</span> 文献证据存储</h3>
+          <ul>
+            <li>原文、文档元数据、物理页、chunk、384 维向量</li>
+            <li>HNSW 向量索引 + FULLTEXT（ik）索引</li>
+            <li>单条 SQL 完成向量 + 全文混合召回，RRF 融合</li>
+            <li>页级身份：空白页也有一行记录</li>
+          </ul>
+          <p class="arch-fact" id="fact-seekdb">读取中…</p>
+        </div>
+        <div class="arch-flow" aria-hidden="true">
+          <span>上传 → 解析 → 分块 → 向量化 → 写入</span>
+          <span>提问 → 检索 → 门控 → 引用回查 → 回答</span>
+          <span>保存 → Scope → Atomic Memory → 快照</span>
+          <span>新会话 → project_id → 恢复 → 续研简报</span>
+        </div>
+        <div class="arch-col">
+          <h3><span class="tag tag-memory">PowerContext</span> 长期任务记忆</h3>
+          <ul>
+            <li>一个科研项目 = 一个 Scope（idempotency_key 绑定）</li>
+            <li>进度条目按 kind 分类的 Atomic Memory</li>
+            <li>带内容指纹的进度快照，重复保存不产生重复记忆</li>
+            <li>恢复走全量读取，不依赖中文分词能力</li>
+          </ul>
+          <p class="arch-fact" id="fact-powercontext">读取中…</p>
+        </div>
+      </div>
+      <h3 class="sub">真实数据流</h3>
+      <ol class="flow">
+        <li><strong>入库</strong>：PDF 经 PyMuPDF 按物理页解析 → 页内确定性分块 → embedding → <code>collection.upsert</code> 写入 seekdb；页与文档元数据写入关系表。</li>
+        <li><strong>检索</strong>：<code>hybrid_search(query=全文腿, knn=向量腿, rank=rrf)</code> 一次调用完成混合召回；证据门控按词法覆盖率与语义相似度双重判定。</li>
+        <li><strong>问答</strong>：LLM 仅能看到通过门控的证据块；返回的每个 citation 回查 seekdb 页表，非法引用剔除并公示，失去引用的「直接支持」降级为「推断」。</li>
+        <li><strong>记忆</strong>：用户显式保存 → <code>remember_memory</code> 写入 Scope；新会话 <code>list_memory_entries</code> 全量读取 + 快照重组 → 生成续研简报。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ demo ============================ -->
+  <section id="demo" class="section">
+    <div class="wrap">
+      <h2>功能演示（真实运行截图）</h2>
+      <p class="section-lede">
+        以下截图取自本地真实运行的 ResearchFlow（seekdb v1.4.0.0 + PowerContext 1.4.1 + DeepSeek），
+        由 <code>scripts/capture_screenshots.cjs</code> 无头浏览器自动采集，可复现。点击可查看高清图。
+      </p>
+      <div class="shots" id="shots">读取中…</div>
+    </div>
+  </section>
+
+  <!-- ============================ verification ============================ -->
+  <section id="verification" class="section section-alt">
+    <div class="wrap">
+      <h2>验证结果</h2>
+      <p class="section-lede">
+        下表为 <strong>记录于 <span id="acc-date">—</span> 的真实运行结果</strong>（非实时查询，在线版不连接任何数据库）。
+        单元测试与集成验收分开统计；全部日志随仓库提交，可逐条核对。
+      </p>
+      <div class="verify-grid">
+        <div class="card verify-card">
+          <h3>单元 + 集成测试（pytest）</h3>
+          <p class="big-number" id="pytest-passed">—</p>
+          <p class="muted" id="pytest-detail">—</p>
+          <p class="muted">覆盖解析、分块、门控、seekdb 集成、PowerContext 集成、citation 校验与 HTTP 契约。</p>
+        </div>
+        <div class="card verify-card">
+          <h3>端到端验收（T1–T9）</h3>
+          <p class="big-number" id="acc-summary">—</p>
+          <p class="muted" id="acc-detail">—</p>
+          <p class="muted">验收运行器自带独立 PowerContext 与 API 实例，真实执行服务重启与断连对比。</p>
+        </div>
+      </div>
+      <table class="table" id="acc-table" aria-label="验收用例结果">
+        <thead>
+          <tr><th>编号</th><th>场景</th><th>结果</th><th>校验数</th><th>失败</th><th>耗时</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <h3 class="sub">证据与日志在哪里</h3>
+      <ul class="plain-list">
+        <li>验收报告（人读 / 机读）与逐用例日志：<code>qoder/researchflow/verification/acceptance-run/</code></li>
+        <li>后端结构化日志：<code>logs/researchflow.log</code>（JSON 行，含 request_id）</li>
+        <li>seekdb 能力实测：<code>scripts/probe_seekdb_capability.py</code> 的输出记录于 ARCHITECTURE.md §2.1</li>
+        <li>PowerContext 契约实测（幂等 / 不幂等 / 乱序 / 中文分词限制）记录于 QODER_LOG.md 与 VERIFICATION.md §2</li>
+      </ul>
+      <h3 class="sub">已知限制（如实披露）</h3>
+      <ul class="plain-list" id="limitations"></ul>
+    </div>
+  </section>
+
+  <!-- ============================ try ============================ -->
+  <section id="try" class="section">
+    <div class="wrap">
+      <h2>体验说明：在线能看什么，本地能跑什么</h2>
+      <table class="table">
+        <thead><tr><th>能力</th><th>本网站（在线展示版）</th><th>本地完整运行</th></tr></thead>
+        <tbody>
+          <tr><td>项目介绍、架构、真实截图</td><td class="yes">可看</td><td class="yes">可看</td></tr>
+          <tr><td>测试报告与日志证据</td><td class="yes">可看（记录值）</td><td class="yes">可重跑</td></tr>
+          <tr><td>上传文档 / 检索 / 问答</td><td class="no">不可用（无后端）</td><td class="yes">可用</td></tr>
+          <tr><td>任务记忆保存 / 跨会话恢复</td><td class="no">不可用（无后端）</td><td class="yes">可用</td></tr>
+          <tr><td>seekdb / PowerContext 实时状态</td><td class="no">不连接</td><td class="yes">实时</td></tr>
+        </tbody>
+      </table>
+      <p class="note">
+        本网站是<strong>静态展示版</strong>：不运行 Python、不连接 seekdb 或 PowerContext，也不提供任何模拟的「在线查询」。
+        页面上的测试数字是某次真实运行的记录值并标注了时间；要复现或交互，请按下面的步骤在本地运行。
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ repo ============================ -->
+  <section id="repo" class="section section-alt">
+    <div class="wrap">
+      <h2>项目仓库与复现</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>仓库</h3>
+          <p>
+            GitHub：<a href="https://github.com/chaoyisn/PowerContext" rel="noopener">github.com/chaoyisn/PowerContext</a>（私有 fork，upstream 为 oceanbase/powercontext）<br />
+            分支：<code>2026-competition-ecosystem</code><br />
+            路径：<code>qoder/researchflow/</code><br />
+            基线 SHA：<code>d647275c308e09b7b623f322a26f5c4e85734fb0</code>
+          </p>
+          <p class="muted">评审访问：克隆后切到上述分支即可；若仓库尚未推送最新提交，评审包与全部验证证据亦随本说明提供。</p>
+        </div>
+        <div class="card">
+          <h3>四步复现</h3>
+          <ol class="steps">
+            <li><code>docker start contest-seekdb</code>（或按 RUN.md 启动 seekdb 容器）</li>
+            <li><code>powercontext server run --port 17429</code></li>
+            <li><code>cd backend &amp;&amp; python -m app.api.main</code></li>
+            <li><code>python scripts/seed_demo.py</code> 后打开 <code>http://127.0.0.1:8787/</code></li>
+          </ol>
+          <p class="muted">完整说明见仓库 <code>RUN.md</code>；验证见 <code>VERIFICATION.md</code> 与 <code>verification/acceptance-run/</code>。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>ResearchFlow · OceanBase × Qoder 2026 数据库比赛 Qoder 赛道参赛作品</p>
+    <p class="muted" id="footer-meta">—</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
