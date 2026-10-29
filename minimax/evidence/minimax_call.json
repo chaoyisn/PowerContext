@@ -6,10 +6,13 @@
     "SPEC-REQ-001"
   ],
   "context_state_todos": [
+    "phase4: 验证跨进程读取",
+    "phase4: 验证跨进程读取",
     "实现 status 筛选"
   ],
   "context_test_files": [
     "tests/test_list_tasks_status_filter.py",
+    "tests/test_list_tasks_status_wildcard.py",
     "tests/test_taskmanager_regression.py"
   ],
   "minimax": {
@@ -17,18 +20,19 @@
     "applied_files": [
       "minimax/sample/taskmanager.py",
       "minimax/sdd_context/cli.py",
-      "minimax/sdd_context/minimax_agent.py"
+      "minimax/sdd_context/importer.py",
+      "minimax/specs/SPEC-REQ-001.md"
     ],
     "base_url": "http://127.0.0.1:15721",
-    "elapsed_seconds": 12.203,
+    "elapsed_seconds": 2.469,
     "error": null,
-    "input_tokens": 183,
+    "input_tokens": 5579,
     "model": "MiniMax-M3.1-Flash",
-    "output_tokens": 519,
-    "patch": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 8f2b1a4..c3d7e9f 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -33,11 +33,11 @@ class TaskStore:\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:\n",
-    "raw_response": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 8f2b1a4..c3d7e9f 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -33,11 +33,11 @@ class TaskStore:\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:",
+    "output_tokens": 271,
+    "patch": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 0000000..0000000 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -37,7 +37,7 @@ class TaskStore:\n         ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        tasks = filter_by_status(self.tasks, status)\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n",
+    "raw_response": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\nindex 0000000..0000000 100644\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -37,7 +37,7 @@ class TaskStore:\n         ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        tasks = filter_by_status(self.tasks, status)\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n",
     "request_id": null
   },
-  "task": "为工单查询函数增加按 status 筛选工单的功能 list_tasks(status='active')",
+  "task": "根据 SPEC-REQ-001 v1.1.0 (r2) 实现 status 通配符筛选 list_tasks(status='*') 返回全部工单",
   "task_id": "TASK-SPEC-REQ-001"
 }

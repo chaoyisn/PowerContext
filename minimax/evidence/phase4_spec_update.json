@@ -1,0 +1,59 @@
+{
+  "after": {
+    "code_files": [
+      "sample/taskmanager.py"
+    ],
+    "content_hash": "80646e267b87fe854f3af93d05c9c82b5ca1cf93b10991492760c23c515a8652",
+    "revision": "r2",
+    "spec_id": "SPEC-REQ-001",
+    "spec_import": {
+      "content_hash": "80646e267b87fe854f3af93d05c9c82b5ca1cf93b10991492760c23c515a8652",
+      "inherited_relations": 3,
+      "previous_version": "1.0.0",
+      "revision": "r2",
+      "source_path": "specs/SPEC-REQ-001.md",
+      "spec_id": "SPEC-REQ-001",
+      "status": "approved",
+      "title": "工单查询函数支持按 status 筛选",
+      "version": "1.1.0"
+    },
+    "test_files": [
+      "tests/test_list_tasks_status_filter.py",
+      "tests/test_taskmanager_regression.py"
+    ],
+    "version": "1.1.0"
+  },
+  "before": {
+    "code_files": [
+      "sample/taskmanager.py"
+    ],
+    "content_hash": "631e9881cf7ee7ad4d195066513addbe70be636d7ae270f2e4ecebc1183397cb",
+    "revision": "r1",
+    "spec_id": "SPEC-REQ-001",
+    "spec_import": {
+      "content_hash": "631e9881cf7ee7ad4d195066513addbe70be636d7ae270f2e4ecebc1183397cb",
+      "inherited_relations": 0,
+      "previous_version": "1.1.0",
+      "revision": "r1",
+      "source_path": "specs/SPEC-REQ-001.md",
+      "spec_id": "SPEC-REQ-001",
+      "status": "approved",
+      "title": "工单查询函数支持按 status 筛选",
+      "version": "1.0.0"
+    },
+    "test_files": [
+      "tests/test_list_tasks_status_filter.py",
+      "tests/test_taskmanager_regression.py"
+    ],
+    "version": "1.0.0"
+  },
+  "checks": {
+    "code_still_resolved": true,
+    "content_hash_changed": true,
+    "expected_new_version": true,
+    "revised_text_present": true,
+    "tests_still_resolved": true,
+    "version_advanced": true
+  },
+  "passed": true
+}

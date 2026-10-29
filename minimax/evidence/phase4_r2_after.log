@@ -1,0 +1,32 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.13, pytest-9.0.2, pluggy-1.6.0 -- D:\OceanBase\venv312\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: E:\OceanBaseContest\powercontext-minimax
+plugins: anyio-4.15.1, platformdirs-4.14.0, asyncio-1.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 22 items
+
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_active_status PASSED [  4%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_done_status PASSED [  9%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_archived_status PASSED [ 13%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filters_by_unknown_status_returns_empty PASSED [ 18%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_without_status_returns_all_tasks PASSED [ 22%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_preserves_return_structure PASSED [ 27%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filter_is_case_sensitive PASSED [ 31%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filtered_result_keeps_priority_order[active] PASSED [ 36%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filtered_result_keeps_priority_order[done] PASSED [ 40%]
+minimax/tests/test_list_tasks_status_filter.py::test_list_tasks_filtered_result_keeps_priority_order[archived] PASSED [ 45%]
+minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_returns_every_task PASSED [ 50%]
+minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_matches_unfiltered_result PASSED [ 54%]
+minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_keeps_return_structure PASSED [ 59%]
+minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_does_not_affect_other_filters PASSED [ 63%]
+minimax/tests/test_taskmanager_regression.py::test_default_store_fixture_contents PASSED [ 68%]
+minimax/tests/test_taskmanager_regression.py::test_list_tasks_orders_by_priority_then_id PASSED [ 72%]
+minimax/tests/test_taskmanager_regression.py::test_list_tasks_on_empty_store_returns_empty_list PASSED [ 77%]
+minimax/tests/test_taskmanager_regression.py::test_find_by_id_returns_matching_task PASSED [ 81%]
+minimax/tests/test_taskmanager_regression.py::test_find_by_id_returns_none_for_unknown_id PASSED [ 86%]
+minimax/tests/test_taskmanager_regression.py::test_task_as_dict_shape_is_stable PASSED [ 90%]
+minimax/tests/test_taskmanager_regression.py::test_filter_by_status_helper_keeps_none_semantics PASSED [ 95%]
+minimax/tests/test_taskmanager_regression.py::test_valid_statuses_constant_is_unchanged PASSED [100%]
+
+============================= 22 passed in 0.04s ==============================

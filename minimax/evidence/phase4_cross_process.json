@@ -1,0 +1,65 @@
+{
+  "checks": {
+    "context_still_resolves_code": true,
+    "context_still_resolves_spec": true,
+    "read_process_succeeded": true,
+    "state_recovered": true,
+    "todos_merged_into_context": true,
+    "verifications_merged_into_context": true,
+    "write_process_succeeded": true
+  },
+  "context_merged": {
+    "completed": [
+      "phase4: 状态已在独立进程中写入",
+      "phase4: 状态已在独立进程中写入",
+      "已导入规格 SPEC-REQ-001"
+    ],
+    "todos": [
+      "phase4: 验证跨进程读取",
+      "phase4: 验证跨进程读取",
+      "实现 status 筛选"
+    ],
+    "verifications": [
+      "phase4: 写入进程退出码 0",
+      "phase4: 写入进程退出码 0",
+      "修改前目标测试失败 (exit 1)"
+    ]
+  },
+  "passed": true,
+  "read_process": {
+    "returncode": 0,
+    "stderr": ""
+  },
+  "recovered_state": {
+    "artifact_ids": {
+      "sdd-completed": "art_cf620b57d97d460bab55815ae83a09e9",
+      "sdd-task-description": "art_e32e4055cfbb45828d984b2be98b806e",
+      "sdd-todo": "art_d5e476065aae4a33a17702876f0d8b5f",
+      "sdd-verification": "art_e9623c50ff6c4e03869d092fe580ee0c"
+    },
+    "completed": [
+      "phase4: 状态已在独立进程中写入",
+      "phase4: 状态已在独立进程中写入",
+      "已导入规格 SPEC-REQ-001"
+    ],
+    "description": "为工单查询函数增加按 status 筛选工单的功能 list_tasks(status='active')",
+    "has_state": true,
+    "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
+    "task_id": "TASK-SPEC-REQ-001",
+    "todos": [
+      "phase4: 验证跨进程读取",
+      "phase4: 验证跨进程读取",
+      "实现 status 筛选"
+    ],
+    "verifications": [
+      "phase4: 写入进程退出码 0",
+      "phase4: 写入进程退出码 0",
+      "修改前目标测试失败 (exit 1)"
+    ]
+  },
+  "write_process": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "written"
+  }
+}

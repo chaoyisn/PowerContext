@@ -1,0 +1,84 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.13, pytest-9.0.2, pluggy-1.6.0 -- D:\OceanBase\venv312\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: E:\OceanBaseContest\powercontext-minimax
+plugins: anyio-4.15.1, platformdirs-4.14.0, asyncio-1.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 4 items
+
+minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_returns_every_task FAILED [ 25%]
+minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_matches_unfiltered_result FAILED [ 50%]
+minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_keeps_return_structure FAILED [ 75%]
+minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_does_not_affect_other_filters PASSED [100%]
+
+================================== FAILURES ===================================
+_________________ test_list_tasks_wildcard_returns_every_task _________________
+
+    def test_list_tasks_wildcard_returns_every_task() -> None:
+        """Revision r2 acceptance criterion 8: the wildcard matches every task."""
+    
+        store = build_default_store()
+    
+        result = store.list_tasks(status="*")
+    
+>       assert [item["id"] for item in result] == [1, 2, 3]
+E       AssertionError: assert [] == [1, 2, 3]
+E         
+E         Right contains 3 more items, first extra item: 1
+E         
+E         Full diff:
+E         + []
+E         - [
+E         -     1,...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show
+
+minimax\tests\test_list_tasks_status_wildcard.py:26: AssertionError
+_____________ test_list_tasks_wildcard_matches_unfiltered_result ______________
+
+    def test_list_tasks_wildcard_matches_unfiltered_result() -> None:
+        """Revision r2 boundary condition 6: the wildcard is equivalent to no filter."""
+    
+        store = build_default_store()
+    
+        wildcard = store.list_tasks(status="*")
+        unfiltered = store.list_tasks()
+    
+>       assert wildcard == unfiltered
+E       AssertionError: assert [] == [{'id': 1, 'p...e old notes'}]
+E         
+E         Right contains 3 more items, first extra item: {'id': 1, 'priority': 5, 'status': 'active', 'title': 'Write specification'}
+E         
+E         Full diff:
+E         + []
+E         - [
+E         -     {...
+E         
+E         ...Full output truncated (18 lines hidden), use '-vv' to show
+
+minimax\tests\test_list_tasks_status_wildcard.py:37: AssertionError
+_______________ test_list_tasks_wildcard_keeps_return_structure _______________
+
+    def test_list_tasks_wildcard_keeps_return_structure() -> None:
+        """Compatibility constraint 2 still holds for the wildcard filter."""
+    
+        store = build_default_store()
+    
+        result = store.list_tasks(status="*")
+    
+>       assert len(result) == 3
+E       assert 0 == 3
+E        +  where 0 = len([])
+
+minimax\tests\test_list_tasks_status_wildcard.py:47: AssertionError
+=========================== short test summary info ===========================
+FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_returns_every_task
+FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_matches_unfiltered_result
+FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_keeps_return_structure
+========================= 3 failed, 1 passed in 0.10s =========================
+
+EXITCODE=1
+COMMIT=e66ae7f76c28bb95b73dde1f6b9592192f5325d2
+TARGET_TEST_SHA256=ac7ab515412113a58bb0185bff6eb07c5738ca1f1bbd7bbe981e95ffad5c3a19
+SPEC_VERSION=1.1.0
+SPEC_REVISION=r2

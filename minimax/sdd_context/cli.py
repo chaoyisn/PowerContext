@@ -32,7 +32,10 @@ DEFAULT_TASK_TEXT = "为工单查询函数增加按 status 筛选工单的功能
 
 SPEC_FILES = ("specs/SPEC-REQ-001.md",)
 CODE_FILES = ("sample/taskmanager.py",)
-FUNCTIONAL_TEST_FILES = ("tests/test_list_tasks_status_filter.py",)
+FUNCTIONAL_TEST_FILES = (
+    "tests/test_list_tasks_status_filter.py",
+    "tests/test_list_tasks_status_wildcard.py",
+)
 REGRESSION_TEST_FILES = ("tests/test_taskmanager_regression.py",)
 
 

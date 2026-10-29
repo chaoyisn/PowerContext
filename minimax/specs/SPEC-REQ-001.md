@@ -4,8 +4,8 @@
 | --- | --- |
 | Requirement ID | SPEC-REQ-001 |
 | Title | 工单查询函数支持按 status 筛选 |
-| Spec version | 1.0.0 |
-| Revision | r1 |
+| Spec version | 1.1.0 |
+| Revision | r2 |
 | Status | approved |
 | Applies to | `minimax/sample/taskmanager.py` |
 
@@ -20,6 +20,7 @@ returned. When the argument is omitted, every task is returned exactly as before
 - Input: `status: str | None = None`.
   - `None` (or omitted) means "no filter".
   - A non-empty string means "exact, case-sensitive match on `Task.status`".
+  - **Revision r2 (v1.1.0)**: the wildcard `"*"` means "no filter" as well.
 - Output: `list[dict[str, object]]` — unchanged shape.
   Each element keeps exactly the keys `id`, `title`, `status`, `priority`.
 
@@ -41,6 +42,8 @@ returned. When the argument is omitted, every task is returned exactly as before
 3. A status that matches no task returns an empty list, not an error.
 4. Matching is case sensitive: `"Active"` does not match `"active"`.
 5. The `status` argument is keyword-only in practice; positional use is not required.
+6. **Revision r2 (v1.1.0)**: the filter must also accept the wildcard value `"*"`
+   and treat it as "every task", equivalent to `status=None`.
 
 ## 5. Compatibility constraints
 
@@ -56,6 +59,9 @@ returned. When the argument is omitted, every task is returned exactly as before
 - Target functional test: `minimax/tests/test_list_tasks_status_filter.py`
   (`test_list_tasks_filters_by_active_status`) — MUST fail before implementation
   and MUST pass afterwards, with identical assertions.
+- Target functional test for revision r2: `minimax/tests/test_list_tasks_status_wildcard.py`
+  (`test_list_tasks_wildcard_returns_every_task`) — MUST fail before the r2
+  implementation and MUST pass afterwards, with identical assertions.
 - Regression tests: `minimax/tests/test_taskmanager_regression.py` — MUST keep
   passing before and after the change.
 - Contract test: `minimax/tests/test_list_tasks_status_filter.py`
@@ -72,3 +78,5 @@ returned. When the argument is omitted, every task is returned exactly as before
 6. Each returned dictionary still carries the keys `id`, `title`, `status`,
    `priority`.
 7. The regression suite passes unchanged.
+8. **Revision r2 (v1.1.0)**: `list_tasks(status="*")` returns every task, in the
+   same order as `list_tasks()`.

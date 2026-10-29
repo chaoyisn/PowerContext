@@ -139,10 +139,18 @@ class MaterialImporter:
         self.root = root.resolve()
 
     def import_specification(self, path: Path, spec_id: str) -> dict[str, Any]:
-        """Import one specification file, replacing its previous revision."""
+        """Import one specification file, replacing its previous revision.
+
+        A new revision inherits the code and test bindings of the revision it
+        replaces, so the context keeps resolving the same material.
+        """
 
         content = path.read_text(encoding="utf-8")
         version, revision, title, status = _parse_spec_header(content)
+        previous = self.store.latest_specification(spec_id)
+        inherited: list[dict[str, Any]] = []
+        if previous is not None and previous["version"] != version:
+            inherited = self.store.relations_for_spec(spec_id, previous["version"])
         digest = self.store.upsert_specification(
             spec_id=spec_id,
             version=version,
@@ -152,6 +160,14 @@ class MaterialImporter:
             content=content,
             source_path=_relative(path, self.root),
         )
+        for relation in inherited:
+            self.store.upsert_relation(
+                spec_id=spec_id,
+                spec_version=version,
+                target_kind=relation["target_kind"],
+                target_id=relation["target_id"],
+                relation_type=relation["relation_type"],
+            )
         return {
             "spec_id": spec_id,
             "version": version,
@@ -160,6 +176,8 @@ class MaterialImporter:
             "status": status,
             "content_hash": digest,
             "source_path": _relative(path, self.root),
+            "inherited_relations": len(inherited),
+            "previous_version": previous["version"] if previous else None,
         }
 
     def import_code(self, path: Path) -> list[dict[str, Any]]:
