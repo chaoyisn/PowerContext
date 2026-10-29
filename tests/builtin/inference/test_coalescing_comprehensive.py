@@ -17,7 +17,6 @@ from __future__ import annotations
 import asyncio
 
 import pytest
-
 from powercontext.builtin.artifacts.memory import EmbeddingProfile
 from powercontext.builtin.inference import EmbeddingResult, InferenceUsage
 from powercontext.builtin.inference.coalescing import CoalescingEmbeddingModel
