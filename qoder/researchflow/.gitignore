@@ -22,12 +22,17 @@ frontend/api-contract.json
 *.log
 logs/
 services/powercontext-data/
+services/powercontext-acceptance-data/
 services/.venv-powercontext/
 backend/.venv/
 data/
 uploads/
 *.db
+*.db-wal
+*.db-shm
+*.db-journal
 *.sqlite3
+*cursor-key*
 
 # OS / editor
 .DS_Store

@@ -54,8 +54,9 @@ python scripts/build_site_data.py && python scripts/verify_site.cjs   # 站点�
 
 ## 4. 需要人工补充的材料（Agent 无法代为完成）
 
-1. **Qoder UID / 账号信息**：用于报名表与作品归属（当前仅知 creator_uid
-   `<REDACTED-QODER-UID>`，来自本地遥测，需以账号页为准）。
+1. **Qoder UID / 账号信息**：用于报名表与作品归属。本地遥测中可见 `creator_uid`（前缀
+   `01a175e3-…`），完整 UID 属个人信息，**不写入公开仓库**；请在 Qoder Desktop 账号页
+   确认后填入报名表，并以截图作为归属证明。
 2. **Sites 权益核验与发布**：在 Qoder Desktop 中确认账号的 Sites 服务状态；恢复后按
    `SITE_DEPLOYMENT.md` §4 执行 prepare → publish；**切换公开访问前需本人确认**。
 3. **仓库推送**：`git push origin 2026-competition-ecosystem`（当前 6 个新提交仅在本地；
