@@ -11,6 +11,15 @@
   {
     "applied": false,
     "applied_files": [],
+    "file": "TASK-SPEC-REQ-001-LIVE-91d93f914d60.json",
+    "model": "MiniMax-M3.1-Flash",
+    "repository_commit": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+    "request_id": "2113154684427440325_1793287265l27z50",
+    "task_id": "TASK-SPEC-REQ-001-LIVE"
+  },
+  {
+    "applied": false,
+    "applied_files": [],
     "file": "TASK-SPEC-REQ-001-LIVE-d809b26b1c46.json",
     "model": "MiniMax-M3.1-Flash",
     "repository_commit": "05eea305c5bb99060e2cd87c6036134ad3a48686",

@@ -51,7 +51,7 @@ minimax\tests\test_list_tasks_status_wildcard.py:47: AssertionError
 FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_returns_every_task
 FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_matches_unfiltered_result
 FAILED minimax/tests/test_list_tasks_status_wildcard.py::test_list_tasks_wildcard_keeps_return_structure
-3 failed, 1 passed in 0.13s
+3 failed, 1 passed in 0.11s
 
 COMMAND=python -m pytest minimax/tests/test_list_tasks_status_wildcard.py
 EXITCODE=1

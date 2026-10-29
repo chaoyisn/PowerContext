@@ -60,18 +60,21 @@ minimax/
 │   └── cli.py               命令行入口
 ├── scripts/
 │   ├── verify.py                 六项官方验收（入口）
+│   ├── render_acceptance_report.py 把验收 JSON 渲染成 Markdown 报告
 │   ├── diagnose.py               环境与服务诊断
 │   ├── audit_minimax_evidence.py 历史调用证据审计（离线，不调用模型）
 │   ├── live_minimax_check.py     在线真实调用验证（单独入口）
 │   ├── audit_red_green.py        r1 / r2 逐轮 Red→Green 证据审计
 │   ├── regenerate_round_logs.py  从真实 Git 提交重生成 Red/Green 日志
 │   ├── reproduce_clean.py        隔离环境端到端复现
+│   ├── seed_call_archive.py      从 Git 历史播种调用归档
 │   ├── seekdb_evidence.py        seekdb 检索证据
 │   └── phase4_checks.py          规格更新 + 跨进程恢复的专项证据
 ├── evidence/                全部证据文件（日志、补丁、快照、报告、调用归档）
-├── docs/                    技术说明与验证说明
+├── docs/VERIFICATION_NOTE.md  验证说明：评审者如何逐项独立复核
 ├── requirements.txt         固定版本依赖
 ├── .env.example             配置模板（不含任何真实密钥）
+├── .gitattributes           固定行尾，保证哈希断言跨平台一致
 ├── README.md                本文件
 └── TECHNICAL_NOTE.md        一页技术说明
 ```
@@ -211,9 +214,12 @@ python -m minimax.sdd_context.cli import \
 
 ```bash
 python minimax/scripts/verify.py --all
+python minimax/scripts/render_acceptance_report.py
 ```
 
-退出码 0 表示六项全部通过；报告同时写入 `evidence/acceptance_report.json`。
+退出码 0 表示六项全部通过；报告写入 `evidence/acceptance_report.json`，
+并由第二条命令渲染成可读的 `evidence/acceptance_report.md`——每项都带
+**实际执行的命令、退出码、Git 版本和证据路径**。
 单项执行：`python minimax/scripts/verify.py --only TEST-04`。
 
 ### 4.7 规格更新与跨进程恢复的专项证据

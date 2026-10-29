@@ -16,7 +16,7 @@
             "minimax/tests/test_taskmanager_regression.py"
           ],
           "status": "PASS",
-          "summary": "6 failed, 12 passed in 0.14s",
+          "summary": "6 failed, 12 passed in 0.16s",
           "target_test_introduced_by_this_round": false,
           "target_test_source_commit": "f8be46eb"
         },
@@ -53,7 +53,7 @@
             "minimax/tests/test_list_tasks_status_wildcard.py"
           ],
           "status": "PASS",
-          "summary": "3 failed, 1 passed in 0.13s",
+          "summary": "3 failed, 1 passed in 0.11s",
           "target_test_introduced_by_this_round": true,
           "target_test_source_commit": "14959429"
         },
@@ -70,7 +70,7 @@
             "minimax/tests/test_taskmanager_regression.py"
           ],
           "status": "PASS",
-          "summary": "22 passed in 0.07s",
+          "summary": "22 passed in 0.09s",
           "target_test_introduced_by_this_round": false,
           "target_test_source_commit": "14959429"
         }

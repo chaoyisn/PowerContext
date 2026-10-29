@@ -29,13 +29,17 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from minimax.sdd_context.config import Settings, load_settings
-from minimax.sdd_context.context_builder import ContextBuilder, link_materials
-from minimax.sdd_context.importer import MaterialImporter
-from minimax.sdd_context.powercontext_store import PowerContextStateStore
-from minimax.sdd_context.seekdb_store import SeekDBStore
-
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from minimax.sdd_context.config import Settings, load_settings  # noqa: E402
+from minimax.sdd_context.context_builder import ContextBuilder, link_materials  # noqa: E402
+from minimax.sdd_context.importer import MaterialImporter  # noqa: E402
+from minimax.sdd_context.powercontext_store import PowerContextStateStore  # noqa: E402
+from minimax.sdd_context.seekdb_store import SeekDBStore  # noqa: E402
+
 SPEC_PATH = REPOSITORY_ROOT / "minimax" / "specs" / "SPEC-REQ-001.md"
 SPEC_BASELINE_PATH = REPOSITORY_ROOT / "minimax" / "specs" / "history" / "SPEC-REQ-001.v1.0.0.md"
 SPEC_ID = "SPEC-REQ-001"

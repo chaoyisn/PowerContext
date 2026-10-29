@@ -1,5 +1,5 @@
 {
-  "archive_file": "TASK-SPEC-REQ-001-LIVE-f0ededd7a4e2.json",
+  "archive_file": "TASK-SPEC-REQ-001-LIVE-91d93f914d60.json",
   "checks": {
     "model_identity_present": true,
     "patch_applies_to_scratch_copy": true,
@@ -9,17 +9,18 @@
     "response_contains_patch": true
   },
   "description": "对 MiniMax 端点的真实在线调用验证；与历史证据审计相互独立。",
-  "elapsed_seconds": 14.0,
+  "elapsed_seconds": 9.359,
   "error": null,
   "mode": "LIVE",
   "model": "MiniMax-M3.1-Flash",
-  "patch": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -34,10 +34,12 @@ class TaskStore:\n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n         \"\"\"Return tasks ordered by descending priority then ascending id.\n \n         ``status`` optionally filters tasks by exact, case-sensitive status match.\n+        The wildcard ``\"*\"`` returns every task.\n         \"\"\"\n \n-        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n+        effective_status = None if status == \"*\" else status\n+        tasks = filter_by_status(self.tasks, effective_status)\n         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n",
-  "repository_commit": "05eea305c5bb99060e2cd87c6036134ad3a48686",
-  "request_id": "2113154684427440325_1793285586zb5pa1",
+  "patch": "diff --git a/sample/taskmanager.py b/sample/taskmanager.py\n--- a/sample/taskmanager.py\n+++ b/sample/taskmanager.py\n@@ -35,9 +35,12 @@ class TaskStore:\n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n         \"\"\"Return tasks ordered by descending priority then ascending id.\n \n         ``status`` optionally filters tasks by exact, case-sensitive status match.\n+        The wildcard ``\"*\"`` treats every task as matching.\n         \"\"\"\n \n-        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n+        effective_status = None if status == \"*\" else status\n+        tasks = filter_by_status(self.tasks, effective_status)\n         return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n",
+  "repository_commit": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
+  "request_id": "2113154684427440325_1793287265l27z50",
   "request_ids": {
-    "alb_request_id": "bb5eb3dee962fcfce64006eecf529191ded7c39c",
-    "trace-id": "073290d2ff042981297d1df4e1586d9c",
-    "x-mm-request-id": "2113154684427440325_1793285586zb5pa1",
+    "alb_request_id": "0f8c28d6107766e4b9ddb9441119935226461bec",
+    "body_id": "07329761a5a14467db211b3570597e56",
+    "trace-id": "07329761a5a14467db211b3570597e56",
+    "x-mm-request-id": "2113154684427440325_1793287265l27z50",
     "x-session-id": "9a1b27a43bdabb1b795801609258e8c3"
   },
   "scratch_apply": {
@@ -34,7 +35,7 @@
   "task": "根据 SPEC-REQ-001 v1.1.0 (r2) 校验实现：list_tasks 支持按 status 精确筛选，并把通配符 \"*\" 视为不筛选",
   "task_id": "TASK-SPEC-REQ-001-LIVE",
   "tokens": [
-    1,
-    1162
+    5225,
+    770
   ]
 }

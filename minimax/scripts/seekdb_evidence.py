@@ -8,11 +8,17 @@ database participation can be inspected without running anything.
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
-from minimax.sdd_context.config import Settings, load_settings
-from minimax.sdd_context.seekdb_store import SeekDBStore, SeekDBUnavailableError
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from minimax.sdd_context.config import Settings, load_settings  # noqa: E402
+from minimax.sdd_context.seekdb_store import SeekDBStore, SeekDBUnavailableError  # noqa: E402
 
 SPEC_ID = "SPEC-REQ-001"
 

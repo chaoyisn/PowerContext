@@ -1,6 +1,6 @@
 {
   "branch": "competition/minimax-sdd-context",
-  "commit": "28828fe0f81e8fe7eb5e25bb4626cfd6b892a0e9",
+  "commit": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
   "generated_by": "minimax/scripts/verify.py",
   "module_root": "E:\\OceanBaseContest\\powercontext-minimax\\minimax",
   "module_root_relative": "minimax",
@@ -38,13 +38,13 @@
           "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
           "exit_code": 0,
           "stderr": "",
-          "stdout": "......................                                                   [100%]\n22 passed in 0.03s\n"
+          "stdout": "......................                                                   [100%]\n22 passed in 0.04s\n"
         }
       },
       "evidence_paths": [
         "minimax/sample/taskmanager.py"
       ],
-      "git_version": "28828fe0f81e8fe7eb5e25bb4626cfd6b892a0e9",
+      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
       "item": "TEST-01",
       "status": "PASS",
       "title": "流程可在干净环境运行"
@@ -109,6 +109,24 @@
           {
             "model": "MiniMax-M3.1-Flash",
             "note": "在线验证记录，不计入历史开发轮次审计",
+            "request_id": "2113154684427440325_1793287265l27z50",
+            "request_ids": {
+              "alb_request_id": "0f8c28d6107766e4b9ddb9441119935226461bec",
+              "body_id": "07329761a5a14467db211b3570597e56",
+              "trace-id": "07329761a5a14467db211b3570597e56",
+              "x-mm-request-id": "2113154684427440325_1793287265l27z50",
+              "x-session-id": "9a1b27a43bdabb1b795801609258e8c3"
+            },
+            "round": "live-verification",
+            "task_id": "TASK-SPEC-REQ-001-LIVE",
+            "tokens": [
+              5225,
+              770
+            ]
+          },
+          {
+            "model": "MiniMax-M3.1-Flash",
+            "note": "在线验证记录，不计入历史开发轮次审计",
             "request_id": "2113154684427440325_1793285552iv1jto",
             "request_ids": {
               "alb_request_id": "9fbe10d1ef82cb5fe6972c7892a4d6527c84b151",
@@ -143,7 +161,7 @@
         ],
         "live_verification_entry_point": "minimax/scripts/live_minimax_check.py",
         "mode": "HISTORICAL",
-        "record_count": 5,
+        "record_count": 6,
         "records": [
           {
             "applied_files": [
@@ -221,7 +239,7 @@
               "commit": "14959429",
               "patched_matches_committed_version": true,
               "pytest_exit_code": 0,
-              "pytest_summary": "4 passed in 0.02s",
+              "pytest_summary": "4 passed in 0.03s",
               "status": "PASS",
               "target_test": "minimax/tests/test_list_tasks_status_wildcard.py",
               "target_test_introduced_by_this_round": true
@@ -243,7 +261,7 @@
         "minimax/evidence/minimax_evidence_audit.json",
         "minimax/evidence/phase3_git_diff.patch"
       ],
-      "git_version": "28828fe0f81e8fe7eb5e25bb4626cfd6b892a0e9",
+      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
       "item": "TEST-02",
       "status": "PASS",
       "title": "MiniMax 真实参与代码修改"
@@ -277,7 +295,7 @@
       "evidence_paths": [
         "minimax/evidence/context_snapshot.json"
       ],
-      "git_version": "28828fe0f81e8fe7eb5e25bb4626cfd6b892a0e9",
+      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
       "item": "TEST-03",
       "status": "PASS",
       "title": "上下文内容正确且来源真实"
@@ -289,7 +307,7 @@
           "exit_code": 0
         }
       ],
-      "detail": "seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 34 行，写入后立即可读回，内容与磁盘文件一致",
+      "detail": "seekdb 5.7.25-OceanBase seekdb-v1.4.0.0 上四张表共 39 行，写入后立即可读回，内容与磁盘文件一致",
       "evidence": {
         "checks": {
           "code_rows_match_files": true,
@@ -303,8 +321,8 @@
         },
         "counts": {
           "sdd_code_symbol": 9,
-          "sdd_relation": 4,
-          "sdd_specification": 1,
+          "sdd_relation": 8,
+          "sdd_specification": 2,
           "sdd_test": 20
         },
         "server_version": "5.7.25-OceanBase seekdb-v1.4.0.0"
@@ -312,7 +330,7 @@
       "evidence_paths": [
         "minimax/evidence/seekdb_queries.json"
       ],
-      "git_version": "28828fe0f81e8fe7eb5e25bb4626cfd6b892a0e9",
+      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
       "item": "TEST-04",
       "status": "PASS",
       "title": "数据库真实参与"
@@ -330,7 +348,7 @@
           "scope": "read process"
         }
       ],
-      "detail": "进程退出后由全新进程读回 1 条完成项、1 条待办、1 条验证结果，并合并进新构建的上下文",
+      "detail": "进程退出后由全新进程读回 26 条完成项、26 条待办、26 条验证结果，并合并进新构建的上下文",
       "evidence": {
         "checks": {
           "context_resolves_code": true,
@@ -348,22 +366,97 @@
         },
         "recovered_state": {
           "artifact_ids": {
-            "sdd-completed": "art_37ab4dc589b1402896412fdc8b1be956",
-            "sdd-todo": "art_4a77b1dff3f242c9942dcb253a1abde5",
-            "sdd-verification": "art_083864d81bbb43d0a37b58260434db35"
+            "sdd-completed": "art_f58f5928b33e48f69b5e9e5d7532ab8b",
+            "sdd-todo": "art_e7b7288dca1f4cf9a80c09aa0ca8a254",
+            "sdd-verification": "art_fc8e9ff1c9a94f468ddacd234731d59e"
           },
           "completed": [
-            "verify-restart-1793287188:completed"
+            "verify-restart-1793286220:completed",
+            "verify-restart-1793286889:completed",
+            "verify-restart-1793285906:completed",
+            "verify-restart-1793286247:completed",
+            "verify-restart-1793285881:completed",
+            "verify-restart-1793286369:completed",
+            "verify-restart-1793284525:completed",
+            "verify-restart-1793284660:completed",
+            "verify-restart-1793285870:completed",
+            "verify-restart-1793284613:completed",
+            "verify-restart-1793286688:completed",
+            "verify-restart-1793284652:completed",
+            "verify-restart-1793287250:completed",
+            "verify-restart-1793284638:completed",
+            "verify-restart-1793285852:completed",
+            "verify-restart-1793284681:completed",
+            "verify-restart-1793287164:completed",
+            "verify-restart-1793284346:completed",
+            "verify-restart-1793284648:completed",
+            "verify-restart-1793284490:completed",
+            "verify-restart-1793286819:completed",
+            "verify-restart-1793285732:completed",
+            "verify-restart-1793286332:completed",
+            "verify-restart-1793286571:completed",
+            "verify-restart-1793286998:completed",
+            "verify-restart-1793287322:completed"
           ],
           "description": null,
           "has_state": true,
-          "scope_id": "scp_51jwv70bpdazr74crwzmgtx56x",
+          "scope_id": "scp_4n4r16s13xgmm0kcykyz4jmdk0",
           "task_id": "TASK-SPEC-REQ-001-RESTART",
           "todos": [
-            "verify-restart-1793287188:todo"
+            "verify-restart-1793286369:todo",
+            "verify-restart-1793284652:todo",
+            "verify-restart-1793286332:todo",
+            "verify-restart-1793284648:todo",
+            "verify-restart-1793284681:todo",
+            "verify-restart-1793286247:todo",
+            "verify-restart-1793284525:todo",
+            "verify-restart-1793284613:todo",
+            "verify-restart-1793284638:todo",
+            "verify-restart-1793284346:todo",
+            "verify-restart-1793286889:todo",
+            "verify-restart-1793285870:todo",
+            "verify-restart-1793285881:todo",
+            "verify-restart-1793286819:todo",
+            "verify-restart-1793286220:todo",
+            "verify-restart-1793284490:todo",
+            "verify-restart-1793287322:todo",
+            "verify-restart-1793287164:todo",
+            "verify-restart-1793286688:todo",
+            "verify-restart-1793285732:todo",
+            "verify-restart-1793284660:todo",
+            "verify-restart-1793287250:todo",
+            "verify-restart-1793285906:todo",
+            "verify-restart-1793286571:todo",
+            "verify-restart-1793285852:todo",
+            "verify-restart-1793286998:todo"
           ],
           "verifications": [
-            "verify-restart-1793287188:verification"
+            "verify-restart-1793286332:verification",
+            "verify-restart-1793287250:verification",
+            "verify-restart-1793284525:verification",
+            "verify-restart-1793284346:verification",
+            "verify-restart-1793285906:verification",
+            "verify-restart-1793286247:verification",
+            "verify-restart-1793286220:verification",
+            "verify-restart-1793286571:verification",
+            "verify-restart-1793286688:verification",
+            "verify-restart-1793286369:verification",
+            "verify-restart-1793285881:verification",
+            "verify-restart-1793285732:verification",
+            "verify-restart-1793284613:verification",
+            "verify-restart-1793284660:verification",
+            "verify-restart-1793284490:verification",
+            "verify-restart-1793284638:verification",
+            "verify-restart-1793284652:verification",
+            "verify-restart-1793286998:verification",
+            "verify-restart-1793287322:verification",
+            "verify-restart-1793285870:verification",
+            "verify-restart-1793285852:verification",
+            "verify-restart-1793286889:verification",
+            "verify-restart-1793284648:verification",
+            "verify-restart-1793286819:verification",
+            "verify-restart-1793287164:verification",
+            "verify-restart-1793284681:verification"
           ]
         },
         "write_process": {
@@ -375,7 +468,7 @@
       "evidence_paths": [
         "minimax/evidence/phase4_cross_process.json"
       ],
-      "git_version": "28828fe0f81e8fe7eb5e25bb4626cfd6b892a0e9",
+      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
       "item": "TEST-05",
       "status": "PASS",
       "title": "任务状态可复用"
@@ -438,7 +531,7 @@
           "command": "-m pytest minimax/tests/test_list_tasks_status_filter.py minimax/tests/test_list_tasks_status_wildcard.py minimax/tests/test_taskmanager_regression.py -q",
           "exit_code": 0,
           "stderr": "",
-          "stdout": "......................                                                   [100%]\n22 passed in 0.03s\n"
+          "stdout": "......................                                                   [100%]\n22 passed in 0.04s\n"
         },
         "git_diff": "diff --git a/minimax/sample/taskmanager.py b/minimax/sample/taskmanager.py\nindex 8f482216..4d57d400 100644\n--- a/minimax/sample/taskmanager.py\n+++ b/minimax/sample/taskmanager.py\n@@ -32,14 +32,13 @@ class TaskStore:\n         return task\n \n     def list_tasks(self, status: str | None = None) -> list[dict[str, object]]:\n-        \"\"\"Return every task ordered by descending priority then ascending id.\n+        \"\"\"Return tasks ordered by descending priority then ascending id.\n \n-        ``status`` is accepted for the SPEC-REQ-001 query contract but the filter\n-        is not implemented yet.\n+        ``status`` optionally filters tasks by exact, case-sensitive status match.\n         \"\"\"\n \n-        del status\n-        return [task.as_dict() for task in sorted(self.tasks, key=lambda item: (-item.priority, item.id))]\n+        tasks = filter_by_status(self.tasks, None if status == \"*\" else status)\n+        return [task.as_dict() for task in sorted(tasks, key=lambda item: (-item.priority, item.id))]\n \n     def find_by_id(self, task_id: int) -> Task | None:\n         for task in self.tasks:",
         "r1_after": {
@@ -468,7 +561,7 @@
         "minimax/evidence/phase3_git_diff.patch",
         "minimax/evidence/red_green_audit.json"
       ],
-      "git_version": "28828fe0f81e8fe7eb5e25bb4626cfd6b892a0e9",
+      "git_version": "8cf55aa5a604b2da57b1103b9137c24c3e92d949",
       "item": "TEST-06",
       "status": "PASS",
       "title": "代码改动生效"

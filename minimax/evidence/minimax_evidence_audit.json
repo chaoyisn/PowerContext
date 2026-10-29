@@ -18,11 +18,17 @@
     "legacy_has_patch": true,
     "legacy_model_is_minimax": true
   },
-  "live_record_count": 3,
+  "live_record_count": 4,
   "live_records_not_audited_here": [
     {
       "note": "在线验证记录，不属于历史开发轮次，审计结论见 evidence/minimax_live_check.json",
       "request_id": "2113154684427440325_17932855705nyy5k",
+      "round": "live-verification",
+      "task_id": "TASK-SPEC-REQ-001-LIVE"
+    },
+    {
+      "note": "在线验证记录，不属于历史开发轮次，审计结论见 evidence/minimax_live_check.json",
+      "request_id": "2113154684427440325_1793287265l27z50",
       "round": "live-verification",
       "task_id": "TASK-SPEC-REQ-001-LIVE"
     },
@@ -40,7 +46,7 @@
     }
   ],
   "mode": "HISTORICAL",
-  "record_count": 5,
+  "record_count": 6,
   "records": [
     {
       "call": {
