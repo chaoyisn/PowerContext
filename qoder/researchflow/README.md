@@ -5,6 +5,9 @@
 > 代码位置：`qoder/researchflow/`
 > **在线展示站（已公开发布）**：<https://researchflow-5esfsogn38f.qoder.zone>
 > 静态展示版，含真实运行截图与真实验证数据；不连接数据库、不提供模拟查询。完整可交互系统按 [RUN.md](./RUN.md) 本地启动。
+> **演示视频**：`submission-package/demo/researchflow-demo.mp4`（1280×800、2:05）——
+> 真实运行的浏览器录屏 + 中文配音 + 烧录字幕，逐场景溯源见 `submission-package/demo/video-manifest.json`。
+> **提交包入口**：[submission-package/FINAL_SUBMISSION.md](./submission-package/FINAL_SUBMISSION.md)
 
 ResearchFlow 是一个「带证据的知识库 + 长期任务记忆 + 科研进度恢复」的科研工作台，
 面向研究生、科研人员与 AI Infra 工程师。它不是 ChatPDF：
@@ -124,6 +127,7 @@ qoder/researchflow/
 ├── PUSH_PRECHECK.md       推送前检查结论、敏感内容处理与待授权方案
 ├── DEMO_SCRIPT.md         2–3 分钟演示视频分镜、旁白稿、录制步骤与截图清单
 ├── SUBMISSION.md          提交材料清单与需人工补充项
+├── submission-package/    最终提交包：入口 FINAL_SUBMISSION.md + 分级证据 + 演示视频 + AUDIT 审计
 ├── RUN.md                 启动、演示、验证命令（Windows 与 Linux/WSL）
 ├── .env.example           全部配置项（不含真实密钥）
 ├── site/public/           比赛展示网站（静态，真实截图与真实验证数据）

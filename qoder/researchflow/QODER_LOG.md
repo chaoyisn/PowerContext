@@ -502,3 +502,53 @@ Markdown 链接零失效；`site/public` 的 10 个资源被 `index.html` / `app
 随后追加的文档提交同样先 `git fetch` 确认零落后再 fast-forward 推送，并在推送后核对
 本地 HEAD 与远端 tip 相同。**结论：交付文档里凡是会被自己的写入动作改变的量，都不该写成字面值。**
 
+## 13:00–13:45 V3 封版：自动演示视频、提交包与交付审计
+
+本轮不加任何业务功能，目标是把必须人工的事项压到 5 项以内。
+
+### 自动生成的演示视频
+
+`scripts/make_demo_video.cjs`：Playwright 无头浏览器录屏驱动**真实运行**的产品
+（前端 + FastAPI + seekdb + PowerContext + 已发布的公开站点），Windows `System.Speech`
+合成中文旁白，libass 烧录字幕，ffmpeg 分段合成后 concat。11 个场景覆盖简报要求的 8 个必答点，
+成片 `submission-package/demo/researchflow-demo.mp4`（1280×800、**124.8s**、6.2 MB）。
+
+关键设计：**旁白里的数字不是预先写死的稿子**，而是每个动作执行后从页面读回的真实值
+（`facts.json` 逐场景落盘），因此字幕与画面必然同源；`video-manifest.json` 记录每个场景的
+采集方式、真实耗时与重放系数，两张日志卡上直接注明「非屏幕录制」。
+
+### 本轮修掉的 4 个真实缺陷
+
+| 现象 | 定位 | 修法 |
+| --- | --- | --- |
+| c6 等待 `text=论断核验` 180s 超时 | 单独诊断脚本实测：接口 21.4s 返回、浏览器路径 10s 出论断区块 → 上游 LLM 偶发挂起，不是选择器问题 | 等 `.claims-section`、超时 300s、失败后重载页面重提一次 |
+| 页原文弹窗在 loading 态就被读走（facts 里是「正在从 seekdb 读取页面原文…」） | `waitForSelector('.page-viewer-dialog')` 只等到外壳 | 改等 `.page-viewer-facts`；c6 第三段先 `goto` 再提问，避免读到上一轮遗留的论断区块 |
+| 场景音轨 concat 报 `Invalid file index 3` | filter 标签索引整体偏移 1（输入只有 0..2） | `inputs.length / 2 - 1` |
+| 抽帧 t=25s 是白屏 | 重放系数写反（`src/target` 而非 `target/src`），短录屏被加速后提前 EOF，后半段只剩冻结帧 | 改为 `target/src` 并 clamp 0.6–2.5；`tpad` 用有限 clone（`stop_duration=-1` 在 ffmpeg 8.1 越界，改 90s 由 `-t` 截断） |
+
+### 两条过程教训
+
+1. **状态更新必须来自已读取的输出。** run4 还在合成时，我把「11 个场景已合成、160.42s」
+   当成事实播报了一次，随后 `ls` 显示 `submission-package/demo/` 是空的。当场纠正——
+   真实值是 124.8s / 6.2 MB。**没读到的结果就不是结果。**
+2. **文档命令要「复制即对」。** `SUBMISSION.md` §2 原来写的是裸 `python -m pytest tests/ -q`，
+   正是本轮审计第 3 项要防的坑（base 环境会得到 17 failed / 54 passed / 78 errors）。
+   已统一改为 `backend/.venv/Scripts/python …`，`.cjs` 脚本改为 `node …` + `NODE_PATH`。
+
+### 提交包与审计
+
+`submission-package/`：`FINAL_SUBMISSION.md` 为唯一入口 + `01`–`11` 共 12 份文档 + `demo/` 3 个产物。
+三类证据（自动化 / 脚本代理 / 人工）在每份文档里强制分级。
+`AUDIT.md` 记录 10 项检查的真实输出：站点内容逐字节未变（首页 72818B 与发布当时一致）→
+**本轮无需重新发布**；复核截图写到 `build/site-recheck/`（已 gitignore），
+没有覆盖仓库内已提交的线上证据；测试用项目 venv 复跑 `149 passed in 51.55s`。
+
+保留判断：`site_id` / `project_id` / `actionId` / `publishOperationId` 四个 UUID 留在发布记录里
+——它们是站点资源标识（随公开站点可推得），不是账号凭据，去掉它们会让发布记录无法独立核对。
+完整 UID 仍以截断形式出现。
+
+### 明确不做的可选优化
+
+不为凑 3:00 拉长旁白（2:05 已全覆盖 8 个必答点）、不生成 ZIP 二进制（只给命令）、
+不改门控阈值、不重构前端、不把后端暴露到公网。
+

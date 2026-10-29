@@ -45,3 +45,6 @@ hf-cache/
 
 # Sites 描述符（工具生成的账号绑定状态，不入库）
 *.qoder.site
+
+# 演示视频/站点验证的中间产物（webm/wav/ass/抽帧），可由 scripts 重新生成
+build/

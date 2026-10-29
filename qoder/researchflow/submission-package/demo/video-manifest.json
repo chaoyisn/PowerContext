@@ -1,0 +1,188 @@
+{
+  "generatedAt": "2026-10-29T05:33:52.107Z",
+  "durationSeconds": 124.82,
+  "resolution": "1280x800",
+  "sources": {
+    "localApp": "http://127.0.0.1:8787",
+    "publishedSite": "https://researchflow-5esfsogn38f.qoder.zone",
+    "python": "backend/.venv (project venv)",
+    "pytestLog": "logs/pytest-20261029T051017.log",
+    "pytestLine": "149 passed in 48.86s"
+  },
+  "captureMethod": {
+    "browserScenes": "Playwright 无头浏览器录屏，驱动真实运行的前端 + FastAPI + seekdb + PowerContext",
+    "cardScenes": "由当次真实命令输出原样渲染的文本卡（日志回放，非屏幕录制）",
+    "narration": "Windows System.Speech 中文语音（Microsoft Huihui）合成，旁白数字取自本次录制读回的真实值",
+    "retiming": "浏览器录屏按旁白时长用 setpts 等比重放（短片段放慢、长片段适度加速，系数见各场景 speedFactor），未删除或跳剪任何真实步骤"
+  },
+  "facts": {
+    "startedAt": "2026-10-29T05:17:51.436Z",
+    "pytestLog": "logs/pytest-20261029T051017.log",
+    "pytestLine": "149 passed in 48.86s",
+    "siteTitle": "ResearchFlow — 基于 seekdb 与 PowerContext 的科研知识与任务连续性助手",
+    "docId": "4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e",
+    "documents": 3,
+    "pages": 7,
+    "projects": 5,
+    "chunks": 13,
+    "seekdbVersion": "5.7.25-OceanBase seekdb-v1.4.0.0",
+    "fts": "ik",
+    "vectorTop": "score 0.4407余弦相似度",
+    "hybridTop": "score 0.0328RRF 融合分",
+    "hybridScore": "0.0328",
+    "overlap": "重叠分析（按 chunk_id） vector ∩ fulltext（5 条） 4d5da56c0b76197b:p0003:c000 4d5da56c0b76197b:p0003:c001 4d5da56c0b76197b:p0005:c001 60aa394c2a530766:p0001:c000 60aa394c2a530766:p0001:c001 仅 hybrid 命中（RRF 融合独有，0 条） hybrid 没有独有命中",
+    "pageNav": "共 5 个物理页，空白页保留页级身份；点击任意页查看 seekdb 中存储的原文。",
+    "blankPage": "页面原文 · 第 4 页 文献证据 · seekdb 关闭（Esc） 文件名 seekdb_hybrid_retrieval_notes.pdf doc_id 4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e page_id 4d5da56c0b76197b:p0004 char_count 0 content_typ",
+    "page5": "页面原文 · 第 5 页 文献证据 · seekdb 关闭（Esc） 文件名 seekdb_hybrid_retrieval_notes.pdf doc_id 4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e page_id 4d5da56c0b76197b:p0005 char_count 847 content_type pdf Page 5 - Rec",
+    "page5Id": "4d5da56c0b76197b:p0005",
+    "claimLine": "资料直接支持：2 模型推断：0 尚无证据：0",
+    "citationCount": 3,
+    "citationPage": "页面原文 · 第 5 页 文献证据 · seekdb 关闭（Esc） 文件名 seekdb_hybrid_retrieval_notes.pdf doc_id 4d5da56c0b76197ba4b679b9804a3b0cb66fdbeba1e8c67d734dcbf86ee1b74e page_id 4d5da56c0b76197b:p0005 char_count 847 content_t",
+    "noEvidenceLine": "论断核验 资料直接支持：0 模型推断：0 尚无证据：1 尚无证据 这篇文档里有没有关于量子纠缠实验的测量结果",
+    "writtenValue": "1",
+    "seqValue": "2",
+    "skipped": "1",
+    "dupResult": "内容未变化，未产生重复记忆",
+    "resumeBrief": "项目：seekdb 混合检索在科研知识库中的效果验证 研究目标：确认 seekdb 的向量 + 全文混合检索能否为科研问答提供可核对的页级证据 上次保存时间：2026-10-29T05:27:29+00:00（seq 2） 【上次做到了哪里】 （快照中没有记录） 【接下来该做什么】 下一步： - 把三模对比与重叠分析纳入下一轮 top_k=20 召回评测 以上全部来自 PowerContext 历史记忆，不是文献原文证据。",
+    "briefHasNewStep": true,
+    "entryCount": "18",
+    "sitePasses": "149 passed | 9 / 9 PASS"
+  },
+  "scenes": [
+    {
+      "id": "c1-intro",
+      "kind": "card",
+      "finalSeconds": 8.5,
+      "realWallSeconds": null,
+      "speedFactor": null,
+      "cues": [
+        "这是 ResearchFlow，一个带证据的科研知识库，加上长期任务记忆。",
+        "它针对两个真实痛点：AI 给的结论能不能回查原文，以及换一个会话以后，研究进度还在不在。"
+      ]
+    },
+    {
+      "id": "c2-site",
+      "kind": "browser",
+      "label": "公开站点",
+      "finalSeconds": 9.6,
+      "realWallSeconds": 2.76,
+      "speedFactor": 2.5,
+      "cues": [
+        "线上展示站已经发布在 Qoder Sites，公开可访问，地址是 researchflow 减 5esfsogn38f 点 qoder 点 zone。",
+        "它是纯静态展示版：真实截图、真实验收数据，不连数据库，也不提供模拟查询。"
+      ]
+    },
+    {
+      "id": "c3-upload",
+      "kind": "browser",
+      "label": "本地应用 · 入库",
+      "finalSeconds": 13.87,
+      "realWallSeconds": 4.6,
+      "speedFactor": 2.5,
+      "cues": [
+        "本地是完整产品。先上传一份五页的 PDF，第四页是刻意留空的。",
+        "文件内容的 SHA-256 直接作为文档主键，所以同一份文件再传一次会被去重，不会堆积垃圾数据。",
+        "原文、页、分块和向量全部写进 seekdb。当前库里 3 个文档、7 个物理页、13 个分块。"
+      ]
+    },
+    {
+      "id": "c4-retrieval",
+      "kind": "browser",
+      "label": "本地应用 · 三模检索",
+      "finalSeconds": 13.88,
+      "realWallSeconds": 7.8,
+      "speedFactor": 1.779,
+      "cues": [
+        "检索有三种模式：纯向量、纯全文，以及 RRF 融合的混合检索。这里问一个只写在第五页的细节。",
+        "混合检索命中第五页，RRF 融合分数 0.0328，和文档里手写的值一致。",
+        "点对比三种检索方式，三列结果并排，还能看到它们按 chunk id 计算的重叠情况。"
+      ]
+    },
+    {
+      "id": "c5-pages",
+      "kind": "browser",
+      "label": "本地应用 · 页级引用",
+      "finalSeconds": 12.3,
+      "realWallSeconds": 7.84,
+      "speedFactor": 1.57,
+      "cues": [
+        "页码用的是 PDF 的物理页号，从一开始数；空白页也保留页级身份，这样引用才对得上。",
+        "点开第四页，它明确告诉你这一页是空的，但仍然有页级身份。",
+        "点开第五页，弹窗里就是 seekdb 中存储的原文，带 page id 4d5da56c0b76。"
+      ]
+    },
+    {
+      "id": "c6-workbench",
+      "kind": "browser",
+      "label": "本地应用 · 证据问答",
+      "finalSeconds": 14.8,
+      "realWallSeconds": 19.68,
+      "speedFactor": 0.752,
+      "cues": [
+        "到工作台问同一个问题。回答里的每个引用编号都能点开，看到它对应的原文页。",
+        "每条论断都标注了「资料直接支持：2 模型推断：0 尚无证据：0」；服务端会把模型给出的引用逐条回查 seekdb，编造的引用一律剔除。",
+        "反过来问一个语料里根本没有的问题：它回答尚无证据，引用列表是空的。"
+      ]
+    },
+    {
+      "id": "c7-memory",
+      "kind": "browser",
+      "label": "本地应用 · 保存进度",
+      "finalSeconds": 12.14,
+      "realWallSeconds": 8.6,
+      "speedFactor": 1.411,
+      "cues": [
+        "记忆这一块交给 PowerContext：一个科研项目对应一个 Scope，保存永远是显式动作，系统不会自动写入。",
+        "加一条下一步计划并保存，返回写入 1 条、序号递增到 2。",
+        "再点一次同样的内容，它告诉你内容没变化，不产生重复记忆。"
+      ]
+    },
+    {
+      "id": "c8-restore",
+      "kind": "browser-new-context",
+      "label": "全新会话 · 恢复",
+      "finalSeconds": 15.31,
+      "realWallSeconds": 8.28,
+      "speedFactor": 1.849,
+      "cues": [
+        "现在换一个全新的会话窗口，只选同一个 project id。",
+        "续研简报直接给出上次做到了哪里、接下来该做什么，刚才新加的那条计划已经在里面；恢复出来的是 18 条记忆。",
+        "需要说明的是，PowerContext 默认全文索引对纯中文不友好，所以我们加了一层中文感知的召回，并在响应里明确标出这一条究竟是谁答的。"
+      ]
+    },
+    {
+      "id": "c9-tests",
+      "kind": "card",
+      "finalSeconds": 9.63,
+      "realWallSeconds": null,
+      "speedFactor": null,
+      "cues": [
+        "这些行为都不是口头承诺。后端一百四十九个测试，直接打真实的 seekdb 和真实的 PowerContext。",
+        "端到端验收 T1 到 T9 全部通过，还有一次在全新虚拟环境里的评审旅程，二十步全过。"
+      ]
+    },
+    {
+      "id": "c10-arch",
+      "kind": "browser",
+      "label": "公开站点 · 架构与验证",
+      "finalSeconds": 9.51,
+      "realWallSeconds": 6.64,
+      "speedFactor": 1.432,
+      "cues": [
+        "架构在站点的 architecture 区块：上传解析分页、seekdb 双索引、混合检索与证据门控、引用核验、PowerContext 记忆。",
+        "验证区块贴的是真实日志和真实截图，不是渲染出来的假数据。"
+      ]
+    },
+    {
+      "id": "c11-outro",
+      "kind": "card",
+      "finalSeconds": 5.27,
+      "realWallSeconds": null,
+      "speedFactor": null,
+      "cues": [
+        "代码在比赛仓库的 qoder 目录下的 researchflow 里，所有数字都能按 RUN 文档复现。",
+        "谢谢观看。"
+      ]
+    }
+  ]
+}

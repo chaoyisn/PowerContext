@@ -37,15 +37,21 @@
 ## 2. 关键可复现命令
 
 ```bash
-cd backend && python -m pytest tests/ -q          # 149 passed
-python scripts/run_acceptance.py                  # T1-T9，150 项校验
-python scripts/fresh_env_e2e.py                   # 全新环境 20/20 步
-python scripts/bench_memory_zh.py                 # B1 中文记忆召回
-python scripts/bench_retrieval.py                 # B2 中英混合检索
-python scripts/bench_workflow.py                  # D 工作流提效（脚本代理）
-python scripts/capture_screenshots.cjs            # 网站真实截图
-python scripts/build_site_data.py                 # 站点数据（由真实产物导出）
-node scripts/verify_site.cjs https://researchflow-5esfsogn38f.qoder.zone/ <outDir>   # 线上站点验证
+# 注意：一律使用项目 venv，不要用系统 / Anaconda base 的 python（base 会 ModuleNotFoundError）
+cd backend && .venv/Scripts/python -m pytest tests/ -q   # 149 passed
+cd ..
+backend/.venv/Scripts/python scripts/run_acceptance.py    # T1-T9，150 项校验
+backend/.venv/Scripts/python scripts/fresh_env_e2e.py     # 全新环境 20/20 步
+backend/.venv/Scripts/python scripts/bench_memory_zh.py   # B1 中文记忆召回
+backend/.venv/Scripts/python scripts/bench_retrieval.py   # B2 中英混合检索
+backend/.venv/Scripts/python scripts/bench_workflow.py    # D 工作流（脚本代理）
+NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" \
+  node scripts/capture_screenshots.cjs                    # 网站真实截图
+backend/.venv/Scripts/python scripts/build_site_data.py   # 站点数据（由真实产物导出）
+NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" \
+  node scripts/verify_site.cjs https://researchflow-5esfsogn38f.qoder.zone/ <outDir>   # 线上站点验证
+NODE_PATH="$(npm root -g)/@playwright/cli/node_modules" \
+  node scripts/make_demo_video.cjs                        # 重新生成演示视频
 ```
 
 ## 3. 核心主张与对应证据
@@ -71,7 +77,7 @@ node scripts/verify_site.cjs https://researchflow-5esfsogn38f.qoder.zone/ <outDi
 | --- | --- | --- |
 | **自动化** | 由 pytest / 验收运行器 / 基准脚本对**真实** seekdb 与**真实** PowerContext 执行并断言，输出可复现 | 149 个测试；T1–T9 共 150 项校验；全新环境 20/20；B1、B2 基准；站点渲染与资源加载验证 |
 | **脚本代理** | 用脚本模拟人工判读（关键词扫描、邮件式扫描）得到的对照数据，**不是真实用户实测** | D 工作流基准 W1/W2 的「基线」与「ResearchFlow」两侧耗时与正确率 |
-| **人工** | 需要真人操作或真人判断，Agent 不代做、不代写 | 演示视频录制与配音、Qoder 对话与开发过程截图、账号 UID 核验、真实用户反馈、公开访问授权 |
+| **人工** | 需要真人操作或真人判断，Agent 不代做、不代写 | Qoder 对话与开发过程截图、账号 UID 核验、真实用户反馈、公开访问授权；（可选）真人配音覆盖自动成片 |
 
 关于 D 工作流基准的强制口径：**脚本代理结果不得表述为真实用户提效结论。**
 可表述为「在与人工无关的脚本代理对照中，ResearchFlow 侧的引用完整性与恢复精确度更高」，
@@ -90,7 +96,7 @@ node scripts/verify_site.cjs https://researchflow-5esfsogn38f.qoder.zone/ <outDi
 | 3 | README / RUN / VERIFICATION | ✅ 已完成 | 三份文档齐备并互链；README 顶部给出线上入口 |
 | 4 | seekdb 与 PowerContext 真实使用证据 | ✅ 已完成 | `VERIFICATION.md`、`verification/acceptance-run/`（含 9 个用例日志与服务日志）、`ARCHITECTURE.md` 运行期实测补充 |
 | 5 | Qoder 对话截图与 UID | ❌ 缺（人工） | 需本人补：Qoder 对话窗口截图；完整 UID 属个人信息不入库，以账号页截图作为归属证明 |
-| 6 | 演示视频 | ❌ 缺（人工） | 分镜与逐句旁白稿已备妥（`DEMO_SCRIPT.md`），录制/配音/剪辑需本人完成 |
+| 6 | 演示视频 | ✅ 已生成（自动） | `submission-package/demo/researchflow-demo.mp4`（1280×800、124.8s、6.2 MB）：Playwright 无头浏览器录制的真实产品流程 + 真实日志卡 + 中文配音 + 烧录字幕；`video-manifest.json` 记录每个场景的采集方式与重放系数。分镜与旁白稿仍在 `DEMO_SCRIPT.md`（如需真人配音可覆盖重录） |
 | 7 | 测试报告 | ✅ 已完成 | 149 pytest（自动化）、T1–T9 150 项校验（自动化）、全新环境 20/20（自动化）、B1/B2/D 基准（D 为脚本代理） |
 | 8 | 可复现样例 | ✅ 已完成 | `demo/` 四份语料 + `scripts/seed_demo.py` + `scripts/fresh_env_e2e.py`（全新 venv/容器/数据目录，20/20，结束自动清理） |
 | 9 | 真实使用效果 | ⚠️ 部分 | 已有：自动化验收与脚本代理对照（口径见 §4）。缺：真实人工使用的耗时/纠错记录 |
@@ -100,7 +106,9 @@ node scripts/verify_site.cjs https://researchflow-5esfsogn38f.qoder.zone/ <outDi
 
 ## 6. 需要人工补充的材料（Agent 无法代为完成）
 
-1. **演示视频录制**：按 `DEMO_SCRIPT.md` §1–§3 录制并配音（旁白中的数字与结论不得改动）。
+1. **演示视频（可选覆盖）**：成片已由 `scripts/make_demo_video.cjs` 自动生成（真实浏览器录屏 +
+   Windows 中文语音配音 + 烧录字幕）。若希望改为**真人配音**，按 `DEMO_SCRIPT.md` §1–§3 录制，
+   旁白中的数字与结论不得改动；否则本项无需人工操作。
 2. **Qoder 对话与开发过程截图**：`QODER_LOG.md` 末尾 15 项清单 + `DEMO_SCRIPT.md` §4 的 8 项关键帧。
 3. **Qoder UID / 账号信息**：本地遥测中可见 `creator_uid`（前缀 `01a175e3-…`）；完整 UID 属个人信息，
    **不写入公开仓库**，请在 Qoder Desktop 账号页确认后填入报名表，并以截图作为归属证明。
@@ -120,4 +128,5 @@ node scripts/verify_site.cjs https://researchflow-5esfsogn38f.qoder.zone/ <outDi
 - [x] Sites 已正式发布并公开访问，发布与验证证据随仓库提交，未伪造任何发布状态
 - [x] 在线展示站不含任何模拟查询，体验边界在页面与文档中明确标注
 - [x] 仓库推送：基线之后的交付提交全部 fast-forward 推送，远端 tip 与本地一致，`master` 未被触碰
-- [ ] 演示视频、开发过程截图、UID、真实用户反馈（人工项，见 §6）
+- [x] 演示视频：已由真实运行的产品录屏自动生成（`submission-package/demo/`，含逐场景事实清单）
+- [ ] 开发过程截图、UID、真实用户反馈（人工项，见 §6）
