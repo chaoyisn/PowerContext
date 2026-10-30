@@ -1,0 +1,67 @@
+{
+  "passed": 10,
+  "total": 10,
+  "checks": [
+    {
+      "code": "T12.0",
+      "title": "本地实例起来了，且确实看不到 PowerContext",
+      "passed": true,
+      "detail": "powercontext=False （地址指向不可达端口）"
+    },
+    {
+      "code": "T12.1",
+      "title": "PowerContext 不可用时，游戏状态仍然照常落库",
+      "passed": true,
+      "detail": "HTTP=200 王冠到手=True 镇长怨念=25"
+    },
+    {
+      "code": "T12.2",
+      "title": "记忆写失败被如实报告，没有伪装成成功",
+      "passed": true,
+      "detail": "memory_written=False memory_error='MemoryError: PowerContext POST /v1/scope-bindings/resolve 请求失败: ConnectError; NPC 态度笔记: Me'"
+    },
+    {
+      "code": "T12.3",
+      "title": "outbox 里留下了可补偿的未交付任务",
+      "passed": true,
+      "detail": "outbox={'done': 669, 'failed': 2}；本次补偿尝试 2 条，成功 0 条"
+    },
+    {
+      "code": "T12.4",
+      "title": "PowerContext 不可达时补偿如实失败（不谎报成功）",
+      "passed": true,
+      "detail": "results=[(False, 'MemoryError: PowerContext POST /v1/scope-bindings/resolve 请求'), (False, 'MemoryError: PowerContext POST /v1/scope-bindings/resolve 请求')]"
+    },
+    {
+      "code": "T12.5",
+      "title": "故障期间事件流与状态一致（事件在、道具在）",
+      "passed": true,
+      "detail": "steal 事件 1 条；背包=['golden_crown']"
+    },
+    {
+      "code": "T12.6",
+      "title": "恢复后的实例能连上 PowerContext",
+      "passed": true,
+      "detail": "powercontext=True"
+    },
+    {
+      "code": "T12.7",
+      "title": "补偿流程把欠下的记忆补写成功",
+      "passed": true,
+      "detail": "attempted=2 succeeded=2 outbox={'done': 671}"
+    },
+    {
+      "code": "T12.8",
+      "title": "补偿之后记忆里确实能看到这次事件",
+      "passed": true,
+      "detail": "关键事件 0 → 1 条"
+    },
+    {
+      "code": "T12.9",
+      "title": "重复补偿不会写出重复记忆",
+      "passed": true,
+      "detail": "记忆条数 1 → 1；涉及王冠的记忆 1 条"
+    }
+  ],
+  "note": "PowerContext 用一个不可达端口模拟故障，未关闭共享服务"
+}

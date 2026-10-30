@@ -21,6 +21,8 @@ A12 规则拒绝：赠送不可转移道具 → 409，且归属未变
 A13 玩家隔离：B 读不到 A 的事件
 A14 超时：后端不可达时快速失败，而不是挂住
 A15 数据库异常被优雅处理（模拟断连 → 5xx 而不是进程崩溃）
+A16 鉴权：缺凭据 / 错凭据 → 401
+A17 身份隔离：冒用别人的 player_id → 403
 
 用法::
 
@@ -44,6 +46,9 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1] / "backend"
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from auth_helper import auth_headers, describe_auth_mode  # noqa: E402
+
 RESULTS: list[dict] = []
 
 
@@ -52,6 +57,10 @@ def reset_fixtures() -> str:
 
     Without this the script is not reproducible: a previous run stole the
     crown, and the plot would no longer trigger.
+
+    王冠只有**一件**，谁偷走它就归谁 —— 所以每个需要它的场景开始前
+    都要复位一次，否则前一个场景的玩家会"吃"掉王冠，后面的场景
+    就会因为"目标身上没有可偷的东西"而失败。
     """
 
     from town_backend.config import load_settings
@@ -69,12 +78,46 @@ def reset_fixtures() -> str:
             "VALUES ('golden_crown', 'npc', 'mayor', %s, %s, 1, 1)",
             ("镇长的金王冠", "镇长视若珍宝的镀金王冠，底座刻着「奥托镇长万岁」。它很值钱，也很招贼。"))
         # 货架补货，并清掉镇长手里的零食，让赠送目标保持唯一。
+        #
+        # 注意这里是 **DELETE + INSERT** 而不是 UPDATE：货架那一行
+        # 可能已经被别的流程整行删掉了（V1 的赠送/偷窃会把道具从
+        # 来源手里搬走），对着一行不存在的记录 UPDATE 是**空操作** ——
+        # 货架就再也不会回来，而"货架上有小鱼干"是 V1 演示的起点。
         cursor.execute(
-            "UPDATE town_item SET quantity = 5 WHERE item_id = 'fat_fish_snack' "
+            "DELETE FROM town_item WHERE item_id = 'fat_fish_snack' "
             "AND owner_kind = 'town' AND owner_id = 'town_square'")
         cursor.execute(
             "DELETE FROM town_item WHERE item_id = 'fat_fish_snack' "
             "AND owner_kind = 'npc' AND owner_id = 'mayor'")
+        cursor.execute(
+            "INSERT INTO town_item "
+            "(item_id, owner_kind, owner_id, name, description, quantity, "
+            "is_transferable, item_kind, is_evidence) "
+            "VALUES ('fat_fish_snack', 'town', 'town_square', %s, %s, 5, 1, 'normal', 0)",
+            ("油炸小鱼干", "喷泉边卖的那种小鱼干，油纸包。墨墨的弱点。"))
+        # 墨墨自己那袋也要复位到 1 —— 之前的赠送/偷窃会把它并进
+        # 目标的数量里，累积到 3、4 也说不清最初是多少。
+        cursor.execute(
+            "UPDATE town_item SET quantity = 1 WHERE item_id = 'fat_fish_snack' "
+            "AND owner_kind = 'npc' AND owner_id = 'cat_detective'")
+        # 两件证据也要复位：调查 NPC 会把它们交给玩家，
+        # 不复位的话"悬案大师"路线会因为证据不在 NPC 手里而拿不到。
+        for item_id, owner_id, name in (
+            ("alley_witness_note", "detective_office", "后巷目击者便条"),
+            ("crown_receipt", "back_alley", "一张王冠领用单"),
+        ):
+            cursor.execute(
+                "DELETE FROM town_item WHERE item_id = %s AND owner_kind = 'player'",
+                (item_id,))
+            cursor.execute(
+                "DELETE FROM town_item WHERE item_id = %s AND owner_kind = 'town'",
+                (item_id,))
+            cursor.execute(
+                "INSERT INTO town_item "
+                "(item_id, owner_kind, owner_id, name, description, quantity, "
+                "is_transferable, item_kind, is_evidence) "
+                "VALUES (%s, 'town', %s, %s, %s, 1, 1, 'evidence', 1)",
+                (item_id, owner_id, name, "可以查证王冠失窃案的关键证物。"))
     return f"{settings.seekdb_host}:{settings.seekdb_port}/{settings.seekdb_database}"
 
 
@@ -98,13 +141,17 @@ def main() -> int:
     session_1 = f"sess_{suffix}_1"
     session_2 = f"sess_{suffix}_2"
 
+    # V2 起，所有调用都必须带服务凭据与玩家身份。
+    auth = auth_headers()
+    print(f"鉴权配置: {describe_auth_mode()}")
+
     try:
         target = reset_fixtures()
         print(f"已复位测试夹具: {target}")
     except Exception as error:  # noqa: BLE001
         print(f"[WARN] 复位夹具失败（后续断言可能受影响）: {type(error).__name__}: {error}")
 
-    client = httpx.Client(base_url=base, timeout=20.0)
+    client = httpx.Client(base_url=base, timeout=20.0, headers=auth)
 
     # ---------------------------------------------------------------- A1
     try:
@@ -260,6 +307,32 @@ def main() -> int:
     check("A15", "畸形请求体 → 400 而不是 500",
           malformed.status_code == 400,
           f"status={malformed.status_code} code={malformed.json().get('error', {}).get('code')}")
+
+    # ---------------------------------------------------------------- A16
+    # 鉴权：缺凭据 / 错凭据一律 401。这条断言证明服务凭据**真的在生效**，
+    # 不是摆设。
+    anonymous = httpx.Client(base_url=base, timeout=20.0)
+    no_token = anonymous.get("/api/state", params={"player_id": player_a})
+    wrong_token = anonymous.get("/api/state", params={"player_id": player_a},
+                                headers={"X-Town-Token": "definitely-not-the-token",
+                                         "X-Town-Identity": "verify_suite"})
+    check("A16", "缺服务凭据 / 错服务凭据 → 401",
+          no_token.status_code == 401 and wrong_token.status_code == 401,
+          f"缺凭据={no_token.status_code} 错凭据={wrong_token.status_code} "
+          f"code={no_token.json().get('error', {}).get('code')}")
+    anonymous.close()
+
+    # ---------------------------------------------------------------- A17
+    # 身份隔离：知道别人的 player_id 也不该读到他的存档。
+    forged = httpx.Client(base_url=base, timeout=20.0, headers={
+        "X-Town-Token": auth.get("X-Town-Token", ""),
+        "X-Town-Identity": "someone_else_" + suffix,
+    })
+    forged_read = forged.get("/api/state", params={"player_id": player_a})
+    check("A17", "冒用他人 player_id 读存档 → 403",
+          forged_read.status_code == 403,
+          f"status={forged_read.status_code} code={forged_read.json().get('error', {}).get('code')}")
+    forged.close()
 
     passed = sum(1 for r in RESULTS if r["passed"])
     total = len(RESULTS)

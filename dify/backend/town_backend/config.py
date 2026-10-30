@@ -66,6 +66,13 @@ class Settings:
     #: Request body size cap; a player message beyond this is rejected.
     max_message_length: int = field(default_factory=lambda: int(_env("TOWN_MAX_MESSAGE_LENGTH", "500")))
 
+    #: Allow calls that carry no trusted player identity.
+    #: When on, the API answers with ``demo_mode: true`` — the player
+    #: identity is then **not** isolated, and the docs must say so.
+    allow_anonymous: bool = field(
+        default_factory=lambda: _env("TOWN_ALLOW_ANONYMOUS", "0").lower() in ("1", "true", "yes", "on")
+    )
+
     @property
     def schema_path(self) -> Path:
         return self.root / "data" / "schema.sql"
@@ -73,6 +80,14 @@ class Settings:
     @property
     def seed_path(self) -> Path:
         return self.root / "data" / "seed.sql"
+
+    @property
+    def schema_v2_path(self) -> Path:
+        return self.root / "data" / "schema_v2.sql"
+
+    @property
+    def seed_v2_path(self) -> Path:
+        return self.root / "data" / "seed_v2.sql"
 
 
 def load_settings() -> Settings:

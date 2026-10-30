@@ -2,14 +2,18 @@
 
 用法::
 
-    python scripts/init_seekdb.py            # 建库 + 建表 + 种子（幂等，可重复执行）
+    python scripts/init_seekdb.py            # 建库 + 建表 + 种子 + V2 迁移（幂等，可重复执行）
     python scripts/init_seekdb.py --drop     # 先删库再建（会清空所有游戏数据）
+    python scripts/init_seekdb.py --v1-only  # 只做 V1，不跑 V2 迁移
 
 连接参数来自环境变量（与 backend/town_backend/config.py 一致）：
 ``TOWN_SEEKDB_HOST`` / ``TOWN_SEEKDB_PORT`` / ``TOWN_SEEKDB_USER`` /
 ``TOWN_SEEKDB_PASSWORD`` / ``TOWN_SEEKDB_DATABASE``。
 
 本脚本直连数据库，不经过 Flask 层，因此可以在后端没起来时单独执行。
+
+**它不会碰其它赛题的库**：只操作 ``TOWN_SEEKDB_DATABASE`` 指向的那个库
+（默认 ``memory_town``），``--drop`` 也会先确认库名。
 """
 
 from __future__ import annotations
@@ -24,12 +28,14 @@ if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
 from town_backend.config import load_settings  # noqa: E402
+from town_backend.migrate import migrate  # noqa: E402
 from town_backend.store import SeekDBStore  # noqa: E402
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="初始化《记仇小镇》seekdb 数据库")
     parser.add_argument("--drop", action="store_true", help="先 DROP DATABASE 再重建（会清空数据）")
+    parser.add_argument("--v1-only", action="store_true", help="只做 V1 建表与种子，不跑 V2 迁移")
     args = parser.parse_args()
 
     settings = load_settings()
@@ -45,6 +51,12 @@ def main() -> int:
     print("表结构:")
     for table in report["tables"]:
         print(f"  - {table}")
+
+    if not args.v1_only:
+        print("执行 V2 增量迁移 ...")
+        migration = migrate(settings)
+        for action in migration["actions"]:
+            print(f"  - [{action['action']}] {action['detail']}")
 
     counts = store.count_rows()
     print("行数:")

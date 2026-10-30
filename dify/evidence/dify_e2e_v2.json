@@ -1,0 +1,190 @@
+{
+  "dify_api": "http://127.0.0.1:5001",
+  "backend": "http://127.0.0.1:8848",
+  "app_id": "b23679e8-a4b4-4958-893c-6e0236f5e4b3",
+  "players": {
+    "a": "e2e_a_7374ae87",
+    "b": "e2e_b_7374ae87",
+    "c": "e2e_c_7374ae87",
+    "d": "e2e_d_7374ae87"
+  },
+  "passed": 27,
+  "total": 27,
+  "checks": [
+    {
+      "code": "P0",
+      "title": "后端依赖（seekdb + PowerContext）可用",
+      "passed": true,
+      "detail": "seekdb=ok powercontext=True"
+    },
+    {
+      "code": "P1",
+      "title": "登录 Dify Console",
+      "passed": true,
+      "detail": "登录成功"
+    },
+    {
+      "code": "P1.1",
+      "title": "取得 Console 账号身份（Dify 的 sys.user_id）",
+      "passed": true,
+      "detail": "identity=924b7784…"
+    },
+    {
+      "code": "P1.2",
+      "title": "后端服务凭据可用",
+      "passed": true,
+      "detail": "已从环境变量 / deploy/.env 读到 TOWN_BACKEND_TOKEN"
+    },
+    {
+      "code": "T1",
+      "title": "DSL 可导入 Dify 并生成应用",
+      "passed": true,
+      "detail": "app_id=b23679e8-a4b4-4958-893c-6e0236f5e4b3 status=completed dsl_version=0.4.0"
+    },
+    {
+      "code": "T1.0",
+      "title": "服务凭据注入 Dify 应用（V2 鉴权生效）",
+      "passed": true,
+      "detail": "已注入 TOWN_BACKEND_TOKEN（Dify 侧加密存储）"
+    },
+    {
+      "code": "T1.1",
+      "title": "导入后 DSL 仍可导出（图未被改写）",
+      "passed": true,
+      "detail": "导出 64432 字符"
+    },
+    {
+      "code": "T1.2",
+      "title": "导出的 DSL 不含明文凭据",
+      "passed": true,
+      "detail": "凭据只在 Dify 的加密环境变量里，不在导出的 DSL 里"
+    },
+    {
+      "code": "T2",
+      "title": "新玩家进入小镇并与 NPC 互动",
+      "passed": true,
+      "detail": "answer='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】本镇长亲眼看见你偷走金王冠，人赃并获，这笔账已经记进日记。根据镇规第三条——哦，似乎没写当场抓贼还让他继续宣布计划。现在立刻归还王冠、公开认错，我可以给你'"
+    },
+    {
+      "code": "T2.1",
+      "title": "玩家在 seekdb 中落库",
+      "passed": true,
+      "detail": "player=e2e_a_7374ae87"
+    },
+    {
+      "code": "T3",
+      "title": "动作真的修改了 seekdb 游戏数据",
+      "passed": true,
+      "detail": "王冠到手=True 镇长怨念=25 好感=-15"
+    },
+    {
+      "code": "T3.1",
+      "title": "偷王冠触发镇长调查支线",
+      "passed": true,
+      "detail": "plots=[('plot_crown_theft', 'investigating')]"
+    },
+    {
+      "code": "T4",
+      "title": "关键事件真的写进了 PowerContext",
+      "passed": true,
+      "detail": "key_events=1 命中=1；样本=['[e2e_a_7374ae87] 偷走了 奥托镇长 的「golden_crown」。奥托镇长 因此记恨上了他。']"
+    },
+    {
+      "code": "T5",
+      "title": "新会话能召回上一轮的关键记忆",
+      "passed": true,
+      "detail": "新会话召回 1 条；台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哦，打招呼？本官还以为您偷走那顶金王冠以后，连正脸都不屑于露呢。既然还敢回来，就先把王冠交还；本官可以给您一个体面的台阶，就当是误手误脚。若还揣着它装无辜'"
+    },
+    {
+      "code": "T5.1",
+      "title": "新会话里 NPC 的台词体现了旧账（记忆真的影响了体验）",
+      "passed": true,
+      "detail": "answer='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哦，打招呼？本官还以为您偷走那顶金王冠以后，连正脸都不屑于露呢。既然还敢回来，就先把王冠交还；本官可以给您一个体面的台阶，就当是误手误脚。若还揣着它装无辜，哼，本官可会把这笔旧账记得清清楚楚。\\n（此地还有：墨墨（猫咪侦探）、奥托镇长（小镇镇长））\\n\\n【行动结果】闲聊；你只是'"
+    },
+    {
+      "code": "T6",
+      "title": "玩家 B 读不到玩家 A 的记忆（无跨玩家泄漏）",
+      "passed": true,
+      "detail": "B 召回 1 条，其中含 A 的 0 条；B 自己的=['[e2e_b_7374ae87] 对 奥托镇长 搞了个恶作剧，奥托镇长 记下了这笔账。']"
+    },
+    {
+      "code": "T7",
+      "title": "同样输入在不同历史下触发不同的关系状态",
+      "passed": true,
+      "detail": "有前科的 A 再作恶：怨念=37；全新玩家 C 第一次：怨念=12"
+    },
+    {
+      "code": "T7.1",
+      "title": "重复作案的怨念继续累积（前科 + 本次）",
+      "passed": true,
+      "detail": "C=12（首次恶作剧）→ A=37（偷窃前科 25 + 恶作剧 12）"
+    },
+    {
+      "code": "T7.2",
+      "title": "有前科的玩家被针对得更明显（台词不同）",
+      "passed": true,
+      "detail": "A 的台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】好啊，好得很！我的金王冠已经被你偷去，你的恶作剧还真够“精彩”。根据镇规，限你立刻归还王冠，到镇长办公室当面认错；'；C 的台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】很好，预告不必再重复。你刚才对我搞的那场恶作剧，我已原样记进日记；根据镇规，先记警告，再算总账。你最好祈祷我找不到'"
+    },
+    {
+      "code": "T8.1",
+      "title": "重复请求被幂等处理（不重复改状态）",
+      "passed": true,
+      "detail": "第一次后怨念=24（起始 12）；第二次返回 duplicate=False/True"
+    },
+    {
+      "code": "T8.2",
+      "title": "同一幂等键配不同内容被拒绝（409）",
+      "passed": true,
+      "detail": "HTTP 409 code=idempotency_conflict"
+    },
+    {
+      "code": "T8.3",
+      "title": "非法输入被拒绝（400）",
+      "passed": true,
+      "detail": "HTTP 400 code=invalid_player_id"
+    },
+    {
+      "code": "T8.4",
+      "title": "未知玩家被拒绝（404）",
+      "passed": true,
+      "detail": "HTTP 404 code=unknown_player"
+    },
+    {
+      "code": "T8.5",
+      "title": "超长输入被拒绝（400）",
+      "passed": true,
+      "detail": "HTTP 400 code=message_too_long"
+    },
+    {
+      "code": "T8.6",
+      "title": "Dify 侧遇到非法玩家 ID 时如实说明而不是崩溃",
+      "passed": true,
+      "detail": "status=succeeded answer='玩家ID只能包含字母、数字、下划线、连字符、点和冒号，长度 1-64'"
+    },
+    {
+      "code": "T8.7",
+      "title": "违反道具规则的请求被拒绝且不报成功",
+      "passed": true,
+      "detail": "HTTP 409 code=item_not_transferable"
+    },
+    {
+      "code": "T9",
+      "title": "全新玩家可在干净环境下完成一整轮交互",
+      "passed": true,
+      "detail": "answer='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】啊哈，欢迎来到小镇广场。本镇长奥托正根据镇规第三条维护公共秩序，两位最好别在告示牌前喧哗或干扰喷泉旁猫咪侦探的办案，喵。\\n（此地还有：墨墨（猫咪侦探）、奥'"
+    }
+  ],
+  "answers": {
+    "a_turn1": "【当前地点】小镇广场\n\n【NPC 对话与剧情】本镇长亲眼看见你偷走金王冠，人赃并获，这笔账已经记进日记。根据镇规第三条——哦，似乎没写当场抓贼还让他继续宣布计划。现在立刻归还王冠、公开认错，我可以给你一个体面的台阶；否则，本镇长会请渡鸦法官把每一笔旧账都翻出来。\n（此地还有：墨墨（猫咪侦探）、奥托镇长（小镇镇长））\n\n【行动结果】偷窃；你试图偷走 奥托镇长 的「golden_crown」，被当场抓住。\n\n【状态变化】好感 -15 / 信任 30 / 怨念 25\n剧情 plot_crown_theft 进入阶段「investigating」：奥托镇长 的金王冠被 e2e_a_7374ae87 偷走了。镇长宣布启动调查。\n任务「王冠失窃案」阶段 in_progress（进度 0/3）\n- 你把「镇长的金王冠」揣进了怀里\n- 触发主线剧情「王冠失窃案」：镇长开始调查。\n\n【可尝试的行动】偷偷拿走某件东西、继续追查王冠失窃案、看看能买点什么",
+    "a_turn2_new_session": "【当前地点】小镇广场\n\n【NPC 对话与剧情】哦，打招呼？本官还以为您偷走那顶金王冠以后，连正脸都不屑于露呢。既然还敢回来，就先把王冠交还；本官可以给您一个体面的台阶，就当是误手误脚。若还揣着它装无辜，哼，本官可会把这笔旧账记得清清楚楚。\n（此地还有：墨墨（猫咪侦探）、奥托镇长（小镇镇长））\n\n【行动结果】闲聊；你只是说了句话，没有人记账。\n\n【可尝试的行动】和在场的人聊几句、处理身上的东西、去镇长办公室看看、看看能买点什么",
+    "b_turn": "【当前地点】小镇广场\n\n【NPC 对话与剧情】哦？还要再来一次？你刚才那个恶作剧，我可已经一笔一笔记在日记里了——时间、经过、当事人，一个字都没漏。根据镇规关于公共秩序的条款，任何针对镇长本官的恶作剧，都将视为藐视镇政、记录在案并追究责任。你若识相，就当众道歉赔礼；否则，本镇长的记性，可比你的胆子还长。\n（此地还有：墨墨（猫咪侦探）、奥托镇长（小镇镇长））\n\n【行动结果】恶作剧；你对 奥托镇长 搞了个恶作剧。\n\n【状态变化】好感 -8 / 信任 45 / 怨念 12\n\n【可尝试的行动】吓唬一下某个人、去镇长办公室看看、看看能买点什么"
+  },
+  "memory": {
+    "a_key_events": [
+      "[e2e_a_7374ae87] 偷走了 奥托镇长 的「golden_crown」。奥托镇长 因此记恨上了他。"
+    ],
+    "b_key_events": [
+      "[e2e_b_7374ae87] 对 奥托镇长 搞了个恶作剧，奥托镇长 记下了这笔账。"
+    ]
+  }
+}

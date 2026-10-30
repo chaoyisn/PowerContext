@@ -40,9 +40,24 @@ from town_backend.config import load_settings  # noqa: E402
 from town_backend.store import SeekDBStore, StoreError  # noqa: E402
 
 EXPECTED_TABLES = {
+    # V1 的八张表。
     "town_location", "town_npc", "town_player", "town_relationship",
     "town_item", "town_event", "town_plot_progress", "town_request_log",
+    # V2 增量加的表。
+    "town_location_link", "town_knowledge", "town_quest", "town_ending",
+    "town_achievement", "town_outbox", "town_player_identity",
 }
+
+#: V2 种子数据里**必须存在**的地点、NPC 与道具。
+#:
+#: 这里按 id 断言，而不是按"有几行"断言 ——
+#: ``town_item`` 的行数会随着玩家偷/送/还不断增长（每个拿到道具的
+#: 玩家都会多出一行），拿总数当断言会随运行次数漂移。
+#: 按 id 断言的是"世界该有的东西在不在"，这才是种子数据的含义。
+SEED_LOCATIONS = ("town_square", "mayor_house", "back_alley", "detective_office")
+SEED_NPCS = ("mayor", "cat_detective", "crow_judge")
+SEED_ITEMS = ("golden_crown", "fat_fish_snack", "mayor_seal",
+               "crown_receipt", "alley_witness_note")
 
 RESULTS: list[dict] = []
 
@@ -70,16 +85,28 @@ def main() -> int:
     # ---------------------------------------------------------------- C1
     counts = store.count_rows()
     missing = sorted(EXPECTED_TABLES - set(counts))
-    check("C1", "8 张业务表存在", not missing, f"缺失: {missing}" if missing else f"共 {len(counts)} 张表")
+    check("C1", "业务表存在", not missing,
+          f"缺失: {missing}" if missing else f"共 {len(EXPECTED_TABLES)} 张表")
 
     # ---------------------------------------------------------------- C2
     locations = store.list_locations()
     npcs = store.list_npcs()
-    item_total = counts.get("town_item", 0)
+    location_ids = {loc["location_id"] for loc in locations}
+    npc_ids = {npc["npc_id"] for npc in npcs}
+    all_items = store.list_all_items()
+    item_ids = {item["item_id"] for item in all_items}
     starts = [loc for loc in locations if int(loc["is_start"]) == 1]
+    missing_locations = sorted(set(SEED_LOCATIONS) - location_ids)
+    missing_npcs = sorted(set(SEED_NPCS) - npc_ids)
+    missing_items = sorted(set(SEED_ITEMS) - item_ids)
     check("C2", "种子数据已灌入",
-          len(locations) == 3 and len(npcs) == 2 and item_total == 5 and len(starts) == 1,
-          f"地点={len(locations)} NPC={len(npcs)} 道具行={item_total} 起始点={len(starts)}")
+          not missing_locations and not missing_npcs and not missing_items
+          and len(starts) == 1,
+          f"地点={len(location_ids)} NPC={len(npc_ids)} "
+          f"道具行={counts.get('town_item', 0)} 起始点={len(starts)}"
+          + (f" 缺地点={missing_locations}" if missing_locations else "")
+          + (f" 缺NPC={missing_npcs}" if missing_npcs else "")
+          + (f" 缺道具={missing_items}" if missing_items else ""))
 
     # ---------------------------------------------------------------- C3
     created = store.register_player(player_a, "验证玩家A", f"sess_{suffix}_1")
@@ -141,14 +168,30 @@ def main() -> int:
 
     # ---------------------------------------------------------------- C7b
     # 货架上的小鱼干有数量，送一件之后还剩 4 件 —— 而不是整堆消失。
+    #
+    # 先保证货架那一行**存在**：前面的流程可能已经把整行搬走了，
+    # 对着一行不存在的记录做断言会抛 AttributeError，而不是给出
+    # 一个诚实的失败。
+    with store._cursor(settings.seekdb_database) as cursor:  # noqa: SLF001
+        cursor.execute(
+            "INSERT INTO town_item (item_id, owner_kind, owner_id, name, description, "
+            "quantity, is_transferable, item_kind, is_evidence) "
+            "VALUES ('fat_fish_snack', 'town', 'town_square', %s, %s, 5, 1, 'normal', 0) "
+            "ON DUPLICATE KEY UPDATE quantity = 5",
+            ("油炸小鱼干", "喷泉边卖的那种小鱼干，油纸包。墨墨的弱点。"))
+        cursor.execute(
+            "DELETE FROM town_item WHERE item_id = 'fat_fish_snack' "
+            "AND owner_kind = 'npc' AND owner_id = 'mayor'")
     shelf_before = store.fetch_item("fat_fish_snack", "town", "town_square")
     store.transfer_item("fat_fish_snack", "npc", "mayor", from_kind="town", from_id="town_square")
     shelf_after = store.fetch_item("fat_fish_snack", "town", "town_square")
     held = store.fetch_item("fat_fish_snack", "npc", "mayor")
     check("C7b", "货架道具按数量扣减，送一件后仍有余量",
-          shelf_before["quantity"] == 5 and shelf_after["quantity"] == 4
+          shelf_before is not None and shelf_before["quantity"] == 5
+          and shelf_after is not None and shelf_after["quantity"] == 4
           and held is not None and int(held["quantity"]) == 1,
-          f"货架 {shelf_before['quantity']} -> {shelf_after['quantity']}, "
+          f"货架 {shelf_before['quantity'] if shelf_before else 'N/A'} -> "
+          f"{shelf_after['quantity'] if shelf_after else 'N/A'}, "
           f"镇长手里 {held['quantity'] if held else 'N/A'}")
     # 把数量补回去，避免影响后续测试。
     with store._cursor(settings.seekdb_database) as cursor:  # noqa: SLF001

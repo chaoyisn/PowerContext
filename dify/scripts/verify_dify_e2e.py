@@ -43,6 +43,8 @@ for _path in (str(BACKEND_ROOT), str(HERE)):
         sys.path.insert(0, _path)
 
 from import_and_run_dify import Console, sse_answer  # noqa: E402
+from auth_helper import backend_token  # noqa: E402
+from deploy_v2 import inject_token  # noqa: E402
 
 RESULTS: list[dict] = []
 
@@ -54,11 +56,14 @@ def check(code: str, title: str, passed: bool, detail: str = "") -> bool:
     return bool(passed)
 
 
-def http_json(url: str, payload: dict | None = None, method: str = "GET") -> Any:
+def http_json(url: str, payload: dict | None = None, method: str = "GET",
+              headers: dict | None = None) -> Any:
     data = json.dumps(payload, ensure_ascii=False).encode("utf-8") if payload is not None else None
     req = urllib.request.Request(url, data=data, method=method)
     if data is not None:
         req.add_header("Content-Type", "application/json")
+    for key, value in (headers or {}).items():
+        req.add_header(key, value)
     try:
         with urllib.request.urlopen(req, timeout=60) as resp:
             return json.loads(resp.read().decode("utf-8"))
@@ -74,10 +79,12 @@ def http_json(url: str, payload: dict | None = None, method: str = "GET") -> Any
 class Town:
     """Chat over the imported Dify app, plus direct reads of the real state."""
 
-    def __init__(self, console: Console, app_id: str, backend: str) -> None:
+    def __init__(self, console: Console, app_id: str, backend: str,
+                 headers: dict | None = None) -> None:
         self.console = console
         self.app_id = app_id
         self.backend = backend.rstrip("/")
+        self.headers = headers or {}
 
     def say(self, player_id: str, text: str, session_id: str = "") -> dict:
         """One turn. A fresh conversation unless a session_id is supplied."""
@@ -100,13 +107,16 @@ class Town:
         }
 
     def state(self, player_id: str) -> dict:
-        return http_json(f"{self.backend}/api/state?player_id={player_id}")
+        return http_json(f"{self.backend}/api/state?player_id={player_id}",
+                         headers=self.headers)
 
     def action(self, payload: dict) -> dict:
-        return http_json(f"{self.backend}/api/action", payload, method="POST")
+        return http_json(f"{self.backend}/api/action", payload, method="POST",
+                         headers=self.headers)
 
     def events(self, player_id: str) -> dict:
-        return http_json(f"{self.backend}/api/players/{player_id}/events")
+        return http_json(f"{self.backend}/api/players/{player_id}/events",
+                         headers=self.headers)
 
 
 def npc_of(state: dict, npc_id: str) -> dict:
@@ -142,6 +152,21 @@ def main() -> int:
     if not check("P1", "登录 Dify Console", ok, detail):
         return 1
 
+    # Console 调试器下的 sys.user_id 是**控制台账号 id**。脚本直接查后端时
+    # 必须呈现同一个身份，否则后端判定为冒用 → 403。
+    status, profile = console.get("/console/api/account/profile")
+    console_identity = (profile or {}).get("id", "")
+    if not check("P1.1", "取得 Console 账号身份（Dify 的 sys.user_id）",
+                 status == 200 and bool(console_identity),
+                 f"identity={console_identity[:8]}…"):
+        return 1
+
+    token = backend_token()
+    if not check("P1.2", "后端服务凭据可用", bool(token),
+                 "已从环境变量 / deploy/.env 读到 TOWN_BACKEND_TOKEN"):
+        print("缺少 TOWN_BACKEND_TOKEN，V2 后端会拒绝所有请求。")
+        return 1
+
     yaml_content = DSL_PATH.read_text(encoding="utf-8")
     status, imported = console.post("/console/api/apps/imports", {
         "mode": "yaml-content",
@@ -155,13 +180,24 @@ def main() -> int:
         return 1
     app_id = imported["app_id"]
 
+    # V2：把真实凭据注入 Dify 应用的环境变量（仓库里的 DSL 只有空值声明）。
+    injected, inject_detail = inject_token(console, app_id, token)
+    if not check("T1.0", "服务凭据注入 Dify 应用（V2 鉴权生效）", injected, inject_detail):
+        return 1
+
     status, exported = console.get(f"/console/api/apps/{app_id}/export")
     exported_yaml = (exported or {}).get("data") or ""
     check("T1.1", "导入后 DSL 仍可导出（图未被改写）",
           status == 200 and "kind: app" in exported_yaml,
           f"导出 {len(exported_yaml)} 字符")
+    check("T1.2", "导出的 DSL 不含明文凭据",
+          bool(token) and token not in exported_yaml,
+          "凭据只在 Dify 的加密环境变量里，不在导出的 DSL 里")
 
-    town = Town(console, app_id, args.backend)
+    town = Town(console, app_id, args.backend, headers={
+        "X-Town-Token": token,
+        "X-Town-Identity": console_identity,
+    })
 
     # 把道具复位，保证每次验收的起点一样。
     from verify_backend_api import reset_fixtures  # type: ignore
@@ -214,25 +250,33 @@ def main() -> int:
           f"answer={turn2['answer'][:160]!r}")
 
     # ------------------------------------------------------------ T6
-    turn_b = town.say(player_b, "我要偷走镇长的金王冠")
+    #
+    # 这里刻意用**恶作剧**而不是偷窃。王冠只有一件：A 在 T3 里已经把它
+    # 偷走了，B 再偷一次会被道具规则挡下来（目标手上已经没东西可拿），
+    # B 什么记忆都不会有 —— 那样这条断言就变成了"没记忆可泄漏"的空断言。
+    # 恶作剧可以重复做，B 一定有属于自己的记忆，"不泄漏"才是真的被验证过。
+    turn_b = town.say(player_b, "我要给你一个恶作剧！")
     state_b = town.state(player_b)
     b_events = memory_texts(state_b)
     leak = [t for t in b_events if player_a in t]
     check("T6", "玩家 B 读不到玩家 A 的记忆（无跨玩家泄漏）",
-          len(leak) == 0 and all(player_a not in t for t in b_events),
+          len(b_events) > 0 and len(leak) == 0 and all(player_a not in t for t in b_events),
           f"B 召回 {len(b_events)} 条，其中含 A 的 {len(leak)} 条；"
           f"B 自己的={b_events[:1]}")
 
     # ------------------------------------------------------------ T7
     # 同样一句话，在"有前科"和"没前科"两种历史下必须得到不同的反馈。
-    # 有前科的玩家（A 刚偷过一次，怨念 25）再说同样的话，怨念应累到 50；
-    # 全新玩家（C）第一次说同样的话，怨念才是 25。
+    #
+    # 这里刻意用**恶作剧**而不是偷窃：王冠只有一件，A 偷走之后既不能再偷，
+    # C 的第一次偷也会因为"王冠已不在镇长手上"被道具规则挡下来 ——
+    # 两边的怨念都不会动，测出来的是"谁先偷到"而不是"前科是否累积"。
+    # 恶作剧可以重复做，才能真正看出怨念是一笔笔累上去的。
     fresh_player = f"e2e_c_{suffix}"
-    turn_c = town.say(fresh_player, "我要偷走镇长的金王冠")
+    turn_c = town.say(fresh_player, "我要给你一个恶作剧！")
     state_c = town.state(fresh_player)
     mayor_c = npc_of(state_c, "mayor")
 
-    turn_a2 = town.say(player_a, "我要偷走镇长的金王冠")
+    turn_a2 = town.say(player_a, "我要给你一个恶作剧！")
     state_a2b = town.state(player_a)
     mayor_a2 = npc_of(state_a2b, "mayor")
 
@@ -240,30 +284,37 @@ def main() -> int:
     grudge_c = int(mayor_c.get("grudge_level", 0))
     check("T7", "同样输入在不同历史下触发不同的关系状态",
           grudge_a > grudge_c,
-          f"有前科的 A 再偷一次：怨念={grudge_a}；全新玩家 C 第一次：怨念={grudge_c}")
-    check("T7.1", "重复作案的怨念继续累积",
-          grudge_a == grudge_c + 25,
-          f"C={grudge_c} → A={grudge_a}（每次偷窃 +25）")
+          f"有前科的 A 再作恶：怨念={grudge_a}；全新玩家 C 第一次：怨念={grudge_c}")
+    # A 在 T3 里已经偷过一次王冠（怨念 25），再作恶一次 +12；
+    # C 是白纸，只作恶一次 = 12。两者之差正好是那份前科。
+    check("T7.1", "重复作案的怨念继续累积（前科 + 本次）",
+          grudge_a == grudge_c + 25 and grudge_c == 12,
+          f"C={grudge_c}（首次恶作剧）→ A={grudge_a}（偷窃前科 25 + 恶作剧 12）")
     check("T7.2", "有前科的玩家被针对得更明显（台词不同）",
           turn_a2["answer"] != turn_c["answer"],
           f"A 的台词={turn_a2['answer'][:80]!r}；C 的台词={turn_c['answer'][:80]!r}")
 
     # ------------------------------------------------------------ T8
     # 8.1 重复提交同一 Idempotency-Key → 不应重复扣数值
+    #
+    # 这里用**恶作剧**而不是偷窃。王冠只有一件，A 在 T3 里已经偷走了；
+    # 如果这里再偷，目标手上已经没东西可拿，后端会**正确地**拒绝
+    # （"nothing_to_steal"）—— 那测的是道具规则，不是幂等。
+    # 恶作剧可以重复做，才能真正看出"同一 key 提交两次只记一笔"。
     key = f"idem_{suffix}"
     before = int(npc_of(town.state(player_b), "mayor").get("grudge_level", 0))
     body = {
         "player_id": player_b,
         "session_id": "s-idem",
         "npc_id": "mayor",
-        "message": "我要偷走镇长的金王冠",
+        "message": "我要给你一个恶作剧！",
         "idempotency_key": key,
     }
     first = town.action(body)
     second = town.action(body)
     after = int(npc_of(town.state(player_b), "mayor").get("grudge_level", 0))
     check("T8.1", "重复请求被幂等处理（不重复改状态）",
-          bool(second.get("duplicate") or second.get("replayed")) and after - before == 25,
+          bool(second.get("duplicate") or second.get("replayed")) and after - before == 12,
           f"第一次后怨念={after}（起始 {before}）；第二次返回 duplicate="
           f"{second.get('duplicate')}/{second.get('replayed')}")
 

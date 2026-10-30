@@ -1,0 +1,76 @@
+{
+  "player_id": "v2t06_d590a52d",
+  "total_memories": 18,
+  "relevant_memories": 18,
+  "capabilities": {
+    "available": true,
+    "search_modes": [
+      "auto",
+      "fts"
+    ],
+    "memory_extraction": false
+  },
+  "strategies": {
+    "fts_combined": {
+      "queries": [
+        "偷走 金王冠 还给 墨墨 镇长 恶作剧 小鱼干 调查 线索"
+      ],
+      "matched_by": [],
+      "hit_count": 0,
+      "relevant_hits": 0
+    },
+    "fts_per_word": {
+      "queries": [
+        "偷走",
+        "金王冠",
+        "还给",
+        "墨墨",
+        "镇长",
+        "恶作剧",
+        "小鱼干",
+        "调查",
+        "线索"
+      ],
+      "hit_count": 18,
+      "relevant_hits": 18,
+      "per_word_hits": {
+        "偷走": 0,
+        "金王冠": 0,
+        "还给": 0,
+        "墨墨": 9,
+        "镇长": 9,
+        "恶作剧": 12,
+        "小鱼干": 0,
+        "调查": 0,
+        "线索": 0
+      }
+    },
+    "candidate+rank": {
+      "queries": [
+        "偷走",
+        "金王冠",
+        "还给",
+        "墨墨",
+        "镇长",
+        "恶作剧",
+        "小鱼干",
+        "调查",
+        "线索"
+      ],
+      "candidate_count": 18,
+      "hit_count": 18,
+      "relevant_hits": 18,
+      "bytes": 1647
+    },
+    "observed_vector": {
+      "hit_count": 0,
+      "matched_by": [],
+      "note": "本部署没有向量索引；该模式静默退化成文本通道"
+    },
+    "observed_hybrid": {
+      "hit_count": 0,
+      "matched_by": [],
+      "note": "本部署没有向量索引；该模式静默退化成文本通道"
+    }
+  }
+}

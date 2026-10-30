@@ -1,0 +1,109 @@
+{
+  "base_url": "http://127.0.0.1:8848",
+  "passed": 17,
+  "total": 17,
+  "checks": [
+    {
+      "code": "A1",
+      "title": "/health 同时报告两个后端",
+      "passed": true,
+      "detail": "seekdb=True powercontext=True"
+    },
+    {
+      "code": "A2",
+      "title": "新玩家注册成功并落在起始地点",
+      "passed": true,
+      "detail": "created=True location=town_square"
+    },
+    {
+      "code": "A3",
+      "title": "/api/state 返回 NPC 人设与关系数值",
+      "passed": true,
+      "detail": "NPC=['cat_detective', 'crow_judge', 'mayor'] mayor.trust=50 mayor.grudge=0"
+    },
+    {
+      "code": "A4",
+      "title": "闲聊动作提升好感并落库",
+      "passed": true,
+      "detail": "type=talk affinity=2 trust=51"
+    },
+    {
+      "code": "A5",
+      "title": "恶作剧降低好感并累积怨念",
+      "passed": true,
+      "detail": "type=prank grudge=12 affinity=-6"
+    },
+    {
+      "code": "A6",
+      "title": "赠送道具后道具真的转到 NPC 手上",
+      "passed": true,
+      "detail": "item=fat_fish_snack outcome=你把「fat_fish_snack」送给了 奥托镇长。"
+    },
+    {
+      "code": "A7",
+      "title": "偷走王冠触发主线剧情「王冠失窃案」",
+      "passed": true,
+      "detail": "status=200 plot=plot_crown_theft/investigating notes=['你把「镇长的金王冠」揣进了怀里', '触发主线剧情「王冠失窃案」：镇长开始调查。']"
+    },
+    {
+      "code": "A8",
+      "title": "重复请求被幂等处理，数值只变一次",
+      "passed": true,
+      "detail": "affinity -15 -> -23, grudge 34 -> 46, replayed=True"
+    },
+    {
+      "code": "A9",
+      "title": "同一幂等 key 换内容 → 409 冲突",
+      "passed": true,
+      "detail": "status=409 code=idempotency_conflict"
+    },
+    {
+      "code": "A10",
+      "title": "输入校验：非法 player_id / 空消息 / 超长消息 → 400",
+      "passed": true,
+      "detail": "bad_player=400 empty=400 long=400"
+    },
+    {
+      "code": "A11",
+      "title": "未知玩家 → 404",
+      "passed": true,
+      "detail": "status=404"
+    },
+    {
+      "code": "A12",
+      "title": "赠送不可转移道具被规则拒绝 → 409",
+      "passed": true,
+      "detail": "status=409 code=item_not_transferable"
+    },
+    {
+      "code": "A13",
+      "title": "玩家隔离：B 读不到 A 的事件",
+      "passed": true,
+      "detail": "A=5 条, B=0 条"
+    },
+    {
+      "code": "A14",
+      "title": "后端不可达时快速失败而不是无限挂起",
+      "passed": true,
+      "detail": "ConnectError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。 / 用时 2.06s"
+    },
+    {
+      "code": "A15",
+      "title": "畸形请求体 → 400 而不是 500",
+      "passed": true,
+      "detail": "status=400 code=invalid_json"
+    },
+    {
+      "code": "A16",
+      "title": "缺服务凭据 / 错服务凭据 → 401",
+      "passed": true,
+      "detail": "缺凭据=401 错凭据=401 code=unauthorized"
+    },
+    {
+      "code": "A17",
+      "title": "冒用他人 player_id 读存档 → 403",
+      "passed": true,
+      "detail": "status=403 code=identity_mismatch"
+    }
+  ]
+}

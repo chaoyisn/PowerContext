@@ -252,9 +252,10 @@ services:
       test: [ 'CMD', 'redis-cli', 'ping' ]
 
   # ------------------------------------------------------------------ sandbox
-  # 本赛题的 Chatflow 不使用 Code 节点（动作判定由后端 Python 完成），
-  # 因此 sandbox 只是留着备用。注意：不要挂载空的 /conf 目录，
-  # 那会遮住镜像自带的 config.yaml，导致 sandbox 启动即 panic。
+  # V2 的 Chatflow **用了 Code 节点**（语义意图校验、状态汇总、输出排版
+  # 共 7 个），所以 sandbox 不再是备用，而是这条链路的必需组件。
+  # 注意：不要挂载空的 /conf 目录，那会遮住镜像自带的 config.yaml，
+  # 导致 sandbox 启动即 panic。
   sandbox:
     image: langgenius/dify-sandbox:0.2.12
     restart: always
@@ -370,6 +371,9 @@ services:
       TOWN_POWERCONTEXT_TOKEN: ${SDD_POWERCONTEXT_TOKEN:-}
       TOWN_POWERCONTEXT_TIMEOUT: ${SDD_POWERCONTEXT_TIMEOUT:-20}
       TOWN_BACKEND_TOKEN: ${TOWN_BACKEND_TOKEN:-}
+      # demo 模式：允许不带玩家身份访问。打开后不具备玩家身份隔离，
+      # 只有服务凭据在把关。默认关闭。
+      TOWN_ALLOW_ANONYMOUS: ${TOWN_ALLOW_ANONYMOUS:-0}
       TOWN_LOG_LEVEL: ${TOWN_LOG_LEVEL:-INFO}
       # 容器里的应用根目录是 /app，schema/seed 从 /app/data 读。
       TOWN_ROOT: /app

@@ -1,0 +1,81 @@
+{
+  "database": "memory_town",
+  "host": "127.0.0.1",
+  "port": 2881,
+  "passed": 12,
+  "total": 12,
+  "checks": [
+    {
+      "code": "C1",
+      "title": "业务表存在",
+      "passed": true,
+      "detail": "共 15 张表"
+    },
+    {
+      "code": "C2",
+      "title": "种子数据已灌入",
+      "passed": true,
+      "detail": "地点=4 NPC=3 道具行=11 起始点=1"
+    },
+    {
+      "code": "C3",
+      "title": "玩家注册写入 town_player 且落在起始地点",
+      "passed": true,
+      "detail": "player_id=verify_a_dda63812 location=town_square"
+    },
+    {
+      "code": "C4",
+      "title": "初始关系值符合设定",
+      "passed": true,
+      "detail": "mayor={'player_id': 'verify_a_dda63812', 'npc_id': 'mayor', 'affinity': 0, 'trust': 50, 'grudge_level': 0, 'last_action': ''}"
+    },
+    {
+      "code": "C5",
+      "title": "CHECK 约束挡住非法关系值",
+      "passed": true,
+      "detail": "OperationalError: (3819, 'check constraint violated')"
+    },
+    {
+      "code": "C6",
+      "title": "关系数值被夹紧在合法区间",
+      "passed": true,
+      "detail": "after 12 steals: affinity=-100 trust=0 grudge=100"
+    },
+    {
+      "code": "C7",
+      "title": "道具转移真实改变 owner 字段",
+      "passed": true,
+      "detail": "npc/mayor -> player/verify_a_dda63812"
+    },
+    {
+      "code": "C7b",
+      "title": "货架道具按数量扣减，送一件后仍有余量",
+      "passed": true,
+      "detail": "货架 5 -> 4, 镇长手里 1"
+    },
+    {
+      "code": "C8",
+      "title": "不可转移道具被拒绝且归属未变",
+      "passed": true,
+      "detail": "StoreError(item_not_transferable): 道具「镇长印章」无法被转手 / 归属仍为 npc/mayor"
+    },
+    {
+      "code": "C9",
+      "title": "重复 idempotency_key 只落一条事件",
+      "passed": true,
+      "detail": "写入 2 次，实际事件 1 条"
+    },
+    {
+      "code": "C10",
+      "title": "玩家隔离：A 的事件不会出现在 B 的查询里",
+      "passed": true,
+      "detail": "A=1 条, B=0 条, 交集=0"
+    },
+    {
+      "code": "C11",
+      "title": "中文按 UTF-8 正确存储",
+      "passed": true,
+      "detail": "原样命中 1 条，出现乱码 0 条"
+    }
+  ]
+}
