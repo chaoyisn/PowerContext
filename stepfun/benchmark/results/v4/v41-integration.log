@@ -1,0 +1,13 @@
+✔ API rejects model mismatch and invalid vector dimensions (694.4327ms)
+{"test":"real-seekdb-hybrid","sdk":"seekdb@1.4.0","readbackVector":[1,0,0,0],"resultIds":["edgeseek-it-hit","edgeseek-it-other"],"seekdbSql":["SELECT DBMS_HYBRID_SEARCH.GET_SQL('c$v2$ae0fe7e5d3c511f1ab04e61998311c62', @search_parm) as query_sql FROM dual"]}
+✔ seekdb-js writes, reads, refreshes, and runs hybrid search in seekdb (570.631ms)
+{"test":"real-api-workflow","measuredAt":"2026-10-30T07:08:18.889Z","source":"real seekdb server; synthetic normalized fixture vectors (not browser model output)","sdk":"seekdb@1.4.0","database":"test","kbId":"7467b6e7e5e64f4ea7adfda6acff641e","incremental":{"duplicateSkipped":true,"writeMs":6.45029999999997,"refreshMs":504.0145,"visibilityMs":2.788000000000011,"searchMs":6.0219999999999345,"searchMode":"fulltext","searchFilename":"incremental.md"},"restart":{"documentCount":2,"documentPersisted":true,"searchMs":6.24169999999998,"vectorSearchFilename":"primary.md"},"isolation":{"separateKbId":"aa8609d4f2574e5497244d80dd0e4eb0","primaryContainsTenantDocument":false}}
+✔ real API imports incrementally, isolates knowledge bases, and survives server restart (4094.0324ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5718.9933

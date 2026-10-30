@@ -1,0 +1,488 @@
+{
+  "at": "2026-10-30T03:13:56.545Z",
+  "headed": true,
+  "channel": "msedge",
+  "kbId": "9f016b46ca55444084d15c5e8b35f916",
+  "query": "How can local browser processing protect private documents?",
+  "samples": [
+    {
+      "run": 1,
+      "l2": 0,
+      "cosine": 1,
+      "norm": 0.9999998579069215,
+      "sha256": "a8044f0c180ae4b67f491765fe6eab821f1d0bac42b63b9388245b5d9d797065",
+      "inferenceMs": 19.700000002980232,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 50.03369999997085
+    },
+    {
+      "run": 2,
+      "l2": 0.0036326928242631324,
+      "cosine": 0.9999934017708202,
+      "norm": 1.0000000479372748,
+      "sha256": "126bc781b169faed6dbce21666fcaf74dc15db182f074992d6e97ea154ad5ceb",
+      "inferenceMs": 20.399999998509884,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 11.688900000008289
+    },
+    {
+      "run": 3,
+      "l2": 0.003557828154315895,
+      "cosine": 0.9999936709290072,
+      "norm": 1.000000074343436,
+      "sha256": "5ce4c26bb9200147d39d123057fe20e3e0dffa0f406a887d70734574ee9a5ebe",
+      "inferenceMs": 21.800000000745058,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 12.411599999992177
+    },
+    {
+      "run": 4,
+      "l2": 0.00396170194579916,
+      "cosine": 0.9999921524578859,
+      "norm": 1.000000017914765,
+      "sha256": "60a1092c9abaaee07465b6a7066f432dd5946b3f3f8283f8288ef0c98b330e06",
+      "inferenceMs": 16.399999998509884,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 9.678499999979977
+    },
+    {
+      "run": 5,
+      "l2": 0.003360137817093358,
+      "cosine": 0.9999943547367576,
+      "norm": 1.0000001067534645,
+      "sha256": "ec7bdc4424d51712ef0a4a688d3727aa19e3173c500651c69051498a90ad447e",
+      "inferenceMs": 21.299999997019768,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 10.071400000015274
+    },
+    {
+      "run": 6,
+      "l2": 0.0034105767502645816,
+      "cosine": 0.9999941839818116,
+      "norm": 0.9999999175533287,
+      "sha256": "7b893ce0fa61f4b3cdb720f3b13cf06f1cd500336e0451ad721311aaa8c20a0c",
+      "inferenceMs": 25.300000000745058,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 11.785399999993388
+    },
+    {
+      "run": 7,
+      "l2": 0.0036499150400622223,
+      "cosine": 0.9999933390592908,
+      "norm": 1.0000000185254365,
+      "sha256": "c84a66611cbf45095fce7c8594a265fa4e4c2c6cb488068e62fb3b9464fe590e",
+      "inferenceMs": 32.70000000298023,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 14.692600000009406
+    },
+    {
+      "run": 8,
+      "l2": 0.0036745076853183754,
+      "cosine": 0.999993248993985,
+      "norm": 0.9999997484313314,
+      "sha256": "10096898b5bb9c3ada98a9c7e039249cda9ca610d4f45ee5602d37cd476a23c1",
+      "inferenceMs": 18.699999999254942,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 9.569500000041444
+    },
+    {
+      "run": 9,
+      "l2": 0.003379278320076785,
+      "cosine": 0.9999942902381472,
+      "norm": 0.9999999879313638,
+      "sha256": "a4318ae28f8764dffa4ecf30796c15a3797d77bade4b09dfdf452697dddf2d01",
+      "inferenceMs": 16.5,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 9.072799999965355
+    },
+    {
+      "run": 10,
+      "l2": 0.0035189266891446653,
+      "cosine": 0.9999938085774605,
+      "norm": 1.000000132968793,
+      "sha256": "8ff2cebd527275d428a21e8be8497fc7d2d4999787fa8b187a7ecc9f3233bbab",
+      "inferenceMs": 13.800000000745058,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 7.956400000024587
+    },
+    {
+      "run": 11,
+      "l2": 0.0038555962193611393,
+      "cosine": 0.9999925671889387,
+      "norm": 1.0000001422514944,
+      "sha256": "06b20bd025f28eaee033bba7652f28de868d050deb5300af54acd0e10b3b59ec",
+      "inferenceMs": 17,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 6.616600000008475
+    },
+    {
+      "run": 12,
+      "l2": 0.003400074806224142,
+      "cosine": 0.999994219745003,
+      "norm": 1.0000000263919933,
+      "sha256": "c80fabe6dfd4a763dd98ec3b75c3720568bb0c96d3815eb59b25ece16a9f8697",
+      "inferenceMs": 13.099999997764826,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 7.182299999985844
+    },
+    {
+      "run": 13,
+      "l2": 0.0034823048551154323,
+      "cosine": 0.9999939367740158,
+      "norm": 0.9999997395563925,
+      "sha256": "b4289e8044c157da42e0fd3c5f3192ccd37fe3347990d331cf6e4392a1d9a3c8",
+      "inferenceMs": 17.100000001490116,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 6.846699999994598
+    },
+    {
+      "run": 14,
+      "l2": 0.004156433424331199,
+      "cosine": 0.9999913620291172,
+      "norm": 0.9999999701840111,
+      "sha256": "6de136d9a2b9c577c71cc2c9695e9454eef433b1fee12cd85dc3acc6360a9de0",
+      "inferenceMs": 15,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 8.15180000005057
+    },
+    {
+      "run": 15,
+      "l2": 0.00452635944272861,
+      "cosine": 0.9999897560336367,
+      "norm": 0.9999999984471354,
+      "sha256": "60a3fa15de7e65db2d0f2d0dad4b7e5f9def1a31fce0fb00f7b390cd61a6e533",
+      "inferenceMs": 16.899999998509884,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 7.315599999972619
+    },
+    {
+      "run": 16,
+      "l2": 0.0036125018325345974,
+      "cosine": 0.9999934749130416,
+      "norm": 0.9999998025286247,
+      "sha256": "65bc58cd42f663dbdbaeb3c3d0f621582e881f871430321848c0ec6918de84ec",
+      "inferenceMs": 17.399999998509884,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 8.516400000022259
+    },
+    {
+      "run": 17,
+      "l2": 0.0035900789774910226,
+      "cosine": 0.9999935556654683,
+      "norm": 0.9999999857079317,
+      "sha256": "9a0a712e277acf44542534605d0dd8b5db4d274cf62971bcf330cb70c267d3bd",
+      "inferenceMs": 15.600000001490116,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 11.895000000018626
+    },
+    {
+      "run": 18,
+      "l2": 0.0032410805257838673,
+      "cosine": 0.9999947476980522,
+      "norm": 1.0000000506341369,
+      "sha256": "5a9957408d8b4a618ce0756235fee3ca7c1756b75e41883f2047037bac9968e2",
+      "inferenceMs": 15.599999997764826,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 7.830300000030547
+    },
+    {
+      "run": 19,
+      "l2": 0.0035236063165985385,
+      "cosine": 0.9999937920986036,
+      "norm": 1.000000033302489,
+      "sha256": "d42dd26ef8ff4461b3046799c716ee300b31d5dadc2d571ccfdf098c4b3ae4e2",
+      "inferenceMs": 18.399999998509884,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 7.229800000030082
+    },
+    {
+      "run": 20,
+      "l2": 0.0036886059489020786,
+      "cosine": 0.9999931970925577,
+      "norm": 1.0000000625545733,
+      "sha256": "27087c47d2b416022314b0db24a1ec754efceff3e72e279590cdda1826912583",
+      "inferenceMs": 15,
+      "rankedIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "rankedFiles": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md"
+      ],
+      "dbMs": 7.06080000003567
+    }
+  ],
+  "errors": [],
+  "version": "156.0.4314.50",
+  "adapter": {
+    "vendor": "intel",
+    "architecture": "gen-12lp",
+    "fallback": false,
+    "shaderF16": true
+  },
+  "state": {
+    "backend": "WebGPU",
+    "dtype": "fp16",
+    "dimension": 384,
+    "modelId": "Xenova/all-MiniLM-L6-v2",
+    "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+    "initMs": 2393.699999999255
+  },
+  "rankingIdentical": true,
+  "maxL2": 0.00452635944272861,
+  "minCosine": 0.9999897560336367
+}

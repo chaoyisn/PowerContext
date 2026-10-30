@@ -4,6 +4,10 @@ EdgeSeek 是一个浏览器端知识库：TXT/Markdown 文档在 Web Worker 中�
 
 ## 当前状态
 
+- V4 使用独立 TCP 故障代理验证真实浏览器向量查询、写入中断、503 提示、恢复与幂等重试；没有停止其他项目数据库。
+- 冷/热 Worker、缓存证明、五次查询、批大小及应用端刷新对照见 [BENCHMARK.md](docs/BENCHMARK.md)。100 文档/30 查询的原创合成质量集显示跨语言能力较弱。
+- 最终队列版本 Chrome/Edge E2E 和有窗口断连恢复回归已通过；受控 GPU 推理失败已验证，真实 GPU Device Lost 未复现，详见 [VERIFICATION.md](docs/VERIFICATION.md)。
+
 - 浏览器 Worker 的 WASM q8 与有窗口 Edge 的物理 GPU WebGPU FP16 均已真实推理；模拟 GPU 不可用和初始化失败后，WASM q8 真实推理通过。
 - 浏览器真实向量已写入 seekdb。SDK 执行边界追踪核对了 `GET_SQL` 返回语句与后续执行的语句及数据库结果，详见 [VERIFICATION.md](docs/VERIFICATION.md)。
 - 知识库绑定精度与后端；旧版未记录精度的知识库必须重新创建并导入。精度质量对照为小样本，批量刷新优化、完整桌面 UI 及断连恢复仍待验收。

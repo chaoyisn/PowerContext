@@ -6,8 +6,8 @@ import wasmModuleUrl from "../../node_modules/onnxruntime-web/dist/ort-wasm-simd
 import type { EmbeddedBatch, EmbeddingStatus, Precision } from "./embedding";
 
 type Request =
-  | { kind: "init"; requestId: string; precision: Precision }
-  | { kind: "embed"; requestId: string; texts: string[]; batchSize: number };
+  | { kind: "init"; requestId: string; precision: Precision; sentAt: number }
+  | { kind: "embed"; requestId: string; texts: string[]; batchSize: number; sentAt: number };
 
 let extractor: FeatureExtractionPipeline | null = null;
 let status: EmbeddingStatus | null = null;
@@ -28,6 +28,7 @@ self.onmessage = (event: MessageEvent<Request>) => {
 
 async function handle(request: Request) {
   try {
+    self.postMessage({ requestId: request.requestId, progress: { phase: "worker-start", kind: request.kind, queueMs: Math.max(0, Date.now() - request.sentAt) } });
     const value = request.kind === "init"
       ? await initialize(request.precision, request.requestId)
       : await embed(request.texts, request.batchSize, request.requestId);
@@ -51,7 +52,9 @@ async function initialize(precision: Precision, requestId: string): Promise<Embe
       const adapter = await self.navigator.gpu?.requestAdapter();
       if (!adapter) throw new Error("WebGPU adapter unavailable");
       await load("webgpu", "fp16", requestId);
+      const probeStarted = performance.now();
       const candidate = await infer(["EdgeSeek WebGPU runtime verification"]);
+      self.postMessage({ requestId, progress: { phase: "first-inference", elapsedMs: performance.now() - probeStarted, backend: "WebGPU" } });
       validate(candidate[0]);
       status = {
         backend: "WebGPU", dtype: "fp16", dimension: model.dimension,
@@ -66,7 +69,9 @@ async function initialize(precision: Precision, requestId: string): Promise<Embe
 
   const dtype = precision === "fp32" ? "fp32" : "q8";
   await load("wasm", dtype, requestId);
+  const probeStarted = performance.now();
   const candidate = await infer(["EdgeSeek WASM runtime verification"]);
+  self.postMessage({ requestId, progress: { phase: "first-inference", elapsedMs: performance.now() - probeStarted, backend: "WASM" } });
   validate(candidate[0]);
   status = {
     backend: "WASM", dtype, dimension: model.dimension,
@@ -86,6 +91,7 @@ async function load(device: "wasm" | "webgpu", dtype: "fp32" | "q8" | "fp16", re
     dtype,
     progress_callback: onProgress,
   });
+  self.postMessage({ requestId, progress: { phase: "model-ready", backend: device, dtype } });
 }
 
 async function infer(texts: string[]) {

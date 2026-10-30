@@ -1,0 +1,10 @@
+{
+  "completed": true,
+  "kbId": "be35a5b0ee5f40a689d597efccce6300",
+  "results": [
+    "01▤privacy.md·分块 1Browser-side embeddings can improve privacy. The browser computes vectors locally before storage.向量 + 全文956bc9c919bf…数据库得分0.0328",
+    "02▤indexes.md·分块 1A seekdb index refresh makes newly inserted document chunks available for hybrid search.向量 + 全文5c1f714d48a7…数据库得分0.0161",
+    "03▤vectors.md·分块 1The database supports vector search. Semantic similarity finds documents by meaning.向量 + 全文7352cc33956a…数据库得分0.0159"
+  ],
+  "errors": []
+}

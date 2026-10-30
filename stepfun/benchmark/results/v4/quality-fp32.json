@@ -1,0 +1,2377 @@
+{
+  "at": "2026-10-30T03:16:49.374Z",
+  "precision": "fp32",
+  "backend": "WASM",
+  "datasetSha256": "ad91b2a832f311dfcf88467f9abb17c32503f8ed71719a77153c97d3253e9558",
+  "dataset": "benchmark/v4-quality.json",
+  "corpusSize": 100,
+  "queryCount": 30,
+  "cases": [
+    {
+      "id": "astronomy-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "astronomy-1.md",
+        "astronomy-10.md",
+        "energy-1.md",
+        "astronomy-4.md",
+        "astronomy-2.md",
+        "astronomy-6.md",
+        "astronomy-5.md",
+        "weather-8.md",
+        "gardening-8.md",
+        "weather-9.md"
+      ],
+      "resultIds": [
+        "8789f998dfc21fe8939311a6ae67088a22e9ef0d5248cfd5b3002154c45cbaaf",
+        "d674a8ef3a1804bbb9812661527b604387d5bf97b046f92851348d6ebcc1bbe4",
+        "69daad815149efa1201451182c40f37baa3b5d87929cd3589bba519f5e5d7f54",
+        "2314a88003f75c8ebbaeca961b69f52e653cde0e5a61d5ad52fcf3ad234b2120",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "c8b486f68bd73edb35cbd1b5d3601a85a832a9a7a5f1ca0dc00efb5db6710cf2",
+        "631fb0064f7647f9b5d29c8a58fcf65aa36ffc83fde87c0154b7a11578656d5b",
+        "d446707055714651f3ced601880141ef8e2d32203f1010d5b47ff18d14b3fb5f",
+        "fd04617ebdec570bdc4b7556ec495dadd09ccef3287a5e08f31aebbb548e0eae",
+        "bc74e214b773783e3657a460d8654708642af755f1686a5f4088f11adaf2cf78"
+      ],
+      "embeddingMs": 15.699999999254942,
+      "dbMs": 6.764000000002852,
+      "gold": [
+        "astronomy-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "astronomy-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "astronomy-1.md",
+        "astronomy-10.md",
+        "energy-1.md",
+        "weather-8.md",
+        "astronomy-4.md",
+        "bicycle-1.md",
+        "astronomy-2.md",
+        "cooking-7.md",
+        "astronomy-6.md",
+        "weather-4.md"
+      ],
+      "resultIds": [
+        "8789f998dfc21fe8939311a6ae67088a22e9ef0d5248cfd5b3002154c45cbaaf",
+        "d674a8ef3a1804bbb9812661527b604387d5bf97b046f92851348d6ebcc1bbe4",
+        "69daad815149efa1201451182c40f37baa3b5d87929cd3589bba519f5e5d7f54",
+        "d446707055714651f3ced601880141ef8e2d32203f1010d5b47ff18d14b3fb5f",
+        "2314a88003f75c8ebbaeca961b69f52e653cde0e5a61d5ad52fcf3ad234b2120",
+        "4abb9ca982ce055c89594c9a736bb35f104ad644259bfeecb51061de0612a0a1",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "2bbcb0e120a5c61d088eb0c4ee83b0ca18d49789ef7626118da321fbc2cbdc7a",
+        "c8b486f68bd73edb35cbd1b5d3601a85a832a9a7a5f1ca0dc00efb5db6710cf2",
+        "c081d41f51c35e703eb63cad15364c71c7e460bd3df083e732a046132397c770"
+      ],
+      "embeddingMs": 15.699999999254942,
+      "dbMs": 13.27719999999681,
+      "gold": [
+        "astronomy-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "astronomy-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "astronomy-2.md",
+        "weather-2.md",
+        "gardening-2.md",
+        "weather-8.md",
+        "energy-2.md",
+        "music-2.md",
+        "maps-2.md",
+        "networking-2.md",
+        "astronomy-4.md",
+        "library-2.md"
+      ],
+      "resultIds": [
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d446707055714651f3ced601880141ef8e2d32203f1010d5b47ff18d14b3fb5f",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "2314a88003f75c8ebbaeca961b69f52e653cde0e5a61d5ad52fcf3ad234b2120",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd"
+      ],
+      "embeddingMs": 21.400000002235174,
+      "dbMs": 3.4320999999981723,
+      "gold": [
+        "astronomy-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "astronomy-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "astronomy-2.md",
+        "weather-2.md",
+        "energy-2.md",
+        "gardening-2.md",
+        "maps-2.md",
+        "library-2.md",
+        "weather-8.md",
+        "music-2.md",
+        "networking-2.md",
+        "astronomy-4.md"
+      ],
+      "resultIds": [
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "d446707055714651f3ced601880141ef8e2d32203f1010d5b47ff18d14b3fb5f",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "2314a88003f75c8ebbaeca961b69f52e653cde0e5a61d5ad52fcf3ad234b2120"
+      ],
+      "embeddingMs": 21.400000002235174,
+      "dbMs": 8.937699999994948,
+      "gold": [
+        "astronomy-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "astronomy-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "astronomy-2.md",
+        "weather-2.md",
+        "energy-2.md",
+        "gardening-2.md",
+        "astronomy-3.md",
+        "networking-2.md",
+        "bicycle-2.md",
+        "music-2.md",
+        "astronomy-9.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "96ace42d01da831b6c2cc3355a072d409c8df57982926c4a410e84a1a30e1ef2",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "f89b9d7a20dd97e3e1ed7703e8e17b15c2d05b0e244ae836b44b4d0371bf049c",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 27.700000002980232,
+      "dbMs": 2.3691000000035274,
+      "gold": [
+        "astronomy-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 0.2,
+      "ndcg10": 0.38685280723454163
+    },
+    {
+      "id": "astronomy-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "weather-2.md",
+        "astronomy-2.md",
+        "gardening-2.md",
+        "maps-2.md",
+        "library-2.md",
+        "energy-2.md",
+        "astronomy-3.md",
+        "networking-2.md",
+        "bicycle-2.md",
+        "music-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "96ace42d01da831b6c2cc3355a072d409c8df57982926c4a410e84a1a30e1ef2",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce"
+      ],
+      "embeddingMs": 27.700000002980232,
+      "dbMs": 8.788399999997637,
+      "gold": [
+        "astronomy-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 1,
+      "mrr10": 0.14285714285714285,
+      "ndcg10": 0.3333333333333333
+    },
+    {
+      "id": "gardening-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "gardening-1.md",
+        "gardening-10.md",
+        "gardening-6.md",
+        "gardening-9.md",
+        "gardening-3.md",
+        "gardening-4.md",
+        "gardening-2.md",
+        "gardening-7.md",
+        "weather-5.md",
+        "gardening-8.md"
+      ],
+      "resultIds": [
+        "c2544dc81ca266ba9a4719838f5ce636660a4ccffe341875dd962af84864e6cf",
+        "76bbc48da176eb955398c9e210442d42425c90e5a300ee19d585639df905848a",
+        "12312e49632fe35f39fc50e91f3527a7a0796b4c0ea989dccd3fcf0dfc7a04c6",
+        "5cfc1739004e2b847610b468a52769cbd1b9cdd4ef9f6ba965ba2edc075f72e0",
+        "37b7e1087adfab09396b25f233e126eb2d5a83cab08e907d4b5844f4eb54c207",
+        "d4ce5d8b6a4ae523d183cb2b86250f7b3c54eeafbb71f919a362c7ef918cedda",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "1abbc317a4040eaafc345baf5f342621e715e8c111a7a88da92a690cbf92c64c",
+        "c2a5437e17646dac5eb9f70391acbdcaeab5b730c53c36c0f159fb094e2ecf20",
+        "fd04617ebdec570bdc4b7556ec495dadd09ccef3287a5e08f31aebbb548e0eae"
+      ],
+      "embeddingMs": 12.899999998509884,
+      "dbMs": 2.769399999997404,
+      "gold": [
+        "gardening-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "gardening-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "gardening-1.md",
+        "gardening-5.md",
+        "gardening-10.md",
+        "gardening-6.md",
+        "library-1.md",
+        "gardening-9.md",
+        "gardening-3.md",
+        "gardening-4.md",
+        "gardening-2.md",
+        "gardening-7.md"
+      ],
+      "resultIds": [
+        "c2544dc81ca266ba9a4719838f5ce636660a4ccffe341875dd962af84864e6cf",
+        "4a359c1e94efd1560be7d861d226619a42dcd67d81e68850f98a68118c4a5ebf",
+        "76bbc48da176eb955398c9e210442d42425c90e5a300ee19d585639df905848a",
+        "12312e49632fe35f39fc50e91f3527a7a0796b4c0ea989dccd3fcf0dfc7a04c6",
+        "64097a8768a12448ecec9868fa42c3e6a60f0b471509f030826ab7b97deb7dc9",
+        "5cfc1739004e2b847610b468a52769cbd1b9cdd4ef9f6ba965ba2edc075f72e0",
+        "37b7e1087adfab09396b25f233e126eb2d5a83cab08e907d4b5844f4eb54c207",
+        "d4ce5d8b6a4ae523d183cb2b86250f7b3c54eeafbb71f919a362c7ef918cedda",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "1abbc317a4040eaafc345baf5f342621e715e8c111a7a88da92a690cbf92c64c"
+      ],
+      "embeddingMs": 12.899999998509884,
+      "dbMs": 8.852300000005926,
+      "gold": [
+        "gardening-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "gardening-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "gardening-2.md",
+        "energy-2.md",
+        "weather-2.md",
+        "cooking-2.md",
+        "networking-2.md",
+        "maps-2.md",
+        "bicycle-2.md",
+        "music-2.md",
+        "astronomy-2.md",
+        "library-2.md"
+      ],
+      "resultIds": [
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd"
+      ],
+      "embeddingMs": 23.299999997019768,
+      "dbMs": 3.3919000000023516,
+      "gold": [
+        "gardening-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "gardening-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "gardening-2.md",
+        "bicycle-2.md",
+        "music-2.md",
+        "maps-2.md",
+        "astronomy-2.md",
+        "energy-2.md",
+        "weather-2.md",
+        "cooking-2.md",
+        "networking-2.md",
+        "library-2.md"
+      ],
+      "resultIds": [
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd"
+      ],
+      "embeddingMs": 23.299999997019768,
+      "dbMs": 8.259399999995367,
+      "gold": [
+        "gardening-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "gardening-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "weather-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "bicycle-2.md",
+        "music-2.md",
+        "astronomy-2.md",
+        "maps-2.md",
+        "cooking-2.md",
+        "library-2.md",
+        "energy-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288"
+      ],
+      "embeddingMs": 25.200000002980232,
+      "dbMs": 3.990799999999581,
+      "gold": [
+        "gardening-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "gardening-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "weather-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "bicycle-2.md",
+        "music-2.md",
+        "astronomy-2.md",
+        "maps-2.md",
+        "cooking-2.md",
+        "library-2.md",
+        "energy-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288"
+      ],
+      "embeddingMs": 25.200000002980232,
+      "dbMs": 7.368200000004435,
+      "gold": [
+        "gardening-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "networking-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "networking-1.md",
+        "networking-8.md",
+        "networking-5.md",
+        "networking-7.md",
+        "networking-6.md",
+        "library-8.md",
+        "maps-6.md",
+        "library-1.md",
+        "networking-2.md",
+        "library-2.md"
+      ],
+      "resultIds": [
+        "f56c20d237ca02b77c1a41fe35d2ea72019e5b4ff1e5393bc98fdc0b42f09e46",
+        "53a439abf1a2d07c5349ba37e4e20a0d5875dd6ed10dced260291d7d902f7bb7",
+        "b478510dca69ccb3bb3a153986ba6300a60517848aba1d8f0365da7c070f809a",
+        "7d9b0d8095a7d2837e6b5efac2ffe2de79b29bd03143f12d3b75a8cdcf5ff5e8",
+        "58942dca1fb2856aa069fc021928e06f429b3f5559073603a60a0e5ea9233028",
+        "3715e43107f78f5f3421ff5d55b57b0991e6646b64b7b8497c65077cf04ba96e",
+        "2193df3c5bdc35dc9c9f6ab7add240ea29f2cc1b9196dbb8899dfb607bd89d28",
+        "64097a8768a12448ecec9868fa42c3e6a60f0b471509f030826ab7b97deb7dc9",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd"
+      ],
+      "embeddingMs": 15.399999998509884,
+      "dbMs": 2.3179999999993015,
+      "gold": [
+        "networking-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "networking-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "networking-1.md",
+        "networking-8.md",
+        "networking-7.md",
+        "networking-6.md",
+        "networking-5.md",
+        "library-8.md",
+        "library-1.md",
+        "energy-7.md",
+        "energy-10.md",
+        "gardening-9.md"
+      ],
+      "resultIds": [
+        "f56c20d237ca02b77c1a41fe35d2ea72019e5b4ff1e5393bc98fdc0b42f09e46",
+        "53a439abf1a2d07c5349ba37e4e20a0d5875dd6ed10dced260291d7d902f7bb7",
+        "7d9b0d8095a7d2837e6b5efac2ffe2de79b29bd03143f12d3b75a8cdcf5ff5e8",
+        "58942dca1fb2856aa069fc021928e06f429b3f5559073603a60a0e5ea9233028",
+        "b478510dca69ccb3bb3a153986ba6300a60517848aba1d8f0365da7c070f809a",
+        "3715e43107f78f5f3421ff5d55b57b0991e6646b64b7b8497c65077cf04ba96e",
+        "64097a8768a12448ecec9868fa42c3e6a60f0b471509f030826ab7b97deb7dc9",
+        "74adacd84b905a213c2c9f18464b2d520794ff7720da48169dbdb62f1a5f83e4",
+        "9717f602348930711e06627950c3b8f382896e5a8c724b00534a18c98f1a9cd1",
+        "5cfc1739004e2b847610b468a52769cbd1b9cdd4ef9f6ba965ba2edc075f72e0"
+      ],
+      "embeddingMs": 15.399999998509884,
+      "dbMs": 9.55789999999979,
+      "gold": [
+        "networking-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "networking-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "maps-2.md",
+        "networking-2.md",
+        "gardening-2.md",
+        "weather-2.md",
+        "astronomy-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "library-2.md",
+        "energy-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 18,
+      "dbMs": 2.455600000001141,
+      "gold": [
+        "networking-2.md"
+      ],
+      "recall1": 0,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 0.5,
+      "ndcg10": 0.6309297535714575
+    },
+    {
+      "id": "networking-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "networking-2.md",
+        "maps-2.md",
+        "gardening-2.md",
+        "weather-2.md",
+        "astronomy-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "library-2.md",
+        "energy-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 18,
+      "dbMs": 7.086799999997311,
+      "gold": [
+        "networking-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "networking-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "music-2.md",
+        "weather-2.md",
+        "energy-2.md",
+        "gardening-2.md",
+        "bicycle-2.md",
+        "library-2.md",
+        "cooking-2.md",
+        "maps-2.md",
+        "astronomy-2.md",
+        "networking-2.md"
+      ],
+      "resultIds": [
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf"
+      ],
+      "embeddingMs": 21.699999999254942,
+      "dbMs": 2.852599999998347,
+      "gold": [
+        "networking-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "networking-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "weather-2.md",
+        "library-2.md",
+        "maps-2.md",
+        "gardening-2.md",
+        "astronomy-2.md",
+        "music-2.md",
+        "energy-2.md",
+        "bicycle-2.md",
+        "cooking-2.md",
+        "networking-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf"
+      ],
+      "embeddingMs": 21.699999999254942,
+      "dbMs": 9.190899999994144,
+      "gold": [
+        "networking-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "energy-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "energy-1.md",
+        "energy-7.md",
+        "energy-3.md",
+        "energy-5.md",
+        "energy-6.md",
+        "energy-10.md",
+        "energy-8.md",
+        "energy-9.md",
+        "astronomy-3.md",
+        "gardening-4.md"
+      ],
+      "resultIds": [
+        "69daad815149efa1201451182c40f37baa3b5d87929cd3589bba519f5e5d7f54",
+        "74adacd84b905a213c2c9f18464b2d520794ff7720da48169dbdb62f1a5f83e4",
+        "0cf4938e012c3f2da454a56678eabed8f925412e60d01060e43d1ce4b4467419",
+        "1e830b8062799ebc0c6844c02b1bf2e807a7b77162018a24633da7b6761adaca",
+        "f84f6e4a8f2527dc4aeaab94477c53c782789e3de636e08fbf39510d38243e85",
+        "9717f602348930711e06627950c3b8f382896e5a8c724b00534a18c98f1a9cd1",
+        "9e19350471f3d21379125c31eb2a661ed1acf68b5af29387c9a49bcdb3eca797",
+        "a0aea468489a4ad296cfddfae4f9a43db00e7dab2cc192caba106ee02c630592",
+        "96ace42d01da831b6c2cc3355a072d409c8df57982926c4a410e84a1a30e1ef2",
+        "d4ce5d8b6a4ae523d183cb2b86250f7b3c54eeafbb71f919a362c7ef918cedda"
+      ],
+      "embeddingMs": 12.399999998509884,
+      "dbMs": 3.040499999995518,
+      "gold": [
+        "energy-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "energy-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "energy-1.md",
+        "energy-5.md",
+        "energy-7.md",
+        "energy-10.md",
+        "energy-3.md",
+        "networking-1.md",
+        "energy-6.md",
+        "astronomy-1.md",
+        "energy-8.md",
+        "energy-9.md"
+      ],
+      "resultIds": [
+        "69daad815149efa1201451182c40f37baa3b5d87929cd3589bba519f5e5d7f54",
+        "1e830b8062799ebc0c6844c02b1bf2e807a7b77162018a24633da7b6761adaca",
+        "74adacd84b905a213c2c9f18464b2d520794ff7720da48169dbdb62f1a5f83e4",
+        "9717f602348930711e06627950c3b8f382896e5a8c724b00534a18c98f1a9cd1",
+        "0cf4938e012c3f2da454a56678eabed8f925412e60d01060e43d1ce4b4467419",
+        "f56c20d237ca02b77c1a41fe35d2ea72019e5b4ff1e5393bc98fdc0b42f09e46",
+        "f84f6e4a8f2527dc4aeaab94477c53c782789e3de636e08fbf39510d38243e85",
+        "8789f998dfc21fe8939311a6ae67088a22e9ef0d5248cfd5b3002154c45cbaaf",
+        "9e19350471f3d21379125c31eb2a661ed1acf68b5af29387c9a49bcdb3eca797",
+        "a0aea468489a4ad296cfddfae4f9a43db00e7dab2cc192caba106ee02c630592"
+      ],
+      "embeddingMs": 12.399999998509884,
+      "dbMs": 7.1304999999993015,
+      "gold": [
+        "energy-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "energy-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "music-2.md",
+        "bicycle-2.md",
+        "weather-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "energy-2.md",
+        "library-2.md",
+        "cooking-2.md",
+        "astronomy-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 18.899999998509884,
+      "dbMs": 2.6212000000014086,
+      "gold": [
+        "energy-2.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 1,
+      "mrr10": 0.16666666666666666,
+      "ndcg10": 0.3562071871080222
+    },
+    {
+      "id": "energy-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "energy-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "weather-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "library-2.md",
+        "cooking-2.md",
+        "astronomy-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 18.899999998509884,
+      "dbMs": 7.8145000000004075,
+      "gold": [
+        "energy-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "energy-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "energy-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "weather-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "library-2.md",
+        "cooking-2.md",
+        "maps-2.md",
+        "astronomy-2.md"
+      ],
+      "resultIds": [
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61"
+      ],
+      "embeddingMs": 25.600000001490116,
+      "dbMs": 2.0186000000030617,
+      "gold": [
+        "energy-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "energy-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "energy-2.md",
+        "bicycle-2.md",
+        "music-2.md",
+        "astronomy-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "weather-2.md",
+        "library-2.md",
+        "cooking-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 25.600000001490116,
+      "dbMs": 8.062200000000303,
+      "gold": [
+        "energy-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "bicycle-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "bicycle-1.md",
+        "bicycle-7.md",
+        "bicycle-8.md",
+        "bicycle-5.md",
+        "bicycle-4.md",
+        "bicycle-3.md",
+        "bicycle-2.md",
+        "bicycle-9.md",
+        "gardening-10.md",
+        "music-6.md"
+      ],
+      "resultIds": [
+        "4abb9ca982ce055c89594c9a736bb35f104ad644259bfeecb51061de0612a0a1",
+        "e2a06d7d47dbc549ba130e62529097f8b7f6eaa65db17e1367523bed28b4932a",
+        "6846f17c9064afeb4a88d410842b8c324306dd7e2d2331a9e0f6b81351170593",
+        "11effc6fc2848a2403c54d72d0a8201afc9fa4f324f7b44bd8ef8f8a5592c92b",
+        "f07b8b75f08abe42666140c39baa89c0c3cc5e609a9d0c7b4399dffe02da62c0",
+        "cb5d5720c6402d6297c454a199550baa64dd8f06aa8c04d60f7beb34e81f24aa",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "072857afe26c495962b81c1639decf96aa63f919bb1780437658621fbd22e192",
+        "76bbc48da176eb955398c9e210442d42425c90e5a300ee19d585639df905848a",
+        "7a9eb0d8631333304624c3fede7f49c9e2109ffe180cd3b7604addbc3e6bc1cf"
+      ],
+      "embeddingMs": 18.699999999254942,
+      "dbMs": 4.310199999999895,
+      "gold": [
+        "bicycle-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "bicycle-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "bicycle-1.md",
+        "bicycle-8.md",
+        "gardening-10.md",
+        "bicycle-7.md",
+        "bicycle-4.md",
+        "bicycle-5.md",
+        "astronomy-1.md",
+        "cooking-7.md",
+        "weather-4.md",
+        "bicycle-3.md"
+      ],
+      "resultIds": [
+        "4abb9ca982ce055c89594c9a736bb35f104ad644259bfeecb51061de0612a0a1",
+        "6846f17c9064afeb4a88d410842b8c324306dd7e2d2331a9e0f6b81351170593",
+        "76bbc48da176eb955398c9e210442d42425c90e5a300ee19d585639df905848a",
+        "e2a06d7d47dbc549ba130e62529097f8b7f6eaa65db17e1367523bed28b4932a",
+        "f07b8b75f08abe42666140c39baa89c0c3cc5e609a9d0c7b4399dffe02da62c0",
+        "11effc6fc2848a2403c54d72d0a8201afc9fa4f324f7b44bd8ef8f8a5592c92b",
+        "8789f998dfc21fe8939311a6ae67088a22e9ef0d5248cfd5b3002154c45cbaaf",
+        "2bbcb0e120a5c61d088eb0c4ee83b0ca18d49789ef7626118da321fbc2cbdc7a",
+        "c081d41f51c35e703eb63cad15364c71c7e460bd3df083e732a046132397c770",
+        "cb5d5720c6402d6297c454a199550baa64dd8f06aa8c04d60f7beb34e81f24aa"
+      ],
+      "embeddingMs": 18.699999999254942,
+      "dbMs": 9.71429999999964,
+      "gold": [
+        "bicycle-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "bicycle-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "bicycle-2.md",
+        "music-2.md",
+        "gardening-2.md",
+        "weather-2.md",
+        "energy-2.md",
+        "networking-2.md",
+        "cooking-2.md",
+        "maps-2.md",
+        "library-2.md",
+        "astronomy-2.md"
+      ],
+      "resultIds": [
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61"
+      ],
+      "embeddingMs": 21.900000002235174,
+      "dbMs": 3.6938000000009197,
+      "gold": [
+        "bicycle-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "bicycle-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "bicycle-2.md",
+        "music-2.md",
+        "gardening-2.md",
+        "weather-2.md",
+        "energy-2.md",
+        "networking-2.md",
+        "cooking-2.md",
+        "maps-2.md",
+        "library-2.md",
+        "astronomy-2.md"
+      ],
+      "resultIds": [
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61"
+      ],
+      "embeddingMs": 21.900000002235174,
+      "dbMs": 9.80920000000333,
+      "gold": [
+        "bicycle-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "bicycle-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "bicycle-2.md",
+        "music-2.md",
+        "weather-2.md",
+        "library-2.md",
+        "gardening-2.md",
+        "energy-2.md",
+        "networking-2.md",
+        "astronomy-2.md",
+        "cooking-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 22.900000002235174,
+      "dbMs": 2.7608999999938533,
+      "gold": [
+        "bicycle-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "bicycle-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "bicycle-2.md",
+        "gardening-2.md",
+        "weather-2.md",
+        "library-2.md",
+        "astronomy-2.md",
+        "maps-2.md",
+        "music-2.md",
+        "energy-2.md",
+        "networking-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 22.900000002235174,
+      "dbMs": 9.037199999998847,
+      "gold": [
+        "bicycle-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "cooking-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "cooking-1.md",
+        "cooking-8.md",
+        "cooking-7.md",
+        "cooking-6.md",
+        "cooking-5.md",
+        "cooking-3.md",
+        "cooking-2.md",
+        "cooking-10.md",
+        "cooking-4.md",
+        "cooking-9.md"
+      ],
+      "resultIds": [
+        "89d097956d304c8c3f51a313400ef0d1c88e1efcdf41be25590fffb6a4b0d4cc",
+        "454c1ff7352a3c1d8f57c282ebaf8f6c915367a09cad5f8deb90891c8ea3a54d",
+        "2bbcb0e120a5c61d088eb0c4ee83b0ca18d49789ef7626118da321fbc2cbdc7a",
+        "95ed96e524065af7ee1f733637db46820e8b87e80c9435f6c4d4beb260ce8293",
+        "92f4f2d68022eea70e2ef22c2c5068bece39bb20d35e44eb93314b89e9e98d2a",
+        "3f529e6117951b72b82b37e423cde95fe156daf3c73d439c79ebde53f5d26179",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "9edb17d9bf12ce83cc3c2123685159d2bf75f55a7d27d613f2d2d904d8b8cf40",
+        "0c9fc8cfbf7b2b1643e8db535275a97a2cd77ce1e0a59523b48698195e58fbaa",
+        "d198cdf33b6c5124e64c6b7780f3622e79426f729f5ce977d07cbba9ed3c5699"
+      ],
+      "embeddingMs": 17.900000002235174,
+      "dbMs": 3.256099999998696,
+      "gold": [
+        "cooking-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "cooking-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "cooking-1.md",
+        "cooking-8.md",
+        "cooking-7.md",
+        "cooking-5.md",
+        "cooking-4.md",
+        "cooking-6.md",
+        "cooking-9.md",
+        "cooking-3.md",
+        "cooking-2.md",
+        "cooking-10.md"
+      ],
+      "resultIds": [
+        "89d097956d304c8c3f51a313400ef0d1c88e1efcdf41be25590fffb6a4b0d4cc",
+        "454c1ff7352a3c1d8f57c282ebaf8f6c915367a09cad5f8deb90891c8ea3a54d",
+        "2bbcb0e120a5c61d088eb0c4ee83b0ca18d49789ef7626118da321fbc2cbdc7a",
+        "92f4f2d68022eea70e2ef22c2c5068bece39bb20d35e44eb93314b89e9e98d2a",
+        "0c9fc8cfbf7b2b1643e8db535275a97a2cd77ce1e0a59523b48698195e58fbaa",
+        "95ed96e524065af7ee1f733637db46820e8b87e80c9435f6c4d4beb260ce8293",
+        "d198cdf33b6c5124e64c6b7780f3622e79426f729f5ce977d07cbba9ed3c5699",
+        "3f529e6117951b72b82b37e423cde95fe156daf3c73d439c79ebde53f5d26179",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "9edb17d9bf12ce83cc3c2123685159d2bf75f55a7d27d613f2d2d904d8b8cf40"
+      ],
+      "embeddingMs": 17.900000002235174,
+      "dbMs": 8.252499999995052,
+      "gold": [
+        "cooking-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "cooking-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "cooking-2.md",
+        "gardening-2.md",
+        "energy-2.md",
+        "music-2.md",
+        "weather-2.md",
+        "bicycle-2.md",
+        "cooking-4.md",
+        "maps-2.md",
+        "library-2.md",
+        "cooking-1.md"
+      ],
+      "resultIds": [
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "0c9fc8cfbf7b2b1643e8db535275a97a2cd77ce1e0a59523b48698195e58fbaa",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "89d097956d304c8c3f51a313400ef0d1c88e1efcdf41be25590fffb6a4b0d4cc"
+      ],
+      "embeddingMs": 18,
+      "dbMs": 2.269799999994575,
+      "gold": [
+        "cooking-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "cooking-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "cooking-2.md",
+        "gardening-2.md",
+        "energy-2.md",
+        "music-2.md",
+        "weather-2.md",
+        "bicycle-2.md",
+        "cooking-4.md",
+        "maps-2.md",
+        "library-2.md",
+        "cooking-1.md"
+      ],
+      "resultIds": [
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "0c9fc8cfbf7b2b1643e8db535275a97a2cd77ce1e0a59523b48698195e58fbaa",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "89d097956d304c8c3f51a313400ef0d1c88e1efcdf41be25590fffb6a4b0d4cc"
+      ],
+      "embeddingMs": 18,
+      "dbMs": 8.217499999998836,
+      "gold": [
+        "cooking-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "cooking-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "cooking-2.md",
+        "gardening-2.md",
+        "weather-2.md",
+        "music-2.md",
+        "energy-2.md",
+        "bicycle-2.md",
+        "library-2.md",
+        "networking-2.md",
+        "cooking-4.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "0c9fc8cfbf7b2b1643e8db535275a97a2cd77ce1e0a59523b48698195e58fbaa",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 17.599999997764826,
+      "dbMs": 2.71480000000156,
+      "gold": [
+        "cooking-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "cooking-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "cooking-2.md",
+        "weather-2.md",
+        "gardening-2.md",
+        "library-2.md",
+        "maps-2.md",
+        "astronomy-2.md",
+        "music-2.md",
+        "energy-2.md",
+        "bicycle-2.md",
+        "networking-2.md"
+      ],
+      "resultIds": [
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf"
+      ],
+      "embeddingMs": 17.599999997764826,
+      "dbMs": 7.816500000000815,
+      "gold": [
+        "cooking-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "music-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "music-1.md",
+        "music-6.md",
+        "music-8.md",
+        "music-3.md",
+        "music-4.md",
+        "music-2.md",
+        "music-7.md",
+        "music-5.md",
+        "music-10.md",
+        "music-9.md"
+      ],
+      "resultIds": [
+        "95d2242b2c0bbcd44b858c22f96033e16714bf384420870447f3d2976b8841a2",
+        "7a9eb0d8631333304624c3fede7f49c9e2109ffe180cd3b7604addbc3e6bc1cf",
+        "acc98ca5547e6439fa44d5709b4bd7e712070289b3d8d89102727d6727b144e4",
+        "8e24c2cc6ae7be45579d72e64d0162a211226e3b343b8d7b74581f8c1eb490b1",
+        "74eeb3ca5eb27b676249e7c1834b34ff2d79d963b6595bf3e35405deb6009e6f",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "dd9d705820d67e35d6ba369fa4d2bf8a7e85e8fd91a02671a7ebadcb61957ff7",
+        "543283fcfa9e1687f02d958bd4d3dade0c45776bc72504707fa0074e84844d0a",
+        "7832677e7a3b30288bf6dfcc3f06b22bdaac66402279573b9774f133610c7ef9",
+        "37ada407c48e60cf34cea8421f93d8adbf0124107942ec08d535980082e583b3"
+      ],
+      "embeddingMs": 11.699999999254942,
+      "dbMs": 2.7523999999975786,
+      "gold": [
+        "music-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "music-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "music-1.md",
+        "music-6.md",
+        "music-5.md",
+        "music-4.md",
+        "music-10.md",
+        "music-9.md",
+        "music-8.md",
+        "music-7.md",
+        "music-3.md",
+        "library-4.md"
+      ],
+      "resultIds": [
+        "95d2242b2c0bbcd44b858c22f96033e16714bf384420870447f3d2976b8841a2",
+        "7a9eb0d8631333304624c3fede7f49c9e2109ffe180cd3b7604addbc3e6bc1cf",
+        "543283fcfa9e1687f02d958bd4d3dade0c45776bc72504707fa0074e84844d0a",
+        "74eeb3ca5eb27b676249e7c1834b34ff2d79d963b6595bf3e35405deb6009e6f",
+        "7832677e7a3b30288bf6dfcc3f06b22bdaac66402279573b9774f133610c7ef9",
+        "37ada407c48e60cf34cea8421f93d8adbf0124107942ec08d535980082e583b3",
+        "acc98ca5547e6439fa44d5709b4bd7e712070289b3d8d89102727d6727b144e4",
+        "dd9d705820d67e35d6ba369fa4d2bf8a7e85e8fd91a02671a7ebadcb61957ff7",
+        "8e24c2cc6ae7be45579d72e64d0162a211226e3b343b8d7b74581f8c1eb490b1",
+        "a6bfead42d5f0801fc34d1c0328f4dbc77d767d33c52509640a75d8bfeb8c129"
+      ],
+      "embeddingMs": 11.699999999254942,
+      "dbMs": 7.3188999999983935,
+      "gold": [
+        "music-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "music-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "weather-2.md",
+        "music-2.md",
+        "library-2.md",
+        "gardening-2.md",
+        "bicycle-2.md",
+        "energy-2.md",
+        "networking-2.md",
+        "astronomy-2.md",
+        "cooking-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 19.399999998509884,
+      "dbMs": 2.455500000003667,
+      "gold": [
+        "music-2.md"
+      ],
+      "recall1": 0,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 0.5,
+      "ndcg10": 0.6309297535714575
+    },
+    {
+      "id": "music-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "music-2.md",
+        "weather-2.md",
+        "library-2.md",
+        "gardening-2.md",
+        "astronomy-2.md",
+        "maps-2.md",
+        "bicycle-2.md",
+        "energy-2.md",
+        "networking-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 19.399999998509884,
+      "dbMs": 7.3761000000013155,
+      "gold": [
+        "music-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "music-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "music-2.md",
+        "gardening-2.md",
+        "bicycle-2.md",
+        "energy-2.md",
+        "weather-2.md",
+        "networking-2.md",
+        "cooking-2.md",
+        "astronomy-2.md",
+        "maps-2.md",
+        "library-2.md"
+      ],
+      "resultIds": [
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd"
+      ],
+      "embeddingMs": 20.100000001490116,
+      "dbMs": 2.1018000000040047,
+      "gold": [
+        "music-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "music-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "gardening-2.md",
+        "maps-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "energy-2.md",
+        "weather-2.md",
+        "networking-2.md",
+        "cooking-2.md",
+        "astronomy-2.md",
+        "library-2.md"
+      ],
+      "resultIds": [
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd"
+      ],
+      "embeddingMs": 20.100000001490116,
+      "dbMs": 9.070800000001327,
+      "gold": [
+        "music-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "library-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "library-1.md",
+        "library-7.md",
+        "library-5.md",
+        "library-3.md",
+        "maps-6.md",
+        "library-4.md",
+        "library-10.md",
+        "library-8.md",
+        "maps-9.md",
+        "maps-7.md"
+      ],
+      "resultIds": [
+        "64097a8768a12448ecec9868fa42c3e6a60f0b471509f030826ab7b97deb7dc9",
+        "f21937858eff66d6a39bd9c0493b14dd207e9e3194d78e6d191fe4a7409771a0",
+        "07f21913c04f9e88a4fb4cd59c0e78e0a17cf1e87a7a638fca97b803ea7fe48a",
+        "d121e66aa5faa029aa27e55a241e6904bb5f329f7d4825b9c697e33d7821a88b",
+        "2193df3c5bdc35dc9c9f6ab7add240ea29f2cc1b9196dbb8899dfb607bd89d28",
+        "a6bfead42d5f0801fc34d1c0328f4dbc77d767d33c52509640a75d8bfeb8c129",
+        "5ba3738712611df0d59d36ebe71a9741c8fb771566b4a84b82415cedc68559f3",
+        "3715e43107f78f5f3421ff5d55b57b0991e6646b64b7b8497c65077cf04ba96e",
+        "7ed5e10d0a141b041645fc5db3ec4198e1a30a99dc76538b7ddafe6446577f10",
+        "0a8b3484fe52f0b707c4ca9e7e57ef34fe0a4151afb2f96d5628a6fd398f2c5f"
+      ],
+      "embeddingMs": 18.300000000745058,
+      "dbMs": 2.5138000000006286,
+      "gold": [
+        "library-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "library-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "library-3.md",
+        "maps-9.md",
+        "maps-7.md",
+        "library-1.md",
+        "library-7.md",
+        "library-5.md",
+        "maps-6.md",
+        "library-10.md",
+        "library-4.md",
+        "library-8.md"
+      ],
+      "resultIds": [
+        "d121e66aa5faa029aa27e55a241e6904bb5f329f7d4825b9c697e33d7821a88b",
+        "7ed5e10d0a141b041645fc5db3ec4198e1a30a99dc76538b7ddafe6446577f10",
+        "0a8b3484fe52f0b707c4ca9e7e57ef34fe0a4151afb2f96d5628a6fd398f2c5f",
+        "64097a8768a12448ecec9868fa42c3e6a60f0b471509f030826ab7b97deb7dc9",
+        "f21937858eff66d6a39bd9c0493b14dd207e9e3194d78e6d191fe4a7409771a0",
+        "07f21913c04f9e88a4fb4cd59c0e78e0a17cf1e87a7a638fca97b803ea7fe48a",
+        "2193df3c5bdc35dc9c9f6ab7add240ea29f2cc1b9196dbb8899dfb607bd89d28",
+        "5ba3738712611df0d59d36ebe71a9741c8fb771566b4a84b82415cedc68559f3",
+        "a6bfead42d5f0801fc34d1c0328f4dbc77d767d33c52509640a75d8bfeb8c129",
+        "3715e43107f78f5f3421ff5d55b57b0991e6646b64b7b8497c65077cf04ba96e"
+      ],
+      "embeddingMs": 18.300000000745058,
+      "dbMs": 7.985999999997148,
+      "gold": [
+        "library-1.md"
+      ],
+      "recall1": 0,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 0.25,
+      "ndcg10": 0.43067655807339306
+    },
+    {
+      "id": "library-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "music-2.md",
+        "bicycle-2.md",
+        "weather-2.md",
+        "networking-2.md",
+        "gardening-2.md",
+        "energy-2.md",
+        "library-2.md",
+        "cooking-2.md",
+        "astronomy-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 17.5,
+      "dbMs": 3.3355999999985215,
+      "gold": [
+        "library-2.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 1,
+      "mrr10": 0.14285714285714285,
+      "ndcg10": 0.3333333333333333
+    },
+    {
+      "id": "library-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "library-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "weather-2.md",
+        "networking-2.md",
+        "gardening-2.md",
+        "energy-2.md",
+        "cooking-2.md",
+        "astronomy-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 17.5,
+      "dbMs": 7.6714000000065425,
+      "gold": [
+        "library-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "library-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "weather-2.md",
+        "music-2.md",
+        "library-2.md",
+        "gardening-2.md",
+        "bicycle-2.md",
+        "networking-2.md",
+        "energy-2.md",
+        "astronomy-2.md",
+        "maps-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 22.699999999254942,
+      "dbMs": 2.293100000002596,
+      "gold": [
+        "library-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "library-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "library-2.md",
+        "weather-2.md",
+        "gardening-2.md",
+        "astronomy-2.md",
+        "maps-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "networking-2.md",
+        "energy-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 22.699999999254942,
+      "dbMs": 7.957900000001246,
+      "gold": [
+        "library-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "weather-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "weather-1.md",
+        "weather-3.md",
+        "weather-6.md",
+        "astronomy-8.md",
+        "bicycle-3.md",
+        "cooking-3.md",
+        "music-5.md",
+        "weather-5.md",
+        "astronomy-3.md",
+        "weather-10.md"
+      ],
+      "resultIds": [
+        "36bbeb50a7c6abb1c15f594aa607c4afd5cedf13081458ea8250aee7ca3cb2c4",
+        "3791fc7341859f9947b5069154bf3683d38eb8a4fc86d3ea579995f1b2483c47",
+        "e4131465735d25746a59876d1769dc65c659121f62c6ee7484d5438621115f55",
+        "071e69ce1dbd079016509cbfaa564bb9e7530269e7c0dacc4727c0cd882286f3",
+        "cb5d5720c6402d6297c454a199550baa64dd8f06aa8c04d60f7beb34e81f24aa",
+        "3f529e6117951b72b82b37e423cde95fe156daf3c73d439c79ebde53f5d26179",
+        "543283fcfa9e1687f02d958bd4d3dade0c45776bc72504707fa0074e84844d0a",
+        "c2a5437e17646dac5eb9f70391acbdcaeab5b730c53c36c0f159fb094e2ecf20",
+        "96ace42d01da831b6c2cc3355a072d409c8df57982926c4a410e84a1a30e1ef2",
+        "717b2e20fd2be6d2e937ea4bfdfead67680d8654d5922ba75c6fdf6fc1f50d4f"
+      ],
+      "embeddingMs": 8.900000002235174,
+      "dbMs": 2.917699999998149,
+      "gold": [
+        "weather-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "weather-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "weather-1.md",
+        "weather-6.md",
+        "bicycle-3.md",
+        "weather-3.md",
+        "cooking-3.md",
+        "energy-5.md",
+        "astronomy-8.md",
+        "networking-9.md",
+        "music-5.md",
+        "weather-5.md"
+      ],
+      "resultIds": [
+        "36bbeb50a7c6abb1c15f594aa607c4afd5cedf13081458ea8250aee7ca3cb2c4",
+        "e4131465735d25746a59876d1769dc65c659121f62c6ee7484d5438621115f55",
+        "cb5d5720c6402d6297c454a199550baa64dd8f06aa8c04d60f7beb34e81f24aa",
+        "3791fc7341859f9947b5069154bf3683d38eb8a4fc86d3ea579995f1b2483c47",
+        "3f529e6117951b72b82b37e423cde95fe156daf3c73d439c79ebde53f5d26179",
+        "1e830b8062799ebc0c6844c02b1bf2e807a7b77162018a24633da7b6761adaca",
+        "071e69ce1dbd079016509cbfaa564bb9e7530269e7c0dacc4727c0cd882286f3",
+        "04a33aea696c213a5f5203414d70b64adb39d3048eb22235a8daf12562c12311",
+        "543283fcfa9e1687f02d958bd4d3dade0c45776bc72504707fa0074e84844d0a",
+        "c2a5437e17646dac5eb9f70391acbdcaeab5b730c53c36c0f159fb094e2ecf20"
+      ],
+      "embeddingMs": 8.900000002235174,
+      "dbMs": 6.88289999999688,
+      "gold": [
+        "weather-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "weather-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "music-2.md",
+        "bicycle-2.md",
+        "weather-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "energy-2.md",
+        "library-2.md",
+        "astronomy-2.md",
+        "cooking-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 15.199999999254942,
+      "dbMs": 2.329700000002049,
+      "gold": [
+        "weather-2.md"
+      ],
+      "recall1": 0,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 0.3333333333333333,
+      "ndcg10": 0.5
+    },
+    {
+      "id": "weather-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "weather-2.md",
+        "library-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "energy-2.md",
+        "astronomy-2.md",
+        "cooking-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 15.199999999254942,
+      "dbMs": 7.8932999999960884,
+      "gold": [
+        "weather-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "weather-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "music-2.md",
+        "bicycle-2.md",
+        "weather-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "energy-2.md",
+        "library-2.md",
+        "cooking-2.md",
+        "astronomy-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 15.600000001490116,
+      "dbMs": 2.8438999999998487,
+      "gold": [
+        "weather-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "weather-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "weather-2.md",
+        "music-2.md",
+        "bicycle-2.md",
+        "gardening-2.md",
+        "networking-2.md",
+        "energy-2.md",
+        "library-2.md",
+        "cooking-2.md",
+        "astronomy-2.md",
+        "maps-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440"
+      ],
+      "embeddingMs": 15.600000001490116,
+      "dbMs": 7.699399999997695,
+      "gold": [
+        "weather-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "maps-en",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "maps-1.md",
+        "maps-9.md",
+        "maps-4.md",
+        "maps-6.md",
+        "maps-8.md",
+        "maps-7.md",
+        "astronomy-8.md",
+        "weather-10.md",
+        "maps-3.md",
+        "maps-5.md"
+      ],
+      "resultIds": [
+        "d9c2878386cc56a126f2ae2525f32dbbc13becea28376abbbced47adeb5de2dd",
+        "7ed5e10d0a141b041645fc5db3ec4198e1a30a99dc76538b7ddafe6446577f10",
+        "6f8c2f4e3162067a669c98dda0bcdda03615500311d48e993c5517e834b9e6e9",
+        "2193df3c5bdc35dc9c9f6ab7add240ea29f2cc1b9196dbb8899dfb607bd89d28",
+        "12ba6d4c8f2e212d8623dacd5ea391edf937e414d6e8c583aeac4c3d9ddd1f18",
+        "0a8b3484fe52f0b707c4ca9e7e57ef34fe0a4151afb2f96d5628a6fd398f2c5f",
+        "071e69ce1dbd079016509cbfaa564bb9e7530269e7c0dacc4727c0cd882286f3",
+        "717b2e20fd2be6d2e937ea4bfdfead67680d8654d5922ba75c6fdf6fc1f50d4f",
+        "2c3fcd8064810fb577c8d4c5cff88dffc09ce3e43cccd29af1a6da7f2b1828f7",
+        "6484918b0269a48a1687b121aef28ba651f4df6ff5e60449dc816b84d886d6bd"
+      ],
+      "embeddingMs": 15.5,
+      "dbMs": 3.2378000000026077,
+      "gold": [
+        "maps-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "maps-en",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "maps-1.md",
+        "maps-9.md",
+        "maps-4.md",
+        "maps-8.md",
+        "weather-10.md",
+        "maps-7.md",
+        "maps-3.md",
+        "cooking-6.md",
+        "energy-10.md",
+        "gardening-9.md"
+      ],
+      "resultIds": [
+        "d9c2878386cc56a126f2ae2525f32dbbc13becea28376abbbced47adeb5de2dd",
+        "7ed5e10d0a141b041645fc5db3ec4198e1a30a99dc76538b7ddafe6446577f10",
+        "6f8c2f4e3162067a669c98dda0bcdda03615500311d48e993c5517e834b9e6e9",
+        "12ba6d4c8f2e212d8623dacd5ea391edf937e414d6e8c583aeac4c3d9ddd1f18",
+        "717b2e20fd2be6d2e937ea4bfdfead67680d8654d5922ba75c6fdf6fc1f50d4f",
+        "0a8b3484fe52f0b707c4ca9e7e57ef34fe0a4151afb2f96d5628a6fd398f2c5f",
+        "2c3fcd8064810fb577c8d4c5cff88dffc09ce3e43cccd29af1a6da7f2b1828f7",
+        "95ed96e524065af7ee1f733637db46820e8b87e80c9435f6c4d4beb260ce8293",
+        "9717f602348930711e06627950c3b8f382896e5a8c724b00534a18c98f1a9cd1",
+        "5cfc1739004e2b847610b468a52769cbd1b9cdd4ef9f6ba965ba2edc075f72e0"
+      ],
+      "embeddingMs": 15.5,
+      "dbMs": 9.010199999996985,
+      "gold": [
+        "maps-1.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "maps-zh",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "maps-2.md",
+        "networking-2.md",
+        "gardening-2.md",
+        "weather-2.md",
+        "bicycle-2.md",
+        "astronomy-2.md",
+        "music-2.md",
+        "library-2.md",
+        "energy-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 27.300000000745058,
+      "dbMs": 4.265500000001339,
+      "gold": [
+        "maps-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "maps-zh",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "maps-2.md",
+        "weather-2.md",
+        "gardening-2.md",
+        "library-2.md",
+        "astronomy-2.md",
+        "networking-2.md",
+        "bicycle-2.md",
+        "music-2.md",
+        "energy-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 27.300000000745058,
+      "dbMs": 8.955299999994168,
+      "gold": [
+        "maps-2.md"
+      ],
+      "recall1": 1,
+      "recall5": 1,
+      "recall10": 1,
+      "mrr10": 1,
+      "ndcg10": 1
+    },
+    {
+      "id": "maps-cross",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "maps-2.md",
+        "weather-2.md",
+        "networking-2.md",
+        "gardening-2.md",
+        "energy-2.md",
+        "astronomy-2.md",
+        "maps-6.md",
+        "bicycle-2.md",
+        "music-2.md",
+        "cooking-2.md"
+      ],
+      "resultIds": [
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "2193df3c5bdc35dc9c9f6ab7add240ea29f2cc1b9196dbb8899dfb607bd89d28",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce",
+        "14fd0b73437d3ad0341960133a3b081c3d37a3f375f449c99f670f5bf313fa56"
+      ],
+      "embeddingMs": 20.599999997764826,
+      "dbMs": 2.3505999999979394,
+      "gold": [
+        "maps-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    },
+    {
+      "id": "maps-cross",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "weather-2.md",
+        "maps-2.md",
+        "astronomy-2.md",
+        "gardening-2.md",
+        "library-2.md",
+        "networking-2.md",
+        "energy-2.md",
+        "maps-6.md",
+        "bicycle-2.md",
+        "music-2.md"
+      ],
+      "resultIds": [
+        "47f7b47f16f149c0a6f0707d9745a3c152349f2a7c54f12b1035f56205e52898",
+        "d03946971330fdab7f537b93189f85c804ded7a13de2b0b8642f69fbabbf5440",
+        "1a3b6b5fe189288097efe9cf7e2f6c7882d1bcf3b5e211abf9415a91d9901a61",
+        "f92af32c78974e27096b65740d0a3ed0e8cd83a2f7c113aba2cf123528f7daaf",
+        "2bcf70db3439ad2a461c032a9c825071e155c6dbccc88903f64ff0a0be58a3fd",
+        "d67e6b76340cad67b9b75f8633522f6e213e05b8ecacfe2374dd63cec16b0acf",
+        "8ee4b087331345ebcb6ace19b2da4cbda17ae20fa9874c0230f009e5c608b288",
+        "2193df3c5bdc35dc9c9f6ab7add240ea29f2cc1b9196dbb8899dfb607bd89d28",
+        "b5ef45aefd5c24b97f471c95fc2f60ec0cc8683b6bd8371f05c62f57b2a09a51",
+        "c11a56f13946b7bdf2c0467c081737bd1fb5a0020f188cebe007e36d54f57dce"
+      ],
+      "embeddingMs": 20.599999997764826,
+      "dbMs": 7.553999999996449,
+      "gold": [
+        "maps-3.md"
+      ],
+      "recall1": 0,
+      "recall5": 0,
+      "recall10": 0,
+      "mrr10": 0,
+      "ndcg10": 0
+    }
+  ],
+  "errors": [],
+  "note": "Original synthetic corpus with labels assigned before evaluation; results are not a general-domain benchmark.",
+  "browserVersion": "156.0.4314.50",
+  "adapter": {
+    "vendor": "intel",
+    "architecture": "gen-12lp",
+    "fallback": false,
+    "shaderF16": true
+  },
+  "state": {
+    "backend": "WASM",
+    "dtype": "fp32",
+    "dimension": 384,
+    "modelId": "Xenova/all-MiniLM-L6-v2",
+    "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+    "initMs": 2573.099999997765
+  },
+  "kbId": "4115d8af929a4927969155efdc91ebca",
+  "documentEmbeddingMs": 1976.5,
+  "import": {
+    "count": 100,
+    "refreshMs": 404.35429999999906,
+    "visibilityMs": 179.5237999999954,
+    "writeMs": 986.1444999999876
+  },
+  "complete": true
+}

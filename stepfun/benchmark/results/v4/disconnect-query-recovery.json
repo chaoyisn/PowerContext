@@ -1,0 +1,118 @@
+{
+  "at": "2026-10-30T02:58:45.100Z",
+  "fault": "isolated TCP proxy on 127.0.0.1:2883 to dedicated edgeseek-seekdb:2882; no database container stopped",
+  "errors": [],
+  "apiLog": [
+    "{\"event\":\"seekdb.ready\",\"sdk\":\"seekdb@1.4.0\",\"database\":\"test\"}\n",
+    "{\"event\":\"api.ready\",\"url\":\"http://127.0.0.1:4174\"}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":1,\"dbMs\":25.857100000000173}\n",
+    "{\"event\":\"seekdb.connection.error\",\"detail\":\"  Error Can't add new command when connection is in closed state\"}\n",
+    "{\"event\":\"seekdb.connection.error\",\"detail\":\" PROTOCOL_CONNECTION_LOST SeekdbConnectionError Failed to connect to 127.0.0.1:2883\"}\n",
+    "{\"event\":\"api.error\",\"message\":\"数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\"}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":1,\"dbMs\":24.660800000000563}\n"
+  ],
+  "viteLog": [
+    "\n  VITE v8.3.5  ready in 229 ms\n\n",
+    "  ➜  Local:   http://127.0.0.1:5174/\n"
+  ],
+  "browser": "156.0.8078.73",
+  "kbId": "b549148b0aa54f60a9ac54b7ceb89d9f",
+  "before": {
+    "label": "before",
+    "status": 200,
+    "elapsedMs": 267.0712999999996,
+    "body": {
+      "results": [
+        {
+          "id": "e762c360e4d0cd1b9ae886f43184f3e718ff3aef6d0169e6eb1d99d8d26746f0",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "d0395fe78f80e50befa8c98c8cdf2feca83b0b14922cf3c9e8a9623a8d2bb088"
+          },
+          "score": 0.0328
+        }
+      ],
+      "dbMs": 25.857100000000173,
+      "mode": "hybrid"
+    }
+  },
+  "disconnected": {
+    "label": "disconnected",
+    "status": 503,
+    "elapsedMs": 248.01029999999992,
+    "body": {
+      "error": "数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试"
+    },
+    "uiError": "!\n数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\n×"
+  },
+  "recovered": {
+    "label": "recovered",
+    "status": 200,
+    "elapsedMs": 108.35190000000057,
+    "body": {
+      "results": [
+        {
+          "id": "e762c360e4d0cd1b9ae886f43184f3e718ff3aef6d0169e6eb1d99d8d26746f0",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "d0395fe78f80e50befa8c98c8cdf2feca83b0b14922cf3c9e8a9623a8d2bb088"
+          },
+          "score": 0.0328
+        }
+      ],
+      "dbMs": 24.660800000000563,
+      "mode": "hybrid"
+    }
+  },
+  "sameIds": true,
+  "browserPerformance": [
+    {
+      "at": "2026-10-30T02:58:48.823Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 1516.9,
+      "workerInitMs": 1205,
+      "modelAssetBytes": 23685047,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:58:50.821Z",
+      "name": "query.embedding",
+      "durationMs": 27.2,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:58:50.975Z",
+      "name": "query.embedding",
+      "durationMs": 33,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:58:51.205Z",
+      "name": "query.embedding",
+      "durationMs": 20.8,
+      "backend": "WASM",
+      "dtype": "q8"
+    }
+  ]
+}

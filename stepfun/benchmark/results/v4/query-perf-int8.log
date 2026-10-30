@@ -1,0 +1,166 @@
+{
+  "precision": "int8",
+  "samples": [
+    {
+      "index": 1,
+      "status": 200,
+      "backend": "WASM",
+      "dtype": "q8",
+      "workerQueueMs": 0,
+      "embeddingMs": 43.7,
+      "apiDbMs": 16.550999999999476,
+      "apiRoundTripMs": 41.300999999999476,
+      "requestTiming": {
+        "startTime": 1793329590972.6228,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.294,
+        "responseStart": 38.83,
+        "responseEnd": 39.933
+      },
+      "responseTransferMs": 1.1030000000000015,
+      "pageVisibleMs": 179.50630000000092,
+      "browserEndToEndMs": 113.8,
+      "resultIds": [
+        "17ba6a9c897002c7e6e58583c48c732e1c2b2dd0583d6e28ba5bb80ffcdc125a",
+        "17a91d496c28471f0e2fa16dc40e2f064a5674bb21da8d49b0f6f3c753c70696",
+        "3496d72a94250584cce80030aa1668d58f04a8d48e6f30654950f5e84068960d",
+        "e3245560b75c91e71d828a15f92e0e85287ad1f3fc42c06a3e28c57abafa8a12",
+        "8d492c8fc88f3c4a7a1ebbe050bf6a277d91362fd1da83d280245b7cc3e66f2a"
+      ],
+      "apiNodeWorkingSetBytes": 65019904
+    },
+    {
+      "index": 2,
+      "status": 200,
+      "backend": "WASM",
+      "dtype": "q8",
+      "workerQueueMs": 1,
+      "embeddingMs": 41.3,
+      "apiDbMs": 8.11409999999887,
+      "apiRoundTripMs": 24.804099999998872,
+      "requestTiming": {
+        "startTime": 1793329593043.7078,
+        "domainLookupStart": 0.685,
+        "domainLookupEnd": 1.012,
+        "connectStart": 1.012,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.557,
+        "requestStart": 1.639,
+        "responseStart": 21.882,
+        "responseEnd": 23.318
+      },
+      "responseTransferMs": 1.436,
+      "pageVisibleMs": 141.9935999999998,
+      "browserEndToEndMs": 91.8,
+      "resultIds": [
+        "17ba6a9c897002c7e6e58583c48c732e1c2b2dd0583d6e28ba5bb80ffcdc125a",
+        "17a91d496c28471f0e2fa16dc40e2f064a5674bb21da8d49b0f6f3c753c70696",
+        "3496d72a94250584cce80030aa1668d58f04a8d48e6f30654950f5e84068960d",
+        "e3245560b75c91e71d828a15f92e0e85287ad1f3fc42c06a3e28c57abafa8a12",
+        "8d492c8fc88f3c4a7a1ebbe050bf6a277d91362fd1da83d280245b7cc3e66f2a"
+      ],
+      "apiNodeWorkingSetBytes": 65552384
+    },
+    {
+      "index": 3,
+      "status": 200,
+      "backend": "WASM",
+      "dtype": "q8",
+      "workerQueueMs": 1,
+      "embeddingMs": 36.6,
+      "apiDbMs": 25.56369999999879,
+      "apiRoundTripMs": 43.00369999999879,
+      "requestTiming": {
+        "startTime": 1793329595120.7832,
+        "domainLookupStart": 0.143,
+        "domainLookupEnd": 0.611,
+        "connectStart": 0.611,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.984,
+        "requestStart": 2.179,
+        "responseStart": 40.802,
+        "responseEnd": 42.169
+      },
+      "responseTransferMs": 1.3669999999999973,
+      "pageVisibleMs": 171.26210000000174,
+      "browserEndToEndMs": 110,
+      "resultIds": [
+        "17ba6a9c897002c7e6e58583c48c732e1c2b2dd0583d6e28ba5bb80ffcdc125a",
+        "17a91d496c28471f0e2fa16dc40e2f064a5674bb21da8d49b0f6f3c753c70696",
+        "3496d72a94250584cce80030aa1668d58f04a8d48e6f30654950f5e84068960d",
+        "e3245560b75c91e71d828a15f92e0e85287ad1f3fc42c06a3e28c57abafa8a12",
+        "8d492c8fc88f3c4a7a1ebbe050bf6a277d91362fd1da83d280245b7cc3e66f2a"
+      ],
+      "apiNodeWorkingSetBytes": 65822720
+    },
+    {
+      "index": 4,
+      "status": 200,
+      "backend": "WASM",
+      "dtype": "q8",
+      "workerQueueMs": 0,
+      "embeddingMs": 19.9,
+      "apiDbMs": 87.96519999999873,
+      "apiRoundTripMs": 113.99519999999873,
+      "requestTiming": {
+        "startTime": 1793329597289.034,
+        "domainLookupStart": 0.106,
+        "domainLookupEnd": 0.482,
+        "connectStart": 0.482,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.453,
+        "requestStart": 2.544,
+        "responseStart": 111.309,
+        "responseEnd": 113.001
+      },
+      "responseTransferMs": 1.6920000000000073,
+      "pageVisibleMs": 223.98470000000088,
+      "browserEndToEndMs": 174.3,
+      "resultIds": [
+        "17ba6a9c897002c7e6e58583c48c732e1c2b2dd0583d6e28ba5bb80ffcdc125a",
+        "17a91d496c28471f0e2fa16dc40e2f064a5674bb21da8d49b0f6f3c753c70696",
+        "3496d72a94250584cce80030aa1668d58f04a8d48e6f30654950f5e84068960d",
+        "e3245560b75c91e71d828a15f92e0e85287ad1f3fc42c06a3e28c57abafa8a12",
+        "8d492c8fc88f3c4a7a1ebbe050bf6a277d91362fd1da83d280245b7cc3e66f2a"
+      ],
+      "apiNodeWorkingSetBytes": 65777664
+    },
+    {
+      "index": 5,
+      "status": 200,
+      "backend": "WASM",
+      "dtype": "q8",
+      "workerQueueMs": 1,
+      "embeddingMs": 21.1,
+      "apiDbMs": 12.630999999993946,
+      "apiRoundTripMs": 32.50099999999395,
+      "requestTiming": {
+        "startTime": 1793329599460.97,
+        "domainLookupStart": 0.162,
+        "domainLookupEnd": 0.607,
+        "connectStart": 0.607,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.384,
+        "requestStart": 1.496,
+        "responseStart": 29.861,
+        "responseEnd": 31.28
+      },
+      "responseTransferMs": 1.4190000000000005,
+      "pageVisibleMs": 136.26850000000195,
+      "browserEndToEndMs": 90.2,
+      "resultIds": [
+        "17ba6a9c897002c7e6e58583c48c732e1c2b2dd0583d6e28ba5bb80ffcdc125a",
+        "17a91d496c28471f0e2fa16dc40e2f064a5674bb21da8d49b0f6f3c753c70696",
+        "3496d72a94250584cce80030aa1668d58f04a8d48e6f30654950f5e84068960d",
+        "e3245560b75c91e71d828a15f92e0e85287ad1f3fc42c06a3e28c57abafa8a12",
+        "8d492c8fc88f3c4a7a1ebbe050bf6a277d91362fd1da83d280245b7cc3e66f2a"
+      ],
+      "apiNodeWorkingSetBytes": 65982464
+    }
+  ],
+  "errors": []
+}

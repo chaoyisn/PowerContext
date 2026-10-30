@@ -1,8 +1,9 @@
 import { chromium } from "playwright";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const dataset = JSON.parse(await readFile("benchmark/v3-quality.json", "utf8"));
 const precision = process.argv[2] || "int8";
+const outputDir = process.env.EDGESEEK_QUALITY_DIR || "benchmark/results/v3";
 const evidence = { at: new Date().toISOString(), precision, cases: [], errors: [], dataset: "benchmark/v3-quality.json", note: "Small independently labelled set; seven candidates make Recall@10 non-discriminating." };
 let browser;
 try {
@@ -56,6 +57,7 @@ try {
 } catch (error) { evidence.errors.push(error.stack || String(error)); }
 finally {
   if (browser) await browser.close().catch(() => {});
-  await writeFile(`benchmark/results/v3/quality-${precision}.json`, JSON.stringify(evidence, null, 2) + "\n");
+  await mkdir(outputDir, { recursive: true });
+  await writeFile(`${outputDir}/quality-${precision}.json`, JSON.stringify(evidence, null, 2) + "\n");
   console.log(JSON.stringify({ precision, complete: evidence.complete, kbId: evidence.kbId, cases: evidence.cases, errors: evidence.errors }, null, 2));
 }

@@ -1,0 +1,355 @@
+{
+  "precision": "fp16",
+  "cold": {
+    "state": {
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "initMs": 3072.5
+    },
+    "initWallMs": 3266.199999999255,
+    "events": [
+      {
+        "phase": "worker-start",
+        "kind": "init",
+        "queueMs": 193,
+        "atMs": 193.5
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 234.79999999701977
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 236.19999999925494
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 243.5
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 243.89999999850988
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 256.0999999977648
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 272.8999999985099
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model_fp16.onnx",
+        "phase": "model-load",
+        "atMs": 341.79999999701977
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model_fp16.onnx",
+        "phase": "model-load",
+        "atMs": 1076.7999999970198
+      },
+      {
+        "phase": "model-ready",
+        "backend": "webgpu",
+        "dtype": "fp16",
+        "atMs": 2580.199999999255
+      },
+      {
+        "phase": "first-inference",
+        "elapsedMs": 685.9000000022352,
+        "backend": "WebGPU",
+        "atMs": 3266
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 4,
+        "atMs": 3269.599999997765
+      }
+    ],
+    "firstPostInitInferenceMs": 31.200000002980232
+  },
+  "warm": {
+    "state": {
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "initMs": 1700.5
+    },
+    "initWallMs": 1827.4000000022352,
+    "events": [
+      {
+        "phase": "worker-start",
+        "kind": "init",
+        "queueMs": 126,
+        "atMs": 126.60000000149012
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 154.90000000223517
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 155.30000000074506
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 155.5
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 155.80000000074506
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 157.5
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 169.30000000074506
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model_fp16.onnx",
+        "phase": "model-load",
+        "atMs": 192.80000000074506
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model_fp16.onnx",
+        "phase": "model-load",
+        "atMs": 248.10000000149012
+      },
+      {
+        "phase": "model-ready",
+        "backend": "webgpu",
+        "dtype": "fp16",
+        "atMs": 1338.7000000029802
+      },
+      {
+        "phase": "first-inference",
+        "elapsedMs": 488.5,
+        "backend": "WebGPU",
+        "atMs": 1827.2000000029802
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 1827.6000000014901
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 1849
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 1870
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 1887.6000000014901
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 1904.1000000014901
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 1917.6000000014901
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2613.400000002235
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 3026.2000000029802
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 3467.10000000149
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 3875
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 4267.60000000149
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 5882.70000000298
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6052.900000002235
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6193
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6370.300000000745
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6514.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6616.60000000149
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6715.10000000149
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6816.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6918.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 7024.10000000149
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 7107.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 7189.300000000745
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 7271.20000000298
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 7352.800000000745
+      }
+    ],
+    "subsequentInferenceMs": [
+      21,
+      20.700000002980232,
+      17.300000000745058,
+      16.199999999254942,
+      13.199999999254942
+    ]
+  },
+  "sampleCount": 20,
+  "memorySummary": {
+    "metric": "maximum sampled sum of browser process working sets, shared pages can be counted more than once",
+    "sampledPeakBytes": 1375682560,
+    "nodeMetric": "test harness Node RSS, not API process",
+    "gpuMemory": "UNKNOWN"
+  },
+  "adapter": {
+    "vendor": "intel",
+    "architecture": "gen-12lp",
+    "fallback": false,
+    "shaderF16": true
+  },
+  "errors": []
+}

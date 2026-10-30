@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-30T03:11:42.449Z",
+  "channel": "msedge",
+  "headed": true,
+  "failureType": "test-only controlled runtime injection; not actual device loss",
+  "errors": [
+    "page.screenshot: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\n    at D:\\OceanBase\\PowerContext-stepfun\\stepfun\\scripts\\v4-gpu-runtime.mjs:29:13"
+  ],
+  "version": "156.0.4314.50",
+  "midBatch": {
+    "backend": "WASM",
+    "dtype": "q8",
+    "reason": "Controlled GPU inference failure",
+    "vectors": [
+      {
+        "dimension": 384,
+        "norm": 0.9999996845194032,
+        "finite": true,
+        "sha256": "5acf45e69a65d4b571f30970665f6f62c0c878133e1bea682a67b2ddac0d7717"
+      },
+      {
+        "dimension": 384,
+        "norm": 1.0000001586066594,
+        "finite": true,
+        "sha256": "b0ac1234d9c5dbe2188baea58c40cb880acac21e90faf8605a0101c307429937"
+      },
+      {
+        "dimension": 384,
+        "norm": 0.9999996845194032,
+        "finite": true,
+        "sha256": "5acf45e69a65d4b571f30970665f6f62c0c878133e1bea682a67b2ddac0d7717"
+      }
+    ],
+    "repeatInputL2": 0,
+    "differentInputL2": 1.3018942418902826,
+    "pass": true
+  }
+}

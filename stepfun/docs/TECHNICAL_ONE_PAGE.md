@@ -1,15 +1,13 @@
 # EdgeSeek · 技术单页
 
-**应用**：TXT/Markdown 在浏览器 Worker 分块并生成向量；Node API 不执行模型推理；seekdb 保存原文、向量与元数据，提供向量、全文和混合搜索。
+**方案与模型**：TXT/Markdown 在浏览器 Worker 分块、向量化；Node 仅传输与访问 seekdb，不执行 Embedding。模型为 Apache-2.0 的 `Xenova/all-MiniLM-L6-v2`，revision `751bff37182d3f1213fa05d7196b954e230abad9`，384 维、mean pooling、L2 归一化。FP32/FP16/q8 实测文件分别为 90,387,606 / 45,297,825 / 22,972,370 字节，FP32/q8 为 3.94 倍。模型和 WASM 均由本机提供。
 
-**模型与量化**：Apache-2.0 的 `Xenova/all-MiniLM-L6-v2`，固定 revision `751bff37182d3f1213fa05d7196b954e230abad9`，384 维、mean pooling 和 L2 归一化。FP32、FP16、q8 权重实测分别为 90,387,606、45,297,825、22,972,370 字节，FP32/q8 为 3.94 倍。资产和 ONNX Runtime 均从本机提供。
+**后端与恢复**：Intel Gen12LP 物理 GPU 的有窗口 Edge 已实际执行 WebGPU FP16；不可用或受控推理故障后回退 WASM q8。集合按模型、revision、tokenizer/运行时版本、精度及后端隔离；回退后不匹配的查询被阻止。真实硬件 Device Lost 未复现。
 
-**后端与空间**：有窗口 Edge 的 Intel Gen12LP 物理适配器已执行 WebGPU FP16；GPU 不可用或初始化失败的模拟场景已回退 WASM q8 并完成真实推理。集合按模型、revision、tokenizer/Transformers 版本、精度及后端隔离；未验证跨配置兼容性。旧版无精度标识的集合需新建并重新向量化。
+**seekdb**：seekdb-js 1.4.0 使用 `embeddingFunction: null`；数据库 `DBMS_HYBRID_SEARCH.GET_SQL` 生成 SQL 并实际执行内部向量、全文与 RRF，执行边界哈希和结果已核对。批次逐份 upsert 后统一刷新并回读；按知识库和 SHA-256 去重。数据库故障返回 503，未确认文档保留 processing，恢复后以稳定 ID 重试；批次不是跨文档事务。
 
-**数据库与增量**：seekdb-js 1.4.0 使用 `embeddingFunction: null` 接收浏览器向量，`hybridSearch()` 调用数据库 `DBMS_HYBRID_SEARCH.GET_SQL` 并执行返回 SQL；SDK 执行边界的语句哈希与数据库行和 API 排序已交叉核对。按知识库和 SHA-256 去重；批量逐份 upsert 后统一刷新、回读，再标记完成。
+**质量**：原创合成集 100 文档、30 查询，英文/中文/跨语言各 10，gold 在评测前固定且产品不读取。FP32/q8/FP16 向量 Recall@5 为 0.633/0.600/0.633，nDCG@10 为 0.595/0.606/0.595；混合 Recall@5 均为 0.667，nDCG@10 为 0.659/0.658/0.659。跨语言向量 Recall@10 均为 0.10；合成标签按构造生成，不能代表通用数据。
 
-**质量**：7 文档、5 查询、Top 10 的独立小样本中，FP32/q8/FP16 的向量和混合检索平均 Recall@5、Recall@10 均 1.0，nDCG@10 均 0.98394；包含英文、中文及跨语言样例。候选少于 10 条，Recall@10 不具区分力，不能代表通用质量。
+**性能**：Windows 11、i7-12650H、Chrome/Edge 156、seekdb 1.4.0.0。冷初始化 FP32/q8/FP16 分别 3157/2351/3266 ms，同 context 新 Worker 热初始化 2726/2027/1827 ms；冷/热各单次，缓存可用性另经阻断模型 HTTP 验证。4 文档应用导入各 5 次：逐条刷新中位 4169 ms，统一刷新 1413 ms，两批刷新 1800 ms，全部可检索。32 文档 q8 Batch 1/4/8/16 中位吞吐 34.08/38.57/37.69/37.60 条/秒，保留 Batch 4 默认值。
 
-**性能与环境**：Windows 11，Intel i7-12650H，Chrome 156.0.8078.73 headless、Edge 156.0.4314.50 有窗口。q8 Batch 1/4/8/16 每组 5 次中位吞吐为 69.23/47.92/44.57/45.95 条/秒。相同 4 条真实向量的 SDK 写入与刷新，逐条刷新中位 2492.75 ms，4 次写入后统一刷新 671.57 ms；均验证最终可检索，比较不含 API 和建表耗时。
-
-**仍待验收**：GPU 推理中途故障与设备丢失、数据库断连恢复、有窗口 Chrome UI、冷热启动完整基准、浏览器峰值内存与更大独立质量集。详细步骤和原始记录见 `RUN.md`、`VERIFICATION.md`、`BENCHMARK.md` 与 `benchmark/results/v3/`。
+**范围与限制**：q8 查询页面可见端到端中位数 173 ms、P95 248 ms（5 次，同机）；最终队列版 Chrome/Edge E2E 和有窗口隔离代理断连恢复通过。GPU 内存及进程真实峰值为 UNKNOWN，工作集为采样最大值；提交表单字段需人工核对。详细方法、原始数据和结果见 `VERIFICATION.md`、`BENCHMARK.md` 与 `benchmark/results/v4/`。

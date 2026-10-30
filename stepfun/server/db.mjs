@@ -13,7 +13,42 @@ const client = new SeekdbClient({
   user: process.env.SEEKDB_USER ?? "root",
   password: process.env.SEEKDB_PASSWORD ?? "",
   database: process.env.SEEKDB_DATABASE ?? "test",
+  queryTimeout: 8000,
 });
+// seekdb-js 1.4 caches a single connection even after it has closed.
+const internalClient = client._delegate._internal;
+const rawExecute = internalClient.execute.bind(internalClient);
+const manager = internalClient.connectionManager;
+const rawEnsureConnection = manager.ensureConnection.bind(manager);
+let connectionGeneration = 0;
+manager.ensureConnection = async () => {
+  const generation = connectionGeneration;
+  const connection = await rawEnsureConnection();
+  if (generation !== connectionGeneration) {
+    if (manager.connection === connection) manager.connection = null;
+    connection.destroy();
+    throw Object.assign(new Error("Stale seekdb connection was discarded"), { code: "EDGESEEK_DB_TIMEOUT" });
+  }
+  return connection;
+};
+internalClient.execute = async (statement, params) => {
+  let timer;
+  try {
+    return await Promise.race([
+      rawExecute(statement, params),
+      new Promise((_, reject) => { timer = setTimeout(() => reject(Object.assign(new Error("seekdb operation timed out"), { code: "EDGESEEK_DB_TIMEOUT" })), 10000); }),
+    ]);
+  } catch (error) {
+    const details = `${error?.code ?? ""} ${error?.cause?.code ?? ""} ${error?.name ?? ""} ${error?.message ?? ""}`;
+    if (/EDGESEEK_DB_TIMEOUT|SeekdbConnectionError|ECONN|ETIMEDOUT|EPIPE|PROTOCOL_CONNECTION_LOST|connection is in closed state|connection closed/i.test(details)) {
+      connectionGeneration++;
+      if (manager.connection) { manager.connection.destroy(); manager.connection = null; }
+      console.error(JSON.stringify({ event: "seekdb.connection.error", detail: details }));
+      throw new HttpError(503, "数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试");
+    }
+    throw error;
+  } finally { clearTimeout(timer); }
+};
 const tracing = new AsyncLocalStorage();
 if (process.env.EDGESEEK_TRACE_SQL === "1") {
   const internal = client._delegate._internal;
@@ -227,6 +262,8 @@ export async function search(kbId, input) {
     throw new HttpError(409, "查询向量模型或维度与该知识库不一致");
   }
   const query = String(input.query ?? "").trim();
+  // GET_SQL embeds query text in a SQL string literal; preserve apostrophes and backslashes safely.
+  const fulltextQuery = query.replaceAll("\\", "\\\\").replaceAll("'", "''");
   validateVector(input.embedding);
   const nResults = Math.max(1, Math.min(20, Number(input.topK) || 5));
   const collection = await getCollection(kb.id);
@@ -236,14 +273,14 @@ export async function search(kbId, input) {
     result = await collection.query({ queryEmbeddings: [input.embedding], nResults, include: ["documents", "metadatas", "distances"] });
   } else if (input.mode === "fulltext") {
     result = await collection.hybridSearch({
-      query: { whereDocument: { $contains: query } },
+      query: { whereDocument: { $contains: fulltextQuery } },
       nResults,
       include: ["documents", "metadatas", "distances"],
     });
   } else if (input.mode === "hybrid") {
     const trace = [];
     result = await tracing.run(trace, () => collection.hybridSearch({
-      query: { whereDocument: { $contains: query } },
+      query: { whereDocument: { $contains: fulltextQuery } },
       knn: { queryEmbeddings: [input.embedding] },
       rank: { rrf: { rankWindowSize: Math.max(20, nResults * 4), rankConstant: 60 } },
       nResults,

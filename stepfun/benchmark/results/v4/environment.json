@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-30T11:29:55.0703373+08:00",
+  "os": "Microsoft Windows 11 家庭版 中文版",
+  "osVersion": "10.0.26200",
+  "ramKiB": 16515304,
+  "availableKiB": 2417928,
+  "cpu": "12th Gen Intel(R) Core(TM) i7-12650H",
+  "gpu": [
+    {
+      "Name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "DriverVersion": "32.0.15.7283",
+      "AdapterRAM": 4293918720
+    },
+    {
+      "Name": "Intel(R) UHD Graphics",
+      "DriverVersion": "31.0.101.4502",
+      "AdapterRAM": 1073741824
+    }
+  ],
+  "chrome": "156.0.8078.73",
+  "edge": "156.0.4314.50",
+  "node": "v24.14.0",
+  "transformers": "4.3.2",
+  "onnxRuntime": "1.31.0-dev.20260914-8d85527a0",
+  "seekdb": "seekdb-v1.4.0.0",
+  "seekdbSdk": "1.4.0",
+  "index": "HNSW cosine 384; fulltext ik smart",
+  "modelRevision": "751bff37182d3f1213fa05d7196b954e230abad9"
+}

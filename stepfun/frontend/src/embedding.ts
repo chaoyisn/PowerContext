@@ -21,6 +21,7 @@ type Reply = { requestId: string; value?: unknown; error?: string; progress?: Re
 
 export class EmbeddingClient {
   private worker: Worker;
+  private failed = false;
   private sequence = 0;
   private pending = new Map<string, { resolve: (value: unknown) => void; reject: (error: Error) => void }>();
   onProgress?: (progress: Record<string, unknown>) => void;
@@ -40,7 +41,13 @@ export class EmbeddingClient {
       else pending.resolve(message.value);
     };
     this.worker.onerror = (event) => {
-      for (const item of this.pending.values()) item.reject(new Error(event.message));
+      this.failed = true;
+      for (const item of this.pending.values()) item.reject(new Error(`Embedding Worker 失败：${event.message || "运行时异常"}；请重试`));
+      this.pending.clear();
+    };
+    this.worker.onmessageerror = () => {
+      this.failed = true;
+      for (const item of this.pending.values()) item.reject(new Error("Embedding Worker 消息无法读取；请重试"));
       this.pending.clear();
     };
   }
@@ -60,10 +67,11 @@ export class EmbeddingClient {
   }
 
   private request<T>(payload: Record<string, unknown>): Promise<T> {
+    if (this.failed) return Promise.reject(new Error("Embedding Worker 已失效，请重试"));
     const requestId = String(++this.sequence);
     return new Promise<T>((resolve, reject) => {
       this.pending.set(requestId, { resolve: (value) => resolve(value as T), reject });
-      this.worker.postMessage({ ...payload, requestId });
+      this.worker.postMessage({ ...payload, requestId, sentAt: Date.now() });
     });
   }
 }

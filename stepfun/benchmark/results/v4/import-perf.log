@@ -1,0 +1,500 @@
+{
+  "samples": [
+    {
+      "strategy": "single",
+      "run": 1,
+      "kbId": "34e04d4e55ad4491b57435452dffd26c",
+      "importVisibleMs": 4739.4809,
+      "embeddingMs": 141.5,
+      "apiRoundTripMs": 2695.5,
+      "dbWriteMs": 161.15,
+      "refreshMs": 2328.4300000000003,
+      "visibilityMs": 13.15,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "single",
+      "run": 2,
+      "kbId": "a27a59fc1af446beb48e5f294db5c63f",
+      "importVisibleMs": 4237.2287,
+      "embeddingMs": 65.89999999999999,
+      "apiRoundTripMs": 2521.4,
+      "dbWriteMs": 48.33,
+      "refreshMs": 2324.04,
+      "visibilityMs": 10.3,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "single",
+      "run": 3,
+      "kbId": "d3d07764b58b471da8ea506df59cd433",
+      "importVisibleMs": 4169.166299999999,
+      "embeddingMs": 107.3,
+      "apiRoundTripMs": 2512.8,
+      "dbWriteMs": 43.82000000000001,
+      "refreshMs": 2320.37,
+      "visibilityMs": 16.47,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "single",
+      "run": 4,
+      "kbId": "77ddc7bb68ae449db6ddd87b21f76cc8",
+      "importVisibleMs": 4167.544900000001,
+      "embeddingMs": 70.5,
+      "apiRoundTripMs": 2404.2,
+      "dbWriteMs": 43.120000000000005,
+      "refreshMs": 2215.5299999999997,
+      "visibilityMs": 9.690000000000001,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "single",
+      "run": 5,
+      "kbId": "cee9b5c12e9a400ebc64a6436d81d417",
+      "importVisibleMs": 4163.0216,
+      "embeddingMs": 67.2,
+      "apiRoundTripMs": 2749,
+      "dbWriteMs": 55.93,
+      "refreshMs": 2517.2999999999997,
+      "visibilityMs": 9.120000000000001,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "batch",
+      "run": 1,
+      "kbId": "24f3b1f5d2f94336b8e054ec4d40085d",
+      "importVisibleMs": 1433.3127000000022,
+      "embeddingMs": 66.7,
+      "apiRoundTripMs": 655.3,
+      "dbWriteMs": 46.96,
+      "refreshMs": 503.75,
+      "visibilityMs": 6.41,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "batch",
+      "run": 2,
+      "kbId": "44958741a3bb43e68d39b7c4925405b6",
+      "importVisibleMs": 897.8303000000014,
+      "embeddingMs": 75.6,
+      "apiRoundTripMs": 642.9,
+      "dbWriteMs": 44.61,
+      "refreshMs": 503.24,
+      "visibilityMs": 10.66,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "batch",
+      "run": 3,
+      "kbId": "2608db92213644c0868823396115fcd4",
+      "importVisibleMs": 899.5460000000021,
+      "embeddingMs": 69.9,
+      "apiRoundTripMs": 641.6,
+      "dbWriteMs": 52.31,
+      "refreshMs": 504.21,
+      "visibilityMs": 10.88,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "batch",
+      "run": 4,
+      "kbId": "bd02d25801a743cb97fbd6c04c0e76fc",
+      "importVisibleMs": 1412.5328000000009,
+      "embeddingMs": 79.9,
+      "apiRoundTripMs": 724.6,
+      "dbWriteMs": 41.72,
+      "refreshMs": 603.87,
+      "visibilityMs": 7.19,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "batch",
+      "run": 5,
+      "kbId": "11ff61db9c204999a318852b6d545d8f",
+      "importVisibleMs": 1420.8657999999996,
+      "embeddingMs": 65.4,
+      "apiRoundTripMs": 942.9,
+      "dbWriteMs": 45.86,
+      "refreshMs": 806.14,
+      "visibilityMs": 11.81,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "incremental",
+      "run": 1,
+      "kbId": "c6a41c1fdb2940198f3d3e8c2c41d606",
+      "importVisibleMs": 1806.6345000000001,
+      "embeddingMs": 86.5,
+      "apiRoundTripMs": 1047,
+      "dbWriteMs": 44.68,
+      "refreshMs": 908.71,
+      "visibilityMs": 9.17,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "incremental",
+      "run": 2,
+      "kbId": "954c3f045de142779ba27c52ea587736",
+      "importVisibleMs": 1779.9628000000012,
+      "embeddingMs": 80.7,
+      "apiRoundTripMs": 1248.1,
+      "dbWriteMs": 45.5,
+      "refreshMs": 1106.81,
+      "visibilityMs": 9.620000000000001,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "incremental",
+      "run": 3,
+      "kbId": "8541f2c05d884bc28e8713919af95758",
+      "importVisibleMs": 2335.2876999999935,
+      "embeddingMs": 115.39999999999999,
+      "apiRoundTripMs": 1402.1999999999998,
+      "dbWriteMs": 66.21,
+      "refreshMs": 1211.3200000000002,
+      "visibilityMs": 9.8,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "incremental",
+      "run": 4,
+      "kbId": "3725252dc22a4b6cacfc7f6af642aab7",
+      "importVisibleMs": 1783.4072000000015,
+      "embeddingMs": 85,
+      "apiRoundTripMs": 1369.1999999999998,
+      "dbWriteMs": 48.73,
+      "refreshMs": 1206.3899999999999,
+      "visibilityMs": 7.35,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    },
+    {
+      "strategy": "incremental",
+      "run": 5,
+      "kbId": "dc96a07443694814912d9036b9c5ca2e",
+      "importVisibleMs": 1799.8917000000001,
+      "embeddingMs": 75.5,
+      "apiRoundTripMs": 1266.1999999999998,
+      "dbWriteMs": 47.620000000000005,
+      "refreshMs": 1106.7,
+      "visibilityMs": 6.21,
+      "verification": [
+        {
+          "filename": "browser.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "database.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "incremental.md",
+          "status": 200,
+          "found": true
+        },
+        {
+          "filename": "hybrid.md",
+          "status": 200,
+          "found": true
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

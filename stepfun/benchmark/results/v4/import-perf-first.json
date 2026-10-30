@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-30T03:08:45.265Z",
+  "browser": "chrome headless",
+  "precision": "WASM q8",
+  "samples": [],
+  "errors": [
+    "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '知识库', exact: true })\u001b[22m\n\n    at D:\\OceanBase\\PowerContext-stepfun\\stepfun\\scripts\\v4-import-perf.mjs:24:66"
+  ],
+  "corpus": [
+    {
+      "filename": "browser.md",
+      "characters": 47
+    },
+    {
+      "filename": "database.md",
+      "characters": 49
+    },
+    {
+      "filename": "incremental.md",
+      "characters": 51
+    },
+    {
+      "filename": "hybrid.md",
+      "characters": 51
+    }
+  ],
+  "note": "UI upload time starts before first file selection and ends when final success is visible; individual stage timings can overlap and are not added to derive the total.",
+  "version": "156.0.8078.73"
+}

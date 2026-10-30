@@ -1,0 +1,748 @@
+{
+  "license": "CC0-1.0",
+  "provenance": "Original synthetic facts authored for EdgeSeek; labels fixed by construction before model evaluation.",
+  "documents": [
+    {
+      "id": "astronomy-1",
+      "filename": "astronomy-1.md",
+      "text": "Astronomy and observation. A lunar eclipse happens when Earth blocks sunlight from reaching the Moon."
+    },
+    {
+      "id": "astronomy-2",
+      "filename": "astronomy-2.md",
+      "text": "Astronomy and observation. 望远镜通过收集光线观察遥远的天体。"
+    },
+    {
+      "id": "astronomy-3",
+      "filename": "astronomy-3.md",
+      "text": "Astronomy and observation. A spectroscope separates starlight by wavelength to study chemical composition."
+    },
+    {
+      "id": "astronomy-4",
+      "filename": "astronomy-4.md",
+      "text": "Astronomy and observation. A comet often develops a tail near the Sun."
+    },
+    {
+      "id": "astronomy-5",
+      "filename": "astronomy-5.md",
+      "text": "Astronomy and observation. A planet follows an orbit around a star."
+    },
+    {
+      "id": "astronomy-6",
+      "filename": "astronomy-6.md",
+      "text": "Astronomy and observation. A meteor is a streak caused by material entering an atmosphere."
+    },
+    {
+      "id": "astronomy-7",
+      "filename": "astronomy-7.md",
+      "text": "Astronomy and observation. The Milky Way is a galaxy containing many stars."
+    },
+    {
+      "id": "astronomy-8",
+      "filename": "astronomy-8.md",
+      "text": "Astronomy and observation. An observatory houses instruments for viewing the sky."
+    },
+    {
+      "id": "astronomy-9",
+      "filename": "astronomy-9.md",
+      "text": "Astronomy and observation. A star chart maps visible constellations."
+    },
+    {
+      "id": "astronomy-10",
+      "filename": "astronomy-10.md",
+      "text": "Astronomy and observation. A solar eclipse involves the Moon obscuring the Sun."
+    },
+    {
+      "id": "gardening-1",
+      "filename": "gardening-1.md",
+      "text": "Gardening and plants. Mulch conserves soil moisture by reducing evaporation around plants."
+    },
+    {
+      "id": "gardening-2",
+      "filename": "gardening-2.md",
+      "text": "Gardening and plants. 堆肥可以将厨余和落叶转化为改良土壤的材料。"
+    },
+    {
+      "id": "gardening-3",
+      "filename": "gardening-3.md",
+      "text": "Gardening and plants. Seedlings need gradual exposure to outdoor conditions before transplanting."
+    },
+    {
+      "id": "gardening-4",
+      "filename": "gardening-4.md",
+      "text": "Gardening and plants. Tomatoes prefer a sunny growing location."
+    },
+    {
+      "id": "gardening-5",
+      "filename": "gardening-5.md",
+      "text": "Gardening and plants. Garden shears cut small branches."
+    },
+    {
+      "id": "gardening-6",
+      "filename": "gardening-6.md",
+      "text": "Gardening and plants. Raised beds can improve drainage."
+    },
+    {
+      "id": "gardening-7",
+      "filename": "gardening-7.md",
+      "text": "Gardening and plants. A trellis supports climbing beans."
+    },
+    {
+      "id": "gardening-8",
+      "filename": "gardening-8.md",
+      "text": "Gardening and plants. Pollinators visit flowers for nectar."
+    },
+    {
+      "id": "gardening-9",
+      "filename": "gardening-9.md",
+      "text": "Gardening and plants. A watering can delivers water to seedlings."
+    },
+    {
+      "id": "gardening-10",
+      "filename": "gardening-10.md",
+      "text": "Gardening and plants. Roots absorb water and nutrients from soil."
+    },
+    {
+      "id": "networking-1",
+      "filename": "networking-1.md",
+      "text": "Computer networking. DNS translates a domain name into an IP address."
+    },
+    {
+      "id": "networking-2",
+      "filename": "networking-2.md",
+      "text": "Computer networking. 路由器根据目标地址转发网络数据包。"
+    },
+    {
+      "id": "networking-3",
+      "filename": "networking-3.md",
+      "text": "Computer networking. TLS encrypts traffic between a client and a server during transmission."
+    },
+    {
+      "id": "networking-4",
+      "filename": "networking-4.md",
+      "text": "Computer networking. A switch connects devices within a local network."
+    },
+    {
+      "id": "networking-5",
+      "filename": "networking-5.md",
+      "text": "Computer networking. A firewall filters traffic using rules."
+    },
+    {
+      "id": "networking-6",
+      "filename": "networking-6.md",
+      "text": "Computer networking. A packet carries a portion of network data."
+    },
+    {
+      "id": "networking-7",
+      "filename": "networking-7.md",
+      "text": "Computer networking. A subnet groups addresses in a network."
+    },
+    {
+      "id": "networking-8",
+      "filename": "networking-8.md",
+      "text": "Computer networking. A modem connects a local network to a service provider."
+    },
+    {
+      "id": "networking-9",
+      "filename": "networking-9.md",
+      "text": "Computer networking. Latency measures the time taken by a network operation."
+    },
+    {
+      "id": "networking-10",
+      "filename": "networking-10.md",
+      "text": "Computer networking. Bandwidth describes a connection's data capacity."
+    },
+    {
+      "id": "energy-1",
+      "filename": "energy-1.md",
+      "text": "Energy systems. A solar panel converts sunlight into electrical energy using photovoltaic cells."
+    },
+    {
+      "id": "energy-2",
+      "filename": "energy-2.md",
+      "text": "Energy systems. 风力发电机利用风推动叶片来产生电能。"
+    },
+    {
+      "id": "energy-3",
+      "filename": "energy-3.md",
+      "text": "Energy systems. A battery stores electrical energy chemically for later use."
+    },
+    {
+      "id": "energy-4",
+      "filename": "energy-4.md",
+      "text": "Energy systems. A transformer changes alternating-current voltage."
+    },
+    {
+      "id": "energy-5",
+      "filename": "energy-5.md",
+      "text": "Energy systems. A power meter measures electricity consumption."
+    },
+    {
+      "id": "energy-6",
+      "filename": "energy-6.md",
+      "text": "Energy systems. A turbine can be driven by moving water."
+    },
+    {
+      "id": "energy-7",
+      "filename": "energy-7.md",
+      "text": "Energy systems. An inverter converts direct current to alternating current."
+    },
+    {
+      "id": "energy-8",
+      "filename": "energy-8.md",
+      "text": "Energy systems. Insulation reduces heat transfer through walls."
+    },
+    {
+      "id": "energy-9",
+      "filename": "energy-9.md",
+      "text": "Energy systems. A fuse breaks a circuit when current is excessive."
+    },
+    {
+      "id": "energy-10",
+      "filename": "energy-10.md",
+      "text": "Energy systems. A grid distributes electricity to consumers."
+    },
+    {
+      "id": "bicycle-1",
+      "filename": "bicycle-1.md",
+      "text": "Bicycle maintenance. A bicycle chain transfers pedaling force from the crank to the rear wheel."
+    },
+    {
+      "id": "bicycle-2",
+      "filename": "bicycle-2.md",
+      "text": "Bicycle maintenance. 自行车刹车通过摩擦减慢车轮转动。"
+    },
+    {
+      "id": "bicycle-3",
+      "filename": "bicycle-3.md",
+      "text": "Bicycle maintenance. A tire pump raises air pressure inside an inner tube."
+    },
+    {
+      "id": "bicycle-4",
+      "filename": "bicycle-4.md",
+      "text": "Bicycle maintenance. A saddle supports the rider."
+    },
+    {
+      "id": "bicycle-5",
+      "filename": "bicycle-5.md",
+      "text": "Bicycle maintenance. A derailleur moves the chain between gears."
+    },
+    {
+      "id": "bicycle-6",
+      "filename": "bicycle-6.md",
+      "text": "Bicycle maintenance. Reflectors improve visibility in low light."
+    },
+    {
+      "id": "bicycle-7",
+      "filename": "bicycle-7.md",
+      "text": "Bicycle maintenance. Handlebars steer the front wheel."
+    },
+    {
+      "id": "bicycle-8",
+      "filename": "bicycle-8.md",
+      "text": "Bicycle maintenance. A spoke connects the rim to the hub."
+    },
+    {
+      "id": "bicycle-9",
+      "filename": "bicycle-9.md",
+      "text": "Bicycle maintenance. A helmet protects a cyclist's head."
+    },
+    {
+      "id": "bicycle-10",
+      "filename": "bicycle-10.md",
+      "text": "Bicycle maintenance. A bicycle bell warns nearby pedestrians."
+    },
+    {
+      "id": "cooking-1",
+      "filename": "cooking-1.md",
+      "text": "Cooking methods. Simmering cooks food in liquid kept just below a vigorous boil."
+    },
+    {
+      "id": "cooking-2",
+      "filename": "cooking-2.md",
+      "text": "Cooking methods. 蒸煮利用水蒸气加热食物，而食物不必浸在水中。"
+    },
+    {
+      "id": "cooking-3",
+      "filename": "cooking-3.md",
+      "text": "Cooking methods. A kitchen thermometer measures the internal temperature of food."
+    },
+    {
+      "id": "cooking-4",
+      "filename": "cooking-4.md",
+      "text": "Cooking methods. A whisk blends ingredients by hand."
+    },
+    {
+      "id": "cooking-5",
+      "filename": "cooking-5.md",
+      "text": "Cooking methods. A cutting board protects a work surface."
+    },
+    {
+      "id": "cooking-6",
+      "filename": "cooking-6.md",
+      "text": "Cooking methods. Roasting uses dry heat in an oven."
+    },
+    {
+      "id": "cooking-7",
+      "filename": "cooking-7.md",
+      "text": "Cooking methods. A colander drains water from pasta."
+    },
+    {
+      "id": "cooking-8",
+      "filename": "cooking-8.md",
+      "text": "Cooking methods. A lid covers a cooking pot."
+    },
+    {
+      "id": "cooking-9",
+      "filename": "cooking-9.md",
+      "text": "Cooking methods. A grater shreds cheese or vegetables."
+    },
+    {
+      "id": "cooking-10",
+      "filename": "cooking-10.md",
+      "text": "Cooking methods. Baking soda is used in some baked goods."
+    },
+    {
+      "id": "music-1",
+      "filename": "music-1.md",
+      "text": "Music and instruments. A metronome provides a steady beat for practicing tempo."
+    },
+    {
+      "id": "music-2",
+      "filename": "music-2.md",
+      "text": "Music and instruments. 钢琴通过琴键控制琴槌敲击琴弦发声。"
+    },
+    {
+      "id": "music-3",
+      "filename": "music-3.md",
+      "text": "Music and instruments. A conductor guides an orchestra using gestures and timing."
+    },
+    {
+      "id": "music-4",
+      "filename": "music-4.md",
+      "text": "Music and instruments. A violin has strings played with a bow."
+    },
+    {
+      "id": "music-5",
+      "filename": "music-5.md",
+      "text": "Music and instruments. A flute is a woodwind instrument."
+    },
+    {
+      "id": "music-6",
+      "filename": "music-6.md",
+      "text": "Music and instruments. A drum makes sound through a vibrating membrane."
+    },
+    {
+      "id": "music-7",
+      "filename": "music-7.md",
+      "text": "Music and instruments. Sheet music represents notes on a staff."
+    },
+    {
+      "id": "music-8",
+      "filename": "music-8.md",
+      "text": "Music and instruments. A guitar can be tuned with tuning pegs."
+    },
+    {
+      "id": "music-9",
+      "filename": "music-9.md",
+      "text": "Music and instruments. A choir consists of singers."
+    },
+    {
+      "id": "music-10",
+      "filename": "music-10.md",
+      "text": "Music and instruments. A melody is a sequence of musical notes."
+    },
+    {
+      "id": "library-1",
+      "filename": "library-1.md",
+      "text": "Library services. A library catalog records titles and helps readers locate books."
+    },
+    {
+      "id": "library-2",
+      "filename": "library-2.md",
+      "text": "Library services. 图书馆借书证用于登记读者借阅的书籍。"
+    },
+    {
+      "id": "library-3",
+      "filename": "library-3.md",
+      "text": "Library services. A librarian can place a hold on a book that is currently on loan."
+    },
+    {
+      "id": "library-4",
+      "filename": "library-4.md",
+      "text": "Library services. A reading room provides space for quiet study."
+    },
+    {
+      "id": "library-5",
+      "filename": "library-5.md",
+      "text": "Library services. A bookshelf stores books vertically."
+    },
+    {
+      "id": "library-6",
+      "filename": "library-6.md",
+      "text": "Library services. A due date indicates when a loan should be returned."
+    },
+    {
+      "id": "library-7",
+      "filename": "library-7.md",
+      "text": "Library services. An author writes a book."
+    },
+    {
+      "id": "library-8",
+      "filename": "library-8.md",
+      "text": "Library services. A periodical is published in recurring issues."
+    },
+    {
+      "id": "library-9",
+      "filename": "library-9.md",
+      "text": "Library services. An archive preserves historical records."
+    },
+    {
+      "id": "library-10",
+      "filename": "library-10.md",
+      "text": "Library services. A reference desk answers research questions."
+    },
+    {
+      "id": "weather-1",
+      "filename": "weather-1.md",
+      "text": "Weather and climate. A barometer measures atmospheric pressure."
+    },
+    {
+      "id": "weather-2",
+      "filename": "weather-2.md",
+      "text": "Weather and climate. 雨量计用于测量一段时间内的降雨量。"
+    },
+    {
+      "id": "weather-3",
+      "filename": "weather-3.md",
+      "text": "Weather and climate. An anemometer measures the speed of the wind."
+    },
+    {
+      "id": "weather-4",
+      "filename": "weather-4.md",
+      "text": "Weather and climate. Clouds form from condensed water droplets."
+    },
+    {
+      "id": "weather-5",
+      "filename": "weather-5.md",
+      "text": "Weather and climate. Humidity describes water vapor in the air."
+    },
+    {
+      "id": "weather-6",
+      "filename": "weather-6.md",
+      "text": "Weather and climate. A thermometer measures temperature."
+    },
+    {
+      "id": "weather-7",
+      "filename": "weather-7.md",
+      "text": "Weather and climate. A forecast predicts future weather."
+    },
+    {
+      "id": "weather-8",
+      "filename": "weather-8.md",
+      "text": "Weather and climate. A rainbow appears when light is refracted in water droplets."
+    },
+    {
+      "id": "weather-9",
+      "filename": "weather-9.md",
+      "text": "Weather and climate. Snow consists of ice crystals."
+    },
+    {
+      "id": "weather-10",
+      "filename": "weather-10.md",
+      "text": "Weather and climate. A weather vane indicates wind direction."
+    },
+    {
+      "id": "maps-1",
+      "filename": "maps-1.md",
+      "text": "Maps and navigation. A compass indicates direction using a magnetic needle."
+    },
+    {
+      "id": "maps-2",
+      "filename": "maps-2.md",
+      "text": "Maps and navigation. 地图比例尺表示地图距离和实际距离之间的关系。"
+    },
+    {
+      "id": "maps-3",
+      "filename": "maps-3.md",
+      "text": "Maps and navigation. Contour lines on a map connect points of equal elevation."
+    },
+    {
+      "id": "maps-4",
+      "filename": "maps-4.md",
+      "text": "Maps and navigation. A legend explains symbols used on a map."
+    },
+    {
+      "id": "maps-5",
+      "filename": "maps-5.md",
+      "text": "Maps and navigation. Latitude describes position north or south of the equator."
+    },
+    {
+      "id": "maps-6",
+      "filename": "maps-6.md",
+      "text": "Maps and navigation. Longitude describes east-west position."
+    },
+    {
+      "id": "maps-7",
+      "filename": "maps-7.md",
+      "text": "Maps and navigation. A street map displays roads and intersections."
+    },
+    {
+      "id": "maps-8",
+      "filename": "maps-8.md",
+      "text": "Maps and navigation. A route is a planned path between locations."
+    },
+    {
+      "id": "maps-9",
+      "filename": "maps-9.md",
+      "text": "Maps and navigation. A waypoint marks a position along a journey."
+    },
+    {
+      "id": "maps-10",
+      "filename": "maps-10.md",
+      "text": "Maps and navigation. A globe models the shape of Earth."
+    }
+  ],
+  "queries": [
+    {
+      "id": "astronomy-en",
+      "language": "en",
+      "text": "What event occurs when Earth blocks sunlight from the Moon?",
+      "relevant": [
+        "astronomy-1.md"
+      ]
+    },
+    {
+      "id": "astronomy-zh",
+      "language": "zh",
+      "text": "什么仪器收集光线来观察远处的天体？",
+      "relevant": [
+        "astronomy-2.md"
+      ]
+    },
+    {
+      "id": "astronomy-cross",
+      "language": "cross",
+      "text": "用什么方法分析星光的波长以研究恒星成分？",
+      "relevant": [
+        "astronomy-3.md"
+      ]
+    },
+    {
+      "id": "gardening-en",
+      "language": "en",
+      "text": "What garden covering helps soil retain moisture?",
+      "relevant": [
+        "gardening-1.md"
+      ]
+    },
+    {
+      "id": "gardening-zh",
+      "language": "zh",
+      "text": "厨余和落叶可以通过什么方式变成土壤改良材料？",
+      "relevant": [
+        "gardening-2.md"
+      ]
+    },
+    {
+      "id": "gardening-cross",
+      "language": "cross",
+      "text": "幼苗移栽前为什么需要逐渐适应室外环境？",
+      "relevant": [
+        "gardening-3.md"
+      ]
+    },
+    {
+      "id": "networking-en",
+      "language": "en",
+      "text": "Which service resolves a website name to an IP address?",
+      "relevant": [
+        "networking-1.md"
+      ]
+    },
+    {
+      "id": "networking-zh",
+      "language": "zh",
+      "text": "什么设备根据目的地址转发数据包？",
+      "relevant": [
+        "networking-2.md"
+      ]
+    },
+    {
+      "id": "networking-cross",
+      "language": "cross",
+      "text": "客户端与服务器之间如何加密传输的数据？",
+      "relevant": [
+        "networking-3.md"
+      ]
+    },
+    {
+      "id": "energy-en",
+      "language": "en",
+      "text": "Which device converts sunlight directly into electricity?",
+      "relevant": [
+        "energy-1.md"
+      ]
+    },
+    {
+      "id": "energy-zh",
+      "language": "zh",
+      "text": "什么设备利用风推动叶片发电？",
+      "relevant": [
+        "energy-2.md"
+      ]
+    },
+    {
+      "id": "energy-cross",
+      "language": "cross",
+      "text": "哪种装置通过化学方式储存电能以便以后使用？",
+      "relevant": [
+        "energy-3.md"
+      ]
+    },
+    {
+      "id": "bicycle-en",
+      "language": "en",
+      "text": "What part transfers force from pedals to the rear wheel?",
+      "relevant": [
+        "bicycle-1.md"
+      ]
+    },
+    {
+      "id": "bicycle-zh",
+      "language": "zh",
+      "text": "自行车靠什么部件摩擦车轮来减速？",
+      "relevant": [
+        "bicycle-2.md"
+      ]
+    },
+    {
+      "id": "bicycle-cross",
+      "language": "cross",
+      "text": "什么工具可以提高自行车内胎的气压？",
+      "relevant": [
+        "bicycle-3.md"
+      ]
+    },
+    {
+      "id": "cooking-en",
+      "language": "en",
+      "text": "What cooking method keeps liquid just below a rolling boil?",
+      "relevant": [
+        "cooking-1.md"
+      ]
+    },
+    {
+      "id": "cooking-zh",
+      "language": "zh",
+      "text": "哪种烹饪方式使用水蒸气加热食物？",
+      "relevant": [
+        "cooking-2.md"
+      ]
+    },
+    {
+      "id": "cooking-cross",
+      "language": "cross",
+      "text": "用什么工具测量食物内部的温度？",
+      "relevant": [
+        "cooking-3.md"
+      ]
+    },
+    {
+      "id": "music-en",
+      "language": "en",
+      "text": "What device provides a regular beat for musicians?",
+      "relevant": [
+        "music-1.md"
+      ]
+    },
+    {
+      "id": "music-zh",
+      "language": "zh",
+      "text": "哪种乐器的琴键控制琴槌敲击琴弦？",
+      "relevant": [
+        "music-2.md"
+      ]
+    },
+    {
+      "id": "music-cross",
+      "language": "cross",
+      "text": "乐队演奏时谁用手势和节奏引导演奏者？",
+      "relevant": [
+        "music-3.md"
+      ]
+    },
+    {
+      "id": "library-en",
+      "language": "en",
+      "text": "Where can a reader look up a book's location and title?",
+      "relevant": [
+        "library-1.md"
+      ]
+    },
+    {
+      "id": "library-zh",
+      "language": "zh",
+      "text": "读者借阅书籍时通常使用什么证件？",
+      "relevant": [
+        "library-2.md"
+      ]
+    },
+    {
+      "id": "library-cross",
+      "language": "cross",
+      "text": "想借的书已经被借走时，馆员可以帮读者做什么？",
+      "relevant": [
+        "library-3.md"
+      ]
+    },
+    {
+      "id": "weather-en",
+      "language": "en",
+      "text": "Which instrument measures air pressure?",
+      "relevant": [
+        "weather-1.md"
+      ]
+    },
+    {
+      "id": "weather-zh",
+      "language": "zh",
+      "text": "什么仪器用于测量降雨量？",
+      "relevant": [
+        "weather-2.md"
+      ]
+    },
+    {
+      "id": "weather-cross",
+      "language": "cross",
+      "text": "哪种仪器测量风速？",
+      "relevant": [
+        "weather-3.md"
+      ]
+    },
+    {
+      "id": "maps-en",
+      "language": "en",
+      "text": "What navigation tool uses a magnetic needle to indicate direction?",
+      "relevant": [
+        "maps-1.md"
+      ]
+    },
+    {
+      "id": "maps-zh",
+      "language": "zh",
+      "text": "地图上什么标记表示图上距离与实际距离的关系？",
+      "relevant": [
+        "maps-2.md"
+      ]
+    },
+    {
+      "id": "maps-cross",
+      "language": "cross",
+      "text": "地形图上哪种线连接海拔相同的地点？",
+      "relevant": [
+        "maps-3.md"
+      ]
+    }
+  ]
+}

@@ -98,7 +98,8 @@ test("browser-local embeddings feed real seekdb results across modes", async ({ 
   expect(performance.some((row: { name: string; fp32ToInt8Ratio?: number }) => row.name === "model.compression" && Number(row.fp32ToInt8Ratio) > 0)).toBeTruthy();
   const sanitizedRemoteResources = [...new Set(externalRequests.map((value) => { const url = new URL(value); return `${url.origin}${url.pathname}`; }))];
   const actualRun = { at: new Date().toISOString(), browser: testInfo.project.name, model: "Xenova/all-MiniLM-L6-v2", revision: "751bff37182d3f1213fa05d7196b954e230abad9", externalModelResources: sanitizedRemoteResources, inferenceRequests, observations, performance };
-  mkdirSync(resolve("benchmark/results/v3"), { recursive: true });
-  writeFileSync(resolve(`benchmark/results/v3/${testInfo.project.name}-e2e.json`), `${JSON.stringify(actualRun, null, 2)}\n`);
+  const evidenceDir = process.env.EDGESEEK_E2E_EVIDENCE ?? "benchmark/results/v3";
+  mkdirSync(resolve(evidenceDir), { recursive: true });
+  writeFileSync(resolve(evidenceDir, `${testInfo.project.name}-e2e.json`), `${JSON.stringify(actualRun, null, 2)}\n`);
   console.info(JSON.stringify({ browser: testInfo.project.name, externalModelResources: sanitizedRemoteResources, observations, performanceRows: performance.length }));
 });
