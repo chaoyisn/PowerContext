@@ -1,0 +1,17 @@
+[
+  {
+    "id": "hybrid-database-ranking",
+    "query": "How does seekdb combine vector and full text search?",
+    "relevant": ["seekdb-hybrid.md"]
+  },
+  {
+    "id": "local-browser-embedding",
+    "query": "Where are embeddings computed and what runtime is preferred?",
+    "relevant": ["browser-embedding.md"]
+  },
+  {
+    "id": "duplicate-incremental-import",
+    "query": "How are repeated documents deduplicated and new vectors indexed?",
+    "relevant": ["incremental-import.md"]
+  }
+]

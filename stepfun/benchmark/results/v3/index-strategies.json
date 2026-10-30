@@ -1,0 +1,356 @@
+{
+  "at": "2026-10-30T02:29:49.125Z",
+  "description": "Four real browser q8 vectors, five independent collections per strategy, same texts and query; timings exclude collection creation.",
+  "samples": [
+    {
+      "strategy": "single-refresh",
+      "run": 1,
+      "collection": "edgeseek_v3_bench_3f964befa6b34a0ab5cac004ecd6fedf",
+      "writesMs": [
+        98.36989999999969,
+        16.590300000000298,
+        22.62880000000041,
+        13.762499999999818
+      ],
+      "refreshesMs": [
+        812.6729,
+        502.6731,
+        602.6498999999994,
+        804.4542000000001
+      ],
+      "writeAndRefreshMs": 2873.8255000000004,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "single-refresh",
+      "run": 2,
+      "collection": "edgeseek_v3_bench_dca3fad92d93473c8fac3c4517e0b3f7",
+      "writesMs": [
+        29.91240000000016,
+        10.352699999999459,
+        9.430500000000393,
+        15.527199999999539
+      ],
+      "refreshesMs": [
+        503.6671000000006,
+        802.9084000000003,
+        602.6603999999998,
+        502.34209999999985
+      ],
+      "writeAndRefreshMs": 2476.829199999999,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "single-refresh",
+      "run": 3,
+      "collection": "edgeseek_v3_bench_4b968a89949b49e7a64f72017a984364",
+      "writesMs": [
+        25.356699999998455,
+        12.595900000000256,
+        12.75799999999981,
+        20.729099999998652
+      ],
+      "refreshesMs": [
+        808.9480999999996,
+        504.0614999999998,
+        607.4795000000013,
+        602.5948000000008
+      ],
+      "writeAndRefreshMs": 2594.5794000000005,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "single-refresh",
+      "run": 4,
+      "collection": "edgeseek_v3_bench_87a8393a2b5a4a0daf8cff213796af57",
+      "writesMs": [
+        24.07289999999921,
+        9.116100000001097,
+        14.08600000000115,
+        19.288399999999456
+      ],
+      "refreshesMs": [
+        503.3060999999998,
+        806.426300000001,
+        604.9079000000002,
+        511.4979999999996
+      ],
+      "writeAndRefreshMs": 2492.7533999999996,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "single-refresh",
+      "run": 5,
+      "collection": "edgeseek_v3_bench_82a0062d9ffb4756b82abe05ec4ff4aa",
+      "writesMs": [
+        22.512500000000728,
+        10.463800000001356,
+        9.955500000000029,
+        14.250599999999395
+      ],
+      "refreshesMs": [
+        504.6412999999993,
+        612.9830000000002,
+        802.2597000000005,
+        403.8683999999994
+      ],
+      "writeAndRefreshMs": 2380.961800000001,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "batch-refresh",
+      "run": 1,
+      "collection": "edgeseek_v3_bench_9e64bcc987314fb0ba742639a17013af",
+      "writesMs": [
+        60.97429999999986
+      ],
+      "refreshesMs": [
+        503.141599999999
+      ],
+      "writeAndRefreshMs": 564.1280999999981,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "batch-refresh",
+      "run": 2,
+      "collection": "edgeseek_v3_bench_25eb8dc73f374e38857827afca35f1c9",
+      "writesMs": [
+        75.45889999999781
+      ],
+      "refreshesMs": [
+        603.9582999999984
+      ],
+      "writeAndRefreshMs": 679.4415000000008,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "batch-refresh",
+      "run": 3,
+      "collection": "edgeseek_v3_bench_315b70bd5f8e428aa49fd7bf55c88336",
+      "writesMs": [
+        54.911199999998644
+      ],
+      "refreshesMs": [
+        708.9372000000003
+      ],
+      "writeAndRefreshMs": 763.8538000000008,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "batch-refresh",
+      "run": 4,
+      "collection": "edgeseek_v3_bench_d769fbfade02430586fa5298aafb06e2",
+      "writesMs": [
+        49.56850000000122
+      ],
+      "refreshesMs": [
+        704.0795999999973
+      ],
+      "writeAndRefreshMs": 753.6559000000016,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "batch-refresh",
+      "run": 5,
+      "collection": "edgeseek_v3_bench_1b002c1ae5c148f6bd01d26784d97e47",
+      "writesMs": [
+        56.04699999999866
+      ],
+      "refreshesMs": [
+        809.4419000000016
+      ],
+      "writeAndRefreshMs": 865.4942999999985,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "incremental-refresh",
+      "run": 1,
+      "collection": "edgeseek_v3_bench_374ca0028612430d88533a0386d64ef1",
+      "writesMs": [
+        39.81100000000151,
+        24.192599999998492
+      ],
+      "refreshesMs": [
+        504.21849999999904,
+        403.4624999999978
+      ],
+      "writeAndRefreshMs": 971.6965999999993,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "incremental-refresh",
+      "run": 2,
+      "collection": "edgeseek_v3_bench_fff21016deac4f748de52995dc660548",
+      "writesMs": [
+        35.397899999999936,
+        22.279300000001967
+      ],
+      "refreshesMs": [
+        504.1839,
+        603.5987999999998
+      ],
+      "writeAndRefreshMs": 1165.4704999999994,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "incremental-refresh",
+      "run": 3,
+      "collection": "edgeseek_v3_bench_c738c0ca31d74aa18fb453146ea1cb42",
+      "writesMs": [
+        32.23919999999998,
+        23.61960000000181
+      ],
+      "refreshesMs": [
+        506.2669999999998,
+        602.5868999999984
+      ],
+      "writeAndRefreshMs": 1164.7246000000014,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "incremental-refresh",
+      "run": 4,
+      "collection": "edgeseek_v3_bench_098a7d414ecf4faba9c5189c21936f59",
+      "writesMs": [
+        34.63940000000002,
+        26.866500000000087
+      ],
+      "refreshesMs": [
+        704.3489000000009,
+        504.8535000000011
+      ],
+      "writeAndRefreshMs": 1270.7195000000029,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    },
+    {
+      "strategy": "incremental-refresh",
+      "run": 5,
+      "collection": "edgeseek_v3_bench_d75957ac22354051b1c46aa0345422a6",
+      "writesMs": [
+        33.896200000002864,
+        29.412199999998847
+      ],
+      "refreshesMs": [
+        607.5926,
+        502.5532999999996
+      ],
+      "writeAndRefreshMs": 1173.5326000000023,
+      "readbackCount": 4,
+      "searchIds": [
+        "doc-0",
+        "doc-1",
+        "doc-3",
+        "doc-2"
+      ],
+      "visible": true
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.8078.73",
+  "backend": "WASM",
+  "dtype": "q8",
+  "vectorSha256": [
+    "c3415fb2214ed179ac1bded6927354127c1f461dd27f3c325636cf0928610de0",
+    "a1974849432437f2d5a91fb51f18211568e5ef19b1e7589fc6c9c81eb938cc6a",
+    "f454f8350d1acc6473f8149b4f04fac2e376ce8d263e00e4cb14b4340fc2285d",
+    "5cb5a1dcc17441ec498d8f66aaaab88039ba19842665451dece408eaa1b21166"
+  ]
+}

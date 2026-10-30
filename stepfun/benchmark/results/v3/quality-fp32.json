@@ -1,0 +1,851 @@
+{
+  "at": "2026-10-30T02:16:00.014Z",
+  "precision": "fp32",
+  "cases": [
+    {
+      "id": "en-hybrid",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "database.md",
+        "index.md",
+        "zh-search.md",
+        "garden.md",
+        "privacy.md",
+        "weather.md",
+        "zh-privacy.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 6.239800000010291
+    },
+    {
+      "id": "en-hybrid",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "database.md",
+        "index.md",
+        "weather.md",
+        "garden.md",
+        "zh-search.md",
+        "privacy.md",
+        "zh-privacy.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 12.78890000001411
+    },
+    {
+      "id": "en-privacy",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "privacy.md",
+        "zh-privacy.md",
+        "index.md",
+        "zh-search.md",
+        "weather.md",
+        "garden.md",
+        "database.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 2.204200000007404
+    },
+    {
+      "id": "en-privacy",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md",
+        "garden.md",
+        "database.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 8.918300000019372
+    },
+    {
+      "id": "en-index",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "index.md",
+        "database.md",
+        "privacy.md",
+        "zh-search.md",
+        "weather.md",
+        "zh-privacy.md",
+        "garden.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 2.2537999999767635
+    },
+    {
+      "id": "en-index",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "index.md",
+        "database.md",
+        "privacy.md",
+        "zh-search.md",
+        "weather.md",
+        "zh-privacy.md",
+        "garden.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 9.893299999996088
+    },
+    {
+      "id": "zh-search",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "zh-search.md",
+        "zh-privacy.md",
+        "privacy.md",
+        "database.md",
+        "index.md",
+        "garden.md",
+        "weather.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 2.6107000000192784
+    },
+    {
+      "id": "zh-search",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "zh-search.md",
+        "zh-privacy.md",
+        "privacy.md",
+        "database.md",
+        "index.md",
+        "garden.md",
+        "weather.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 15.990700000023935
+    },
+    {
+      "id": "cross-language",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "zh-privacy.md",
+        "zh-search.md",
+        "privacy.md",
+        "garden.md",
+        "index.md",
+        "weather.md",
+        "database.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 0.9197207891481876,
+      "dbMs": 5.601899999979651
+    },
+    {
+      "id": "cross-language",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "zh-privacy.md",
+        "zh-search.md",
+        "privacy.md",
+        "garden.md",
+        "index.md",
+        "weather.md",
+        "database.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 0.9197207891481876,
+      "dbMs": 8.292199999996228
+    }
+  ],
+  "errors": [],
+  "dataset": "benchmark/v3-quality.json",
+  "note": "Small independently labelled set; seven candidates make Recall@10 non-discriminating.",
+  "browser": "156.0.8078.73",
+  "kbId": "1b1ea7e8fd654c328d409ddc24a51d62",
+  "performance": [
+    {
+      "at": "2026-10-30T02:16:02.000Z",
+      "name": "model.asset",
+      "file": "config.json",
+      "bytes": 650,
+      "acquisitionMs": 0.2,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:16:02.018Z",
+      "name": "model.asset",
+      "file": "tokenizer.json",
+      "bytes": 711661,
+      "acquisitionMs": 17.3,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:16:02.031Z",
+      "name": "model.asset",
+      "file": "tokenizer_config.json",
+      "bytes": 366,
+      "acquisitionMs": 29.8,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:16:04.204Z",
+      "name": "model.asset",
+      "file": "onnx/model.onnx",
+      "bytes": 90387606,
+      "acquisitionMs": 2124.3,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:16:06.580Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384,
+      "durationMs": 4803.6,
+      "workerInitMs": 4613.8,
+      "modelAssetBytes": 91100283,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:16:07.281Z",
+      "name": "network.deduplicate",
+      "durationMs": 14.1,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:07.353Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 70.6,
+      "wallMs": 71.2,
+      "itemsPerSecond": 14.16,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:07.981Z",
+      "name": "network.document-write",
+      "durationMs": 625.1,
+      "bytes": 93,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:07.981Z",
+      "name": "seekdb.write",
+      "durationMs": 35.59,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:07.981Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 510.45,
+      "visibleMs": 3.95,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:08.177Z",
+      "name": "network.deduplicate",
+      "durationMs": 11,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:08.233Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 55.1,
+      "wallMs": 55.5,
+      "itemsPerSecond": 18.15,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:08.784Z",
+      "name": "network.document-write",
+      "durationMs": 550,
+      "bytes": 104,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:08.784Z",
+      "name": "seekdb.write",
+      "durationMs": 7.81,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:08.784Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 503.84,
+      "visibleMs": 3.36,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:09.054Z",
+      "name": "network.deduplicate",
+      "durationMs": 9.2,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:09.108Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 52.5,
+      "wallMs": 53.3,
+      "itemsPerSecond": 19.05,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:09.749Z",
+      "name": "network.document-write",
+      "durationMs": 640.6,
+      "bytes": 101,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:09.749Z",
+      "name": "seekdb.write",
+      "durationMs": 9.11,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:09.749Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 604.53,
+      "visibleMs": 1.81,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:09.958Z",
+      "name": "network.deduplicate",
+      "durationMs": 26.6,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:10.002Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 42.4,
+      "wallMs": 44,
+      "itemsPerSecond": 23.58,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:10.546Z",
+      "name": "network.document-write",
+      "durationMs": 542.7,
+      "bytes": 82,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:10.546Z",
+      "name": "seekdb.write",
+      "durationMs": 7.33,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:10.546Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 503.17,
+      "visibleMs": 1.76,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:10.862Z",
+      "name": "network.deduplicate",
+      "durationMs": 10.4,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:10.913Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 50.1,
+      "wallMs": 50.4,
+      "itemsPerSecond": 19.96,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:11.561Z",
+      "name": "network.document-write",
+      "durationMs": 647.5,
+      "bytes": 77,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:11.561Z",
+      "name": "seekdb.write",
+      "durationMs": 8.22,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:11.561Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 605.13,
+      "visibleMs": 2.35,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:11.766Z",
+      "name": "network.deduplicate",
+      "durationMs": 10.8,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:11.838Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 71.1,
+      "wallMs": 71.6,
+      "itemsPerSecond": 14.06,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:12.385Z",
+      "name": "network.document-write",
+      "durationMs": 546.6,
+      "bytes": 105,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:12.386Z",
+      "name": "seekdb.write",
+      "durationMs": 8.07,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:12.386Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 504.02,
+      "visibleMs": 3.95,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:12.676Z",
+      "name": "network.deduplicate",
+      "durationMs": 15.7,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:12.730Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 50.5,
+      "wallMs": 50.9,
+      "itemsPerSecond": 19.8,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:13.375Z",
+      "name": "network.document-write",
+      "durationMs": 644.3,
+      "bytes": 93,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:13.375Z",
+      "name": "seekdb.write",
+      "durationMs": 7.24,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:13.375Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 604,
+      "visibleMs": 1.8,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:13.929Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 36.5,
+      "wallMs": 37,
+      "itemsPerSecond": 27.4,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:13.929Z",
+      "name": "query.embedding",
+      "durationMs": 36.5,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:13.955Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 6.24,
+      "networkMs": 16.66,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.003Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 110.9,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.157Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 36.5,
+      "wallMs": 37.4,
+      "itemsPerSecond": 27.4,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:14.157Z",
+      "name": "query.embedding",
+      "durationMs": 36.5,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:14.183Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 12.79,
+      "networkMs": 12.41,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.207Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 87.3,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.370Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 31,
+      "wallMs": 40.7,
+      "itemsPerSecond": 32.26,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:14.370Z",
+      "name": "query.embedding",
+      "durationMs": 31,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:14.387Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 2.2,
+      "networkMs": 12.9,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.408Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 78.6,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.548Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 29.9,
+      "wallMs": 30.1,
+      "itemsPerSecond": 33.44,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:14.548Z",
+      "name": "query.embedding",
+      "durationMs": 29.9,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:14.572Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 8.92,
+      "networkMs": 12.78,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.595Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 76.8,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.754Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 27.1,
+      "wallMs": 27.4,
+      "itemsPerSecond": 36.9,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:14.754Z",
+      "name": "query.embedding",
+      "durationMs": 27.1,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:14.776Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 2.25,
+      "networkMs": 18.65,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.802Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 75.2,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.933Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 24.8,
+      "wallMs": 25.3,
+      "itemsPerSecond": 40.32,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:14.933Z",
+      "name": "query.embedding",
+      "durationMs": 24.8,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:14.962Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 9.89,
+      "networkMs": 17.01,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:14.988Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 80.1,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:15.200Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 40.5,
+      "wallMs": 40.7,
+      "itemsPerSecond": 24.69,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:15.201Z",
+      "name": "query.embedding",
+      "durationMs": 40.5,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:15.219Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 2.61,
+      "networkMs": 15.49,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:15.248Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 88.7,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:15.423Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 41.8,
+      "wallMs": 42.2,
+      "itemsPerSecond": 23.92,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:15.423Z",
+      "name": "query.embedding",
+      "durationMs": 41.8,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:15.457Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 15.99,
+      "networkMs": 16.81,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:15.458Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 77,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:15.642Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 44.3,
+      "wallMs": 44.6,
+      "itemsPerSecond": 22.57,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:15.643Z",
+      "name": "query.embedding",
+      "durationMs": 44.3,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:15.663Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 5.6,
+      "networkMs": 14.3,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:15.665Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 67.2,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:15.848Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 43,
+      "wallMs": 43.4,
+      "itemsPerSecond": 23.26,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:15.849Z",
+      "name": "query.embedding",
+      "durationMs": 43,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "at": "2026-10-30T02:16:15.873Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 8.29,
+      "networkMs": 15.41,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:15.897Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 91.5,
+      "resultCount": 7
+    }
+  ],
+  "complete": true
+}

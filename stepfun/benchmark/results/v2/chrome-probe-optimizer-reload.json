@@ -1,0 +1,147 @@
+{
+  "channel": "chrome",
+  "started": "2026-10-30T01:27:55.478Z",
+  "layers": {
+    "L0": {
+      "status": "PASS",
+      "url": "http://127.0.0.1:5174/probe.html"
+    },
+    "L1": {
+      "status": "PASS",
+      "url": "http://127.0.0.1:5174/embedding-lab.html"
+    },
+    "L2": {
+      "status": "PASS",
+      "reply": 42
+    },
+    "L3": {
+      "status": "BLOCKED"
+    }
+  },
+  "console": [
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    }
+  ],
+  "errors": [
+    {
+      "stage": "launch-or-layer",
+      "message": "SyntaxError: Unexpected token 'N', \"No run yet.\" is not valid JSON\n    at JSON.parse (<anonymous>)\n    at file:///D:/OceanBase/PowerContext-stepfun/stepfun/scripts/browser-probe.mjs:33:21"
+    }
+  ],
+  "network": [
+    {
+      "url": "http://127.0.0.1:5174/probe.html",
+      "status": 200,
+      "contentType": "text/html",
+      "contentLength": "388"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@vite/client",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "224218"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@react-refresh",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "118071"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/vite/dist/client/env.mjs",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "3478"
+    },
+    {
+      "url": "http://127.0.0.1:5174/embedding-lab.html",
+      "status": 200,
+      "contentType": "text/html",
+      "contentLength": "2732"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@vite/client",
+      "status": 304
+    },
+    {
+      "url": "http://127.0.0.1:5174/@react-refresh",
+      "status": 304
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/embedding-lab.ts",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "19794"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/vite/dist/client/env.mjs",
+      "status": 304
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/model.json?import",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "1965"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/embedding.ts",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "5857"
+    },
+    {
+      "url": "blob:http://127.0.0.1:5174/af3ac8c9-84d5-40f0-9a7a-d04e1b394400",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "40"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/embedding-worker.ts?worker_file&type=module",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "18148"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/vite/dist/client/env.mjs",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "3478"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/model.json?import",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "1965"
+    },
+    {
+      "url": "http://127.0.0.1:5174/embedding-lab.html",
+      "status": 200,
+      "contentType": "text/html",
+      "contentLength": "2732"
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/embedding-lab.ts",
+      "status": 304
+    }
+  ],
+  "version": "156.0.8078.73",
+  "finished": "2026-10-30T01:27:57.629Z"
+}

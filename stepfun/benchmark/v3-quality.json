@@ -1,0 +1,18 @@
+{
+  "documents": [
+    { "name": "database.md", "text": "A database combines semantic vector search and full text search using reciprocal rank fusion." },
+    { "name": "privacy.md", "text": "The browser creates embeddings on the user's device to keep text private from remote inference services." },
+    { "name": "index.md", "text": "After an incremental import the database refreshes its index so new document chunks can be retrieved." },
+    { "name": "weather.md", "text": "A weekend weather forecast predicts rain and cooler temperatures in the mountains." },
+    { "name": "garden.md", "text": "Gardeners plant tomatoes in spring and water them regularly in sunny weather." },
+    { "name": "zh-search.md", "text": "数据库使用向量检索和全文检索查找相关文档，并在数据库内部融合搜索结果。" },
+    { "name": "zh-privacy.md", "text": "浏览器在本地生成文本向量，减少将用户文档发送到远程服务的需要。" }
+  ],
+  "queries": [
+    { "id": "en-hybrid", "language": "en", "text": "How are semantic and keyword results combined by a database?", "relevant": ["database.md"] },
+    { "id": "en-privacy", "language": "en", "text": "How can local browser processing protect private documents?", "relevant": ["privacy.md"] },
+    { "id": "en-index", "language": "en", "text": "When can newly inserted chunks be searched?", "relevant": ["index.md"] },
+    { "id": "zh-search", "language": "zh", "text": "数据库如何融合全文和向量搜索？", "relevant": ["zh-search.md"] },
+    { "id": "cross-language", "language": "cross", "text": "浏览器本地生成向量如何保护隐私？", "relevant": ["privacy.md", "zh-privacy.md"] }
+  ]
+}

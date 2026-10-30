@@ -1,0 +1,7 @@
+node_modules/
+frontend/dist/
+frontend/public/models/
+.data/
+.env
+playwright-report/
+test-results/

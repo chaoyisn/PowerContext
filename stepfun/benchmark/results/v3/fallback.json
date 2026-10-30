@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-30T02:14:38.652Z",
+  "testOnlyInjection": true,
+  "cases": [
+    {
+      "mode": "unavailable",
+      "errors": [],
+      "result": {
+        "backend": "WASM",
+        "dtype": "q8",
+        "fallbackReason": "WebGPU adapter unavailable",
+        "vectors": [
+          {
+            "dimension": 384,
+            "norm": 0.9999996845194032,
+            "finite": true,
+            "sha256": "5acf45e69a65d4b571f30970665f6f62c0c878133e1bea682a67b2ddac0d7717"
+          },
+          {
+            "dimension": 384,
+            "norm": 1.0000001586066594,
+            "finite": true,
+            "sha256": "b0ac1234d9c5dbe2188baea58c40cb880acac21e90faf8605a0101c307429937"
+          },
+          {
+            "dimension": 384,
+            "norm": 0.9999996845194032,
+            "finite": true,
+            "sha256": "5acf45e69a65d4b571f30970665f6f62c0c878133e1bea682a67b2ddac0d7717"
+          }
+        ],
+        "differentInputL2": 1.3018942418902826,
+        "repeatInputL2": 0,
+        "initMs": 1564.199999999255,
+        "inferenceMs": 43.099999997764826
+      },
+      "pass": true
+    },
+    {
+      "mode": "initialization-failure",
+      "errors": [],
+      "result": {
+        "backend": "WASM",
+        "dtype": "q8",
+        "fallbackReason": "Simulated WebGPU initialization failure",
+        "vectors": [
+          {
+            "dimension": 384,
+            "norm": 0.9999996845194032,
+            "finite": true,
+            "sha256": "5acf45e69a65d4b571f30970665f6f62c0c878133e1bea682a67b2ddac0d7717"
+          },
+          {
+            "dimension": 384,
+            "norm": 1.0000001586066594,
+            "finite": true,
+            "sha256": "b0ac1234d9c5dbe2188baea58c40cb880acac21e90faf8605a0101c307429937"
+          },
+          {
+            "dimension": 384,
+            "norm": 0.9999996845194032,
+            "finite": true,
+            "sha256": "5acf45e69a65d4b571f30970665f6f62c0c878133e1bea682a67b2ddac0d7717"
+          }
+        ],
+        "differentInputL2": 1.3018942418902826,
+        "repeatInputL2": 0,
+        "initMs": 1673.3999999985099,
+        "inferenceMs": 35
+      },
+      "pass": true
+    }
+  ]
+}

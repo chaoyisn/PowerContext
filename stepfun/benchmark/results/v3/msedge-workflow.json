@@ -1,0 +1,670 @@
+{
+  "started": "2026-10-30T02:21:56.660Z",
+  "events": [
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "vectors": []
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/health",
+      "vectors": []
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "vectors": []
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/health",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "status": 200
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/health",
+      "status": 200,
+      "body": {
+        "ok": true,
+        "sdk": "seekdb@1.4.0",
+        "database": "test"
+      }
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "status": 200
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/health",
+      "status": 200,
+      "body": {
+        "ok": true,
+        "sdk": "seekdb@1.4.0",
+        "database": "test"
+      }
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+      "vectors": []
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "status": 201
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "status": 200
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "status": 200,
+      "body": {
+        "documents": []
+      }
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "status": 200,
+      "body": {
+        "documents": []
+      }
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/deduplicate",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/deduplicate",
+      "status": 200,
+      "body": {
+        "duplicates": []
+      }
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "filename": "vectors.md",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+      "dtype": "q8",
+      "vectors": [
+        {
+          "dimension": 384,
+          "finite": true,
+          "norm": 0.9999999352371066,
+          "sha256": "ad10d6a408f7e4ea3b3db003ba9637e354c4e13928306a514b09075c99d4d1fc"
+        }
+      ]
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "status": 201,
+      "body": {
+        "duplicate": false,
+        "documentId": "7c79aeb2d8371119324cf3d99a66a47b185cff7767b6fdd2bc1e38eef74d2aba",
+        "chunks": 1,
+        "writeMs": 97.26579999999376,
+        "refreshMs": 615.5720999999903,
+        "visibilityMs": 5.450100000016391
+      }
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "status": 200,
+      "body": {
+        "documents": [
+          {
+            "id": "7c79aeb2d8371119324cf3d99a66a47b185cff7767b6fdd2bc1e38eef74d2aba",
+            "filename": "vectors.md",
+            "sha256": "f3c47357dc6f6f3b3b866f4645e297b9819575a240b33c3c13bf20c04b839002",
+            "chunkCount": 1,
+            "status": "imported",
+            "createdAt": "2026-10-30T02:22:00.000Z"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "status": 200
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/deduplicate",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/deduplicate",
+      "status": 200,
+      "body": {
+        "duplicates": []
+      }
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "filename": "privacy.md",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+      "dtype": "q8",
+      "vectors": [
+        {
+          "dimension": 384,
+          "finite": true,
+          "norm": 0.9999999387348355,
+          "sha256": "4a0f6d9ed94dc51bbe259f1c71925756a16f0b83666d078dba3dae6ce25031d8"
+        }
+      ]
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "status": 201,
+      "body": {
+        "duplicate": false,
+        "documentId": "c71ce7b4698b86dfa260eeea661996f075f3d557c8f9bc1ab993c5fd35edaa8f",
+        "chunks": 1,
+        "writeMs": 8.076800000009825,
+        "refreshMs": 603.5834000000032,
+        "visibilityMs": 1.2682999999960884
+      }
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "status": 200,
+      "body": {
+        "documents": [
+          {
+            "id": "c71ce7b4698b86dfa260eeea661996f075f3d557c8f9bc1ab993c5fd35edaa8f",
+            "filename": "privacy.md",
+            "sha256": "8bac0f6b48dd4e0f1cecc6c497673c10368b58aef133136948a55c9f3a1bb322",
+            "chunkCount": 1,
+            "status": "imported",
+            "createdAt": "2026-10-30T02:22:01.000Z"
+          },
+          {
+            "id": "7c79aeb2d8371119324cf3d99a66a47b185cff7767b6fdd2bc1e38eef74d2aba",
+            "filename": "vectors.md",
+            "sha256": "f3c47357dc6f6f3b3b866f4645e297b9819575a240b33c3c13bf20c04b839002",
+            "chunkCount": 1,
+            "status": "imported",
+            "createdAt": "2026-10-30T02:22:00.000Z"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "status": 200
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/deduplicate",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/deduplicate",
+      "status": 200,
+      "body": {
+        "duplicates": []
+      }
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "filename": "indexes.md",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+      "dtype": "q8",
+      "vectors": [
+        {
+          "dimension": 384,
+          "finite": true,
+          "norm": 1.0000002702777795,
+          "sha256": "5178dca1b0853e4272ed263b05ef4cc86351ca59089cd7b5f014c1912279ce53"
+        }
+      ]
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "status": 201,
+      "body": {
+        "duplicate": false,
+        "documentId": "9bfed6cb9ec87ad10a517edfe86439f51d3fde8970816cf1acb62eec20c06ac1",
+        "chunks": 1,
+        "writeMs": 21.031199999997625,
+        "refreshMs": 503.50950000001467,
+        "visibilityMs": 1.3929000000061933
+      }
+    },
+    {
+      "kind": "request",
+      "method": "GET",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/documents",
+      "status": 200,
+      "body": {
+        "documents": [
+          {
+            "id": "9bfed6cb9ec87ad10a517edfe86439f51d3fde8970816cf1acb62eec20c06ac1",
+            "filename": "indexes.md",
+            "sha256": "d8d00de62aa6982489ab9c88e8e09d49466ff1e7636645cdb6af565231cf4244",
+            "chunkCount": 1,
+            "status": "imported",
+            "createdAt": "2026-10-30T02:22:02.000Z"
+          },
+          {
+            "id": "c71ce7b4698b86dfa260eeea661996f075f3d557c8f9bc1ab993c5fd35edaa8f",
+            "filename": "privacy.md",
+            "sha256": "8bac0f6b48dd4e0f1cecc6c497673c10368b58aef133136948a55c9f3a1bb322",
+            "chunkCount": 1,
+            "status": "imported",
+            "createdAt": "2026-10-30T02:22:01.000Z"
+          },
+          {
+            "id": "7c79aeb2d8371119324cf3d99a66a47b185cff7767b6fdd2bc1e38eef74d2aba",
+            "filename": "vectors.md",
+            "sha256": "f3c47357dc6f6f3b3b866f4645e297b9819575a240b33c3c13bf20c04b839002",
+            "chunkCount": 1,
+            "status": "imported",
+            "createdAt": "2026-10-30T02:22:00.000Z"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs",
+      "status": 200
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/deduplicate",
+      "vectors": []
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/deduplicate",
+      "status": 200,
+      "body": {
+        "duplicates": [
+          "f3c47357dc6f6f3b3b866f4645e297b9819575a240b33c3c13bf20c04b839002"
+        ]
+      }
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/search",
+      "mode": "hybrid",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+      "dtype": "q8",
+      "vectors": [
+        {
+          "dimension": 384,
+          "finite": true,
+          "norm": 1.0000000973739813,
+          "sha256": "5e8ab1903192e0db3371d4751b57225342b17e85a6752e17cff8606de6a455f7"
+        }
+      ]
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:5174/api/kbs/f0719cfafe0a42388c0e8161ec83ab9b/search",
+      "status": 200,
+      "body": {
+        "results": [
+          {
+            "id": "2a2036734d73226169b82e3ad4570ac2b5cd2089de2ef45ac0430f16f04b784f",
+            "document": "Browser-side embeddings can improve privacy. The browser computes vectors locally before storage.",
+            "metadata": {
+              "dtype": "q8",
+              "sha256": "8bac0f6b48dd4e0f1cecc6c497673c10368b58aef133136948a55c9f3a1bb322",
+              "filename": "privacy.md",
+              "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+              "chunkCount": 1,
+              "chunkIndex": 0,
+              "documentId": "c71ce7b4698b86dfa260eeea661996f075f3d557c8f9bc1ab993c5fd35edaa8f"
+            },
+            "score": 0.0328
+          },
+          {
+            "id": "b24a25d15910ffd0bf926fea281f0fc26d51b216d8a60e95448b3d3cf7f4dd9c",
+            "document": "A seekdb index refresh makes newly inserted document chunks available for hybrid search.",
+            "metadata": {
+              "dtype": "q8",
+              "sha256": "d8d00de62aa6982489ab9c88e8e09d49466ff1e7636645cdb6af565231cf4244",
+              "filename": "indexes.md",
+              "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+              "chunkCount": 1,
+              "chunkIndex": 0,
+              "documentId": "9bfed6cb9ec87ad10a517edfe86439f51d3fde8970816cf1acb62eec20c06ac1"
+            },
+            "score": 0.0161
+          },
+          {
+            "id": "ae0739dc0767130d54210338a4353eb7b90117704a22eabeffee6d44b3e6c3a7",
+            "document": "The database supports vector search. Semantic similarity finds documents by meaning.",
+            "metadata": {
+              "dtype": "q8",
+              "sha256": "f3c47357dc6f6f3b3b866f4645e297b9819575a240b33c3c13bf20c04b839002",
+              "filename": "vectors.md",
+              "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+              "chunkCount": 1,
+              "chunkIndex": 0,
+              "documentId": "7c79aeb2d8371119324cf3d99a66a47b185cff7767b6fdd2bc1e38eef74d2aba"
+            },
+            "score": 0.0159
+          }
+        ],
+        "dbMs": 42.21150000000489,
+        "mode": "hybrid"
+      }
+    }
+  ],
+  "errors": [],
+  "channel": "msedge",
+  "headed": true,
+  "version": "156.0.4314.50",
+  "kbId": "f0719cfafe0a42388c0e8161ec83ab9b",
+  "duplicate": "PASS",
+  "results": [
+    "01▤privacy.md·分块 1Browser-side embeddings can improve privacy. The browser computes vectors locally before storage.向量 + 全文2a2036734d73…数据库得分0.0328",
+    "02▤indexes.md·分块 1A seekdb index refresh makes newly inserted document chunks available for hybrid search.向量 + 全文b24a25d15910…数据库得分0.0161",
+    "03▤vectors.md·分块 1The database supports vector search. Semantic similarity finds documents by meaning.向量 + 全文ae0739dc0767…数据库得分0.0159"
+  ],
+  "performance": [
+    {
+      "at": "2026-10-30T02:21:58.348Z",
+      "name": "model.asset",
+      "file": "config.json",
+      "bytes": 650,
+      "acquisitionMs": 0.1,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:21:58.363Z",
+      "name": "model.asset",
+      "file": "tokenizer_config.json",
+      "bytes": 366,
+      "acquisitionMs": 14.7,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:21:58.363Z",
+      "name": "model.asset",
+      "file": "tokenizer.json",
+      "bytes": 711661,
+      "acquisitionMs": 14.8,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:21:58.790Z",
+      "name": "model.asset",
+      "file": "onnx/model_quantized.onnx",
+      "bytes": 22972370,
+      "acquisitionMs": 378.5,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:21:59.909Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 1809,
+      "workerInitMs": 1658.9,
+      "modelAssetBytes": 23685047,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:22:00.526Z",
+      "name": "network.deduplicate",
+      "durationMs": 11.2,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:22:00.537Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 11,
+      "wallMs": 11.4,
+      "itemsPerSecond": 90.91,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:22:01.299Z",
+      "name": "network.document-write",
+      "durationMs": 761.5,
+      "bytes": 84,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:01.299Z",
+      "name": "seekdb.write",
+      "durationMs": 97.27,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:01.299Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 615.57,
+      "visibleMs": 5.45,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:01.397Z",
+      "name": "network.deduplicate",
+      "durationMs": 9.2,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:22:01.409Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 11.9,
+      "wallMs": 12,
+      "itemsPerSecond": 84.03,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:22:02.050Z",
+      "name": "network.document-write",
+      "durationMs": 641.3,
+      "bytes": 97,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:02.051Z",
+      "name": "seekdb.write",
+      "durationMs": 8.08,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:02.051Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 603.58,
+      "visibleMs": 1.27,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:02.266Z",
+      "name": "network.deduplicate",
+      "durationMs": 10.1,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:22:02.277Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 10.4,
+      "wallMs": 10.8,
+      "itemsPerSecond": 96.15,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:22:02.830Z",
+      "name": "network.document-write",
+      "durationMs": 552.6,
+      "bytes": 88,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:02.830Z",
+      "name": "seekdb.write",
+      "durationMs": 21.03,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:02.830Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 503.51,
+      "visibleMs": 1.39,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:22:03.133Z",
+      "name": "network.deduplicate",
+      "durationMs": 8.6,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:22:03.288Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 9,
+      "wallMs": 9.5,
+      "itemsPerSecond": 111.11,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:22:03.288Z",
+      "name": "query.embedding",
+      "durationMs": 9,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:22:03.352Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 42.21,
+      "networkMs": 17.99,
+      "resultCount": 3
+    },
+    {
+      "at": "2026-10-30T02:22:03.392Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 113,
+      "resultCount": 3
+    }
+  ],
+  "completed": true,
+  "finished": "2026-10-30T02:22:04.098Z"
+}

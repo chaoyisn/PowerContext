@@ -1,0 +1,39 @@
+{
+  "measuredAt": "2026-10-29T18:39:26.055Z",
+  "source": "real seekdb server; 4D SDK fixture vectors",
+  "sdk": "seekdb@1.4.0",
+  "embeddingFunctionDisabled": true,
+  "readback": {
+    "ids": [
+      "p0-seekdb-hit"
+    ],
+    "document": "seekdb combines OceanBase vector data and full text search",
+    "vector": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "metadata": {
+      "chunk": 0,
+      "source": "p0"
+    }
+  },
+  "hybrid": {
+    "ids": [
+      "p0-seekdb-hit",
+      "p0-other"
+    ],
+    "documents": [
+      "seekdb combines OceanBase vector data and full text search",
+      "A separate note about unrelated storage systems"
+    ],
+    "distances": [
+      0.0328,
+      0.0161
+    ]
+  },
+  "seekdbSqlPath": [
+    "SELECT DBMS_HYBRID_SEARCH.GET_SQL('c$v2$d1c23501d3c211f1ab04e61998311c62', @search_parm) as query_sql FROM dual"
+  ]
+}

@@ -1,0 +1,48 @@
+
+Running 1 test using 1 worker
+
+(node:3240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chrome] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes (3.8s)
+
+
+  1) [chrome] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('quality-chrome-1793327071661')
+    Expected: visible
+    Error: strict mode violation: getByText('quality-chrome-1793327071661') resolved to 2 elements:
+        1) <option value="e0f5ee652e2e4eafb6609fcadd121ad9">quality-chrome-1793327071661</option> aka getByLabel('切换知识库')
+        2) <div>已创建知识库「quality-chrome-1793327071661」</div> aka getByText('已创建知识库「quality-chrome-')
+
+    Call log:
+      - Expect "toBeVisible" getByText('quality-chrome-1793327071661') with timeout 15000ms
+      - waiting for getByText('quality-chrome-1793327071661')
+
+
+      21 |   await page.locator(".modal-card input").fill(knowledgeBaseName);
+      22 |   await page.getByRole("button", { name: "创建知识库" }).click();
+    > 23 |   await expect(page.getByText(knowledgeBaseName)).toBeVisible();
+         |                                                   ^
+      24 |   const primaryKbId = await page.getByLabel("切换知识库").inputValue();
+      25 |
+      26 |   const input = page.locator('input[type="file"]');
+        at D:\OceanBase\PowerContext-stepfun\stepfun\tests\e2e\quality.spec.ts:23:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chrome] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes 

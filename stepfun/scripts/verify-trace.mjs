@@ -1,0 +1,21 @@
+import assert from "node:assert/strict";
+import { readFile, writeFile } from "node:fs/promises";
+
+const workflow = JSON.parse(await readFile("benchmark/results/v3/chrome-workflow.json", "utf8"));
+const lines = (await readFile("benchmark/results/v3/api-sql-trace.log", "utf8")).trim().split(/\r?\n/).map(JSON.parse);
+const event = lines.find(row => row.event === "seekdb.hybrid.trace" && row.kbId === workflow.kbId);
+assert.ok(event, "No trace for browser workflow knowledge base");
+const generated = event.trace.find(row => row.generatedSqlSha256);
+const executed = event.trace.find(row => row.sqlSha256 === generated?.generatedSqlSha256);
+const searchRequest = workflow.events.find(row => row.kind === "request" && row.url.endsWith("/search"));
+const response = workflow.events.find(row => row.kind === "response" && row.url.endsWith("/search"));
+assert.ok(generated && executed && searchRequest && response);
+assert.equal(searchRequest.vectors[0].dimension, 384);
+assert.equal(searchRequest.vectors[0].finite, true);
+const dbRows = executed.rows.map(row => ({ id: row._id?.type === "Buffer" ? Buffer.from(row._id.data).toString("utf8") : String(row._id), document: row.document, filename: row.metadata.filename, score: Number(row._score) }));
+const apiRows = response.body.results.map(row => ({ id: row.id, document: row.document, filename: row.metadata.filename, score: row.score }));
+assert.deepEqual(dbRows, apiRows);
+assert.equal(executed.rowCount, apiRows.length);
+const result = { source: "seekdb-js execute boundary, not database audit", kbId: workflow.kbId, generatedSqlSha256: generated.generatedSqlSha256, executedSqlSha256: executed.sqlSha256, elapsedMs: executed.elapsedMs, rowCount: executed.rowCount, rowsMatchApiIncludingOrder: true, queryVector: searchRequest.vectors[0], rows: dbRows };
+await writeFile("benchmark/results/v3/trace-verification.json", JSON.stringify(result, null, 2) + "\n");
+console.log(JSON.stringify(result));

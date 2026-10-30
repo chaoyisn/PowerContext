@@ -1,0 +1,16 @@
+
+> edgeseek@0.1.0 test:unit
+> node --test tests/unit/*.test.mjs
+
+✔ recall@K and MRR measure labeled retrieval results (0.8766ms)
+✔ compression ratio is calculated only from two measured positive sizes (0.1257ms)
+✔ chunkText keeps bounded chunks with overlap and handles blank input (1.5401ms)
+✔ sha256Text produces the standard SHA-256 digest (6.0324ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 125.4251

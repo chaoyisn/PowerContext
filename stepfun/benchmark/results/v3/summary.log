@@ -1,0 +1,95 @@
+{
+  "quality": {
+    "fp32": {
+      "vector": {
+        "queries": 5,
+        "recall5": 1,
+        "recall10": 1,
+        "ndcg10": 0.9839441578296375
+      },
+      "hybrid": {
+        "queries": 5,
+        "recall5": 1,
+        "recall10": 1,
+        "ndcg10": 0.9839441578296375
+      }
+    },
+    "int8": {
+      "vector": {
+        "queries": 5,
+        "recall5": 1,
+        "recall10": 1,
+        "ndcg10": 0.9839441578296375
+      },
+      "hybrid": {
+        "queries": 5,
+        "recall5": 1,
+        "recall10": 1,
+        "ndcg10": 0.9839441578296375
+      }
+    },
+    "fp16": {
+      "vector": {
+        "queries": 5,
+        "recall5": 1,
+        "recall10": 1,
+        "ndcg10": 0.9839441578296375
+      },
+      "hybrid": {
+        "queries": 5,
+        "recall5": 1,
+        "recall10": 1,
+        "ndcg10": 0.9839441578296375
+      }
+    }
+  },
+  "batches": [
+    {
+      "batchSize": 1,
+      "runs": 5,
+      "medianMs": 231.10000000149012,
+      "medianItemsPerSecond": 69.23409779271671
+    },
+    {
+      "batchSize": 4,
+      "runs": 5,
+      "medianMs": 333.8999999985099,
+      "medianItemsPerSecond": 47.91853848479007
+    },
+    {
+      "batchSize": 8,
+      "runs": 5,
+      "medianMs": 359,
+      "medianItemsPerSecond": 44.56824512534819
+    },
+    {
+      "batchSize": 16,
+      "runs": 5,
+      "medianMs": 348.19999999925494,
+      "medianItemsPerSecond": 45.95060310176403
+    }
+  ],
+  "indexStrategies": {
+    "single-refresh": {
+      "samples": 5,
+      "medianMs": 2492.7533999999996
+    },
+    "batch-refresh": {
+      "samples": 5,
+      "medianMs": 753.6559000000016
+    },
+    "incremental-refresh": {
+      "samples": 5,
+      "medianMs": 1165.4704999999994
+    },
+    "deferred-refresh": {
+      "samples": 5,
+      "medianMs": 671.5729000000001
+    }
+  },
+  "caveats": [
+    "Seven candidates; Recall@10 cannot discriminate configurations.",
+    "Batch groups were measured in fixed order on one device; browser peak memory unavailable.",
+    "Index strategy timings exclude collection creation, API and browser network overhead."
+  ]
+}
