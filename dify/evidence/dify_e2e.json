@@ -1,0 +1,166 @@
+{
+  "dify_api": "http://127.0.0.1:5001",
+  "backend": "http://127.0.0.1:8848",
+  "app_id": "0a401cef-42e7-4190-b6ee-6be2e58eb386",
+  "players": {
+    "a": "e2e_a_bc4fe333",
+    "b": "e2e_b_bc4fe333",
+    "c": "e2e_c_bc4fe333",
+    "d": "e2e_d_bc4fe333"
+  },
+  "passed": 23,
+  "total": 23,
+  "checks": [
+    {
+      "code": "P0",
+      "title": "后端依赖（seekdb + PowerContext）可用",
+      "passed": true,
+      "detail": "seekdb=ok powercontext=True"
+    },
+    {
+      "code": "P1",
+      "title": "登录 Dify Console",
+      "passed": true,
+      "detail": "登录成功"
+    },
+    {
+      "code": "T1",
+      "title": "DSL 可导入 Dify 并生成应用",
+      "passed": true,
+      "detail": "app_id=0a401cef-42e7-4190-b6ee-6be2e58eb386 status=completed dsl_version=0.4.0"
+    },
+    {
+      "code": "T1.1",
+      "title": "导入后 DSL 仍可导出（图未被改写）",
+      "passed": true,
+      "detail": "导出 33059 字符"
+    },
+    {
+      "code": "T2",
+      "title": "新玩家进入小镇并与 NPC 互动",
+      "passed": true,
+      "detail": "answer='好胆量！根据镇规第三条，当众窃取镇长财物者，须加倍赔偿并接受审讯。立刻交还金王冠，到镇长办公室报到。很好，这笔账本镇长记下了，日后定会一笔一笔跟你算清。'"
+    },
+    {
+      "code": "T2.1",
+      "title": "玩家在 seekdb 中落库",
+      "passed": true,
+      "detail": "player=e2e_a_bc4fe333"
+    },
+    {
+      "code": "T3",
+      "title": "动作真的修改了 seekdb 游戏数据",
+      "passed": true,
+      "detail": "王冠到手=True 镇长怨念=25 好感=-15"
+    },
+    {
+      "code": "T3.1",
+      "title": "偷王冠触发镇长调查支线",
+      "passed": true,
+      "detail": "plots=[('plot_crown_theft', 'investigating')]"
+    },
+    {
+      "code": "T4",
+      "title": "关键事件真的写进了 PowerContext",
+      "passed": true,
+      "detail": "key_events=1 命中=1；样本=['[e2e_a_bc4fe333] 偷走了 奥托镇长 的「golden_crown」。奥托镇长 因此记恨上了他。']"
+    },
+    {
+      "code": "T5",
+      "title": "新会话能召回上一轮的关键记忆",
+      "passed": true,
+      "detail": "新会话召回 1 条；台词='你好。根据镇规关于调查期间人员往来之规定，嫌疑人与镇长接触须保持必要的礼节和距离。至于你偷走金王冠那件事，我记得清清楚楚，调查也仍在进行。今天既然只是打招呼，我便暂不额外追究；下次来访，请先报告，再敲'"
+    },
+    {
+      "code": "T5.1",
+      "title": "新会话里 NPC 的台词体现了旧账（记忆真的影响了体验）",
+      "passed": true,
+      "detail": "answer='你好。根据镇规关于调查期间人员往来之规定，嫌疑人与镇长接触须保持必要的礼节和距离。至于你偷走金王冠那件事，我记得清清楚楚，调查也仍在进行。今天既然只是打招呼，我便暂不额外追究；下次来访，请先报告，再敲门。'"
+    },
+    {
+      "code": "T6",
+      "title": "玩家 B 读不到玩家 A 的记忆（无跨玩家泄漏）",
+      "passed": true,
+      "detail": "B 召回 1 条，其中含 A 的 0 条；B 自己的=['[e2e_b_bc4fe333] 因为「偷窃」被 奥托镇长 记恨，怨念 +25。']"
+    },
+    {
+      "code": "T7",
+      "title": "同样输入在不同历史下触发不同的关系状态",
+      "passed": true,
+      "detail": "有前科的 A 再偷一次：怨念=50；全新玩家 C 第一次：怨念=25"
+    },
+    {
+      "code": "T7.1",
+      "title": "重复作案的怨念继续累积",
+      "passed": true,
+      "detail": "C=25 → A=50（每次偷窃 +25）"
+    },
+    {
+      "code": "T7.2",
+      "title": "有前科的玩家被针对得更明显（台词不同）",
+      "passed": true,
+      "detail": "A 的台词='很好，你亲口承认了，倒也省去本镇查证的时间。根据镇规，盗窃镇长授权财物者，须立刻归还原物并接受公开问询。那顶金王冠就在你身上，本镇长已经连日期带证词一并记入日记'；C 的台词='根据镇规第三条，盗窃镇长金王冠属于公然损害镇长权威。此事我已记入日记：嫌疑人一名，企图一桩，性质恶劣。请立刻归还王冠并到镇公所说明，否则我将召集镇民公开审理。你'"
+    },
+    {
+      "code": "T8.1",
+      "title": "重复请求被幂等处理（不重复改状态）",
+      "passed": true,
+      "detail": "第一次后怨念=50（起始 25）；第二次返回 duplicate=False/True"
+    },
+    {
+      "code": "T8.2",
+      "title": "同一幂等键配不同内容被拒绝（409）",
+      "passed": true,
+      "detail": "HTTP 409 code=idempotency_conflict"
+    },
+    {
+      "code": "T8.3",
+      "title": "非法输入被拒绝（400）",
+      "passed": true,
+      "detail": "HTTP 400 code=invalid_player_id"
+    },
+    {
+      "code": "T8.4",
+      "title": "未知玩家被拒绝（404）",
+      "passed": true,
+      "detail": "HTTP 404 code=unknown_player"
+    },
+    {
+      "code": "T8.5",
+      "title": "超长输入被拒绝（400）",
+      "passed": true,
+      "detail": "HTTP 400 code=message_too_long"
+    },
+    {
+      "code": "T8.6",
+      "title": "Dify 侧遇到非法玩家 ID 时如实说明而不是崩溃",
+      "passed": true,
+      "detail": "status=succeeded answer='玩家ID只能包含字母、数字、下划线、连字符、点和冒号，长度 1-64'"
+    },
+    {
+      "code": "T8.7",
+      "title": "违反道具规则的请求被拒绝且不报成功",
+      "passed": true,
+      "detail": "HTTP 409 code=item_not_transferable"
+    },
+    {
+      "code": "T9",
+      "title": "全新玩家可在干净环境下完成一整轮交互",
+      "passed": true,
+      "detail": "answer='下午好，尊敬的市民。根据镇规第三条，广场内禁止喧哗、奔跑以及给那头肥猫喂食；违者视情节轻重处以训诫。若只是问好，自然合规。'"
+    }
+  ],
+  "answers": {
+    "a_turn1": "好胆量！根据镇规第三条，当众窃取镇长财物者，须加倍赔偿并接受审讯。立刻交还金王冠，到镇长办公室报到。很好，这笔账本镇长记下了，日后定会一笔一笔跟你算清。",
+    "a_turn2_new_session": "你好。根据镇规关于调查期间人员往来之规定，嫌疑人与镇长接触须保持必要的礼节和距离。至于你偷走金王冠那件事，我记得清清楚楚，调查也仍在进行。今天既然只是打招呼，我便暂不额外追究；下次来访，请先报告，再敲门。",
+    "b_turn": "根据镇规第三条，觊觎镇长印信者，以妨害公务论处。官方金王冠乃本镇权威象征，岂容你偷盗？此事我已记入日记，胆敢伸手，便等着镇务所按程序请你喝茶吧。"
+  },
+  "memory": {
+    "a_key_events": [
+      "[e2e_a_bc4fe333] 偷走了 奥托镇长 的「golden_crown」。奥托镇长 因此记恨上了他。"
+    ],
+    "b_key_events": [
+      "[e2e_b_bc4fe333] 因为「偷窃」被 奥托镇长 记恨，怨念 +25。"
+    ]
+  }
+}

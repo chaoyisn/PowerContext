@@ -1,0 +1,48 @@
+{
+  "dify_api": "http://127.0.0.1:5001",
+  "app_id": "34ef87a7-d827-4d0d-8c6e-a3c510442c21",
+  "player_id": "dify_f57793aa",
+  "query": "我要偷走镇长的金王冠",
+  "answer": "根据镇规第三条，盗窃镇长公物者须立即归还，并接受公开调查。你倒胆子不小，竟敢在众目睽睽之下把本镇长的金王冠揣进怀里。此事我已原原本本记入日记，一字都不会忘。限你当场交还，否则全镇都会看着你如何解释。",
+  "run_status": "succeeded",
+  "passed": 6,
+  "total": 6,
+  "checks": [
+    {
+      "code": "T1.0",
+      "title": "登录 Dify Console",
+      "passed": true,
+      "detail": "登录成功"
+    },
+    {
+      "code": "T1.1",
+      "title": "DSL 导入成功",
+      "passed": true,
+      "detail": "app_id=34ef87a7-d827-4d0d-8c6e-a3c510442c21 mode=advanced-chat status=completed dsl=0.4.0"
+    },
+    {
+      "code": "T1.2",
+      "title": "导入后节点结构未被改写",
+      "passed": true,
+      "detail": "本地 13 节点 / 导入后 13 节点"
+    },
+    {
+      "code": "T1.3",
+      "title": "导入后连线数量一致",
+      "passed": true,
+      "detail": "本地 13 条 / 导入后 13 条"
+    },
+    {
+      "code": "T1.4",
+      "title": "运行 Chatflow 得到 NPC 台词",
+      "passed": true,
+      "detail": "player=dify_f57793aa answer='根据镇规第三条，盗窃镇长公物者须立即归还，并接受公开调查。你倒胆子不小，竟敢在众目睽睽之下把本镇长的金王冠揣进怀里。此事我已原原本本记入日记，一字都不会忘。限你当场交还，否则全镇都会看着你如何解释。'"
+    },
+    {
+      "code": "T1.5",
+      "title": "运行状态为 succeeded",
+      "passed": true,
+      "detail": "status=succeeded"
+    }
+  ]
+}

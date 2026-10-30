@@ -1,0 +1,44 @@
+{
+  "results": [
+    {
+      "label": "规则单元测试",
+      "kind": "mock 单元测试",
+      "command": "D:\\Anaconda\\python.exe E:\\OceanBaseContest\\powercontext-minimax\\dify\\scripts\\..\\tests\\test_rules.py",
+      "returncode": 0,
+      "passed": true
+    },
+    {
+      "label": "seekdb 数据层验收",
+      "kind": "真实集成测试",
+      "command": "D:\\Anaconda\\python.exe E:\\OceanBaseContest\\powercontext-minimax\\dify\\scripts\\verify_seekdb.py --json E:\\OceanBaseContest\\powercontext-minimax\\dify\\evidence\\seekdb_verify.json",
+      "returncode": 0,
+      "passed": true
+    },
+    {
+      "label": "后端 API 验收",
+      "kind": "真实集成测试",
+      "command": "D:\\Anaconda\\python.exe E:\\OceanBaseContest\\powercontext-minimax\\dify\\scripts\\verify_backend_api.py --json E:\\OceanBaseContest\\powercontext-minimax\\dify\\evidence\\backend_api_verify.json",
+      "returncode": 0,
+      "passed": true
+    },
+    {
+      "label": "PowerContext 记忆验收",
+      "kind": "真实集成测试",
+      "command": "D:\\Anaconda\\python.exe E:\\OceanBaseContest\\powercontext-minimax\\dify\\scripts\\verify_memory.py --json E:\\OceanBaseContest\\powercontext-minimax\\dify\\evidence\\memory_verify.json",
+      "returncode": 0,
+      "passed": true
+    },
+    {
+      "label": "Dify 全链路 T1–T9 验收",
+      "kind": "真实集成测试",
+      "command": "D:\\Anaconda\\python.exe E:\\OceanBaseContest\\powercontext-minimax\\dify\\scripts\\verify_dify_e2e.py --email admin@memorytown.local --password TownAdmin2026 --json E:\\OceanBaseContest\\powercontext-minimax\\dify\\evidence\\dify_e2e.json",
+      "returncode": 0,
+      "passed": true
+    }
+  ],
+  "integration_passed": 4,
+  "integration_total": 4,
+  "mock_passed": 1,
+  "mock_total": 1,
+  "all_passed": true
+}

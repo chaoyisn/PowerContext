@@ -1,0 +1,389 @@
+# Dify × OceanBase — 《记仇小镇：NPC 的复仇日记》部署编排
+#
+# 这是一个 **精简版** Dify 1.8.0 编排，只包含本赛题真正需要的服务：
+#   api / worker / worker_beat / db / redis / sandbox / plugin_daemon / ssrf_proxy
+#   + town-backend（游戏后端）
+#
+# 与官方 compose 的差异（以及原因）：
+#   1. 不启动 nginx / web 前端。本赛题的验收入口是 Dify 的 **Service API**
+#      （/v1/chat-messages 等），命令行脚本即可驱动，不需要浏览器控制台。
+#   2. 不启动任何向量数据库。本赛题的记忆由 PowerContext 承担，不依赖
+#      Dify 的 Knowledge Retrieval。
+#   3. ssrf_proxy 挂载了额外的 conf.d 允许清单，让 HTTP Request 节点
+#      能访问游戏后端（见 ssrf_proxy/allow-town-backend.conf）。
+#      官方模板最后一行是 `http_access deny all`，默认拒绝一切出网请求。
+#
+# 启动：
+#   cd dify/deploy
+#   cp .env.example .env        # 按需修改
+#   docker compose -f docker-compose.yaml up -d
+#
+# 停止与清理：
+#   docker compose -f docker-compose.yaml down
+#   docker compose -f docker-compose.yaml down -v   # 连同数据卷一起删除
+
+name: memory-town
+
+x-shared-env: &shared-api-worker-env
+  CONSOLE_API_URL: ${CONSOLE_API_URL:-}
+  CONSOLE_WEB_URL: ${CONSOLE_WEB_URL:-}
+  SERVICE_API_URL: ${SERVICE_API_URL:-}
+  APP_API_URL: ${APP_API_URL:-}
+  APP_WEB_URL: ${APP_WEB_URL:-}
+  FILES_URL: ${FILES_URL:-}
+  INTERNAL_FILES_URL: ${INTERNAL_FILES_URL:-}
+  LANG: ${LANG:-zh_Hans.UTF-8}
+  LC_ALL: ${LC_ALL:-zh_Hans.UTF-8}
+  PYTHONIOENCODING: ${PYTHONIOENCODING:-utf-8}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  LOG_FILE: ${LOG_FILE:-/app/logs/server.log}
+  LOG_FILE_MAX_SIZE: ${LOG_FILE_MAX_SIZE:-20}
+  LOG_FILE_BACKUP_COUNT: ${LOG_FILE_BACKUP_COUNT:-5}
+  LOG_DATEFORMAT: ${LOG_DATEFORMAT:-%Y-%m-%d %H:%M:%S}
+  LOG_TZ: ${LOG_TZ:-UTC}
+  DEBUG: ${DEBUG:-false}
+  SECRET_KEY: ${SECRET_KEY:-change-me-to-a-random-64-char-string}
+  INIT_PASSWORD: ${INIT_PASSWORD:-}
+  DEPLOY_ENV: ${DEPLOY_ENV:-PRODUCTION}
+  MIGRATION_ENABLED: ${MIGRATION_ENABLED:-true}
+  FILES_ACCESS_TIMEOUT: ${FILES_ACCESS_TIMEOUT:-300}
+  ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+  REFRESH_TOKEN_EXPIRE_DAYS: ${REFRESH_TOKEN_EXPIRE_DAYS:-30}
+  APP_MAX_ACTIVE_REQUESTS: ${APP_MAX_ACTIVE_REQUESTS:-0}
+  APP_MAX_EXECUTION_TIME: ${APP_MAX_EXECUTION_TIME:-1200}
+  DIFY_BIND_ADDRESS: ${DIFY_BIND_ADDRESS:-0.0.0.0}
+  DIFY_PORT: ${DIFY_PORT:-5001}
+  SERVER_WORKER_AMOUNT: ${SERVER_WORKER_AMOUNT:-1}
+  SERVER_WORKER_CLASS: ${SERVER_WORKER_CLASS:-gevent}
+  SERVER_WORKER_CONNECTIONS: ${SERVER_WORKER_CONNECTIONS:-10}
+  GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-360}
+  CELERY_WORKER_AMOUNT: ${CELERY_WORKER_AMOUNT:-}
+  CELERY_AUTO_SCALE: ${CELERY_AUTO_SCALE:-false}
+  CELERY_MAX_WORKERS: ${CELERY_MAX_WORKERS:-}
+  CELERY_MIN_WORKERS: ${CELERY_MIN_WORKERS:-}
+  ENABLE_WEBSITE_JINAREADER: ${ENABLE_WEBSITE_JINAREADER:-false}
+  ENABLE_WEBSITE_FIRECRAWL: ${ENABLE_WEBSITE_FIRECRAWL:-false}
+  ENABLE_WEBSITE_WATERCRAWL: ${ENABLE_WEBSITE_WATERCRAWL:-false}
+  DB_USERNAME: ${DB_USERNAME:-postgres}
+  DB_PASSWORD: ${DB_PASSWORD:-dify_local_only_2026}
+  DB_HOST: ${DB_HOST:-db}
+  DB_PORT: ${DB_PORT:-5432}
+  DB_DATABASE: ${DB_DATABASE:-dify}
+  SQLALCHEMY_POOL_SIZE: ${SQLALCHEMY_POOL_SIZE:-30}
+  SQLALCHEMY_MAX_OVERFLOW: ${SQLALCHEMY_MAX_OVERFLOW:-10}
+  SQLALCHEMY_POOL_RECYCLE: ${SQLALCHEMY_POOL_RECYCLE:-3600}
+  SQLALCHEMY_ECHO: ${SQLALCHEMY_ECHO:-false}
+  SQLALCHEMY_POOL_PRE_PING: ${SQLALCHEMY_POOL_PRE_PING:-false}
+  SQLALCHEMY_POOL_USE_LIFO: ${SQLALCHEMY_POOL_USE_LIFO:-false}
+  POSTGRES_MAX_CONNECTIONS: ${POSTGRES_MAX_CONNECTIONS:-100}
+  POSTGRES_SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-128MB}
+  POSTGRES_WORK_MEM: ${POSTGRES_WORK_MEM:-4MB}
+  POSTGRES_MAINTENANCE_WORK_MEM: ${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}
+  POSTGRES_EFFECTIVE_CACHE_SIZE: ${POSTGRES_EFFECTIVE_CACHE_SIZE:-4096MB}
+  REDIS_HOST: ${REDIS_HOST:-redis}
+  REDIS_PORT: ${REDIS_PORT:-6379}
+  REDIS_USERNAME: ${REDIS_USERNAME:-}
+  REDIS_PASSWORD: ${REDIS_PASSWORD:-dify_local_only_2026}
+  REDIS_USE_SSL: ${REDIS_USE_SSL:-false}
+  REDIS_SSL_CERT_REQS: ${REDIS_SSL_CERT_REQS:-CERT_NONE}
+  REDIS_SSL_CA_CERTS: ${REDIS_SSL_CA_CERTS:-}
+  REDIS_SSL_CERTFILE: ${REDIS_SSL_CERTFILE:-}
+  REDIS_SSL_KEYFILE: ${REDIS_SSL_KEYFILE:-}
+  REDIS_DB: ${REDIS_DB:-0}
+  REDIS_USE_SENTINEL: ${REDIS_USE_SENTINEL:-false}
+  CELERY_BROKER_URL: ${CELERY_BROKER_URL:-redis://:dify_local_only_2026@redis:6379/1}
+  BROKER_USE_SSL: ${BROKER_USE_SSL:-false}
+  CELERY_SSL_CERT_REQS: ${CELERY_SSL_CERT_REQS:-CERT_NONE}
+  CELERY_SSL_CA_CERTS: ${CELERY_SSL_CA_CERTS:-}
+  CELERY_SSL_CERTFILE: ${CELERY_SSL_CERTFILE:-}
+  CELERY_SSL_KEYFILE: ${CELERY_SSL_KEYFILE:-}
+  CODE_EXECUTION_ENDPOINT: ${CODE_EXECUTION_ENDPOINT:-http://sandbox:8194}
+  CODE_EXECUTION_API_KEY: ${CODE_EXECUTION_API_KEY:-dify-sandbox}
+  CODE_EXECUTION_CONNECT_TIMEOUT: ${CODE_EXECUTION_CONNECT_TIMEOUT:-10}
+  CODE_EXECUTION_READ_TIMEOUT: ${CODE_EXECUTION_READ_TIMEOUT:-60}
+  CODE_EXECUTION_WRITE_TIMEOUT: ${CODE_EXECUTION_WRITE_TIMEOUT:-10}
+  HTTP_REQUEST_NODE_SSL_VERIFY: ${HTTP_REQUEST_NODE_SSL_VERIFY:-false}
+  SSRF_PROXY_HTTP_URL: ${SSRF_PROXY_HTTP_URL:-http://ssrf_proxy:3128}
+  SSRF_PROXY_HTTPS_URL: ${SSRF_PROXY_HTTPS_URL:-http://ssrf_proxy:3128}
+  SSRF_DEFAULT_MAX_RETRIES: ${SSRF_DEFAULT_MAX_RETRIES:-3}
+  SSRF_DEFAULT_TIME_OUT: ${SSRF_DEFAULT_TIME_OUT:-15}
+  SSRF_DEFAULT_CONNECT_TIME_OUT: ${SSRF_DEFAULT_CONNECT_TIME_OUT:-15}
+  SSRF_DEFAULT_READ_TIME_OUT: ${SSRF_DEFAULT_READ_TIME_OUT:-30}
+  SSRF_DEFAULT_WRITE_TIME_OUT: ${SSRF_DEFAULT_WRITE_TIME_OUT:-30}
+  STORAGE_TYPE: ${STORAGE_TYPE:-local}
+  OPENDAL_SCHEME: ${OPENDAL_SCHEME:-}
+  OPENDAL_ACCESS_KEY: ${OPENDAL_ACCESS_KEY:-}
+  OPENDAL_SECRET_KEY: ${OPENDAL_SECRET_KEY:-}
+  OPENDAL_BUCKET: ${OPENDAL_BUCKET:-}
+  OPENDAL_ENDPOINT: ${OPENDAL_ENDPOINT:-}
+  OPENDAL_REGION: ${OPENDAL_REGION:-}
+  MARKETPLACE_ENABLED: ${MARKETPLACE_ENABLED:-true}
+  MARKETPLACE_API_URL: ${MARKETPLACE_API_URL:-https://marketplace.dify.ai}
+  PLUGIN_DAEMON_URL: ${PLUGIN_DAEMON_URL:-http://plugin_daemon:5002}
+  PLUGIN_DAEMON_KEY: ${PLUGIN_DAEMON_KEY:-lYkiYYT6owG+71oLerGzA7GXCgOT++6ovaezWAjpCjf+Sjc3ZtU+qUEi}
+  PLUGIN_DIFY_INNER_API_URL: ${PLUGIN_DIFY_INNER_API_URL:-http://api:5001}
+  PLUGIN_DIFY_INNER_API_KEY: ${PLUGIN_DIFY_INNER_API_KEY:-QaHbTe77CtuXmsfyhR7+vRjI/+XbV1AaFy691iy+kGDv2Jvy0/eAh8Y1}
+  PLUGIN_MAX_PACKAGE_SIZE: ${PLUGIN_MAX_PACKAGE_SIZE:-52428800}
+  PLUGIN_MAX_EXECUTION_TIMEOUT: ${PLUGIN_MAX_EXECUTION_TIMEOUT:-600}
+  PLUGIN_STDIO_BUFFER_SIZE: ${PLUGIN_STDIO_BUFFER_SIZE:-1024}
+  PLUGIN_STDIO_MAX_BUFFER_SIZE: ${PLUGIN_STDIO_MAX_BUFFER_SIZE:-5242880}
+  PLUGIN_WORKING_PATH: ${PLUGIN_WORKING_PATH:-/app/storage/cwd}
+  PLUGIN_STORAGE_TYPE: ${PLUGIN_STORAGE_TYPE:-local}
+  PLUGIN_STORAGE_LOCAL_ROOT: ${PLUGIN_STORAGE_LOCAL_ROOT:-/app/storage}
+  PLUGIN_INSTALLED_PATH: ${PLUGIN_INSTALLED_PATH:-plugin}
+  PLUGIN_PACKAGE_CACHE_PATH: ${PLUGIN_PACKAGE_CACHE_PATH:-plugin_packages}
+  PLUGIN_MEDIA_CACHE_PATH: ${PLUGIN_MEDIA_CACHE_PATH:-assets}
+  PLUGIN_STORAGE_OSS_BUCKET: ${PLUGIN_STORAGE_OSS_BUCKET:-}
+  S3_USE_AWS_MANAGED_IAM: ${S3_USE_AWS_MANAGED_IAM:-false}
+  S3_USE_AWS: ${S3_USE_AWS:-false}
+  S3_ENDPOINT: ${S3_ENDPOINT:-}
+  S3_USE_PATH_STYLE: ${S3_USE_PATH_STYLE:-false}
+  AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
+  AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
+  AWS_REGION: ${AWS_REGION:-}
+  AZURE_BLOB_STORAGE_CONNECTION_STRING: ${AZURE_BLOB_STORAGE_CONNECTION_STRING:-}
+  AZURE_BLOB_STORAGE_CONTAINER_NAME: ${AZURE_BLOB_STORAGE_CONTAINER_NAME:-}
+  TENCENT_COS_SECRET_KEY: ${TENCENT_COS_SECRET_KEY:-}
+  TENCENT_COS_SECRET_ID: ${TENCENT_COS_SECRET_ID:-}
+  TENCENT_COS_REGION: ${TENCENT_COS_REGION:-}
+  TENCENT_COS_BUCKET: ${TENCENT_COS_BUCKET:-}
+  ALIYUN_OSS_REGION: ${ALIYUN_OSS_REGION:-}
+  ALIYUN_OSS_ACCESS_KEY_ID: ${ALIYUN_OSS_ACCESS_KEY_ID:-}
+  ALIYUN_OSS_ACCESS_KEY_SECRET: ${ALIYUN_OSS_ACCESS_KEY_SECRET:-}
+  ALIYUN_OSS_BUCKET: ${ALIYUN_OSS_BUCKET:-}
+  VOLCENGINE_TOS_ENDPOINT: ${VOLCENGINE_TOS_ENDPOINT:-}
+  VOLCENGINE_TOS_ACCESS_KEY: ${VOLCENGINE_TOS_ACCESS_KEY:-}
+  VOLCENGINE_TOS_SECRET_KEY: ${VOLCENGINE_TOS_SECRET_KEY:-}
+  VOLCENGINE_TOS_REGION: ${VOLCENGINE_TOS_REGION:-}
+  GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS:-}
+
+services:
+  # ------------------------------------------------------------------ API
+  api:
+    image: langgenius/dify-api:1.8.0
+    restart: always
+    environment:
+      <<: *shared-api-worker-env
+      MODE: api
+      SENTRY_DSN: ${API_SENTRY_DSN:-}
+      SENTRY_TRACES_SAMPLE_RATE: ${API_SENTRY_TRACES_SAMPLE_RATE:-1.0}
+      SENTRY_PROFILES_SAMPLE_RATE: ${API_SENTRY_PROFILES_SAMPLE_RATE:-1.0}
+      PLUGIN_REMOTE_INSTALL_HOST: ${PLUGIN_REMOTE_INSTALL_HOST:-localhost}
+      PLUGIN_REMOTE_INSTALL_PORT: ${PLUGIN_REMOTE_INSTALL_PORT:-5003}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./volumes/app/storage:/app/api/storage
+    ports:
+      - "${EXPOSE_API_PORT:-5001}:${DIFY_PORT:-5001}"
+    networks:
+      - ssrf_proxy_network
+      - default
+
+  # ------------------------------------------------------------------ worker
+  worker:
+    image: langgenius/dify-api:1.8.0
+    restart: always
+    environment:
+      <<: *shared-api-worker-env
+      MODE: worker
+      SENTRY_DSN: ${API_SENTRY_DSN:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./volumes/app/storage:/app/api/storage
+    networks:
+      - ssrf_proxy_network
+      - default
+
+  worker_beat:
+    image: langgenius/dify-api:1.8.0
+    restart: always
+    environment:
+      <<: *shared-api-worker-env
+      MODE: beat
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - ssrf_proxy_network
+      - default
+
+  # ------------------------------------------------------------------ Dify 自身数据库
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dify}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dify_local_only_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-dify}
+      PGDATA: ${PGDATA:-/var/lib/postgresql/data/pgdata}
+    command: >
+      postgres -c 'max_connections=${POSTGRES_MAX_CONNECTIONS:-100}'
+               -c 'shared_buffers=${POSTGRES_SHARED_BUFFERS:-128MB}'
+               -c 'work_mem=${POSTGRES_WORK_MEM:-4MB}'
+               -c 'maintenance_work_mem=${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}'
+               -c 'effective_cache_size=${POSTGRES_EFFECTIVE_CACHE_SIZE:-4096MB}'
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD', 'pg_isready', '-h', 'db', '-U', '${POSTGRES_USER:-dify}', '-d', '${POSTGRES_DB:-dify}' ]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+
+  redis:
+    image: redis:6-alpine
+    restart: always
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD:-dify_local_only_2026}
+    volumes:
+      - ./volumes/redis/data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD:-dify_local_only_2026}
+    healthcheck:
+      test: [ 'CMD', 'redis-cli', 'ping' ]
+
+  # ------------------------------------------------------------------ sandbox
+  # 本赛题的 Chatflow 不使用 Code 节点（动作判定由后端 Python 完成），
+  # 因此 sandbox 只是留着备用。注意：不要挂载空的 /conf 目录，
+  # 那会遮住镜像自带的 config.yaml，导致 sandbox 启动即 panic。
+  sandbox:
+    image: langgenius/dify-sandbox:0.2.12
+    restart: always
+    environment:
+      API_KEY: ${SANDBOX_API_KEY:-dify-sandbox}
+      GIN_MODE: ${SANDBOX_GIN_MODE:-release}
+      WORKER_TIMEOUT: ${SANDBOX_WORKER_TIMEOUT:-15}
+      ENABLE_NETWORK: ${SANDBOX_ENABLE_NETWORK:-true}
+      HTTP_PROXY: ${SANDBOX_HTTP_PROXY:-http://ssrf_proxy:3128}
+      HTTPS_PROXY: ${SANDBOX_HTTPS_PROXY:-http://ssrf_proxy:3128}
+      SANDBOX_PORT: ${SANDBOX_PORT:-8194}
+      PIP_MIRROR_URL: ${PIP_MIRROR_URL:-}
+    volumes:
+      - ./volumes/sandbox/dependencies:/dependencies
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://localhost:8194/health' ]
+    networks:
+      - ssrf_proxy_network
+
+  # ------------------------------------------------------------------ plugin daemon
+  plugin_daemon:
+    image: langgenius/dify-plugin-daemon:0.2.0-local
+    restart: always
+    environment:
+      <<: *shared-api-worker-env
+      DB_DATABASE: ${DB_PLUGIN_DATABASE:-dify_plugin}
+      SERVER_PORT: ${PLUGIN_DAEMON_PORT:-5002}
+      SERVER_KEY: ${PLUGIN_DAEMON_KEY:-lYkiYYT6owG+71oLerGzA7GXCgOT++6ovaezWAjpCjf+Sjc3ZtU+qUEi}
+      DIFY_INNER_API_URL: ${PLUGIN_DIFY_INNER_API_URL:-http://api:5001}
+      DIFY_INNER_API_KEY: ${PLUGIN_DIFY_INNER_API_KEY:-QaHbTe77CtuXmsfyhR7+vRjI/+XbV1AaFy691iy+kGDv2Jvy0/eAh8Y1}
+      PLUGIN_REMOTE_INSTALLING_HOST: ${PLUGIN_DEBUGGING_HOST:-0.0.0.0}
+      PLUGIN_REMOTE_INSTALLING_PORT: ${PLUGIN_DEBUGGING_PORT:-5003}
+      FORCE_VERIFYING_SIGNATURE: ${FORCE_VERIFYING_SIGNATURE:-true}
+      PYTHON_ENV_INIT_TIMEOUT: ${PYTHON_ENV_INIT_TIMEOUT:-120}
+      PLUGIN_MAX_EXECUTION_TIMEOUT: ${PLUGIN_MAX_EXECUTION_TIMEOUT:-600}
+      PLUGIN_STDIO_BUFFER_SIZE: ${PLUGIN_STDIO_BUFFER_SIZE:-1024}
+      PLUGIN_STDIO_MAX_BUFFER_SIZE: ${PLUGIN_STDIO_MAX_BUFFER_SIZE:-5242880}
+      PIP_MIRROR_URL: ${PIP_MIRROR_URL:-}
+      PLUGIN_STORAGE_TYPE: ${PLUGIN_STORAGE_TYPE:-local}
+      PLUGIN_STORAGE_LOCAL_ROOT: ${PLUGIN_STORAGE_LOCAL_ROOT:-/app/storage}
+      PLUGIN_INSTALLED_PATH: ${PLUGIN_INSTALLED_PATH:-plugin}
+      PLUGIN_PACKAGE_CACHE_PATH: ${PLUGIN_PACKAGE_CACHE_PATH:-plugin_packages}
+      PLUGIN_MEDIA_CACHE_PATH: ${PLUGIN_MEDIA_CACHE_PATH:-assets}
+      PLUGIN_STORAGE_OSS_BUCKET: ${PLUGIN_STORAGE_OSS_BUCKET:-}
+      S3_USE_AWS_MANAGED_IAM: ${S3_USE_AWS_MANAGED_IAM:-false}
+      S3_USE_AWS: ${S3_USE_AWS:-false}
+      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_USE_PATH_STYLE: ${S3_USE_PATH_STYLE:-false}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
+      AWS_REGION: ${AWS_REGION:-}
+      AZURE_BLOB_STORAGE_CONNECTION_STRING: ${AZURE_BLOB_STORAGE_CONNECTION_STRING:-}
+      AZURE_BLOB_STORAGE_CONTAINER_NAME: ${AZURE_BLOB_STORAGE_CONTAINER_NAME:-}
+      TENCENT_COS_SECRET_KEY: ${TENCENT_COS_SECRET_KEY:-}
+      TENCENT_COS_SECRET_ID: ${TENCENT_COS_SECRET_ID:-}
+      TENCENT_COS_REGION: ${TENCENT_COS_REGION:-}
+      ALIYUN_OSS_REGION: ${ALIYUN_OSS_REGION:-}
+      ALIYUN_OSS_ACCESS_KEY_ID: ${ALIYUN_OSS_ACCESS_KEY_ID:-}
+      ALIYUN_OSS_ACCESS_KEY_SECRET: ${ALIYUN_OSS_ACCESS_KEY_SECRET:-}
+      ALIYUN_OSS_BUCKET: ${ALIYUN_OSS_BUCKET:-}
+      VOLCENGINE_TOS_ENDPOINT: ${VOLCENGINE_TOS_ENDPOINT:-}
+      VOLCENGINE_TOS_ACCESS_KEY: ${VOLCENGINE_TOS_ACCESS_KEY:-}
+      VOLCENGINE_TOS_SECRET_KEY: ${VOLCENGINE_TOS_SECRET_KEY:-}
+      VOLCENGINE_TOS_REGION: ${VOLCENGINE_TOS_REGION:-}
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS:-}
+    ports:
+      - "${EXPOSE_PLUGIN_DEBUGGING_PORT:-5003}:${PLUGIN_DEBUGGING_PORT:-5003}"
+    volumes:
+      - ./volumes/plugin_daemon:/app/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ------------------------------------------------------------------ SSRF 代理
+  # 官方 squid 模板以 `http_access deny all` 收尾，所有出网请求默认被拒。
+  # 这里额外挂载 conf.d/allow-town-backend.conf，
+  # 只对**游戏后端与模型代理**开放，其余目标仍然拒绝。
+  ssrf_proxy:
+    image: ubuntu/squid:latest
+    restart: always
+    volumes:
+      - ./ssrf_proxy/squid.conf.template:/etc/squid/squid.conf.template:ro
+      - ./ssrf_proxy/docker-entrypoint.sh:/docker-entrypoint-mount.sh:ro
+      - ./ssrf_proxy/conf.d:/etc/squid/conf.d:ro
+    entrypoint: [ 'sh', '-c', "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
+    environment:
+      HTTP_PORT: ${SSRF_HTTP_PORT:-3128}
+      COREDUMP_DIR: ${SSRF_COREDUMP_DIR:-/var/spool/squid}
+      REVERSE_PROXY_PORT: ${SSRF_REVERSE_PROXY_PORT:-8194}
+      SANDBOX_HOST: ${SSRF_SANDBOX_HOST:-sandbox}
+      SANDBOX_PORT: ${SANDBOX_PORT:-8194}
+    networks:
+      - ssrf_proxy_network
+      - default
+
+  # ------------------------------------------------------------------ 游戏后端
+  # Dify Chatflow 的 HTTP Request 节点通过 ssrf_proxy 访问它。
+  town-backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      # 容器内不能用 127.0.0.1 访问宿主机上的 seekdb / PowerContext，
+      # 必须走 host.docker.internal。所以这里用一组**容器专用**变量，
+      # 与 .env 里供宿主机直跑脚本使用的 SDD_* 分开。
+      TOWN_SEEKDB_HOST: ${TOWN_CONTAINER_SEEKDB_HOST:-host.docker.internal}
+      TOWN_SEEKDB_PORT: ${TOWN_CONTAINER_SEEKDB_PORT:-2881}
+      TOWN_SEEKDB_USER: ${SDD_SEEKDB_USER:-root}
+      TOWN_SEEKDB_PASSWORD: ${SDD_SEEKDB_PASSWORD:-}
+      TOWN_SEEKDB_DATABASE: ${SDD_SEEKDB_DATABASE:-memory_town}
+      TOWN_POWERCONTEXT_URL: ${TOWN_CONTAINER_POWERCONTEXT_URL:-http://host.docker.internal:8800}
+      TOWN_POWERCONTEXT_TOKEN: ${SDD_POWERCONTEXT_TOKEN:-}
+      TOWN_POWERCONTEXT_TIMEOUT: ${SDD_POWERCONTEXT_TIMEOUT:-20}
+      TOWN_BACKEND_TOKEN: ${TOWN_BACKEND_TOKEN:-}
+      TOWN_LOG_LEVEL: ${TOWN_LOG_LEVEL:-INFO}
+      # 容器里的应用根目录是 /app，schema/seed 从 /app/data 读。
+      TOWN_ROOT: /app
+    volumes:
+      # schema.sql / seed.sql 挂进容器，改表结构不需要重新构建镜像。
+      - ../data:/app/data:ro
+    ports:
+      - "${EXPOSE_TOWN_BACKEND_PORT:-8848}:8848"
+    networks:
+      - default
+
+networks:
+  ssrf_proxy_network:
+    driver: bridge
+    internal: true
+  default:
+    driver: bridge

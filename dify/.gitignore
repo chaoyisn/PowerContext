@@ -1,0 +1,12 @@
+# 真实环境配置：绝不入库（deploy/.env.example 是占位模板，可以入库）
+deploy/.env
+.env
+.env.local
+
+# 运行时数据卷：Dify 的 Postgres 数据、私钥、插件运行时等
+deploy/volumes/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/

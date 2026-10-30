@@ -1,0 +1,1107 @@
+version: 0.4.0
+kind: app
+app:
+  name: 记仇小镇
+  mode: advanced-chat
+  icon: 🏘️
+  icon_background: '#FFEAD5'
+  description: 《记仇小镇：NPC 的复仇日记》—— Dify 编排、seekdb 存状态、PowerContext 记仇。
+  use_icon_as_answer_icon: false
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions: []
+      allowed_file_types: []
+      allowed_file_upload_methods: []
+      enabled: false
+      fileUploadConfig: {}
+      image:
+        detail: high
+      number_limits: 3
+      number_limits_enabled: false
+      restricted_file_types: []
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+      type: ''
+    speech_to_text:
+      enabled: false
+    suggested_questions_after_answer:
+      enabled: false
+      suggested_questions: []
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - id: e-start-input
+      source: start
+      sourceHandle: source
+      target: code_input
+      targetHandle: target
+    - id: e-input-register
+      source: code_input
+      sourceHandle: source
+      target: http_register
+      targetHandle: target
+    - id: e-register-state
+      source: http_register
+      sourceHandle: source
+      target: http_state
+      targetHandle: target
+    - id: e-state-parse
+      source: http_state
+      sourceHandle: source
+      target: code_state
+      targetHandle: target
+    - id: e-parse-branch
+      source: code_state
+      sourceHandle: source
+      target: if_action
+      targetHandle: target
+    - id: e-branch-action
+      source: if_action
+      sourceHandle: case_action
+      target: http_action
+      targetHandle: target
+    - id: e-branch-idle
+      source: if_action
+      sourceHandle: case_idle
+      target: code_result
+      targetHandle: target
+    - id: e-branch-reject
+      source: if_action
+      sourceHandle: 'false'
+      target: code_reject
+      targetHandle: target
+    - id: e-action-result
+      source: http_action
+      sourceHandle: source
+      target: code_result
+      targetHandle: target
+    - id: e-result-llm
+      source: code_result
+      sourceHandle: source
+      target: llm_roleplay
+      targetHandle: target
+    - id: e-llm-answer
+      source: llm_roleplay
+      sourceHandle: source
+      target: code_clean
+      targetHandle: target
+    - id: e-clean-answer
+      source: code_clean
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+    - id: e-reject-answer
+      source: code_reject
+      sourceHandle: source
+      target: answer_reject
+      targetHandle: target
+    nodes:
+    - id: start
+      type: custom
+      position:
+        x: 30
+        y: 300
+      positionAbsolute:
+        x: 30
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: start
+        title: 开始
+        desc: 玩家身份与会话绑定
+        variables:
+        - variable: player_id
+          label: 玩家ID
+          description: 稳定的玩家标识；跨会话不变，用于 seekdb 状态与 PowerContext 记忆隔离
+          type: text-input
+          required: true
+          max_length: 64
+          options: []
+          allowed_file_types: []
+          allowed_file_extensions: []
+          allowed_file_upload_methods: []
+        - variable: session_id
+          label: 会话ID
+          description: 本次会话标识；留空则自动使用 Dify 的 conversation_id（新建会话=新 ID）
+          type: text-input
+          required: false
+          max_length: 128
+          options: []
+          allowed_file_types: []
+          allowed_file_extensions: []
+          allowed_file_upload_methods: []
+    - id: code_input
+      type: custom
+      position:
+        x: 220
+        y: 300
+      positionAbsolute:
+        x: 220
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: code
+        title: 输入校验与意图判定
+        desc: 校验玩家ID/会话ID；解析自由文本是否含有动作
+        code_language: python3
+        variables:
+        - variable: player_id
+          value_selector:
+          - start
+          - player_id
+        - variable: session_id
+          value_selector:
+          - start
+          - session_id
+        - variable: conversation_id
+          value_selector:
+          - sys
+          - conversation_id
+        - variable: query
+          value_selector:
+          - sys
+          - query
+        code: |
+          import json
+          import re
+
+          # 与后端 town_backend/api.py 中的校验规则保持一致：
+          # 标识只允许字母、数字、下划线、连字符、点和冒号。
+          PLAYER_ID_RE = re.compile(r"^[A-Za-z0-9_\-:.]{1,64}$")
+          SESSION_ID_RE = re.compile(r"^[A-Za-z0-9_\-:.]{1,128}$")
+
+          # 动作关键词。Dify 负责"这句话是不是一个动作"的判断，
+          # 但真正的动作类型与数值变化仍由后端确定性代码裁定。
+          ACTION_KEYWORDS = [
+              "偷", "拿走", "抢", "顺走", "摸走", "盗", "窃",
+              "送", "给", "赠", "递", "礼物", "小鱼干", "鱼干",
+              "恶作剧", "捉弄", "恶搞", "偷袭",
+              "调查", "查看", "搜", "查", "探查",
+          ]
+
+
+          def _json_escape(value):
+              # 把字符串安全地嵌进 JSON 字符串字面量：玩家输入里的引号
+              # 不会破坏 http-request 节点拼出来的 JSON 请求体。
+              return json.dumps(value or "", ensure_ascii=False)[1:-1]
+
+
+          def main(player_id: str, session_id: str, conversation_id: str, query: str) -> dict:
+              pid = (player_id or "").strip()
+              sid = (session_id or "").strip() or (conversation_id or "").strip()
+              text = (query or "").strip()
+
+              errors = []
+              if not pid:
+                  errors.append("玩家ID不能为空")
+              elif not PLAYER_ID_RE.match(pid):
+                  errors.append("玩家ID只能包含字母、数字、下划线、连字符、点和冒号，长度 1-64")
+              if not sid:
+                  errors.append("会话ID不能为空")
+              elif not SESSION_ID_RE.match(sid):
+                  errors.append("会话ID格式非法")
+
+              input_ok = not errors
+              if not input_ok:
+                  # 不悄悄改写玩家的身份：非法标识一律清空，
+                  # 让后端明确返回 400，而不是写进一个错误的 scope。
+                  pid = ""
+                  sid = ""
+
+              # 只有一个字的输入不算动作，避免把"你好"也写进事件表。
+              has_action = len(text) >= 2 and any(k in text for k in ACTION_KEYWORDS)
+
+              return {
+                  "player_id": pid,
+                  "session_id": sid,
+                  "query_text": text,
+                  "query_json": _json_escape(text),
+                  "has_action": has_action,
+                  "input_ok": input_ok,
+                  "input_error": "；".join(errors),
+              }
+        outputs:
+          player_id:
+            type: string
+          session_id:
+            type: string
+          query_text:
+            type: string
+          query_json:
+            type: string
+          has_action:
+            type: boolean
+          input_ok:
+            type: boolean
+          input_error:
+            type: string
+        error_strategy: default-value
+        default_value:
+        - key: player_id
+          type: string
+          value: ''
+        - key: session_id
+          type: string
+          value: ''
+        - key: query_text
+          type: string
+          value: ''
+        - key: query_json
+          type: string
+          value: ''
+        - key: has_action
+          type: string
+          value: 'false'
+        - key: input_ok
+          type: string
+          value: 'false'
+        - key: input_error
+          type: string
+          value: ''
+    - id: http_register
+      type: custom
+      position:
+        x: 410
+        y: 300
+      positionAbsolute:
+        x: 410
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: http-request
+        title: 注册玩家并绑定会话
+        desc: 写入 seekdb town_player；老玩家保留状态，只换会话
+        method: post
+        url: http://town-backend:8848/api/player/register
+        authorization:
+          type: no-auth
+        headers: 'Content-Type: application/json'
+        params: ''
+        body:
+          type: json
+          data:
+          - key: ''
+            type: text
+            value: '{"player_id": "{{#code_input.player_id#}}", "session_id": "{{#code_input.session_id#}}", "display_name": "{{#code_input.player_id#}}"}'
+        timeout:
+          connect: 10
+          read: 30
+          write: 20
+        ssl_verify: false
+        retry_config:
+          max_retries: 1
+          retry_interval: 1000
+          retry_enabled: false
+    - id: http_state
+      type: custom
+      position:
+        x: 600
+        y: 300
+      positionAbsolute:
+        x: 600
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: http-request
+        title: 读取状态与记忆
+        desc: seekdb 状态 + PowerContext 关键事件召回
+        method: get
+        url: http://town-backend:8848/api/state?player_id={{#code_input.player_id#}}
+        authorization:
+          type: no-auth
+        headers: ''
+        params: ''
+        body:
+          type: none
+          data: []
+        timeout:
+          connect: 10
+          read: 30
+          write: 20
+        ssl_verify: false
+        retry_config:
+          max_retries: 1
+          retry_interval: 1000
+          retry_enabled: false
+    - id: code_state
+      type: custom
+      position:
+        x: 790
+        y: 300
+      positionAbsolute:
+        x: 790
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: code
+        title: 解析状态与召回记忆
+        desc: 抽取人设、关系数值、跨会话记忆、剧情与道具；定位对话对象
+        code_language: python3
+        variables:
+        - variable: state_body
+          value_selector:
+          - http_state
+          - body
+        - variable: state_code
+          value_selector:
+          - http_state
+          - status_code
+        - variable: query_text
+          value_selector:
+          - code_input
+          - query_text
+        code: |
+          import json
+
+
+          def _safe_json(raw):
+              if not raw:
+                  return {}
+              try:
+                  data = json.loads(raw)
+              except Exception:
+                  return {}
+              return data if isinstance(data, dict) else {}
+
+
+          # 玩家口语里的简称 -> 道具 ID。与后端 engine.ITEM_ALIASES 保持一致。
+          ITEM_ALIASES = {
+              "golden_crown": ("金王冠", "王冠", "皇冠"),
+              "fat_fish_snack": ("小鱼干", "鱼干", "零食"),
+              "old_notebook": ("账本", "笔记本"),
+              "mayor_seal": ("印章"),
+          }
+
+
+          def _npc_tokens(npc):
+              return [npc.get("name", ""), npc.get("title", ""), npc.get("npc_id", "")]
+
+
+          def _match_by_name(npcs, text):
+              """玩家点名某个 NPC 时命中。
+
+              玩家往往只说简称（"镇长" 对应 "奥托镇长"、"镇长" 也出现在
+              头衔 "小镇镇长" 里）。所以除了"整个词出现在输入里"，
+              还要允许"词的一部分出现在输入里"，并取最长命中。
+              """
+
+              best_id = ""
+              best_name = ""
+              best_len = 0
+              for npc in npcs:
+                  for raw in _npc_tokens(npc):
+                      token = (raw or "").strip()
+                      if not token:
+                          continue
+                      if token.lower() in text:
+                          length = len(token)
+                      else:
+                          length = 0
+                          for size in range(len(token), 1, -1):
+                              if any(
+                                  token[i:i + size].lower() in text
+                                  for i in range(len(token) - size + 1)
+                              ):
+                                  length = size
+                                  break
+                      if length > best_len:
+                          best_len = length
+                          best_id = npc.get("npc_id", "")
+                          best_name = npc.get("name", "")
+              return best_id, best_name, best_len
+
+
+          def _match_by_item(npcs, text):
+              """玩家点名了某件道具，而那件道具只在一个 NPC 手里 → 找那个 NPC。
+
+              例："偷走王冠" 里没有"镇长"二字，但王冠在镇长手里，
+              找镇长才对，否则主线剧情永远触发不了。
+              """
+
+              owners = {}
+              for npc in npcs:
+                  for item in npc.get("items") or []:
+                      item_id = item.get("item_id", "")
+                      names = [item.get("name", "")]
+                      names.extend(ITEM_ALIASES.get(item_id, ()))
+                      for name in names:
+                          if name and name.lower() in text:
+                              owners.setdefault(npc.get("npc_id", ""), set()).add(item_id)
+              # 只有唯一一位 NPC 被指向时才敢据此定位
+              if len(owners) != 1:
+                  return "", "", 0
+              npc_id = next(iter(owners))
+              for npc in npcs:
+                  if npc.get("npc_id") == npc_id:
+                      return npc_id, npc.get("name", ""), 1
+              return "", "", 0
+
+
+          def main(state_body: str, state_code: int, query_text: str) -> dict:
+              state = _safe_json(state_body)
+              npcs = state.get("npcs") or []
+              player = state.get("player") or {}
+              location = state.get("location") or {}
+              text = (query_text or "").lower()
+
+              # 定位对话对象：先按玩家点名的 NPC，再按唯一道具的持有者，
+              # 最后退回到同地点的居民。
+              target, target_name, _ = _match_by_name(npcs, text)
+              if not target:
+                  target, target_name, _ = _match_by_item(npcs, text)
+              if not target:
+                  # 玩家没点名任何人时，谁对你有怨谁就该出面回应 ——
+                  # 这正是《记仇小镇》的核心：找你算账的人会主动出现。
+                  here = player.get("current_location") or location.get("location_id") or ""
+                  here_npcs = [n for n in npcs if n.get("home_location") == here] or npcs
+                  if here_npcs:
+                      target_npc = max(
+                          here_npcs,
+                          key=lambda n: (
+                              int(n.get("grudge_level") or 0),
+                              int(n.get("trust") or 0),
+                          ),
+                      )
+                      target = target_npc.get("npc_id", "")
+                      target_name = target_npc.get("name", "")
+              if not target and npcs:
+                  target = npcs[0].get("npc_id", "")
+                  target_name = npcs[0].get("name", "")
+              if not target:
+                  target = "mayor"
+                  target_name = "奥托镇长"
+
+              persona_lines = []
+              relation_lines = []
+              for npc in npcs:
+                  persona_lines.append(
+                      "- {name}（{title}）：{persona}\n  说话风格：{style}".format(
+                          name=npc.get("name", ""),
+                          title=npc.get("title", ""),
+                          persona=npc.get("persona", ""),
+                          style=npc.get("speech_style", ""),
+                      )
+                  )
+                  relation_lines.append(
+                      "- {name}：好感 {aff} / 信任 {trust} / 怨念 {grudge}（最近一次动作：{last}）".format(
+                          name=npc.get("name", ""),
+                          aff=npc.get("affinity", 0),
+                          trust=npc.get("trust", 0),
+                          grudge=npc.get("grudge_level", 0),
+                          last=npc.get("last_action", "无"),
+                      )
+                  )
+
+              memory = state.get("memory") or {}
+              key_events = [e.get("text", "") for e in (memory.get("key_events") or [])]
+              npc_notes = [e.get("text", "") for e in (memory.get("npc_notes") or [])]
+              memory_block = "\n".join("- " + t for t in (key_events + npc_notes)) or "（他还什么都不记得）"
+              memory_error = str(memory.get("error") or "")
+
+              plots = state.get("plots") or []
+              plot_lines = [
+                  "- {pid} 当前阶段：{stage}（{detail}）".format(
+                      pid=p.get("plot_id", ""), stage=p.get("stage", ""), detail=p.get("detail", "")
+                  )
+                  for p in plots
+              ] or ["（尚未触发任何支线剧情）"]
+
+              inventory = state.get("inventory") or []
+              inv_lines = [
+                  "- {name}（{iid}）".format(name=i.get("name", ""), iid=i.get("item_id", ""))
+                  for i in inventory
+              ] or ["（身上什么也没有）"]
+
+              code = int(state_code or 0)
+              state_ok = 200 <= code < 300 and bool(state)
+
+              return {
+                  "state_ok": state_ok,
+                  "target_npc": target,
+                  "target_name": target_name,
+                  "location_name": location.get("name", "小镇广场"),
+                  "location_desc": location.get("description", ""),
+                  "persona_block": "\n".join(persona_lines) or "（镇上没有别人）",
+                  "relation_block": "\n".join(relation_lines) or "（暂无关系记录）",
+                  "memory_block": memory_block,
+                  "memory_error": memory_error,
+                  "plot_block": "\n".join(plot_lines),
+                  "inventory_block": "\n".join(inv_lines),
+                  "recall_count": len(key_events),
+              }
+        outputs:
+          state_ok:
+            type: boolean
+          target_npc:
+            type: string
+          target_name:
+            type: string
+          location_name:
+            type: string
+          location_desc:
+            type: string
+          persona_block:
+            type: string
+          relation_block:
+            type: string
+          memory_block:
+            type: string
+          memory_error:
+            type: string
+          plot_block:
+            type: string
+          inventory_block:
+            type: string
+          recall_count:
+            type: number
+        error_strategy: default-value
+        default_value:
+        - key: state_ok
+          type: string
+          value: 'false'
+        - key: target_npc
+          type: string
+          value: mayor
+        - key: target_name
+          type: string
+          value: 奥托镇长
+        - key: location_name
+          type: string
+          value: 小镇广场
+        - key: location_desc
+          type: string
+          value: ''
+        - key: persona_block
+          type: string
+          value: ''
+        - key: relation_block
+          type: string
+          value: ''
+        - key: memory_block
+          type: string
+          value: '（他还什么都不记得）'
+        - key: memory_error
+          type: string
+          value: ''
+        - key: plot_block
+          type: string
+          value: ''
+        - key: inventory_block
+          type: string
+          value: ''
+        - key: recall_count
+          type: number
+          value: 0
+    - id: if_action
+      type: custom
+      position:
+        x: 980
+        y: 300
+      positionAbsolute:
+        x: 980
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: if-else
+        title: 本轮走哪条路
+        desc: 有动作且状态可读才落库；否则闲聊或直接拒绝
+        logical_operator: and
+        cases:
+        - case_id: case_action
+          logical_operator: and
+          conditions:
+          - comparison_operator: is
+            value: 'true'
+            variable_selector:
+            - code_input
+            - input_ok
+          - comparison_operator: is
+            value: 'true'
+            variable_selector:
+            - code_state
+            - state_ok
+          - comparison_operator: is
+            value: 'true'
+            variable_selector:
+            - code_input
+            - has_action
+        - case_id: case_idle
+          logical_operator: and
+          conditions:
+          - comparison_operator: is
+            value: 'true'
+            variable_selector:
+            - code_input
+            - input_ok
+          - comparison_operator: is
+            value: 'true'
+            variable_selector:
+            - code_state
+            - state_ok
+    - id: http_action
+      type: custom
+      position:
+        x: 1170
+        y: 160
+      positionAbsolute:
+        x: 1170
+        y: 160
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: http-request
+        title: 执行动作并写入状态与记忆
+        desc: seekdb 事务落状态；PowerContext 写关键事件
+        method: post
+        url: http://town-backend:8848/api/action
+        authorization:
+          type: no-auth
+        headers: 'Content-Type: application/json'
+        params: ''
+        body:
+          type: json
+          data:
+          - key: ''
+            type: text
+            value: '{"player_id": "{{#code_input.player_id#}}", "session_id": "{{#code_input.session_id#}}", "npc_id": "{{#code_state.target_npc#}}", "message": "{{#code_input.query_json#}}", "idempotency_key": "{{#sys.workflow_run_id#}}"}'
+        timeout:
+          connect: 10
+          read: 30
+          write: 20
+        ssl_verify: false
+        retry_config:
+          max_retries: 1
+          retry_interval: 1000
+          retry_enabled: false
+    - id: code_result
+      type: custom
+      position:
+        x: 1360
+        y: 300
+      positionAbsolute:
+        x: 1360
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: code
+        title: 汇总动作结果
+        desc: 把后端判定结果整理成给 LLM 的事实；拒绝绝不报成功
+        code_language: python3
+        variables:
+        - variable: action_body
+          value_selector:
+          - http_action
+          - body
+        - variable: action_code
+          value_selector:
+          - http_action
+          - status_code
+        - variable: query_text
+          value_selector:
+          - code_input
+          - query_text
+        code: |
+          import json
+
+
+          def _safe_json(raw):
+              if not raw:
+                  return {}
+              try:
+                  data = json.loads(raw)
+              except Exception:
+                  return {}
+              return data if isinstance(data, dict) else {}
+
+
+          def main(action_body: str, action_code: int, query_text: str) -> dict:
+              # action_code 为 None 说明走的是"闲聊"分支：http_action 根本没运行。
+              if action_code is None:
+                  return {
+                      "action_type": "talk",
+                      "action_label": "闲聊",
+                      "outcome": "你只是说了句话，没有人记账。",
+                      "relationship_block": "",
+                      "plot_block": "",
+                      "notes_block": "",
+                      "key_event": "",
+                      "state_changed": False,
+                      "action_ok": True,
+                      "error_message": "",
+                  }
+
+              code = int(action_code)
+              body = _safe_json(action_body)
+
+              if not (200 <= code < 300):
+                  # 后端明确拒绝（规则冲突、记忆写失败、玩家不存在等）。
+                  # 绝不能报告为成功 —— 把错误如实告诉 LLM。
+                  err = body.get("error") or {}
+                  message = err.get("message") or ("请求失败，HTTP %s" % code)
+                  return {
+                      "action_type": "rejected",
+                      "action_label": "被拒绝",
+                      "outcome": "",
+                      "relationship_block": "",
+                      "plot_block": "",
+                      "notes_block": "",
+                      "key_event": "",
+                      "state_changed": False,
+                      "action_ok": False,
+                      "error_message": str(message),
+                  }
+
+              action = body.get("action") or {}
+              relation = body.get("relationship") or {}
+              plot = body.get("plot") or {}
+              notes = body.get("notes") or []
+
+              relation_block = "好感 {aff} / 信任 {trust} / 怨念 {grudge}".format(
+                  aff=relation.get("affinity", 0),
+                  trust=relation.get("trust", 0),
+                  grudge=relation.get("grudge_level", 0),
+              )
+              plot_block = ""
+              if plot:
+                  plot_block = "剧情 {pid} 进入阶段「{stage}」：{detail}".format(
+                      pid=plot.get("plot_id", ""),
+                      stage=plot.get("stage", ""),
+                      detail=plot.get("detail", ""),
+                  )
+
+              return {
+                  "action_type": action.get("action_type", ""),
+                  "action_label": action.get("action_label", ""),
+                  "outcome": action.get("outcome", ""),
+                  "relationship_block": relation_block,
+                  "plot_block": plot_block,
+                  "notes_block": "\n".join("- " + str(n) for n in notes),
+                  "key_event": body.get("key_event", "") or "",
+                  "state_changed": True,
+                  "action_ok": True,
+                  "error_message": "",
+              }
+        outputs:
+          action_type:
+            type: string
+          action_label:
+            type: string
+          outcome:
+            type: string
+          relationship_block:
+            type: string
+          plot_block:
+            type: string
+          notes_block:
+            type: string
+          key_event:
+            type: string
+          state_changed:
+            type: boolean
+          action_ok:
+            type: boolean
+          error_message:
+            type: string
+        error_strategy: default-value
+        default_value:
+        - key: action_type
+          type: string
+          value: talk
+        - key: action_label
+          type: string
+          value: 闲聊
+        - key: outcome
+          type: string
+          value: ''
+        - key: relationship_block
+          type: string
+          value: ''
+        - key: plot_block
+          type: string
+          value: ''
+        - key: notes_block
+          type: string
+          value: ''
+        - key: key_event
+          type: string
+          value: ''
+        - key: state_changed
+          type: string
+          value: 'false'
+        - key: action_ok
+          type: string
+          value: 'false'
+        - key: error_message
+          type: string
+          value: '状态汇总节点异常，本轮动作结果未知。'
+    - id: code_reject
+      type: custom
+      position:
+        x: 1170
+        y: 440
+      positionAbsolute:
+        x: 1170
+        y: 440
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: code
+        title: 说明为什么无法开始
+        desc: 输入非法或状态读不出来时，如实给出原因而不是编台词
+        code_language: python3
+        variables:
+        - variable: input_error
+          value_selector:
+          - code_input
+          - input_error
+        - variable: state_code
+          value_selector:
+          - http_state
+          - status_code
+        - variable: state_body
+          value_selector:
+          - http_state
+          - body
+        code: |
+          import json
+
+
+          def _safe_json(raw):
+              if not raw:
+                  return {}
+              try:
+                  data = json.loads(raw)
+              except Exception:
+                  return {}
+              return data if isinstance(data, dict) else {}
+
+
+          def main(input_error: str, state_code: int, state_body: str) -> dict:
+              message = (input_error or "").strip()
+              if not message:
+                  err = _safe_json(state_body).get("error") or {}
+                  message = str(err.get("message") or "").strip()
+              if not message:
+                  message = "小镇的档案系统暂时读不出你的记录（后端返回 HTTP %s）。请稍后再来。" % (state_code or 0)
+              return {"message": message}
+        outputs:
+          message:
+            type: string
+        error_strategy: default-value
+        default_value:
+        - key: message
+          type: string
+          value: 小镇的档案系统暂时读不出你的记录，请稍后再来。
+    - id: llm_roleplay
+      type: custom
+      position:
+        x: 1550
+        y: 300
+      positionAbsolute:
+        x: 1550
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: llm
+        title: NPC 角色扮演与台词生成
+        desc: 用人设+关系数值+跨会话记忆生成台词
+        model:
+          provider: langgenius/anthropic/anthropic
+          name: claude-sonnet-4-6
+          mode: chat
+          completion_params:
+            temperature: 0.8
+            max_tokens: 1024
+        prompt_template:
+        - role: system
+          edition_type: basic
+          text: |
+            你在扮演《记仇小镇》里的 NPC。你不是助手，是一个有脾气的镇民。
+            只输出这位 NPC 说出口的话，不要旁白、不要动作描写、不要引号、不要 markdown。
+            特别注意：**不要输出任何思考过程**。不要写 <think> 标签，
+            不要解释你为什么这么回话，只写台词本身。
+
+            【当前地点】{{#code_state.location_name#}}——{{#code_state.location_desc#}}
+
+            【镇上的居民与说话风格】
+            {{#code_state.persona_block#}}
+
+            【他们对你的态度】
+            {{#code_state.relation_block#}}
+
+            【他们记得的事（跨会话记忆）】
+            {{#code_state.memory_block#}}
+
+            【剧情进度】
+            {{#code_state.plot_block#}}
+
+            【你身上的东西】
+            {{#code_state.inventory_block#}}
+
+            【这一轮已经发生的事（系统判定的事实，不可改写）】
+            动作类型：{{#code_result.action_label#}}
+            结果：{{#code_result.outcome#}}
+            关系变化：{{#code_result.relationship_block#}}
+            剧情变化：{{#code_result.plot_block#}}
+            备注：{{#code_result.notes_block#}}
+            记忆写入：{{#code_result.key_event#}}
+            记忆系统状态：{{#code_state.memory_error#}}
+
+            规则：
+            1. 台词必须与上面的事实一致。"结果"是空的，说明玩家只是说了句话，正常回应即可。
+            2. 怨念越高越阴阳怪气、越记仇；信任高就更坦诚。
+            3. 如果"他们记得的事"里出现玩家曾经的偷窃、恶作剧或送礼，你必须表现出你还记得——可以翻旧账、可以威胁、可以冷笑、可以点出具体那件事。
+            4. 如果"动作类型"是"被拒绝"，说明玩家想做的事没做成。如实表现出制止或不满，绝不能假装成功。
+            5. 如果"记忆写入"不是空的，说明这件事已经被记进日记，你可以在台词里表现出记账的态度。
+            6. 如果"记忆系统状态"不是空的，说明记忆库读不出来，不要假装记得任何事。
+            7. 用中文说话，控制在 200 字以内。
+            8. 输出里不得出现 <think>、</think>、思考、推理等字样，也不得用引号包住整段台词。
+        - role: user
+          edition_type: basic
+          text: |
+            玩家说：{{#code_input.query_text#}}
+
+            请以 {{#code_state.target_name#}} 的身份回应。
+        prompt_config:
+          jinja2_variables: []
+        context:
+          enabled: false
+          variable_selector: []
+        vision:
+          enabled: false
+        structured_output: null
+        structured_output_enabled: false
+        error_strategy: default-value
+        default_value:
+        - key: text
+          type: string
+          value: （镇上的居民沉默了一会儿，什么也没说。）
+    - id: code_clean
+      type: custom
+      position:
+        x: 1740
+        y: 300
+      positionAbsolute:
+        x: 1740
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: code
+        title: 清洗台词
+        desc: 去掉思考过程与 markdown，只留 NPC 说的话
+        code_language: python3
+        variables:
+        - variable: llm_text
+          value_selector:
+          - llm_roleplay
+          - text
+        code: |
+          import re
+
+
+          def main(llm_text: str) -> dict:
+              text = llm_text or ""
+
+              # 模型代理会返回 <think>...</think> 的推理块（Anthropic 格式的
+              # thinking block 被 Dify 插件包成了 think 标签）。
+              # 这些内容不是台词，不能给玩家看。
+              text = re.sub(r"<think>.*?</think>", "", text, flags=re.S | re.I)
+              text = re.sub(r"^<think>.*", "", text, flags=re.S | re.I)
+              text = re.sub(r"</?think[^>]*>", "", text, flags=re.I)
+
+              # 去掉 markdown 记号与包裹的引号，台词应该是直接说出来的话。
+              text = text.replace("**", "").replace("##", "")
+              text = re.sub(r"^\s*[-*]\s+", "", text, flags=re.M)
+              text = re.sub(r"^\s*[（(【\[][^）)】\]]{0,12}[）)】\]]\s*", "", text)
+              text = text.strip().strip("`").strip()
+
+              # 去掉成对包裹整段话的中英文引号。
+              if len(text) >= 2 and text[0] in "“\"「『" and text[-1] in "”\"」』":
+                  text = text[1:-1].strip()
+
+              if not text:
+                  text = "（镇上的居民沉默了一会儿，什么也没说。）"
+
+              return {"speech": text}
+        outputs:
+          speech:
+            type: string
+        error_strategy: default-value
+        default_value:
+        - key: speech
+          type: string
+          value: （镇上的居民沉默了一会儿，什么也没说。）
+    - id: answer
+      type: custom
+      position:
+        x: 1930
+        y: 300
+      positionAbsolute:
+        x: 1930
+        y: 300
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: answer
+        title: 回答
+        desc: 最终输出
+        answer: "{{#code_clean.speech#}}"
+    - id: answer_reject
+      type: custom
+      position:
+        x: 1360
+        y: 440
+      positionAbsolute:
+        x: 1360
+        y: 440
+      width: 114
+      height: 116
+      sourcePosition: right
+      targetPosition: left
+      data:
+        type: answer
+        title: 拒绝回答
+        desc: 输入非法或状态不可读时的如实说明
+        answer: "{{#code_reject.message#}}"

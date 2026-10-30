@@ -1,0 +1,63 @@
+{
+  "powercontext_url": "http://127.0.0.1:8800",
+  "players": {
+    "a": "mem_a_dcb4eb7a",
+    "b": "mem_b_dcb4eb7a",
+    "c": "mem_c_dcb4eb7a"
+  },
+  "passed": 7,
+  "total": 7,
+  "checks": [
+    {
+      "code": "M0",
+      "title": "PowerContext 可用",
+      "passed": true,
+      "detail": "http://127.0.0.1:8800 status=ready error="
+    },
+    {
+      "code": "M1",
+      "title": "关键事件写入 PowerContext",
+      "passed": true,
+      "detail": "scope_id=scp_7fmsm9zdrskzm8j5p17kn69cmn artifact_id=art_e90810a1374d4236b61889a676046ea9 kind=town-key-event"
+    },
+    {
+      "code": "M2",
+      "title": "新会话（新实例）仍能召回关键事件",
+      "passed": true,
+      "detail": "召回 1 条, 精确命中 1 条"
+    },
+    {
+      "code": "M3",
+      "title": "玩家 B 读不到玩家 A 的记忆",
+      "passed": true,
+      "detail": "B 召回 0 条, 其中含 A 内容的 0 条"
+    },
+    {
+      "code": "M4",
+      "title": "从未写过记忆的玩家召回为空（不报错）",
+      "passed": true,
+      "detail": "C 召回 0 条"
+    },
+    {
+      "code": "M5",
+      "title": "同一玩家始终解析到同一个 scope（绑定稳定）",
+      "passed": true,
+      "detail": "scope=scp_7fmsm9zdrskzm8j5p17kn69cmn / scp_7fmsm9zdrskzm8j5p17kn69cmn / scp_7fmsm9zdrskzm8j5p17kn69cmn"
+    },
+    {
+      "code": "M6",
+      "title": "记忆条目的 kind 正确",
+      "passed": true,
+      "detail": "kinds=['town-key-event'] 共 2 条"
+    }
+  ],
+  "recalled_a": [
+    {
+      "kind": "town-key-event",
+      "text": "[mem_a_dcb4eb7a] 偷走了 奥托镇长 的「镇长的金王冠」。奥托镇长 因此记恨上了他。",
+      "artifact_id": "art_e90810a1374d4236b61889a676046ea9",
+      "revision": 1,
+      "state": "active"
+    }
+  ]
+}
