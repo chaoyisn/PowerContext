@@ -44,6 +44,8 @@ test("real API imports incrementally, isolates knowledge bases, and survives ser
     assert.equal(isolatedSearch.results[0]?.metadata.filename, "tenant-only.md");
     const primarySearch = await search(kb.id, "violet tenant", [1, 0, 0], "hybrid");
     assert.ok(primarySearch.results.every((row) => row.metadata.filename !== "tenant-only.md"));
+    const apostropheSearch = await search(kb.id, "reader's book", [1, 0, 0], "hybrid");
+    assert.ok(Array.isArray(apostropheSearch.results));
 
     const batchInput = (filename, content, index) => {
       const embedding = Array(384).fill(0); embedding[index] = 1;

@@ -83,6 +83,7 @@ export function App() {
       const instance = new EmbeddingClient();
       instance.onProgress = (progress) => {
         setModelProgress(progress);
+        if (progress.phase === "worker-start" && progress.kind === "embed" && typeof progress.queueMs === "number") recordPerf("worker.queue", { durationMs: progress.queueMs });
         if (progress.phase === "model-load" && typeof progress.file === "string") {
           const file = progress.file;
           if (progress.status === "download") assetDownloads.current.set(file, performance.now());
@@ -128,6 +129,8 @@ export function App() {
       recordMeasuredCompression();
       return state;
     } catch (reason) {
+      workerRef.current?.close();
+      workerRef.current = null;
       setModelState("error");
       throw reason;
     }
@@ -145,7 +148,15 @@ export function App() {
   async function embedTexts(texts: string[], size = batchSize) {
     if (modelState !== "ready" || !embedding) await ensureModel();
     const started = performance.now();
-    const batch = await worker().embed(texts, size);
+    let batch;
+    try { batch = await worker().embed(texts, size); }
+    catch (reason) {
+      workerRef.current?.close();
+      workerRef.current = null;
+      setModelState("error");
+      setEmbedding(null);
+      throw reason;
+    }
     if (embedding?.backend !== batch.backend || embedding?.dtype !== batch.dtype) {
       setEmbedding((current) => current ? { ...current, backend: batch.backend, dtype: batch.dtype, fallbackReason: batch.fallbackReason } : current);
     }
@@ -249,10 +260,10 @@ export function App() {
       const modelKey = embeddingSpace(model.modelKey, model.revision, vector.backend, vector.dtype);
       if (modelKey !== activeKb.modelKey) throw new Error("当前推理配置与知识库向量空间不一致，请切换到匹配的知识库或重新创建并导入文档");
       recordPerf("query.embedding", { durationMs: Number(vector.elapsedMs.toFixed(2)), backend: vector.backend, dtype: vector.dtype });
-      const { data, requestMs } = await post<{ results: SearchResult[]; dbMs: number; mode: string }>(`/api/kbs/${activeKb.id}/search`, {
+      const { data, requestMs, timings } = await post<{ results: SearchResult[]; dbMs: number; mode: string }>(`/api/kbs/${activeKb.id}/search`, {
         query: query.trim(), embedding: vector.embeddings[0], modelKey, backend: vector.backend, dtype: vector.dtype, mode, topK,
       });
-      recordPerf("seekdb.search", { mode: data.mode, dbMs: Number(data.dbMs.toFixed(2)), networkMs: Number(Math.max(0, requestMs - data.dbMs).toFixed(2)), resultCount: data.results.length });
+      recordPerf("seekdb.search", { mode: data.mode, dbMs: Number(data.dbMs.toFixed(2)), networkMs: Number(Math.max(0, requestMs - data.dbMs).toFixed(2)), outboundMs: timings.outboundMs, serverMs: timings.serverMs, inboundHeadersMs: timings.inboundHeadersMs, inboundBodyParsedMs: timings.inboundBodyParsedMs, resultCount: data.results.length });
       setResults(data.results);
       requestAnimationFrame(() => recordPerf("query.end-to-end", { mode, durationMs: Number((performance.now() - endToEndStart).toFixed(2)), resultCount: data.results.length }));
       setNotice(`seekdb 返回 ${data.results.length} 条真实结果`);

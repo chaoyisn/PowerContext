@@ -1,0 +1,205 @@
+{
+  "at": "2026-10-30T03:07:23.282Z",
+  "precision": "fp16",
+  "kbId": "9f016b46ca55444084d15c5e8b35f916",
+  "query": "How can local browser processing protect private documents?",
+  "samples": [
+    {
+      "index": 1,
+      "status": 200,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "workerQueueMs": 0,
+      "embeddingMs": 23.7,
+      "apiDbMs": 9.295800000007148,
+      "apiRoundTripMs": 30.89580000000715,
+      "requestTiming": {
+        "startTime": 1793329656544.1533,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.2,
+        "responseStart": 28.778,
+        "responseEnd": 29.878
+      },
+      "responseTransferMs": 1.1000000000000014,
+      "pageVisibleMs": 112.14580000000024,
+      "browserEndToEndMs": 70.3,
+      "resultIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "apiNodeWorkingSetBytes": 66011136
+    },
+    {
+      "index": 2,
+      "status": 200,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "workerQueueMs": 0,
+      "embeddingMs": 17.6,
+      "apiDbMs": 7.908400000000256,
+      "apiRoundTripMs": 27.098400000000257,
+      "requestTiming": {
+        "startTime": 1793329658609.294,
+        "domainLookupStart": 0.457,
+        "domainLookupEnd": 0.716,
+        "connectStart": 0.716,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.051,
+        "requestStart": 1.111,
+        "responseStart": 25.157,
+        "responseEnd": 26.235
+      },
+      "responseTransferMs": 1.0779999999999994,
+      "pageVisibleMs": 97.21860000000015,
+      "browserEndToEndMs": 60.8,
+      "resultIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "apiNodeWorkingSetBytes": 66207744
+    },
+    {
+      "index": 3,
+      "status": 200,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "workerQueueMs": 0,
+      "embeddingMs": 14.9,
+      "apiDbMs": 8.353600000002189,
+      "apiRoundTripMs": 25.003600000002187,
+      "requestTiming": {
+        "startTime": 1793329660609.4292,
+        "domainLookupStart": 0.095,
+        "domainLookupEnd": 0.333,
+        "connectStart": 0.333,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.726,
+        "requestStart": 0.78,
+        "responseStart": 22.95,
+        "responseEnd": 24.106
+      },
+      "responseTransferMs": 1.1560000000000024,
+      "pageVisibleMs": 103.23679999999877,
+      "browserEndToEndMs": 53.8,
+      "resultIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "apiNodeWorkingSetBytes": 65957888
+    },
+    {
+      "index": 4,
+      "status": 200,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "workerQueueMs": 0,
+      "embeddingMs": 16.9,
+      "apiDbMs": 7.217700000008335,
+      "apiRoundTripMs": 21.997700000008336,
+      "requestTiming": {
+        "startTime": 1793329662552.263,
+        "domainLookupStart": 0.101,
+        "domainLookupEnd": 0.377,
+        "connectStart": 0.377,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.788,
+        "requestStart": 0.847,
+        "responseStart": 20.128,
+        "responseEnd": 21.155
+      },
+      "responseTransferMs": 1.027000000000001,
+      "pageVisibleMs": 90.66609999999855,
+      "browserEndToEndMs": 56.5,
+      "resultIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "apiNodeWorkingSetBytes": 66043904
+    },
+    {
+      "index": 5,
+      "status": 200,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "workerQueueMs": 0,
+      "embeddingMs": 19.4,
+      "apiDbMs": 8.45810000000347,
+      "apiRoundTripMs": 19.79810000000347,
+      "requestTiming": {
+        "startTime": 1793329664534.2231,
+        "domainLookupStart": 0.097,
+        "domainLookupEnd": 0.346,
+        "connectStart": 0.346,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.68,
+        "requestStart": 0.736,
+        "responseStart": 17.609,
+        "responseEnd": 18.75
+      },
+      "responseTransferMs": 1.1409999999999982,
+      "pageVisibleMs": 86.63080000000264,
+      "browserEndToEndMs": 41.7,
+      "resultIds": [
+        "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+        "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+        "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+        "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+        "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+      ],
+      "apiNodeWorkingSetBytes": 66093056
+    }
+  ],
+  "errors": [],
+  "note": "Browser request timing includes server processing; one-way outbound latency cannot be isolated without synchronized instrumentation.",
+  "apiPid": 21264,
+  "browserVersion": "156.0.4314.50",
+  "headed": true,
+  "warmup": {
+    "index": 0,
+    "status": 200,
+    "backend": "WebGPU",
+    "dtype": "fp16",
+    "workerQueueMs": 0,
+    "embeddingMs": 19.7,
+    "apiDbMs": 26.98520000001008,
+    "apiRoundTripMs": 52.39520000001008,
+    "requestTiming": {
+      "startTime": 1793329654190.9512,
+      "domainLookupStart": -1,
+      "domainLookupEnd": -1,
+      "connectStart": -1,
+      "secureConnectionStart": -1,
+      "connectEnd": -1,
+      "requestStart": 0.315,
+      "responseStart": 47.031,
+      "responseEnd": 51.043
+    },
+    "responseTransferMs": 4.0120000000000005,
+    "pageVisibleMs": 3177.1722,
+    "browserEndToEndMs": 3084.7,
+    "resultIds": [
+      "eec041c6a96dbbce2cb24164c6ffc01f2e6edd66f7fb9e5f491663662c55035d",
+      "d36d24f8a201c0ed50cc96ebe890ee1ace386a849249583e2ba85e8f9426340a",
+      "28aaa8f0b1ba9403de329ba9a397aa505ccc1f2a467dd4f0786d10935892187b",
+      "f803d5acbcebc9ee7de9a2aaedc4112014f99b69a7a6ab24e120d71761ab3d30",
+      "e55f42788ecbde45d381b23bf6658789facc87866978cc4e8b6974e14e85a8db"
+    ],
+    "apiNodeWorkingSetBytes": 66101248
+  }
+}

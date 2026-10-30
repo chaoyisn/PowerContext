@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 
-const workflow = JSON.parse(await readFile("benchmark/results/v3/chrome-workflow.json", "utf8"));
-const lines = (await readFile("benchmark/results/v3/api-sql-trace.log", "utf8")).trim().split(/\r?\n/).map(JSON.parse);
+const directory = process.argv[2] || "benchmark/results/v3";
+const workflow = JSON.parse(await readFile(`${directory}/chrome-workflow.json`, "utf8"));
+const lines = (await readFile(`${directory}/api-sql-trace.log`, "utf8")).trim().split(/\r?\n/).map(JSON.parse);
 const event = lines.find(row => row.event === "seekdb.hybrid.trace" && row.kbId === workflow.kbId);
 assert.ok(event, "No trace for browser workflow knowledge base");
 const generated = event.trace.find(row => row.generatedSqlSha256);
@@ -17,5 +18,5 @@ const apiRows = response.body.results.map(row => ({ id: row.id, document: row.do
 assert.deepEqual(dbRows, apiRows);
 assert.equal(executed.rowCount, apiRows.length);
 const result = { source: "seekdb-js execute boundary, not database audit", kbId: workflow.kbId, generatedSqlSha256: generated.generatedSqlSha256, executedSqlSha256: executed.sqlSha256, elapsedMs: executed.elapsedMs, rowCount: executed.rowCount, rowsMatchApiIncludingOrder: true, queryVector: searchRequest.vectors[0], rows: dbRows };
-await writeFile("benchmark/results/v3/trace-verification.json", JSON.stringify(result, null, 2) + "\n");
+await writeFile(`${directory}/trace-verification.json`, JSON.stringify(result, null, 2) + "\n");
 console.log(JSON.stringify(result));

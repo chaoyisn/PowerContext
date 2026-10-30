@@ -1,0 +1,63 @@
+{
+  "before": {
+    "label": "before",
+    "status": 200,
+    "elapsedMs": 226.21119999999974,
+    "body": {
+      "results": [
+        {
+          "id": "eee30bde97b955fb92917adc073b36fc651d4d6bfe8a4107b53e177ce3e0d665",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "3b95ee9dbb1c7d1e8906d0cf653b5921dbae0d9c432060e55089c345287dcd85"
+          },
+          "score": 0.0328
+        }
+      ],
+      "dbMs": 32.99579999999969,
+      "mode": "hybrid"
+    }
+  },
+  "disconnected": {
+    "label": "disconnected",
+    "status": 503,
+    "elapsedMs": 230.0007999999998,
+    "body": {
+      "error": "数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试"
+    },
+    "uiError": "!\n数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\n×"
+  },
+  "recovered": {
+    "label": "recovered",
+    "status": 200,
+    "elapsedMs": 110.3726000000006,
+    "body": {
+      "results": [
+        {
+          "id": "eee30bde97b955fb92917adc073b36fc651d4d6bfe8a4107b53e177ce3e0d665",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "3b95ee9dbb1c7d1e8906d0cf653b5921dbae0d9c432060e55089c345287dcd85"
+          },
+          "score": 0.0328
+        }
+      ],
+      "dbMs": 23.273299999999836,
+      "mode": "hybrid"
+    }
+  },
+  "sameIds": true,
+  "errors": []
+}

@@ -1,5 +1,13 @@
 # 验证记录
 
+## V4（2026-10-30）
+
+- `disconnect-queue-final.json`：专用 seekdb 前的隔离 TCP 代理模拟断连；查询返回 503，恢复后相同 ID；刷新期间断连后的两份真实向量文档保持 processing，恢复重试后 ID 稳定、重复导入跳过，六个并发查询与基线一致。停滞约 20.3 秒后 503、恢复后 200；无数据库启动时子进程退出码 1。没有停止任何容器。
+- V4.1（2026-10-30）最终队列版本 `final-queue-e2e.log`：Chrome/Edge 自动 E2E 2/2；`v41-chrome-recovery.json`、`v41-edge-recovery.json` 和截图：有窗口浏览器分别验证 API 重启、隔离代理断连、刷新中断重试、六并发、停滞超时及恢复、知识库切换和页面刷新。两者控制台各有一次 404 及故障注入期间三次预期 503；无未捕获页面异常。历史 `chrome-headed-final.json`、`edge-headed-final.json` 和 `final-e2e.log` 保留。
+- `gpu-runtime.json`：真实 Edge WebGPU FP16 推理中注入受控错误，丢弃先前批次并以 q8 重算；不匹配的 FP16 知识库查询被阻止，切换 q8 集合后检索成功。`worker-fault.json` 验证 Worker 致命异常后提示及重新初始化。真实硬件 Device Lost 未复现。
+- `gpu-stability.json`：物理 GPU 相同查询 20 次，最大 L2 差异 0.0045264、最小余弦 0.99998976，Top 5 排名全部一致。`trace-verification.json` 验证 SDK 执行边界生成与执行 SQL 哈希一致，三行与 API 响应一致；不是数据库审计日志。
+- T1–T12：按已有真实或受控测试证据 PASS；T11 最终版本 E2E 与有窗口故障回归通过。T12 的 GPU 专用/共享内存及真实进程峰值为 UNKNOWN，工作集仅为周期采样最大值；冷/热初始化各一份样本。
+
 ## V3（2026-10-30）
 
 - 实际浏览器向量查询的 seekdb-js 执行边界追踪：`GET_SQL` 返回语句与后续执行语句 SHA-256 均为 `528ee53fea21627bcfdb3964f981a15c52c52d981480e4859ef229f5e4a40c87`；数据库返回 3 行，ID、原文、得分和排序与 API 响应一致。SQL 中的全文、向量和 RRF 均在数据库执行。证据是 SDK 执行边界，而非数据库审计日志：`benchmark/results/v3/trace-verification.json`、`api-sql-trace.log`。

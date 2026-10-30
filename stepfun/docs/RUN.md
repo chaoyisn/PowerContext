@@ -1,5 +1,15 @@
 # EdgeSeek 运行说明
 
+## V4 操作与恢复
+
+Windows 11 先启动 Docker Desktop，在 `stepfun` 目录执行 `npm ci --legacy-peer-deps`、`npm run fetch:model`，再执行 `./scripts/start.ps1`；打开 `http://127.0.0.1:5174/`。已有模型会先做完整性校验；缺失模型会从固定 revision 获取，下载完成后浏览器从本机读取。Linux 使用 `./scripts/install.sh` 和 `./scripts/start.sh`。
+
+选择自动模式时优先 WebGPU FP16，失败回退 WASM q8。不同精度/后端使用不同知识库；回退后不兼容的查询会被阻止，需切换匹配知识库或重新导入。旧版缺少精度身份的知识库需要新建并重新向量化。模型缺失或连接异常会显示错误，不生成假向量。
+
+数据库连接出错会返回 503，失效单连接被丢弃；只读操作最多重试一次，写入不自动重放。批次可能部分写入，尚未确认的文档保持 `processing`，恢复后重新导入即可按稳定 ID 重试。SDK 的单连接查询由最多 16 项的队列保护，等待超过 30 秒返回繁忙错误，单条数据库操作超时 10 秒；大批量请求并非跨文档事务。
+
+复现实验时数据库中的知识库 ID 每次不同。为保留原始记录，在 PowerShell 设置 `$env:EDGESEEK_QUALITY_DIR='benchmark/results/v4/reproduction/small'`、`$env:EDGESEEK_V4_OUTPUT_DIR='benchmark/results/v4/reproduction/runs'` 和 `$env:EDGESEEK_PERF_SUFFIX='-instrumented'`。先启动应用，依次运行 `node scripts/quality-probe.mjs int8`、`fp32`、`fp16` 重建小语料配置；`v4-query-perf.mjs`、`v4-gpu-stability.mjs` 和断连脚本将读取小语料目录的新 ID。每次运行断连脚本可用不同的 `$env:EDGESEEK_RESULT_NAME` 区分输出。运行断连脚本前停止本次启动的 API/Vite，由 `v4-disconnect-probe.mjs` 自行启动隔离代理与测试服务器。运行 V4 的 100 文档评测使用 `node scripts/v4-quality.mjs int8`（或 `fp32`、`fp16`）；评测标注仅由脚本计算指标，不进入产品请求。
+
 ## V3 验收与旧知识库
 
 进入 `stepfun` 后，先确保 Docker 中专用 seekdb 服务运行，执行 `npm run fetch:model` 校验固定模型，再运行 `npm run dev`；访问 `http://127.0.0.1:5174/`。创建知识库时先加载所选推理配置；切换精度或实际后端后需使用匹配的知识库。旧版没有记录精度的知识库需新建并重新导入，原数据不会自动迁移。

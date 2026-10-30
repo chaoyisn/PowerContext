@@ -1,0 +1,555 @@
+{
+  "at": "2026-10-30T03:25:45.170Z",
+  "fault": "isolated TCP proxy on 127.0.0.1:2883 to dedicated edgeseek-seekdb:2882; no database container stopped",
+  "errors": [],
+  "apiLog": [
+    "{\"event\":\"seekdb.ready\",\"sdk\":\"seekdb@1.4.0\",\"database\":\"test\"}\n",
+    "{\"event\":\"api.ready\",\"url\":\"http://127.0.0.1:4174\"}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":1,\"dbMs\":39.51669999999922}\n",
+    "{\"event\":\"seekdb.connection.error\",\"detail\":\"  Error Can't add new command when connection is in closed state\"}\n",
+    "{\"event\":\"seekdb.connection.error\",\"detail\":\" PROTOCOL_CONNECTION_LOST SeekdbConnectionError Failed to connect to 127.0.0.1:2883\"}\n",
+    "{\"event\":\"api.error\",\"message\":\"数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\"}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":1,\"dbMs\":23.98859999999968}\n",
+    "{\"event\":\"seekdb.connection.error\",\"detail\":\"PROTOCOL_CONNECTION_LOST  Error Connection lost: The server closed the connection.\"}\n{\"event\":\"api.error\",\"message\":\"数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\"}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":11.358400000000074}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":8.492400000000089}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":8.409599999999955}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":14.032600000000457}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":7.946400000000722}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":8.082900000000336}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":8.285100000000057}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":8.751100000000406}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":9.706200000000536}\n",
+    "{\"event\":\"seekdb.connection.error\",\"detail\":\"EDGESEEK_DB_TIMEOUT  Error seekdb operation timed out\"}\n",
+    "{\"event\":\"seekdb.connection.error\",\"detail\":\" ETIMEDOUT SeekdbConnectionError Failed to connect to 127.0.0.1:2883\"}\n",
+    "{\"event\":\"api.error\",\"message\":\"数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\"}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":3,\"dbMs\":10.70089999999982}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":5,\"dbMs\":13.947799999998097}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":5,\"dbMs\":13.13260000000082}\n"
+  ],
+  "viteLog": [
+    "\n  VITE v8.3.5  ready in 237 ms\n\n",
+    "  ➜  Local:   http://127.0.0.1:5174/\n"
+  ],
+  "channel": "chrome",
+  "headed": true,
+  "browser": "156.0.8078.73",
+  "kbId": "4118c3a2623042b9b2f16544dd0962b6",
+  "before": {
+    "label": "before",
+    "status": 200,
+    "elapsedMs": 216.27819999999974,
+    "body": {
+      "results": [
+        {
+          "id": "f06b5f097e99fa6aef5548a86de8edfc761f02f87d3ff3e7a48d5d6bfcbe04a0",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "a97a3500c7d142682abcbd56a4e98f9b8cc4edb8e2692c28b3cb87449d547d59"
+          },
+          "score": 0.0328
+        }
+      ],
+      "dbMs": 39.51669999999922,
+      "mode": "hybrid"
+    }
+  },
+  "disconnected": {
+    "label": "disconnected",
+    "status": 503,
+    "elapsedMs": 230.33899999999994,
+    "body": {
+      "error": "数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试"
+    },
+    "uiError": "!\n数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\n×"
+  },
+  "recovered": {
+    "label": "recovered",
+    "status": 200,
+    "elapsedMs": 104.41070000000036,
+    "body": {
+      "results": [
+        {
+          "id": "f06b5f097e99fa6aef5548a86de8edfc761f02f87d3ff3e7a48d5d6bfcbe04a0",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "a97a3500c7d142682abcbd56a4e98f9b8cc4edb8e2692c28b3cb87449d547d59"
+          },
+          "score": 0.0328
+        }
+      ],
+      "dbMs": 23.98859999999968,
+      "mode": "hybrid"
+    }
+  },
+  "sameIds": true,
+  "writeFailure": {
+    "injectedAtRefresh": true,
+    "status": 503,
+    "body": {
+      "error": "数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试"
+    },
+    "uiError": "!\n数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\n×"
+  },
+  "pendingAfterFailure": [
+    {
+      "id": "fffcf62f0dc0854222b582370e3181b098a770aafa270701cbb5eaa99b85770a",
+      "filename": "interrupted-two.md",
+      "sha256": "9c68eab537b7cca69ae430ba57c49df98bfc601e3550a412876a7d6ca73b6780",
+      "chunkCount": 1,
+      "status": "processing",
+      "createdAt": "2026-10-30T03:25:50.000Z"
+    },
+    {
+      "id": "02d470dbe79eea8f310c3e6bc2dd4a6475b0549120749dd741da44dbc90b300e",
+      "filename": "interrupted-one.md",
+      "sha256": "e1e9e553be73d9f92064e67b29d25a2d3e7bb6685eae08c08a552764e9749914",
+      "chunkCount": 1,
+      "status": "processing",
+      "createdAt": "2026-10-30T03:25:50.000Z"
+    }
+  ],
+  "completedAfterRetry": [
+    {
+      "id": "fffcf62f0dc0854222b582370e3181b098a770aafa270701cbb5eaa99b85770a",
+      "filename": "interrupted-two.md",
+      "sha256": "9c68eab537b7cca69ae430ba57c49df98bfc601e3550a412876a7d6ca73b6780",
+      "chunkCount": 1,
+      "status": "imported",
+      "createdAt": "2026-10-30T03:25:50.000Z"
+    },
+    {
+      "id": "02d470dbe79eea8f310c3e6bc2dd4a6475b0549120749dd741da44dbc90b300e",
+      "filename": "interrupted-one.md",
+      "sha256": "e1e9e553be73d9f92064e67b29d25a2d3e7bb6685eae08c08a552764e9749914",
+      "chunkCount": 1,
+      "status": "imported",
+      "createdAt": "2026-10-30T03:25:50.000Z"
+    }
+  ],
+  "preexistingPreserved": true,
+  "stableDocumentIds": true,
+  "duplicateSkippedAfterRetry": true,
+  "afterWriteRecovery": {
+    "label": "after-write-recovery",
+    "status": 200,
+    "elapsedMs": 96.10930000000008,
+    "body": {
+      "results": [
+        {
+          "id": "d3156b4f99ea29a95e1206c88d81798ebd8a1015ac3e8f3043235087b127dade",
+          "document": "A batch import should recover safely after an index refresh interruption.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "e1e9e553be73d9f92064e67b29d25a2d3e7bb6685eae08c08a552764e9749914",
+            "filename": "interrupted-one.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "02d470dbe79eea8f310c3e6bc2dd4a6475b0549120749dd741da44dbc90b300e"
+          },
+          "score": 0.0328
+        },
+        {
+          "id": "8581b281f2f44871eeb6e63c7c5799a55e6b26c4e16c33577a71fe969e70d1cf",
+          "document": "A second document keeps a stable identifier when the batch is retried.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "9c68eab537b7cca69ae430ba57c49df98bfc601e3550a412876a7d6ca73b6780",
+            "filename": "interrupted-two.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "fffcf62f0dc0854222b582370e3181b098a770aafa270701cbb5eaa99b85770a"
+          },
+          "score": 0.0323
+        },
+        {
+          "id": "f06b5f097e99fa6aef5548a86de8edfc761f02f87d3ff3e7a48d5d6bfcbe04a0",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "a97a3500c7d142682abcbd56a4e98f9b8cc4edb8e2692c28b3cb87449d547d59"
+          },
+          "score": 0.0159
+        }
+      ],
+      "dbMs": 11.358400000000074,
+      "mode": "hybrid"
+    }
+  },
+  "uniqueChunkIds": true,
+  "concurrent": [
+    {
+      "status": 200,
+      "matches": true
+    },
+    {
+      "status": 200,
+      "matches": true
+    },
+    {
+      "status": 200,
+      "matches": true
+    },
+    {
+      "status": 200,
+      "matches": true
+    },
+    {
+      "status": 200,
+      "matches": true
+    },
+    {
+      "status": 200,
+      "matches": true
+    }
+  ],
+  "timeout": {
+    "label": "stalled",
+    "status": 503,
+    "elapsedMs": 20239.6864,
+    "body": {
+      "error": "数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试"
+    },
+    "uiError": "!\n数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\n×"
+  },
+  "afterTimeout": {
+    "label": "after-timeout",
+    "status": 200,
+    "elapsedMs": 97.49539999999979,
+    "body": {
+      "results": [
+        {
+          "id": "d3156b4f99ea29a95e1206c88d81798ebd8a1015ac3e8f3043235087b127dade",
+          "document": "A batch import should recover safely after an index refresh interruption.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "e1e9e553be73d9f92064e67b29d25a2d3e7bb6685eae08c08a552764e9749914",
+            "filename": "interrupted-one.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "02d470dbe79eea8f310c3e6bc2dd4a6475b0549120749dd741da44dbc90b300e"
+          },
+          "score": 0.0328
+        },
+        {
+          "id": "8581b281f2f44871eeb6e63c7c5799a55e6b26c4e16c33577a71fe969e70d1cf",
+          "document": "A second document keeps a stable identifier when the batch is retried.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "9c68eab537b7cca69ae430ba57c49df98bfc601e3550a412876a7d6ca73b6780",
+            "filename": "interrupted-two.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "fffcf62f0dc0854222b582370e3181b098a770aafa270701cbb5eaa99b85770a"
+          },
+          "score": 0.0323
+        },
+        {
+          "id": "f06b5f097e99fa6aef5548a86de8edfc761f02f87d3ff3e7a48d5d6bfcbe04a0",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "a97a3500c7d142682abcbd56a4e98f9b8cc4edb8e2692c28b3cb87449d547d59"
+          },
+          "score": 0.0159
+        }
+      ],
+      "dbMs": 10.70089999999982,
+      "mode": "hybrid"
+    }
+  },
+  "switchedKnowledgeBase": {
+    "label": "switched-kb",
+    "status": 200,
+    "elapsedMs": 100.56950000000143,
+    "body": {
+      "results": [
+        {
+          "id": "17ba6a9c897002c7e6e58583c48c732e1c2b2dd0583d6e28ba5bb80ffcdc125a",
+          "document": "The browser creates embeddings on the user's device to keep text private from remote inference services.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "219b297c7ea568feb5f13f6628f30d9d7dc98631e1463c3c4e7beb652026de2b",
+            "filename": "privacy.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "5ea5f0562698f2213f39067d874aeeae459349805ddc342de1823ddffd9ac4f5"
+          },
+          "score": 0.0328
+        },
+        {
+          "id": "17a91d496c28471f0e2fa16dc40e2f064a5674bb21da8d49b0f6f3c753c70696",
+          "document": "After an incremental import the database refreshes its index so new document chunks can be retrieved.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "037d35973af03ed8684aede3e2189f01040129633a6feed3683da385989ea9bb",
+            "filename": "index.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "f6f31ca1417e233e42ddb45634eec1661e76fac44e392b4b05d9815895a95973"
+          },
+          "score": 0.032
+        },
+        {
+          "id": "3496d72a94250584cce80030aa1668d58f04a8d48e6f30654950f5e84068960d",
+          "document": "浏览器在本地生成文本向量，减少将用户文档发送到远程服务的需要。",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "4ea276089a5cb1c0c3195f5d7491c5705e5ee9144fe707bf749e6fd39d361068",
+            "filename": "zh-privacy.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "0d21051d091f7dd496845d84b22888c37fd4553cb0163978722b349a280b008b"
+          },
+          "score": 0.0161
+        },
+        {
+          "id": "e3245560b75c91e71d828a15f92e0e85287ad1f3fc42c06a3e28c57abafa8a12",
+          "document": "数据库使用向量检索和全文检索查找相关文档，并在数据库内部融合搜索结果。",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "85b0a5a2e4edc94b2dcc36ef31ceda8aafa68cda0f2f913473a9c01f0e203311",
+            "filename": "zh-search.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "e6174a9de2e8b3f640ba94f4b186817cff673683e792073a895043cbd0e0299a"
+          },
+          "score": 0.0156
+        },
+        {
+          "id": "8d492c8fc88f3c4a7a1ebbe050bf6a277d91362fd1da83d280245b7cc3e66f2a",
+          "document": "A weekend weather forecast predicts rain and cooler temperatures in the mountains.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "2e7019ef59e68b9095190f23fef0a1687476f0d4b481778c7d82d9aae9375a0c",
+            "filename": "weather.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "8f841ec785fbf63a9fc28af470e0cada848b108c465feee18c1545dbfe6a1673"
+          },
+          "score": 0.0154
+        }
+      ],
+      "dbMs": 13.947799999998097,
+      "mode": "hybrid"
+    }
+  },
+  "afterRefresh": {
+    "label": "after-refresh",
+    "status": 200,
+    "elapsedMs": 1013.1978999999992,
+    "body": {
+      "results": [
+        {
+          "id": "17ba6a9c897002c7e6e58583c48c732e1c2b2dd0583d6e28ba5bb80ffcdc125a",
+          "document": "The browser creates embeddings on the user's device to keep text private from remote inference services.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "219b297c7ea568feb5f13f6628f30d9d7dc98631e1463c3c4e7beb652026de2b",
+            "filename": "privacy.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "5ea5f0562698f2213f39067d874aeeae459349805ddc342de1823ddffd9ac4f5"
+          },
+          "score": 0.0328
+        },
+        {
+          "id": "17a91d496c28471f0e2fa16dc40e2f064a5674bb21da8d49b0f6f3c753c70696",
+          "document": "After an incremental import the database refreshes its index so new document chunks can be retrieved.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "037d35973af03ed8684aede3e2189f01040129633a6feed3683da385989ea9bb",
+            "filename": "index.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "f6f31ca1417e233e42ddb45634eec1661e76fac44e392b4b05d9815895a95973"
+          },
+          "score": 0.032
+        },
+        {
+          "id": "3496d72a94250584cce80030aa1668d58f04a8d48e6f30654950f5e84068960d",
+          "document": "浏览器在本地生成文本向量，减少将用户文档发送到远程服务的需要。",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "4ea276089a5cb1c0c3195f5d7491c5705e5ee9144fe707bf749e6fd39d361068",
+            "filename": "zh-privacy.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "0d21051d091f7dd496845d84b22888c37fd4553cb0163978722b349a280b008b"
+          },
+          "score": 0.0161
+        },
+        {
+          "id": "e3245560b75c91e71d828a15f92e0e85287ad1f3fc42c06a3e28c57abafa8a12",
+          "document": "数据库使用向量检索和全文检索查找相关文档，并在数据库内部融合搜索结果。",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "85b0a5a2e4edc94b2dcc36ef31ceda8aafa68cda0f2f913473a9c01f0e203311",
+            "filename": "zh-search.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "e6174a9de2e8b3f640ba94f4b186817cff673683e792073a895043cbd0e0299a"
+          },
+          "score": 0.0156
+        },
+        {
+          "id": "8d492c8fc88f3c4a7a1ebbe050bf6a277d91362fd1da83d280245b7cc3e66f2a",
+          "document": "A weekend weather forecast predicts rain and cooler temperatures in the mountains.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "2e7019ef59e68b9095190f23fef0a1687476f0d4b481778c7d82d9aae9375a0c",
+            "filename": "weather.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "8f841ec785fbf63a9fc28af470e0cada848b108c465feee18c1545dbfe6a1673"
+          },
+          "score": 0.0154
+        }
+      ],
+      "dbMs": 13.13260000000082,
+      "mode": "hybrid"
+    }
+  },
+  "startupFailure": {
+    "exitCode": 1,
+    "output": "{\"event\":\"seekdb.connection.error\",\"detail\":\" ECONNREFUSED SeekdbConnectionError Failed to connect to 127.0.0.1:51810\"}\nfile:///D:/OceanBase/PowerContext-stepfun/stepfun/server/db.mjs:47\r\n      throw new HttpError(503, \"数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\");\r\n            ^\r\n\r\nHttpError: 数据库连接不可用或超时，请检查 seekdb 并重试；未确认完成的导入可安全重试\r\n    at internalClient.execute (file:///D:/OceanBase/PowerContext-stepfun/stepfun/server/db.mjs:47:13)\r\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\r\n    at async initializeDatabase (file:///D:/OceanBase/PowerContext-stepfun/stepfun/server/db.mjs:74:3)\r\n    at async file:///D:/OceanBase/PowerContext-stepfun/stepfun/server/index.mjs:119:1 {\r\n  status: 503\r\n}\r\n\r\nNode.js v24.14.0\r\n"
+  },
+  "browserPerformance": [
+    {
+      "at": "2026-10-30T03:25:49.158Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 1663.3,
+      "workerInitMs": 1344.9,
+      "modelAssetBytes": 23685047,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T03:25:50.434Z",
+      "name": "query.embedding",
+      "durationMs": 13.3,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:25:50.577Z",
+      "name": "query.embedding",
+      "durationMs": 10.6,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:25:50.807Z",
+      "name": "query.embedding",
+      "durationMs": 9.8,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:25:52.041Z",
+      "name": "query.embedding",
+      "durationMs": 11.3,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:25:52.167Z",
+      "name": "query.embedding",
+      "durationMs": 8.1,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:25:52.283Z",
+      "name": "query.embedding",
+      "durationMs": 8.3,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:25:52.492Z",
+      "name": "query.embedding",
+      "durationMs": 11.2,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:26:12.743Z",
+      "name": "query.embedding",
+      "durationMs": 8.4,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:26:12.900Z",
+      "name": "query.embedding",
+      "durationMs": 7.9,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T03:26:14.134Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 889,
+      "workerInitMs": 804.8,
+      "modelAssetBytes": 23685047,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T03:26:14.164Z",
+      "name": "query.embedding",
+      "durationMs": 16.7,
+      "backend": "WASM",
+      "dtype": "q8"
+    }
+  ]
+}

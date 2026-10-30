@@ -1,0 +1,27 @@
+{
+  "test": "real-api-workflow",
+  "measuredAt": "2026-10-30T03:27:27.850Z",
+  "source": "real seekdb server; synthetic normalized fixture vectors (not browser model output)",
+  "sdk": "seekdb@1.4.0",
+  "database": "test",
+  "kbId": "bd15f0d68be14e3294db3ce3283aa426",
+  "incremental": {
+    "duplicateSkipped": true,
+    "writeMs": 19.514499999999998,
+    "refreshMs": 504.0857000000001,
+    "visibilityMs": 3.701000000000022,
+    "searchMs": 19.03099999999995,
+    "searchMode": "fulltext",
+    "searchFilename": "incremental.md"
+  },
+  "restart": {
+    "documentCount": 2,
+    "documentPersisted": true,
+    "searchMs": 6.500700000000052,
+    "vectorSearchFilename": "primary.md"
+  },
+  "isolation": {
+    "separateKbId": "3e3df1f220b247879105cf656fdb27f9",
+    "primaryContainsTenantDocument": false
+  }
+}

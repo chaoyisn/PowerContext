@@ -1,0 +1,725 @@
+{
+  "at": "2026-10-30T03:03:54.880Z",
+  "precision": "fp32",
+  "channel": "chrome",
+  "headed": false,
+  "samples": [
+    {
+      "batchSize": 1,
+      "run": 1,
+      "items": 32,
+      "elapsedMs": 1828,
+      "itemsPerSecond": 17.505470459518598,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 1,
+      "run": 2,
+      "items": 32,
+      "elapsedMs": 1517,
+      "itemsPerSecond": 21.09426499670402,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 1,
+      "run": 3,
+      "items": 32,
+      "elapsedMs": 1725.5,
+      "itemsPerSecond": 18.54534917415242,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 1,
+      "run": 4,
+      "items": 32,
+      "elapsedMs": 1400.1000000014901,
+      "itemsPerSecond": 22.855510320667054,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 1,
+      "run": 5,
+      "items": 32,
+      "elapsedMs": 1273.6000000014901,
+      "itemsPerSecond": 25.12562814067412,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 4,
+      "run": 1,
+      "items": 32,
+      "elapsedMs": 1304.5999999977648,
+      "itemsPerSecond": 24.528591139088476,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 4,
+      "run": 2,
+      "items": 32,
+      "elapsedMs": 1176.2999999970198,
+      "itemsPerSecond": 27.20394457203186,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 4,
+      "run": 3,
+      "items": 32,
+      "elapsedMs": 1421.5999999977648,
+      "itemsPerSecond": 22.509848058560998,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 4,
+      "run": 4,
+      "items": 32,
+      "elapsedMs": 1114.8999999985099,
+      "itemsPerSecond": 28.70212575122681,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 4,
+      "run": 5,
+      "items": 32,
+      "elapsedMs": 1403.5,
+      "itemsPerSecond": 22.80014250089063,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 8,
+      "run": 1,
+      "items": 32,
+      "elapsedMs": 1217.199999999255,
+      "itemsPerSecond": 26.289845547173503,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 8,
+      "run": 2,
+      "items": 32,
+      "elapsedMs": 1149,
+      "itemsPerSecond": 27.8503046127067,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 8,
+      "run": 3,
+      "items": 32,
+      "elapsedMs": 1292,
+      "itemsPerSecond": 24.76780185758514,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 8,
+      "run": 4,
+      "items": 32,
+      "elapsedMs": 1294.0999999977648,
+      "itemsPerSecond": 24.72760992199619,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 8,
+      "run": 5,
+      "items": 32,
+      "elapsedMs": 1326,
+      "itemsPerSecond": 24.132730015082956,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 16,
+      "run": 1,
+      "items": 32,
+      "elapsedMs": 1137.199999999255,
+      "itemsPerSecond": 28.139289482958993,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 16,
+      "run": 2,
+      "items": 32,
+      "elapsedMs": 1287,
+      "itemsPerSecond": 24.864024864024863,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 16,
+      "run": 3,
+      "items": 32,
+      "elapsedMs": 1549.300000000745,
+      "itemsPerSecond": 20.654489124110636,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 16,
+      "run": 4,
+      "items": 32,
+      "elapsedMs": 1139.6000000014901,
+      "itemsPerSecond": 28.08002807999136,
+      "backend": "WASM",
+      "dtype": "fp32"
+    },
+    {
+      "batchSize": 16,
+      "run": 5,
+      "items": 32,
+      "elapsedMs": 1377.7999999970198,
+      "itemsPerSecond": 23.22543184792366,
+      "backend": "WASM",
+      "dtype": "fp32"
+    }
+  ],
+  "memory": [
+    {
+      "at": "2026-10-30T03:03:58.064Z",
+      "browserProcesses": 4,
+      "browserWorkingSetSum": 477548544,
+      "harnessNodeRss": 134000640
+    },
+    {
+      "at": "2026-10-30T03:04:01.266Z",
+      "browserProcesses": 7,
+      "browserWorkingSetSum": 1163649024,
+      "harnessNodeRss": 134250496
+    },
+    {
+      "at": "2026-10-30T03:04:04.469Z",
+      "browserProcesses": 8,
+      "browserWorkingSetSum": 1152851968,
+      "harnessNodeRss": 102404096
+    },
+    {
+      "at": "2026-10-30T03:04:10.788Z",
+      "browserProcesses": 7,
+      "browserWorkingSetSum": 1144168448,
+      "harnessNodeRss": 101548032
+    },
+    {
+      "at": "2026-10-30T03:04:13.870Z",
+      "browserProcesses": 7,
+      "browserWorkingSetSum": 1146384384,
+      "harnessNodeRss": 101888000
+    },
+    {
+      "at": "2026-10-30T03:04:17.059Z",
+      "browserProcesses": 7,
+      "browserWorkingSetSum": 1148362752,
+      "harnessNodeRss": 102019072
+    },
+    {
+      "at": "2026-10-30T03:04:20.112Z",
+      "browserProcesses": 7,
+      "browserWorkingSetSum": 1064222720,
+      "harnessNodeRss": 102457344
+    },
+    {
+      "at": "2026-10-30T03:04:23.294Z",
+      "browserProcesses": 7,
+      "browserWorkingSetSum": 1070055424,
+      "harnessNodeRss": 102600704
+    },
+    {
+      "at": "2026-10-30T03:04:26.552Z",
+      "browserProcesses": 7,
+      "browserWorkingSetSum": 1075736576,
+      "harnessNodeRss": 102825984
+    }
+  ],
+  "errors": [],
+  "runtime": "Transformers.js 4.3.2; ONNX Runtime Web 1.31.0-dev.20260914-8d85527a0",
+  "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+  "browserVersion": "156.0.8078.73",
+  "memoryError": "Error: Command failed: powershell.exe -NoProfile -Command Get-Process -Id 23136,32404,18508,26024,32292,31304,30136 -ErrorAction SilentlyContinue | Select-Object Id,WorkingSet64 | ConvertTo-Json -Compress\n",
+  "corpus": {
+    "count": 32,
+    "characterLengths": [
+      116,
+      124,
+      132,
+      140,
+      148,
+      156,
+      164,
+      116,
+      124,
+      132,
+      141,
+      149,
+      157,
+      165,
+      117,
+      125,
+      133,
+      141,
+      149,
+      157,
+      165,
+      117,
+      125,
+      133,
+      141,
+      149,
+      157,
+      165,
+      117,
+      125,
+      133,
+      141
+    ],
+    "tokenizerLengths": "not measured"
+  },
+  "cacheBefore": [],
+  "cacheAfterCold": [
+    {
+      "name": "transformers-cache",
+      "entries": 6
+    }
+  ],
+  "cacheAfterWarm": [
+    {
+      "name": "transformers-cache",
+      "entries": 6
+    }
+  ],
+  "cold": {
+    "state": {
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "initMs": 2956.60000000149
+    },
+    "initWallMs": 3156.89999999851,
+    "events": [
+      {
+        "phase": "worker-start",
+        "kind": "init",
+        "queueMs": 200,
+        "atMs": 199.89999999850988
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 224.30000000074506
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 225.19999999925494
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 232
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 232.19999999925494
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 242.30000000074506
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 251.39999999850988
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model.onnx",
+        "phase": "model-load",
+        "atMs": 328.8999999985099
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model.onnx",
+        "phase": "model-load",
+        "atMs": 1601.5
+      },
+      {
+        "phase": "model-ready",
+        "backend": "wasm",
+        "dtype": "fp32",
+        "atMs": 3030.39999999851
+      },
+      {
+        "phase": "first-inference",
+        "elapsedMs": 126,
+        "backend": "WASM",
+        "atMs": 3156.699999999255
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 2,
+        "atMs": 3159.099999997765
+      }
+    ],
+    "firstPostInitInferenceMs": 96.79999999701977
+  },
+  "warm": {
+    "state": {
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "initMs": 2472.900000002235
+    },
+    "initWallMs": 2725.599999997765,
+    "events": [
+      {
+        "phase": "worker-start",
+        "kind": "init",
+        "queueMs": 252,
+        "atMs": 252.39999999850988
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 268.29999999701977
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 269.29999999701977
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 269.29999999701977
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 271
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 274.69999999925494
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 289.8999999985099
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model.onnx",
+        "phase": "model-load",
+        "atMs": 330.69999999925494
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model.onnx",
+        "phase": "model-load",
+        "atMs": 487.5
+      },
+      {
+        "phase": "model-ready",
+        "backend": "wasm",
+        "dtype": "fp32",
+        "atMs": 2608.099999997765
+      },
+      {
+        "phase": "first-inference",
+        "elapsedMs": 117.29999999701977,
+        "backend": "WASM",
+        "atMs": 2725.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 15,
+        "atMs": 2741.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2810.199999999255
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2869.39999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 2918.7999999970198
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2971.89999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 3026.39999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 4855.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 6374.699999999255
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 8102.89999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 9503.79999999702
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 10779.199999999255
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 12086.29999999702
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 13261.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 14688.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 15799.39999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 17203.699999999255
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 18421.599999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 2,
+        "atMs": 19573.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 20867.599999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 22162.39999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 2,
+        "atMs": 23492
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 24629
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 25920.39999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 27466.39999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 28606.5
+      }
+    ],
+    "subsequentInferenceMs": [
+      69,
+      58.5,
+      48.5,
+      52.70000000298023,
+      53.899999998509884
+    ]
+  },
+  "pageJsHeapBytes": 6709941,
+  "network": [
+    {
+      "at": 1793329436011,
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs?url",
+      "status": 200,
+      "bytes": "784"
+    },
+    {
+      "at": 1793329436018,
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm?import&url",
+      "status": 200,
+      "bytes": "797"
+    },
+    {
+      "at": 1793329436111,
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/config.json",
+      "status": 200,
+      "bytes": "650"
+    },
+    {
+      "at": 1793329436120,
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer_config.json",
+      "status": 200,
+      "bytes": "366"
+    },
+    {
+      "at": 1793329436124,
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer.json",
+      "status": 200,
+      "bytes": "711661"
+    },
+    {
+      "at": 1793329436125,
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/onnx/model.onnx",
+      "status": 200,
+      "bytes": "90387606"
+    },
+    {
+      "at": 1793329436134,
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer.json",
+      "status": 200,
+      "bytes": "711661"
+    },
+    {
+      "at": 1793329436134,
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer_config.json",
+      "status": 200,
+      "bytes": "366"
+    },
+    {
+      "at": 1793329436232,
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/onnx/model.onnx",
+      "status": 200,
+      "bytes": "90387606"
+    },
+    {
+      "at": 1793329437522,
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs",
+      "status": 200,
+      "bytes": "339968"
+    },
+    {
+      "at": 1793329437525,
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm",
+      "status": 200,
+      "bytes": "26861777"
+    },
+    {
+      "at": 1793329439243,
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm?import&url",
+      "status": 200,
+      "bytes": "797"
+    },
+    {
+      "at": 1793329439244,
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs?url",
+      "status": 200,
+      "bytes": "784"
+    }
+  ],
+  "memorySummary": {
+    "metric": "maximum sampled sum of browser process working sets, shared pages can be counted more than once",
+    "sampledPeakBytes": 1163649024,
+    "nodeMetric": "test harness Node RSS, not API process",
+    "gpuMemory": "UNKNOWN"
+  }
+}

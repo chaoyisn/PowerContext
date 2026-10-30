@@ -5,3 +5,4 @@ frontend/public/models/
 .env
 playwright-report/
 test-results/
+deliverables/

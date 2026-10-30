@@ -1,0 +1,100 @@
+{
+  "at": "2026-10-30T02:57:42.001Z",
+  "fault": "isolated TCP proxy on 127.0.0.1:2883 to dedicated edgeseek-seekdb:2882; no database container stopped",
+  "errors": [],
+  "apiLog": [
+    "{\"event\":\"seekdb.ready\",\"sdk\":\"seekdb@1.4.0\",\"database\":\"test\"}\n",
+    "{\"event\":\"api.ready\",\"url\":\"http://127.0.0.1:4174\"}\n",
+    "{\"event\":\"seekdb.search\",\"mode\":\"hybrid\",\"sdk\":\"seekdb@1.4.0\",\"resultCount\":1,\"dbMs\":39.70190000000002}\n",
+    "{\"event\":\"api.error\",\"message\":\"Can't add new command when connection is in closed state\"}\n",
+    "{\"event\":\"api.error\",\"message\":\"Can't add new command when connection is in closed state\"}\n"
+  ],
+  "viteLog": [
+    "\n  VITE v8.3.5  ready in 185 ms\n\n",
+    "  ➜  Local:   http://127.0.0.1:5174/\n"
+  ],
+  "browser": "156.0.8078.73",
+  "kbId": "96b264dd2c444a23bcc1da9a3cc47df9",
+  "before": {
+    "label": "before",
+    "status": 200,
+    "elapsedMs": 309.40130000000045,
+    "body": {
+      "results": [
+        {
+          "id": "497bbcc03dfb476614d5698b7f89b84b9db17235c76e02d65325a0dc954d833f",
+          "document": "Browser-side embeddings protect privacy and the database enables semantic search.",
+          "metadata": {
+            "dtype": "q8",
+            "sha256": "d81f00f87bcd089dddaa814a9c24f81b0afb223f0b4c2c817dae48c99a402c4b",
+            "filename": "recovery.md",
+            "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384:transformers=4.3.2:tokenizer=751bff37182d3f1213fa05d7196b954e230abad9:dtype=q8:backend=WASM",
+            "chunkCount": 1,
+            "chunkIndex": 0,
+            "documentId": "a81590b210d4b284784fe49823c3583a10d253d36642fe409a28e32083c5ee0f"
+          },
+          "score": 0.0328
+        }
+      ],
+      "dbMs": 39.70190000000002,
+      "mode": "hybrid"
+    }
+  },
+  "disconnected": {
+    "label": "disconnected",
+    "status": 500,
+    "elapsedMs": 98.36050000000068,
+    "body": {
+      "error": "Can't add new command when connection is in closed state"
+    },
+    "uiError": "!\nCan't add new command when connection is in closed state\n×"
+  },
+  "recovered": {
+    "label": "recovered",
+    "status": 500,
+    "elapsedMs": 89.11329999999998,
+    "body": {
+      "error": "Can't add new command when connection is in closed state"
+    },
+    "uiError": "!\nCan't add new command when connection is in closed state\n×"
+  },
+  "sameIds": false,
+  "browserPerformance": [
+    {
+      "at": "2026-10-30T02:57:46.913Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 2582.3,
+      "workerInitMs": 2140.3,
+      "modelAssetBytes": 23685047,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:57:48.957Z",
+      "name": "query.embedding",
+      "durationMs": 31.8,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:57:49.131Z",
+      "name": "query.embedding",
+      "durationMs": 29.9,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:57:49.232Z",
+      "name": "query.embedding",
+      "durationMs": 32.8,
+      "backend": "WASM",
+      "dtype": "q8"
+    }
+  ]
+}

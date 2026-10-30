@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-30T03:21:46.109Z",
+  "precision": "fp32",
+  "blockedRequests": [],
+  "errors": [],
+  "note": "Fresh isolated context; warm pass blocks all model HTTP requests to prove cached model assets are sufficient.",
+  "before": [],
+  "cold": {
+    "state": {
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "initMs": 2761.10000000149
+    },
+    "wallMs": 3057,
+    "dimension": 384,
+    "backend": "WASM",
+    "dtype": "fp32"
+  },
+  "cache": [
+    {
+      "name": "transformers-cache",
+      "urls": [
+        "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/config.json",
+        "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer.json",
+        "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer_config.json",
+        "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/onnx/model.onnx",
+        "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs",
+        "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm"
+      ]
+    }
+  ],
+  "warm": {
+    "state": {
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "initMs": 2132
+    },
+    "wallMs": 2536.7999999970198,
+    "dimension": 384,
+    "backend": "WASM",
+    "dtype": "fp32"
+  },
+  "pass": true
+}

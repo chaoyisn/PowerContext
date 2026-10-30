@@ -3,6 +3,7 @@ import { createServer } from "node:http";
 import { extname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "./env.mjs";
+import { performance } from "node:perf_hooks";
 
 loadEnv();
 const { createKnowledgeBase, findDuplicateDocuments, getDocument, health, importDocument, importDocuments, initializeDatabase, listDocuments, listKnowledgeBases, search, HttpError } = await import("./db.mjs");
@@ -10,11 +11,29 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const staticRoot = resolve(root, "frontend/dist");
 const modelRoot = resolve(root, "frontend/public/models");
 const maxBodyBytes = 64 * 1024 * 1024;
+let databaseQueue = Promise.resolve();
+let queuedRequests = 0;
 
 const server = createServer(async (request, response) => {
+  response.setHeader("x-edgeseek-server-received", String(performance.timeOrigin + performance.now()));
   try {
     const url = new URL(request.url ?? "/", "http://127.0.0.1");
-    const route = await routeApi(request, url);
+    if (request.method === "GET" && !url.pathname.startsWith("/api/")) return serveStatic(url.pathname, response);
+    if (request.method === "POST" && url.pathname.startsWith("/api/")) await readJson(request);
+    // ponytail: one bounded queue protects the SDK's session variables; use isolated connections for higher concurrency.
+    if (queuedRequests >= 16) throw new HttpError(503, "数据库繁忙，请稍后重试");
+    queuedRequests++;
+    let expired = false;
+    let queueTimer;
+    const timeout = new Promise((_, reject) => { queueTimer = setTimeout(() => { expired = true; reject(new HttpError(503, "等待数据库超时，请稍后重试")); }, 30000); });
+    const operation = databaseQueue.then(() => {
+      clearTimeout(queueTimer);
+      return expired ? null : routeWithRetry(request, url);
+    });
+    databaseQueue = operation.catch(() => {});
+    let route;
+    try { route = await Promise.race([operation, timeout]); }
+    finally { clearTimeout(queueTimer); queuedRequests--; }
     if (route) return sendJson(response, route.status ?? 200, route.body);
     if (request.method === "GET") return serveStatic(url.pathname, response);
     throw new HttpError(404, "找不到接口");
@@ -24,6 +43,16 @@ const server = createServer(async (request, response) => {
     sendJson(response, status, { error: error instanceof Error ? error.message : "服务器错误" });
   }
 });
+
+async function routeWithRetry(request, url) {
+  const readOnly = request.method === "GET" || (request.method === "POST" && /\/search$/.test(url.pathname));
+  try { return await routeApi(request, url); }
+  catch (error) {
+    if (!readOnly || error?.status !== 503) throw error;
+    await new Promise(resolve => setTimeout(resolve, 150));
+    return routeApi(request, url);
+  }
+}
 
 async function routeApi(request, url) {
   const parts = url.pathname.split("/").filter(Boolean).map(decodeURIComponent);
@@ -55,6 +84,7 @@ async function routeApi(request, url) {
 }
 
 async function readJson(request) {
+  if (request.parsedBody !== undefined) return request.parsedBody;
   const chunks = [];
   let size = 0;
   for await (const chunk of request) {
@@ -63,7 +93,8 @@ async function readJson(request) {
     chunks.push(chunk);
   }
   try {
-    return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    request.parsedBody = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    return request.parsedBody;
   } catch {
     throw new HttpError(400, "请求 JSON 格式无效");
   }
@@ -71,6 +102,7 @@ async function readJson(request) {
 
 function sendJson(response, status, value) {
   if (response.headersSent) return;
+  response.setHeader("x-edgeseek-server-sent", String(performance.timeOrigin + performance.now()));
   response.writeHead(status, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
   response.end(JSON.stringify(value));
 }

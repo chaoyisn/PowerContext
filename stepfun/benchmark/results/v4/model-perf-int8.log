@@ -1,0 +1,349 @@
+{
+  "precision": "int8",
+  "cold": {
+    "state": {
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "initMs": 1597.0999999977648
+    },
+    "initWallMs": 2351.199999999255,
+    "events": [
+      {
+        "phase": "worker-start",
+        "kind": "init",
+        "queueMs": 753,
+        "atMs": 753.8999999985099
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 781
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 781.7999999970198
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 787.1999999992549
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 789.1999999992549
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 796.5999999977648
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 799.3999999985099
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model_quantized.onnx",
+        "phase": "model-load",
+        "atMs": 873.3999999985099
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model_quantized.onnx",
+        "phase": "model-load",
+        "atMs": 1161.7999999970198
+      },
+      {
+        "phase": "model-ready",
+        "backend": "wasm",
+        "dtype": "q8",
+        "atMs": 2263.7999999970198
+      },
+      {
+        "phase": "first-inference",
+        "elapsedMs": 87.40000000223517,
+        "backend": "WASM",
+        "atMs": 2351.099999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2351.2999999970198
+      }
+    ],
+    "firstPostInitInferenceMs": 23.099999997764826
+  },
+  "warm": {
+    "state": {
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "initMs": 1911.5
+    },
+    "initWallMs": 2027.0999999977648,
+    "events": [
+      {
+        "phase": "worker-start",
+        "kind": "init",
+        "queueMs": 115,
+        "atMs": 115.29999999701977
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 130.89999999850988
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 132
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 132.19999999925494
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "config.json",
+        "phase": "model-load",
+        "atMs": 132.79999999701977
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer.json",
+        "phase": "model-load",
+        "atMs": 134.89999999850988
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "tokenizer_config.json",
+        "phase": "model-load",
+        "atMs": 143.69999999925494
+      },
+      {
+        "status": "download",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model_quantized.onnx",
+        "phase": "model-load",
+        "atMs": 158.29999999701977
+      },
+      {
+        "status": "done",
+        "name": "Xenova/all-MiniLM-L6-v2",
+        "file": "onnx/model_quantized.onnx",
+        "phase": "model-load",
+        "atMs": 213.59999999776483
+      },
+      {
+        "phase": "model-ready",
+        "backend": "wasm",
+        "dtype": "q8",
+        "atMs": 1906
+      },
+      {
+        "phase": "first-inference",
+        "elapsedMs": 121,
+        "backend": "WASM",
+        "atMs": 2027
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2027.3999999985099
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2086.099999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2134
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2193.89999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2224.099999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 2279.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 3562.599999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 4451.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 5409.599999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 1,
+        "atMs": 6349.599999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 7240.29999999702
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 8134.89999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 8946.099999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 9831.099999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 10610.199999999255
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 11440.79999999702
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 12252.199999999255
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 13068
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 13929.599999997765
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 14820.39999999851
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 15672.29999999702
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 16521.79999999702
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 17368.699999999255
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 2,
+        "atMs": 18368.5
+      },
+      {
+        "phase": "worker-start",
+        "kind": "embed",
+        "queueMs": 0,
+        "atMs": 19254.79999999702
+      }
+    ],
+    "subsequentInferenceMs": [
+      58.5,
+      47.19999999925494,
+      59.69999999925494,
+      29.399999998509884,
+      54.900000002235174
+    ]
+  },
+  "sampleCount": 20,
+  "memorySummary": {
+    "metric": "maximum sampled sum of browser process working sets, shared pages can be counted more than once",
+    "sampledPeakBytes": 855969792,
+    "nodeMetric": "test harness Node RSS, not API process",
+    "gpuMemory": "UNKNOWN"
+  },
+  "errors": []
+}
