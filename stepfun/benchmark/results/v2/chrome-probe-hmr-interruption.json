@@ -1,0 +1,109 @@
+{
+  "channel": "chrome",
+  "started": "2026-10-30T01:27:19.763Z",
+  "layers": {
+    "L0": {
+      "status": "PASS",
+      "url": "http://127.0.0.1:5174/probe.html"
+    },
+    "L1": {
+      "status": "FAIL",
+      "url": "http://127.0.0.1:5174/probe.html"
+    },
+    "L2": {
+      "status": "PASS",
+      "reply": 42
+    },
+    "L3": {
+      "status": "BLOCKED"
+    }
+  },
+  "console": [
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    }
+  ],
+  "errors": [
+    {
+      "stage": "launch-or-layer",
+      "message": "locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#text-a')\u001b[22m\n\n    at D:\\OceanBase\\PowerContext-stepfun\\stepfun\\scripts\\browser-probe.mjs:29:33"
+    }
+  ],
+  "network": [
+    {
+      "url": "http://127.0.0.1:5174/probe.html",
+      "status": 200,
+      "contentType": "text/html",
+      "contentLength": "388"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@vite/client",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "224218"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@react-refresh",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "118071"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/vite/dist/client/env.mjs",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "3478"
+    },
+    {
+      "url": "http://127.0.0.1:5174/embedding-lab.html",
+      "status": 200,
+      "contentType": "text/html",
+      "contentLength": "2732"
+    },
+    {
+      "url": "http://127.0.0.1:5174/probe.html",
+      "status": 200,
+      "contentType": "text/html",
+      "contentLength": "388"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@react-refresh",
+      "status": 304
+    },
+    {
+      "url": "http://127.0.0.1:5174/@vite/client",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "224218"
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/vite/dist/client/env.mjs",
+      "status": 304
+    },
+    {
+      "url": "blob:http://127.0.0.1:5174/cac3fbfd-8cd7-461c-90fd-b4475867c004",
+      "status": 200,
+      "contentType": "text/javascript",
+      "contentLength": "40"
+    }
+  ],
+  "version": "156.0.8078.73",
+  "finished": "2026-10-30T01:27:41.542Z"
+}

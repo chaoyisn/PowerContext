@@ -1,6 +1,8 @@
 /// <reference lib="webworker" />
 import { env, pipeline, type FeatureExtractionPipeline } from "@huggingface/transformers";
 import model from "../../model.json";
+import wasmUrl from "../../node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm?url";
+import wasmModuleUrl from "../../node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs?url";
 import type { EmbeddedBatch, EmbeddingStatus, Precision } from "./embedding";
 
 type Request =
@@ -11,9 +13,14 @@ let extractor: FeatureExtractionPipeline | null = null;
 let status: EmbeddingStatus | null = null;
 
 env.useBrowserCache = true;
-env.allowRemoteModels = true;
+env.allowLocalModels = true;
+env.allowRemoteModels = false;
+env.localModelPath = `/models/${model.revision}/`;
 const wasm = env.backends.onnx.wasm;
-if (wasm) wasm.numThreads = Math.min(4, Math.max(1, self.navigator.hardwareConcurrency || 2));
+if (wasm) {
+  wasm.numThreads = self.crossOriginIsolated ? Math.min(4, Math.max(1, self.navigator.hardwareConcurrency || 2)) : 1;
+  wasm.wasmPaths = { wasm: wasmUrl, mjs: wasmModuleUrl };
+}
 
 self.onmessage = (event: MessageEvent<Request>) => {
   void handle(event.data);
@@ -31,8 +38,9 @@ async function handle(request: Request) {
 }
 
 async function initialize(precision: Precision, requestId: string): Promise<EmbeddingStatus> {
-  const autoMatch = status && precision === "auto" && status.dtype === (status.backend === "WebGPU" ? "fp16" : "int8");
-  if (status && (autoMatch || status.dtype === precision)) return status;
+  const requestedDtype = precision === "int8" ? "q8" : precision;
+  const autoMatch = status && precision === "auto" && status.dtype === (status.backend === "WebGPU" ? "fp16" : "q8");
+  if (status && (autoMatch || status.dtype === requestedDtype)) return status;
   await dispose();
   status = null;
   const started = performance.now();
@@ -56,7 +64,7 @@ async function initialize(precision: Precision, requestId: string): Promise<Embe
     }
   }
 
-  const dtype = precision === "fp32" ? "fp32" : "int8";
+  const dtype = precision === "fp32" ? "fp32" : "q8";
   await load("wasm", dtype, requestId);
   const candidate = await infer(["EdgeSeek WASM runtime verification"]);
   validate(candidate[0]);
@@ -68,7 +76,7 @@ async function initialize(precision: Precision, requestId: string): Promise<Embe
   return status;
 }
 
-async function load(device: "wasm" | "webgpu", dtype: "fp32" | "int8" | "fp16", requestId: string) {
+async function load(device: "wasm" | "webgpu", dtype: "fp32" | "q8" | "fp16", requestId: string) {
   const onProgress = (event: { status?: string; file?: string; loaded?: number; total?: number; progress?: number }) => {
     self.postMessage({ requestId, progress: { ...event, phase: "model-load" } });
   };
@@ -102,10 +110,10 @@ async function embed(texts: string[], requestedBatchSize: number, requestId: str
       if (status.backend !== "WebGPU") throw error;
       const fallbackReason = error instanceof Error ? error.message : String(error);
       await dispose();
-      await load("wasm", "int8", requestId);
+      await load("wasm", "q8", requestId);
       const probe = await infer(["EdgeSeek WASM fallback verification"]);
       validate(probe[0]);
-      status = { ...status, backend: "WASM", dtype: "int8", fallbackReason };
+      status = { ...status, backend: "WASM", dtype: "q8", fallbackReason };
       embeddings.push(...await infer(texts.slice(offset, offset + batchSize)));
     }
     self.postMessage({ requestId, progress: { phase: "embedding", completed: Math.min(offset + batchSize, texts.length), total: texts.length } });

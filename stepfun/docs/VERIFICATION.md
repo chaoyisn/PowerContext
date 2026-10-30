@@ -1,5 +1,15 @@
 # 验证记录
 
+## V2.1（2026-10-30）
+
+- 独立 Playwright Chrome 156.0.8078.73 与 Edge 156.0.4314.50，均为 headless、单页、单 Worker 串行执行：静态页面 L0、实验页 L1、普通 Worker L2、真实 WASM 模型初始化与推理 L3 均 PASS。截图、网络、控制台、向量摘要见 `benchmark/results/v2/{chrome,msedge}-probe.json` 和对应截图。
+- 两条固定文本及重复输入得到 384 个有限值；范数范围 0.9999996845–1.0000001586，不同输入 L2 距离 1.30189424，重复输入距离 0。q8 实际请求本机 `model_quantized.onnx`（22,972,370 字节），本地 ONNX Runtime WASM 与模块均加载成功，最终网络记录无外部 HTTPS 请求。
+- Chrome 实际 UI 导入三份文档，Worker 生成向量并经 API 写入 seekdb，导入完成前回读校验；重复导入被跳过。自然语言查询得到三条数据库混合检索结果，`privacy.md` 排名第一。见 `chrome-workflow.json` 和 `chrome-workflow.png`。该记录不包含其他知识库列表内容。
+- seekdb 1.4.0 SDK 的 `hybridSearch()` 源码先执行 `GET_SQL`，再校验并执行返回的 `querySql`，结果直接来自数据库；当前样本没有捕获该次生成 SQL 的数据库执行跟踪，不能将该证据缺口称为已闭合。
+- Vite 的依赖预构建会触发页面刷新，实验服务器禁用热更新以避免初始化被中断。首次运行曾从 CDN 获取 WASM；现显式使用安装包中的本地 WASM 和模块，重新运行后无外部请求。上轮桌面浏览器控制失败的根因仍未确认。
+- T1、T2、T3、T5 本轮 PASS；T4 BLOCKED（GPU/回退未测）；T6 BLOCKED（缺本次生成 SQL 执行跟踪）；T7 部分通过（增量、去重，其他状态待复验）；T8、T9 本轮真实向量待复验；T10 部分；T11 BLOCKED（仅 headless Chrome 完整 UI 和 headless Edge 实验页）；T12 部分。下方 V1 PASS 是合成向量的历史结果。
+- `npm run build`、unit 4/4、串行 integration 3/3 通过；数据库 integration 仍使用合成向量，结果单独写入 V2 目录。向量空间目前没有按精度强制隔离，切换精度或 GPU 回退后不得将向量混入同一知识库；这项修复及验证仍待完成。
+
 ## 环境与 SDK
 
 - 官方基线：`upstream/2026-competition-ecosystem`，基线 commit `d647275c308e09b7b623f322a26f5c4e85734fb0`。

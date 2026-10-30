@@ -1,5 +1,9 @@
 # EdgeSeek · 技术单页（V1 初稿）
 
+## V2.1 验收补充
+
+固定 revision 的 MiniLM 在浏览器 Worker 使用 q8/WASM、mean pooling 和归一化产生 384 维向量；模型、tokenizer 与 ONNX Runtime 均由本机提供。Chrome 和 Edge 的独立 headless 实测通过，Chrome 真实导入三份文档并从 seekdb 混合检索返回原文。FP32、FP16、真实 GPU、精度隔离和同次数据库生成 SQL 执行跟踪仍待验证，不能宣称全部赛题验收通过。模型文件与单次耗时见 BENCHMARK.md，详细证据见 VERIFICATION.md。
+
 ## 目标
 
 提供一个本地优先的文本知识库。用户导入 TXT/Markdown 后，浏览器完成文本向量化，seekdb 保存原文、向量和来源信息，并执行向量、全文或数据库内部混合检索。

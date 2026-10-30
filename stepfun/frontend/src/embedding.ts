@@ -1,7 +1,7 @@
 export type Precision = "auto" | "fp32" | "int8" | "fp16";
 export type EmbeddingStatus = {
   backend: "WebGPU" | "WASM";
-  dtype: "fp32" | "int8" | "fp16";
+  dtype: "fp32" | "q8" | "fp16";
   dimension: number;
   modelId: string;
   modelKey: string;
@@ -13,7 +13,7 @@ export type EmbeddedBatch = {
   elapsedMs: number;
   batchSize: number;
   backend: "WebGPU" | "WASM";
-  dtype: "fp32" | "int8" | "fp16";
+  dtype: "fp32" | "q8" | "fp16";
 };
 
 type Reply = { requestId: string; value?: unknown; error?: string; progress?: Record<string, unknown> };
@@ -54,6 +54,7 @@ export class EmbeddingClient {
 
   close() {
     this.worker.terminate();
+    this.pending.clear();
   }
 
   private request<T>(payload: Record<string, unknown>): Promise<T> {

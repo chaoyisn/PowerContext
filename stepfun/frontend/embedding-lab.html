@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EdgeSeek V2 · Browser Embedding Lab</title>
+    <style>
+      :root { color-scheme: dark; font: 15px/1.5 ui-monospace, Consolas, monospace; background: #10131a; color: #e7eaf1; }
+      body { max-width: 960px; margin: 32px auto; padding: 0 20px; }
+      h1 { font: 600 24px/1.2 system-ui; } p { color: #aab2c2; }
+      section { margin: 16px 0; padding: 16px; border: 1px solid #343b49; border-radius: 10px; background: #171c25; }
+      label { display: block; margin: 10px 0 4px; color: #aab2c2; }
+      textarea, select, button { color: inherit; background: #10131a; border: 1px solid #465064; border-radius: 6px; padding: 9px; font: inherit; }
+      textarea { box-sizing: border-box; width: 100%; min-height: 72px; resize: vertical; }
+      button { cursor: pointer; margin: 10px 8px 0 0; background: #263b5d; } button:disabled { opacity: .5; cursor: wait; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; color: #c7d0e2; }
+      .row { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; }
+      #status { color: #9ad7bd; } #error { color: #ff9f9f; } progress { width: 100%; }
+      small { color: #8791a3; }
+    </style>
+  </head>
+  <body>
+    <h1>EdgeSeek V2 · Browser Embedding Lab</h1>
+    <p id="model"></p>
+    <section>
+      <div class="row"><label>Precision <select id="precision"><option value="int8">q8 / INT8 · WASM</option><option value="fp32">FP32 · WASM diagnostic</option><option value="fp16">FP16 · WebGPU</option><option value="auto">WebGPU, then WASM q8</option></select></label><button id="run">Load model and embed</button><button id="download" disabled>Download JSON evidence</button></div>
+      <label>Text A</label><textarea id="text-a">The database supports vector search.</textarea>
+      <label>Text B</label><textarea id="text-b">Browser-side embeddings can improve privacy.</textarea>
+      <div id="status">Idle</div><progress id="progress" max="1" value="0" hidden></progress>
+    </section>
+    <section><b>Run output</b><pre id="output">No run yet.</pre></section>
+    <section><b>Original errors and reproduction context</b><pre id="errors">[]</pre></section>
+    <script type="module" src="/src/embedding-lab.ts"></script>
+  </body>
+</html>

@@ -8,6 +8,7 @@ loadEnv();
 const { createKnowledgeBase, findDuplicateDocuments, getDocument, health, importDocument, initializeDatabase, listDocuments, listKnowledgeBases, search, HttpError } = await import("./db.mjs");
 const root = fileURLToPath(new URL("../", import.meta.url));
 const staticRoot = resolve(root, "frontend/dist");
+const modelRoot = resolve(root, "frontend/public/models");
 const maxBodyBytes = 64 * 1024 * 1024;
 
 const server = createServer(async (request, response) => {
@@ -71,6 +72,15 @@ function sendJson(response, status, value) {
 }
 
 function serveStatic(pathname, response) {
+  if (pathname.startsWith("/models/")) {
+    const candidate = resolve(modelRoot, `.${decodeURIComponent(pathname.slice("/models".length))}`);
+    const rel = relative(modelRoot, candidate);
+    if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(candidate)) return sendJson(response, 404, { error: "本地模型资产缺失；运行 npm run fetch:model 后重试" });
+    const type = { ".json": "application/json", ".txt": "text/plain; charset=utf-8", ".onnx": "application/octet-stream" }[extname(candidate)] ?? "application/octet-stream";
+    response.writeHead(200, { "content-type": type, "cache-control": "public, max-age=31536000, immutable" });
+    createReadStream(candidate).pipe(response);
+    return;
+  }
   const candidate = resolve(staticRoot, `.${decodeURIComponent(pathname)}`);
   const rel = relative(staticRoot, candidate);
   const safe = rel === "" || (!rel.startsWith("..") && !isAbsolute(rel));

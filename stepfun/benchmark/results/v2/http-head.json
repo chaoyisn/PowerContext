@@ -1,0 +1,48 @@
+[
+  {
+    "path": "/probe.html",
+    "status": 200,
+    "contentType": [
+      "text/html"
+    ],
+    "contentLength": null
+  },
+  {
+    "path": "/embedding-lab.html",
+    "status": 200,
+    "contentType": [
+      "text/html"
+    ],
+    "contentLength": null
+  },
+  {
+    "path": "/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/config.json",
+    "status": 200,
+    "contentType": [
+      "application/json"
+    ],
+    "contentLength": [
+      "650"
+    ]
+  },
+  {
+    "path": "/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer.json",
+    "status": 200,
+    "contentType": [
+      "application/json"
+    ],
+    "contentLength": [
+      "711661"
+    ]
+  },
+  {
+    "path": "/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx",
+    "status": 200,
+    "contentType": [
+      ""
+    ],
+    "contentLength": [
+      "22972370"
+    ]
+  }
+]

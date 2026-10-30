@@ -1,5 +1,9 @@
 # EdgeSeek 运行说明
 
+## V2.1 本地模型与实验页
+
+安装依赖后执行 `npm run fetch:model`，脚本从固定 revision 获取并校验模型，权重保存在被 Git 忽略的 `frontend/public/models/`。运行 `npm run dev:lab`，访问 `http://127.0.0.1:5174/embedding-lab.html`，选择 q8 / INT8 后点击加载；完成后可下载 JSON。实验页使用本地 ONNX Runtime 文件，缺失模型时会报告错误。`node scripts/browser-probe.mjs chrome` 或 `msedge` 可运行独立浏览器的分层检查。完整应用还需启动专用 seekdb 和 `npm run dev:server`。
+
 ## 依赖
 
 - Node.js 20 或更新版本；已验证 Node.js 24.14.0、npm 11.3.0。

@@ -11,5 +11,5 @@ export default defineConfig({
     proxy: { "/api": "http://127.0.0.1:4174" },
   },
   worker: { format: "es" },
-  build: { outDir: "dist", emptyOutDir: true },
+  build: { outDir: "dist", emptyOutDir: true, copyPublicDir: false },
 });

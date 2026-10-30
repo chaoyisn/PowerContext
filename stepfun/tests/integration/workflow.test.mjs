@@ -58,7 +58,7 @@ test("real API imports incrementally, isolates knowledge bases, and survives ser
     assert.equal(persistedSearch.results[0]?.metadata.filename, "primary.md");
     const evidence = { test: "real-api-workflow", measuredAt: new Date().toISOString(), source: "real seekdb server; synthetic normalized fixture vectors (not browser model output)", sdk: "seekdb@1.4.0", database: "test", kbId: kb.id, incremental: { duplicateSkipped: true, writeMs: incremental.writeMs, refreshMs: incremental.refreshMs, visibilityMs: incremental.visibilityMs, searchMs: freshSearch.dbMs, searchMode: "fulltext", searchFilename: freshSearch.results[0]?.metadata.filename }, restart: { documentCount: beforeRestart.documents.length, documentPersisted: true, searchMs: persistedSearch.dbMs, vectorSearchFilename: persistedSearch.results[0]?.metadata.filename }, isolation: { separateKbId: isolated.id, primaryContainsTenantDocument: primarySearch.results.some((row) => row.metadata.filename === "tenant-only.md") } };
     mkdirSync(resolve(root, "benchmark/results"), { recursive: true });
-    writeFileSync(resolve(root, "benchmark/results/seekdb-api-actual.json"), `${JSON.stringify(evidence, null, 2)}\n`);
+    writeFileSync(resolve(root, process.env.EDGESEEK_WORKFLOW_EVIDENCE ?? "benchmark/results/seekdb-api-actual.json"), `${JSON.stringify(evidence, null, 2)}\n`);
     console.info(JSON.stringify(evidence));
   } finally {
     if (child) await stopServer(child);
