@@ -49,7 +49,7 @@ runButton.onclick = async () => {
       pooling: model.pooling, normalize: model.normalize, dimension: model.dimension,
       texts: [a, b], vectors: await Promise.all(run.embeddings.map(async (vector) => ({ dimension: vector.length, norm: norm(vector), finite: vector.every(Number.isFinite), sha256: await hash(vector) }))),
       normRange: [Math.min(...norms), Math.max(...norms)], differentInputL2: difference, repeatInputL2: repeatDifference,
-      initMs: init.initMs, inferenceMs: run.elapsedMs, endToEndMs: performance.now() - started,
+      initMs: init.initMs, inferenceMs: run.elapsedMs, endToEndMs: performance.now() - started, fallbackReason: run.fallbackReason ?? init.fallbackReason,
       vectorizationExecutedIn: "browser module worker", modelAssets: log.filter((row) => row.phase === "model-load"), progressLog: log, errors: [],
     };
     localStorage.setItem("edgeseek.v2.lab.last-run", JSON.stringify(latest));

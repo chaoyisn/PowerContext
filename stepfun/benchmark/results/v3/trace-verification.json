@@ -1,0 +1,35 @@
+{
+  "source": "seekdb-js execute boundary, not database audit",
+  "kbId": "d3b944d41c6f48de9212aa67d20d65d6",
+  "generatedSqlSha256": "528ee53fea21627bcfdb3964f981a15c52c52d981480e4859ef229f5e4a40c87",
+  "executedSqlSha256": "528ee53fea21627bcfdb3964f981a15c52c52d981480e4859ef229f5e4a40c87",
+  "elapsedMs": 11.182000000000698,
+  "rowCount": 3,
+  "rowsMatchApiIncludingOrder": true,
+  "queryVector": {
+    "dimension": 384,
+    "finite": true,
+    "norm": 1.0000000973739813,
+    "sha256": "5e8ab1903192e0db3371d4751b57225342b17e85a6752e17cff8606de6a455f7"
+  },
+  "rows": [
+    {
+      "id": "b867687eaf9bf61cab9ed2f5f7b2376bc67d7b0f912166ce08a314c1af67020d",
+      "document": "Browser-side embeddings can improve privacy. The browser computes vectors locally before storage.",
+      "filename": "privacy.md",
+      "score": 0.0328
+    },
+    {
+      "id": "95908dee564c9101f6c6257e0b9ea5c66b1be5336b9942482460905b233f917b",
+      "document": "A seekdb index refresh makes newly inserted document chunks available for hybrid search.",
+      "filename": "indexes.md",
+      "score": 0.0161
+    },
+    {
+      "id": "4abfde3ada54133e441f30228456b36fa46abec6a773979a57c155f75fe71cd4",
+      "document": "The database supports vector search. Semantic similarity finds documents by meaning.",
+      "filename": "vectors.md",
+      "score": 0.0159
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "at": "2026-10-30T02:17:15.241Z",
+  "browser": "chrome headless",
+  "precision": "int8",
+  "samples": [
+    {
+      "batchSize": 1,
+      "run": 1,
+      "items": 16,
+      "elapsedMs": 283.30000000074506,
+      "itemsPerSecond": 56.4772326154533,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 1,
+      "run": 2,
+      "items": 16,
+      "elapsedMs": 231.10000000149012,
+      "itemsPerSecond": 69.23409779271671,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 1,
+      "run": 3,
+      "items": 16,
+      "elapsedMs": 237.5,
+      "itemsPerSecond": 67.36842105263158,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 1,
+      "run": 4,
+      "items": 16,
+      "elapsedMs": 179.90000000223517,
+      "itemsPerSecond": 88.93829905392556,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 1,
+      "run": 5,
+      "items": 16,
+      "elapsedMs": 177,
+      "itemsPerSecond": 90.3954802259887,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 4,
+      "run": 1,
+      "items": 16,
+      "elapsedMs": 319.6000000014901,
+      "itemsPerSecond": 50.062578222545056,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 4,
+      "run": 2,
+      "items": 16,
+      "elapsedMs": 344.0999999977648,
+      "itemsPerSecond": 46.49811101454209,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 4,
+      "run": 3,
+      "items": 16,
+      "elapsedMs": 387.6000000014901,
+      "itemsPerSecond": 41.279669762483195,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 4,
+      "run": 4,
+      "items": 16,
+      "elapsedMs": 333.8999999985099,
+      "itemsPerSecond": 47.91853848479007,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 4,
+      "run": 5,
+      "items": 16,
+      "elapsedMs": 323.9000000022352,
+      "itemsPerSecond": 49.39796233371283,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 8,
+      "run": 1,
+      "items": 16,
+      "elapsedMs": 303.69999999925494,
+      "itemsPerSecond": 52.68356931195012,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 8,
+      "run": 2,
+      "items": 16,
+      "elapsedMs": 359,
+      "itemsPerSecond": 44.56824512534819,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 8,
+      "run": 3,
+      "items": 16,
+      "elapsedMs": 346.4000000022352,
+      "itemsPerSecond": 46.18937644311997,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 8,
+      "run": 4,
+      "items": 16,
+      "elapsedMs": 389.69999999925494,
+      "itemsPerSecond": 41.05722350533895,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 8,
+      "run": 5,
+      "items": 16,
+      "elapsedMs": 415.30000000074506,
+      "itemsPerSecond": 38.52636648199204,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 16,
+      "run": 1,
+      "items": 16,
+      "elapsedMs": 294.30000000074506,
+      "itemsPerSecond": 54.36629289826535,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 16,
+      "run": 2,
+      "items": 16,
+      "elapsedMs": 366.30000000074506,
+      "itemsPerSecond": 43.68004367995483,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 16,
+      "run": 3,
+      "items": 16,
+      "elapsedMs": 360.3999999985099,
+      "itemsPerSecond": 44.39511653736447,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 16,
+      "run": 4,
+      "items": 16,
+      "elapsedMs": 301.5999999977648,
+      "itemsPerSecond": 53.05039787837725,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "batchSize": 16,
+      "run": 5,
+      "items": 16,
+      "elapsedMs": 348.19999999925494,
+      "itemsPerSecond": 45.95060310176403,
+      "backend": "WASM",
+      "dtype": "q8"
+    }
+  ],
+  "errors": [],
+  "version": "156.0.8078.73",
+  "state": {
+    "backend": "WASM",
+    "dtype": "q8",
+    "dimension": 384,
+    "modelId": "Xenova/all-MiniLM-L6-v2",
+    "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+    "initMs": 1558.9000000022352
+  },
+  "wallInitMs": 1690.300000000745,
+  "memoryNote": "Browser process peak memory unavailable; no estimate recorded."
+}

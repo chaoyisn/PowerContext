@@ -1,0 +1,956 @@
+{
+  "at": "2026-10-30T02:29:04.768Z",
+  "browser": "chrome",
+  "model": "Xenova/all-MiniLM-L6-v2",
+  "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+  "externalModelResources": [],
+  "inferenceRequests": [],
+  "observations": [
+    {
+      "queryId": "hybrid-database-ranking",
+      "mode": "hybrid",
+      "resultFiles": [
+        "▤seekdb-hybrid.md·分块 1",
+        "▤incremental-import.md·分块 1",
+        "▤browser-embedding.md·分块 1",
+        "▤incremental-extra.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    },
+    {
+      "queryId": "hybrid-database-ranking",
+      "mode": "vector",
+      "resultFiles": [
+        "▤seekdb-hybrid.md·分块 1",
+        "▤incremental-import.md·分块 1",
+        "▤incremental-extra.md·分块 1",
+        "▤browser-embedding.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    },
+    {
+      "queryId": "hybrid-database-ranking",
+      "mode": "fulltext",
+      "resultFiles": [
+        "▤seekdb-hybrid.md·分块 1",
+        "▤incremental-import.md·分块 1",
+        "▤browser-embedding.md·分块 1",
+        "▤incremental-extra.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    },
+    {
+      "queryId": "local-browser-embedding",
+      "mode": "hybrid",
+      "resultFiles": [
+        "▤browser-embedding.md·分块 1",
+        "▤incremental-import.md·分块 1",
+        "▤seekdb-hybrid.md·分块 1",
+        "▤incremental-extra.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    },
+    {
+      "queryId": "local-browser-embedding",
+      "mode": "vector",
+      "resultFiles": [
+        "▤browser-embedding.md·分块 1",
+        "▤incremental-import.md·分块 1",
+        "▤seekdb-hybrid.md·分块 1",
+        "▤incremental-extra.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    },
+    {
+      "queryId": "local-browser-embedding",
+      "mode": "fulltext",
+      "resultFiles": [
+        "▤browser-embedding.md·分块 1",
+        "▤incremental-import.md·分块 1",
+        "▤incremental-extra.md·分块 1",
+        "▤seekdb-hybrid.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    },
+    {
+      "queryId": "duplicate-incremental-import",
+      "mode": "hybrid",
+      "resultFiles": [
+        "▤incremental-import.md·分块 1",
+        "▤incremental-extra.md·分块 1",
+        "▤browser-embedding.md·分块 1",
+        "▤seekdb-hybrid.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    },
+    {
+      "queryId": "duplicate-incremental-import",
+      "mode": "vector",
+      "resultFiles": [
+        "▤incremental-import.md·分块 1",
+        "▤incremental-extra.md·分块 1",
+        "▤seekdb-hybrid.md·分块 1",
+        "▤browser-embedding.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    },
+    {
+      "queryId": "duplicate-incremental-import",
+      "mode": "fulltext",
+      "resultFiles": [
+        "▤incremental-import.md·分块 1",
+        "▤browser-embedding.md·分块 1",
+        "▤incremental-extra.md·分块 1",
+        "▤seekdb-hybrid.md·分块 1"
+      ],
+      "recallAt1": 1,
+      "reciprocalRank": 1
+    }
+  ],
+  "performance": [
+    {
+      "at": "2026-10-30T02:28:46.071Z",
+      "name": "model.asset",
+      "file": "config.json",
+      "bytes": 650,
+      "acquisitionMs": 0.1,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:28:46.087Z",
+      "name": "model.asset",
+      "file": "tokenizer.json",
+      "bytes": 711661,
+      "acquisitionMs": 14.1,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:28:46.099Z",
+      "name": "model.asset",
+      "file": "tokenizer_config.json",
+      "bytes": 366,
+      "acquisitionMs": 26.4,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:28:46.398Z",
+      "name": "model.asset",
+      "file": "onnx/model_quantized.onnx",
+      "bytes": 22972370,
+      "acquisitionMs": 258.6,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:28:47.531Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 1742.9,
+      "workerInitMs": 1523.9,
+      "modelAssetBytes": 23685047,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:28:47.922Z",
+      "name": "network.deduplicate",
+      "durationMs": 30.4,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:28:48.087Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 163.9,
+      "wallMs": 164.6,
+      "itemsPerSecond": 6.1,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:48.818Z",
+      "name": "network.document-write",
+      "durationMs": 729.7,
+      "bytes": 262,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:48.819Z",
+      "name": "seekdb.write",
+      "durationMs": 170.96,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:48.819Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 503.43,
+      "visibleMs": 2.81,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:48.965Z",
+      "name": "network.deduplicate",
+      "durationMs": 35.7,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:28:49.046Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 80,
+      "wallMs": 80.7,
+      "itemsPerSecond": 12.5,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:49.859Z",
+      "name": "network.document-write",
+      "durationMs": 812.9,
+      "bytes": 242,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:49.859Z",
+      "name": "seekdb.write",
+      "durationMs": 23.46,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:49.859Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 709.18,
+      "visibleMs": 1.96,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:50.459Z",
+      "name": "network.deduplicate",
+      "durationMs": 27.5,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:28:50.528Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 65.8,
+      "wallMs": 67.9,
+      "itemsPerSecond": 15.2,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:51.078Z",
+      "name": "network.document-write",
+      "durationMs": 549.4,
+      "bytes": 217,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:51.078Z",
+      "name": "seekdb.write",
+      "durationMs": 9.68,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:51.078Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 503.55,
+      "visibleMs": 1.62,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:51.442Z",
+      "name": "network.deduplicate",
+      "durationMs": 22.6,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:28:51.554Z",
+      "name": "network.deduplicate",
+      "durationMs": 17.2,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:28:51.589Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 33.7,
+      "wallMs": 34.4,
+      "itemsPerSecond": 29.67,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:52.439Z",
+      "name": "network.document-write",
+      "durationMs": 848.1,
+      "bytes": 82,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:52.439Z",
+      "name": "seekdb.write",
+      "durationMs": 8.2,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:52.439Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 805.8,
+      "visibleMs": 1.78,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:52.931Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 48,
+      "wallMs": 48.9,
+      "itemsPerSecond": 20.83,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:52.932Z",
+      "name": "query.embedding",
+      "durationMs": 48,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:53.006Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 24.86,
+      "networkMs": 48.94,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:53.073Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 190,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:53.393Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 31.6,
+      "wallMs": 31.9,
+      "itemsPerSecond": 31.65,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:53.393Z",
+      "name": "query.embedding",
+      "durationMs": 31.6,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:53.428Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 5.24,
+      "networkMs": 28.86,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:53.451Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 89.9,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:53.637Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 20.6,
+      "wallMs": 21,
+      "itemsPerSecond": 48.54,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:53.639Z",
+      "name": "query.embedding",
+      "durationMs": 20.6,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:53.678Z",
+      "name": "seekdb.search",
+      "mode": "fulltext",
+      "dbMs": 17.97,
+      "networkMs": 19.43,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:53.715Z",
+      "name": "query.end-to-end",
+      "mode": "fulltext",
+      "durationMs": 99.6,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.004Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 42.6,
+      "wallMs": 43.2,
+      "itemsPerSecond": 23.47,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:54.004Z",
+      "name": "query.embedding",
+      "durationMs": 42.6,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:54.034Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 9.11,
+      "networkMs": 19.79,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.055Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 94,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.247Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 28.2,
+      "wallMs": 28.8,
+      "itemsPerSecond": 35.46,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:54.247Z",
+      "name": "query.embedding",
+      "durationMs": 28.2,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:54.283Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 5.32,
+      "networkMs": 29.18,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.303Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 85.2,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.503Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 36.2,
+      "wallMs": 36.6,
+      "itemsPerSecond": 27.62,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:54.503Z",
+      "name": "query.embedding",
+      "durationMs": 36.2,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:54.537Z",
+      "name": "seekdb.search",
+      "mode": "fulltext",
+      "dbMs": 8.39,
+      "networkMs": 19.81,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.557Z",
+      "name": "query.end-to-end",
+      "mode": "fulltext",
+      "durationMs": 91.3,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.746Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 25,
+      "wallMs": 25.1,
+      "itemsPerSecond": 40,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:54.746Z",
+      "name": "query.embedding",
+      "durationMs": 25,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:54.776Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 12.14,
+      "networkMs": 16.56,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.798Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 77.3,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:54.988Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 19,
+      "wallMs": 19.2,
+      "itemsPerSecond": 52.63,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:54.991Z",
+      "name": "query.embedding",
+      "durationMs": 19,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:55.016Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 3.82,
+      "networkMs": 20.68,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:55.035Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 66.4,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:55.287Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 42.7,
+      "wallMs": 47.9,
+      "itemsPerSecond": 23.42,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:55.287Z",
+      "name": "query.embedding",
+      "durationMs": 42.7,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:55.308Z",
+      "name": "seekdb.search",
+      "mode": "fulltext",
+      "dbMs": 5.08,
+      "networkMs": 15.52,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:55.327Z",
+      "name": "query.end-to-end",
+      "mode": "fulltext",
+      "durationMs": 88.3,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:55.543Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 23.3,
+      "workerInitMs": 1523.9,
+      "modelAssetBytes": 0,
+      "cacheState": "worker-resident",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:28:55.802Z",
+      "name": "network.deduplicate",
+      "durationMs": 21,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:28:55.881Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 78.5,
+      "wallMs": 78.9,
+      "itemsPerSecond": 12.74,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:56.471Z",
+      "name": "network.document-write",
+      "durationMs": 589.4,
+      "bytes": 88,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:56.471Z",
+      "name": "seekdb.write",
+      "durationMs": 27.41,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:56.471Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 505.48,
+      "visibleMs": 3.43,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:28:56.969Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 33.9,
+      "wallMs": 34.2,
+      "itemsPerSecond": 29.5,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:56.970Z",
+      "name": "query.embedding",
+      "durationMs": 33.9,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:57.005Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 13.29,
+      "networkMs": 20.81,
+      "resultCount": 1
+    },
+    {
+      "at": "2026-10-30T02:28:57.018Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 82.4,
+      "resultCount": 1
+    },
+    {
+      "at": "2026-10-30T02:28:57.175Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 19.5,
+      "wallMs": 19.8,
+      "itemsPerSecond": 51.28,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:28:57.175Z",
+      "name": "query.embedding",
+      "durationMs": 19.5,
+      "backend": "WASM",
+      "dtype": "q8"
+    },
+    {
+      "at": "2026-10-30T02:28:57.214Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 11.35,
+      "networkMs": 24.75,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:57.235Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 80,
+      "resultCount": 4
+    },
+    {
+      "at": "2026-10-30T02:28:57.884Z",
+      "name": "model.asset",
+      "file": "config.json",
+      "bytes": 650,
+      "acquisitionMs": 0.3,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:28:57.884Z",
+      "name": "model.asset",
+      "file": "tokenizer.json",
+      "bytes": 711661,
+      "acquisitionMs": 0.8,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:28:57.931Z",
+      "name": "model.asset",
+      "file": "tokenizer_config.json",
+      "bytes": 366,
+      "acquisitionMs": 47,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:28:59.556Z",
+      "name": "model.asset",
+      "file": "onnx/model.onnx",
+      "bytes": 90387606,
+      "acquisitionMs": 1522.7,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:29:01.356Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384,
+      "durationMs": 3825.1,
+      "workerInitMs": 3545.4,
+      "modelAssetBytes": 91100283,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:29:01.357Z",
+      "name": "model.compression",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "original": "model.onnx",
+      "quantized": "model_quantized.onnx",
+      "fp32Bytes": 90387606,
+      "int8Bytes": 22972370,
+      "fp32ToInt8Ratio": 3.935
+    },
+    {
+      "at": "2026-10-30T02:29:01.401Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384,
+      "durationMs": 43.4,
+      "workerInitMs": 3545.4,
+      "modelAssetBytes": 0,
+      "cacheState": "browser-cache-or-unknown",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:29:01.401Z",
+      "name": "model.compression",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "original": "model.onnx",
+      "quantized": "model_quantized.onnx",
+      "fp32Bytes": 90387606,
+      "int8Bytes": 22972370,
+      "fp32ToInt8Ratio": 3.935
+    },
+    {
+      "at": "2026-10-30T02:29:01.525Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 122.5,
+      "wallMs": 124.1,
+      "itemsPerSecond": 8.16,
+      "backend": "WASM",
+      "dtype": "fp32",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:29:02.405Z",
+      "name": "model.asset",
+      "file": "config.json",
+      "bytes": 650,
+      "acquisitionMs": 0.1,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:29:02.406Z",
+      "name": "model.asset",
+      "file": "tokenizer.json",
+      "bytes": 711661,
+      "acquisitionMs": 0.7,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:29:02.437Z",
+      "name": "model.asset",
+      "file": "tokenizer_config.json",
+      "bytes": 366,
+      "acquisitionMs": 32,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:29:02.497Z",
+      "name": "model.asset",
+      "file": "onnx/model_quantized.onnx",
+      "bytes": 22972370,
+      "acquisitionMs": 33.1,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:29:04.379Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 2448,
+      "workerInitMs": 2044.3,
+      "modelAssetBytes": 23685047,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:29:04.380Z",
+      "name": "model.compression",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "original": "model.onnx",
+      "quantized": "model_quantized.onnx",
+      "fp32Bytes": 90387606,
+      "int8Bytes": 22972370,
+      "fp32ToInt8Ratio": 3.935
+    },
+    {
+      "at": "2026-10-30T02:29:04.413Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384,
+      "durationMs": 32.4,
+      "workerInitMs": 2044.3,
+      "modelAssetBytes": 0,
+      "cacheState": "browser-cache-or-unknown",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:29:04.414Z",
+      "name": "model.compression",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "original": "model.onnx",
+      "quantized": "model_quantized.onnx",
+      "fp32Bytes": 90387606,
+      "int8Bytes": 22972370,
+      "fp32ToInt8Ratio": 3.935
+    },
+    {
+      "at": "2026-10-30T02:29:04.509Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 71.3,
+      "wallMs": 95.5,
+      "itemsPerSecond": 14.03,
+      "backend": "WASM",
+      "dtype": "q8",
+      "dimension": 384
+    }
+  ]
+}

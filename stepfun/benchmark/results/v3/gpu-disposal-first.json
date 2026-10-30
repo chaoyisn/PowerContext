@@ -1,0 +1,111 @@
+{
+  "at": "2026-10-30T02:22:33.121Z",
+  "headed": true,
+  "testOnlyInjection": "throw immediately after successful WebGPU pipeline load",
+  "errors": [
+    "locator.textContent: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#output')\u001b[22m\n\n    at D:\\OceanBase\\PowerContext-stepfun\\stepfun\\scripts\\gpu-disposal-probe.mjs:23:56"
+  ],
+  "network": [
+    {
+      "url": "http://127.0.0.1:5174/embedding-lab.html",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/embedding-lab.ts",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@vite/client",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/model.json?import",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/embedding.ts",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/vite/dist/client/env.mjs",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/src/embedding-worker.ts?worker_file&type=module",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/vite/dist/client/env.mjs",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/.vite/deps/@huggingface_transformers.js?v=4edea39e",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/model.json?import",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm?import&url",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs?url",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@vite/client",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/.vite/deps/rolldown-runtime-B-AY9Fx3.js?v=4edea39e",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/config.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer_config.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/onnx/model_fp16.onnx",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/tokenizer_config.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/onnx/model_fp16.onnx",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/@fs/D:/OceanBase/PowerContext-stepfun/stepfun/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5174/models/751bff37182d3f1213fa05d7196b954e230abad9/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx",
+      "status": 200
+    }
+  ],
+  "version": "156.0.4314.50"
+}

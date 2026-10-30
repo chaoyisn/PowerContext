@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-30T02:32:41.349Z",
+  "browser": "chrome headless",
+  "errors": [],
+  "version": "156.0.8078.73",
+  "kbId": "93cae1ec16bb4fc2ab773936fc35a1c8",
+  "request": [
+    {
+      "filename": "batch-0.md",
+      "backend": "WASM",
+      "dtype": "q8",
+      "vectors": [
+        {
+          "dimension": 384,
+          "sha256": "c3415fb2214ed179ac1bded6927354127c1f461dd27f3c325636cf0928610de0"
+        }
+      ]
+    },
+    {
+      "filename": "batch-1.md",
+      "backend": "WASM",
+      "dtype": "q8",
+      "vectors": [
+        {
+          "dimension": 384,
+          "sha256": "a1974849432437f2d5a91fb51f18211568e5ef19b1e7589fc6c9c81eb938cc6a"
+        }
+      ]
+    },
+    {
+      "filename": "batch-2.md",
+      "backend": "WASM",
+      "dtype": "q8",
+      "vectors": [
+        {
+          "dimension": 384,
+          "sha256": "f454f8350d1acc6473f8149b4f04fac2e376ce8d263e00e4cb14b4340fc2285d"
+        }
+      ]
+    },
+    {
+      "filename": "batch-3.md",
+      "backend": "WASM",
+      "dtype": "q8",
+      "vectors": [
+        {
+          "dimension": 384,
+          "sha256": "5cb5a1dcc17441ec498d8f66aaaab88039ba19842665451dece408eaa1b21166"
+        }
+      ]
+    }
+  ],
+  "response": {
+    "status": 201,
+    "results": [
+      {
+        "duplicate": false,
+        "documentId": "7299126d6902df5874329519b13fa9ed46810f5c7e8b0d1568a5adf089207e00",
+        "chunks": 1,
+        "writeMs": 122.39819999999963
+      },
+      {
+        "duplicate": false,
+        "documentId": "6679aaad5153ea1b9a1da44f19938db987c7f456a18b32bdc46230c785e036ce",
+        "chunks": 1,
+        "writeMs": 10.696600000002945
+      },
+      {
+        "duplicate": false,
+        "documentId": "1ecbde468f5f3a703713406bc1ac4c2a004e3207157e44cdd913493b636af584",
+        "chunks": 1,
+        "writeMs": 25.761600000001636
+      },
+      {
+        "duplicate": false,
+        "documentId": "56c67b2d45e3386f25994c29e38bc0478cb83a0b01aecaac80ba5af6613c8143",
+        "chunks": 1,
+        "writeMs": 8.66309999999794
+      }
+    ],
+    "refreshMs": 515.329700000002,
+    "visibilityMs": 12.158699999999953
+  },
+  "importWallMs": 1191,
+  "duplicateSkipped": true,
+  "results": [
+    "▤batch-3.md·分块 1",
+    "▤batch-1.md·分块 1",
+    "▤batch-0.md·分块 1",
+    "▤batch-2.md·分块 1"
+  ],
+  "pass": true
+}

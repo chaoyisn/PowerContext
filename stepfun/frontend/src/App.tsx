@@ -5,6 +5,7 @@ import { EmbeddingClient, type EmbeddingStatus, type Precision } from "./embeddi
 import { chunkText, sha256Text } from "./text-utils.mjs";
 import { downloadPerf, readPerf, recordPerf, type PerfRecord } from "./perf";
 import { compressionRatio } from "../../benchmark/performance.mjs";
+import { embeddingSpace } from "./embedding-space.mjs";
 
 type Page = "home" | "search" | "documents" | "performance";
 const pages: { id: Page; label: string; glyph: string }[] = [
@@ -60,11 +61,11 @@ export function App() {
     else setDocuments([]);
   }, [activeKbId]);
 
-  function refreshKbs() {
+  function refreshKbs(preferredId?: string) {
     return api<{ kbs: KnowledgeBase[] }>("/api/kbs").then(({ data }) => {
       setKbs(data.kbs);
       const stored = localStorage.getItem("edgeseek.active-kb");
-      const next = data.kbs.some((kb) => kb.id === activeKbId) ? activeKbId : data.kbs.some((kb) => kb.id === stored) ? stored! : data.kbs[0]?.id ?? "";
+      const next = data.kbs.some((kb) => kb.id === preferredId) ? preferredId! : data.kbs.some((kb) => kb.id === activeKbId) ? activeKbId : data.kbs.some((kb) => kb.id === stored) ? stored! : data.kbs[0]?.id ?? "";
       setActiveKbId(next);
       if (next) localStorage.setItem("edgeseek.active-kb", next);
     }).catch((reason: Error) => setError(reason.message));
@@ -103,7 +104,7 @@ export function App() {
 
   async function ensureModel(requested: Precision = precision) {
     if (modelState === "loading") throw new Error("本地模型正在加载，请稍候");
-    const workerResident = modelState === "ready" && Boolean(embedding) && (requested === "auto" || requested === embedding?.dtype);
+    const workerResident = modelState === "ready" && Boolean(embedding) && (requested === "auto" || (requested === "int8" ? "q8" : requested) === embedding?.dtype);
     setModelState("loading");
     setError("");
     assetDownloads.current.clear();
@@ -136,9 +137,9 @@ export function App() {
     const rows = readPerf().filter((row) => row.name === "model.asset" && row.modelId === model.id && row.revision === model.revision && Number(row.bytes) > 0);
     const latestSize = (filename: string) => rows.filter((row) => String(row.file).split(/[?#]/)[0].split("/").at(-1) === filename).map((row) => Number(row.bytes)).at(-1);
     const fp32Bytes = latestSize("model.onnx");
-    const int8Bytes = latestSize("model_int8.onnx");
+    const int8Bytes = latestSize("model_quantized.onnx");
     const ratio = compressionRatio(fp32Bytes, int8Bytes);
-    if (ratio !== null) recordPerf("model.compression", { modelId: model.id, revision: model.revision, original: "model.onnx", quantized: "model_int8.onnx", fp32Bytes, int8Bytes, fp32ToInt8Ratio: ratio });
+    if (ratio !== null) recordPerf("model.compression", { modelId: model.id, revision: model.revision, original: "model.onnx", quantized: "model_quantized.onnx", fp32Bytes, int8Bytes, fp32ToInt8Ratio: ratio });
   }
 
   async function embedTexts(texts: string[], size = batchSize) {
@@ -146,7 +147,7 @@ export function App() {
     const started = performance.now();
     const batch = await worker().embed(texts, size);
     if (embedding?.backend !== batch.backend || embedding?.dtype !== batch.dtype) {
-      setEmbedding((current) => current ? { ...current, backend: batch.backend, dtype: batch.dtype } : current);
+      setEmbedding((current) => current ? { ...current, backend: batch.backend, dtype: batch.dtype, fallbackReason: batch.fallbackReason } : current);
     }
     recordPerf("embedding.batch", {
       items: texts.length, batchSize: batch.batchSize, durationMs: Number(batch.elapsedMs.toFixed(2)),
@@ -162,12 +163,14 @@ export function App() {
     setBusy("kb");
     setError("");
     try {
-      const { data } = await post<{ kb: KnowledgeBase }>("/api/kbs", { name: newKbName, modelKey: model.modelKey });
+      const state = await ensureModel();
+      const modelKey = embeddingSpace(model.modelKey, model.revision, state.backend, state.dtype);
+      const { data } = await post<{ kb: KnowledgeBase }>("/api/kbs", { name: newKbName, modelKey });
       setNewKbName("");
       localStorage.setItem("edgeseek.active-kb", data.kb.id);
       setActiveKbId(data.kb.id);
       setShowNewKb(false);
-      await refreshKbs();
+      await refreshKbs(data.kb.id);
       setNotice(`已创建知识库「${data.kb.name}」`);
     } catch (reason) {
       setError((reason as Error).message);
@@ -193,35 +196,41 @@ export function App() {
       const check = await post<{ duplicates: string[] }>(`/api/kbs/${activeKb.id}/deduplicate`, { hashes: candidates.map((doc) => doc.sha256) });
       recordPerf("network.deduplicate", { durationMs: Number(check.requestMs.toFixed(2)), files: candidates.length });
       const duplicates = new Set(check.data.duplicates);
-      const fresh = candidates.filter((doc) => !duplicates.has(doc.sha256));
+      const selectedHashes = new Set<string>();
+      const fresh = candidates.filter((doc) => {
+        if (duplicates.has(doc.sha256) || selectedHashes.has(doc.sha256)) return false;
+        selectedHashes.add(doc.sha256);
+        return true;
+      });
       if (!fresh.length) {
         setNotice(`所选 ${files.length} 份文档都已导入，未重复计算向量`);
         return;
       }
 
-      let imported = 0;
+      if (fresh.length > 100) throw new Error("单次最多导入 100 份文档，请分批选择");
+      const prepared: { filename: string; content: string; sha256: string; modelKey: string; backend: string; dtype: string; chunks: { text: string; embedding: number[] }[] }[] = [];
       for (const [index, item] of fresh.entries()) {
         const chunks = chunkText(item.content);
         if (!chunks.length) throw new Error(`${item.file.name}：文档内容为空`);
         setNotice(`正在处理 ${index + 1}/${fresh.length}：${item.file.name} · ${chunks.length} 个分块`);
         const vectors = await embedTexts(chunks);
-        const { data, requestMs } = await post<{ duplicate: boolean; documentId: string; chunks: number; writeMs?: number; refreshMs?: number; visibilityMs?: number }>(
-          `/api/kbs/${activeKb.id}/documents`,
-          { filename: item.file.name, content: item.content, sha256: item.sha256, modelKey: model.modelKey, dtype: vectors.dtype, chunks: chunks.map((text, i) => ({ text, embedding: vectors.embeddings[i] })) },
-        );
-        recordPerf("network.document-write", { durationMs: Number(requestMs.toFixed(2)), bytes: item.file.size, chunks: data.chunks });
-        if (!data.duplicate) {
-          recordPerf("seekdb.write", { durationMs: Number((data.writeMs ?? 0).toFixed(2)), chunks: data.chunks });
-          recordPerf("seekdb.index-refresh", { durationMs: Number((data.refreshMs ?? 0).toFixed(2)), visibleMs: Number((data.visibilityMs ?? 0).toFixed(2)), chunks: data.chunks });
-          imported++;
-        }
+        const modelKey = embeddingSpace(model.modelKey, model.revision, vectors.backend, vectors.dtype);
+        if (modelKey !== activeKb.modelKey) throw new Error("当前推理配置与知识库向量空间不一致，请切换到匹配的知识库或重新创建并导入文档");
+        prepared.push({ filename: item.file.name, content: item.content, sha256: item.sha256, modelKey, backend: vectors.backend, dtype: vectors.dtype, chunks: chunks.map((text, i) => ({ text, embedding: vectors.embeddings[i] })) });
       }
+      setNotice(`正在批量写入 ${prepared.length} 份文档并刷新索引`);
+      const { data, requestMs } = await post<{ results: { duplicate: boolean; documentId: string; chunks: number; writeMs?: number }[]; refreshMs: number; visibilityMs: number }>(`/api/kbs/${activeKb.id}/documents/batch`, { documents: prepared });
+      const imported = data.results.filter((item) => !item.duplicate).length;
+      const totalChunks = data.results.reduce((sum, item) => sum + item.chunks, 0);
+      recordPerf("network.document-write", { durationMs: Number(requestMs.toFixed(2)), bytes: fresh.reduce((sum, item) => sum + item.file.size, 0), chunks: totalChunks, files: fresh.length });
+      for (const item of data.results.filter((result) => !result.duplicate)) recordPerf("seekdb.write", { durationMs: Number((item.writeMs ?? 0).toFixed(2)), chunks: item.chunks });
+      recordPerf("seekdb.index-refresh", { durationMs: Number(data.refreshMs.toFixed(2)), visibleMs: Number(data.visibilityMs.toFixed(2)), chunks: totalChunks, files: imported });
       await refreshDocuments();
       await refreshKbs();
-      setNotice(`已导入 ${imported} 份新文档；重复文档跳过 ${duplicates.size} 份`);
+      setNotice(`已导入 ${imported} 份新文档；重复文档跳过 ${files.length - fresh.length + data.results.filter((item) => item.duplicate).length} 份`);
     } catch (reason) {
       setError((reason as Error).message);
-      setNotice("导入未完成。失败文档会显示为 processing，可重新导入恢复。");
+      setNotice("导入未完成；未确认完成的文档可重新导入恢复。");
     } finally {
       setBusy("");
       if (fileRef.current) fileRef.current.value = "";
@@ -237,9 +246,11 @@ export function App() {
     const endToEndStart = performance.now();
     try {
       const vector = await embedTexts([query.trim()], 1);
+      const modelKey = embeddingSpace(model.modelKey, model.revision, vector.backend, vector.dtype);
+      if (modelKey !== activeKb.modelKey) throw new Error("当前推理配置与知识库向量空间不一致，请切换到匹配的知识库或重新创建并导入文档");
       recordPerf("query.embedding", { durationMs: Number(vector.elapsedMs.toFixed(2)), backend: vector.backend, dtype: vector.dtype });
       const { data, requestMs } = await post<{ results: SearchResult[]; dbMs: number; mode: string }>(`/api/kbs/${activeKb.id}/search`, {
-        query: query.trim(), embedding: vector.embeddings[0], modelKey: model.modelKey, mode, topK,
+        query: query.trim(), embedding: vector.embeddings[0], modelKey, backend: vector.backend, dtype: vector.dtype, mode, topK,
       });
       recordPerf("seekdb.search", { mode: data.mode, dbMs: Number(data.dbMs.toFixed(2)), networkMs: Number(Math.max(0, requestMs - data.dbMs).toFixed(2)), resultCount: data.results.length });
       setResults(data.results);
@@ -277,6 +288,8 @@ export function App() {
   }
 
   function changePrecision(value: Precision) {
+    workerRef.current?.close();
+    workerRef.current = null;
     setPrecision(value);
     localStorage.setItem("edgeseek.precision", value);
     setModelState("idle");
@@ -313,12 +326,12 @@ export function App() {
           <div className="breadcrumb"><span>工作区</span><i>/</i><strong>{pages.find((item) => item.id === page)?.label}</strong></div>
           <div className="topbar-right">
             <label className="kb-switcher"><span className="kb-dot" />
-              <select aria-label="切换知识库" value={activeKbId} onChange={(event) => changeKb(event.target.value)} disabled={!kbs.length}>
+              <select aria-label="切换知识库" value={activeKbId} onChange={(event) => changeKb(event.target.value)} disabled={!kbs.length || Boolean(busy)}>
                 {!kbs.length && <option value="">暂无知识库</option>}
                 {kbs.map((kb) => <option key={kb.id} value={kb.id}>{kb.name}</option>)}
               </select>
             </label>
-            <button className="kb-add" onClick={() => setShowNewKb(true)} aria-label="新建知识库" title="新建知识库">＋</button>
+            <button className="kb-add" onClick={() => setShowNewKb(true)} disabled={Boolean(busy)} aria-label="新建知识库" title="新建知识库">＋</button>
             <div className={`status-pill ${databaseReady ? "is-ready" : "is-error"}`}><span />{databaseReady ? "seekdb 已连接" : "数据库未连接"}</div>
             <div className={`model-pill ${modelState === "ready" ? "is-ready" : ""}`} title={embedding ? `${embedding.modelId} · ${embedding.dtype} · ${embedding.dimension} 维` : model.id}>
               <span className="model-dot" />{embedding ? `${embedding.backend} · ${embedding.dtype}` : modelState === "loading" ? "模型加载中" : "端侧模型未加载"}
@@ -382,7 +395,7 @@ export function App() {
 
           {page === "performance" && <section className="performance-view">
             <div className="page-title-row"><div><div className="eyebrow"><span className="eyebrow-line" /> RUNTIME & MEASUREMENTS</div><h1>性能记录</h1><p>计时来自浏览器 Worker 与实际 seekdb 调用，不预填加速比或质量分数。</p></div><div className="export-actions"><button className="button button-soft" onClick={() => downloadPerf("csv")}>导出 CSV</button><button className="button button-primary" onClick={() => downloadPerf("json")}>导出 JSON</button></div></div>
-            <div className="panel performance-controls"><div><h3>推理配置</h3><p>切换精度会在浏览器 Worker 中重新加载模型权重。</p></div><label>精度<select value={precision} onChange={(event) => changePrecision(event.target.value as Precision)}><option value="auto">自动 · WebGPU 优先</option><option value="fp32">FP32 · WASM</option><option value="int8">INT8 · WASM</option><option value="fp16">FP16 · WebGPU（失败时降级）</option></select></label><label>Batch<select value={batchSize} onChange={(event) => setBatchSize(Number(event.target.value))}><option value={1}>1</option><option value={4}>4</option><option value={8}>8</option></select></label><button className="button button-primary" disabled={busy === "benchmark" || modelState === "loading"} onClick={() => void benchmarkPrecision(precision)}>{busy === "benchmark" ? "运行中…" : "加载并计时"}</button></div>
+            <div className="panel performance-controls"><div><h3>推理配置</h3><p>切换精度会在浏览器 Worker 中重新加载模型权重。</p></div><label>精度<select value={precision} disabled={Boolean(busy) || modelState === "loading"} onChange={(event) => changePrecision(event.target.value as Precision)}><option value="auto">自动 · WebGPU 优先</option><option value="fp32">FP32 · WASM</option><option value="int8">INT8 · WASM</option><option value="fp16">FP16 · WebGPU（失败时降级）</option></select></label><label>Batch<select value={batchSize} disabled={Boolean(busy)} onChange={(event) => setBatchSize(Number(event.target.value))}><option value={1}>1</option><option value={4}>4</option><option value={8}>8</option><option value={16}>16</option></select></label><button className="button button-primary" disabled={Boolean(busy) || modelState === "loading"} onClick={() => void benchmarkPrecision(precision)}>{busy === "benchmark" ? "运行中…" : "加载并计时"}</button></div>
             <div className="metric-grid"><Metric label="当前推理后端" value={embedding ? `${embedding.backend} · ${embedding.dtype}` : "尚未加载"} detail={embedding ? `${embedding.dimension} 维 · ${embedding.modelId}` : model.id} /><Metric label="记录条数" value={String(performanceRows.length)} detail="保存在当前浏览器" /><Metric label="文档分块" value={String(documents.reduce((sum, doc) => sum + doc.chunkCount, 0))} detail="当前知识库" /><Metric label="数据库状态" value={databaseReady ? "已连接" : "未连接"} detail="seekdb-js · 本机 seekdb" />
             </div>
             {embedding?.fallbackReason && <div className="fallback-note"><b>WebGPU 回退已记录</b><span>{embedding.fallbackReason}</span></div>}

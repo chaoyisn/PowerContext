@@ -11,15 +11,16 @@ test("browser-local embeddings feed real seekdb results across modes", async ({ 
   const externalRequests: string[] = [];
   page.context().on("request", (request) => {
     const url = new URL(request.url());
-    if (!/^(localhost|127\.0\.0\.1)$/.test(url.hostname)) externalRequests.push(url.href);
+    if (["http:", "https:"].includes(url.protocol) && !/^(localhost|127\.0\.0\.1)$/.test(url.hostname)) externalRequests.push(url.href);
   });
+  await page.addInitScript(() => localStorage.setItem("edgeseek.precision", "int8"));
   await page.goto("/");
   await expect(page.getByText("seekdb 已连接")).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: "新建知识库" }).click();
   const knowledgeBaseName = `quality-${testInfo.project.name}-${Date.now()}`;
   await page.locator(".modal-card input").fill(knowledgeBaseName);
   await page.getByRole("button", { name: "创建知识库" }).click();
-  await expect(page.getByText(knowledgeBaseName)).toBeVisible();
+  await expect(page.getByRole("status")).toContainText(knowledgeBaseName);
   const primaryKbId = await page.getByLabel("切换知识库").inputValue();
 
   const input = page.locator('input[type="file"]');
@@ -56,6 +57,8 @@ test("browser-local embeddings feed real seekdb results across modes", async ({ 
   const isolatedKbName = `isolated-${testInfo.project.name}-${Date.now()}`;
   await page.locator(".modal-card input").fill(isolatedKbName);
   await page.getByRole("button", { name: "创建知识库" }).click();
+  await expect(page.getByRole("status")).toContainText(isolatedKbName);
+  expect(await page.getByLabel("切换知识库").inputValue()).not.toBe(primaryKbId);
   const isolatedInput = page.locator('input[type="file"]');
   await isolatedInput.setInputFiles({ name: "isolated.md", mimeType: "text/markdown", buffer: Buffer.from("tenant-only bluejay isolation token: 74f6. This text exists in this knowledge base only.") });
   await expect(page.getByText(/已导入 1 份新文档/)).toBeVisible({ timeout: 120_000 });
@@ -66,10 +69,13 @@ test("browser-local embeddings feed real seekdb results across modes", async ({ 
   expect((await page.locator(".result-source").first().innerText()).includes("isolated.md")).toBeTruthy();
   await page.getByLabel("切换知识库").selectOption(primaryKbId);
   await page.getByLabel("检索内容").fill("bluejay isolation token 74f6");
-  await page.getByRole("button", { name: "开始检索" }).click();
-  await expect(page.getByText(/显示 \d+ 条数据库返回结果|输入查询后/)).toBeVisible({ timeout: 60_000 });
-  const primaryResults = await page.locator(".result-source").allTextContents();
-  expect(primaryResults.some((value) => value.includes("isolated.md"))).toBeFalsy();
+  const [primaryResponse] = await Promise.all([
+    page.waitForResponse((response) => response.url().endsWith(`/api/kbs/${primaryKbId}/search`) && response.request().method() === "POST", { timeout: 60_000 }),
+    page.getByRole("button", { name: "开始检索" }).click(),
+  ]);
+  const primaryBody = await primaryResponse.json() as { results: { metadata?: { filename?: string } }[] };
+  expect(primaryBody.results.some((row) => row.metadata?.filename === "isolated.md")).toBeFalsy();
+  await expect.poll(async () => (await page.locator(".result-source").allTextContents()).some((value) => value.includes("isolated.md"))).toBeFalsy();
 
   await page.getByRole("button", { name: "性能记录" }).click();
   await page.getByLabel("精度").selectOption("fp32");
@@ -77,23 +83,22 @@ test("browser-local embeddings feed real seekdb results across modes", async ({ 
   await expect(page.getByText(/WASM · fp32 实测完成/)).toBeVisible({ timeout: 180_000 });
   await page.getByLabel("精度").selectOption("int8");
   await page.getByRole("button", { name: "加载并计时" }).click();
-  await expect(page.getByText(/WASM · int8 实测完成/)).toBeVisible({ timeout: 180_000 });
+  await expect(page.getByText(/WASM · q8 实测完成/)).toBeVisible({ timeout: 180_000 });
 
   const inferenceRequests = externalRequests.filter((url) => /api-inference|router\.huggingface\.co|api\.openai\.com|api\.cohere\.ai|api\.voyageai\.com/i.test(url));
   expect(inferenceRequests).toEqual([]);
-  expect(externalRequests.some((url) => /huggingface\.co|\.hf\.co/.test(new URL(url).hostname))).toBeTruthy();
-  expect(externalRequests.filter((url) => !/(^|\.)huggingface\.co$|(^|\.)hf\.co$/i.test(new URL(url).hostname))).toEqual([]);
+  expect(externalRequests).toEqual([]);
   expect(observations.every((row) => row.reciprocalRank > 0)).toBeTruthy();
 
   const performance = await page.evaluate(() => JSON.parse(localStorage.getItem("edgeseek.performance.v1") ?? "[]"));
   expect(performance.some((row: { name: string; dimension?: number }) => row.name === "embedding.batch" && row.dimension === 384)).toBeTruthy();
   expect(performance.some((row: { name: string }) => row.name === "seekdb.search")).toBeTruthy();
   expect(performance.some((row: { name: string; file?: string; bytes?: number }) => row.name === "model.asset" && row.file?.includes("model.onnx") && Number(row.bytes) > 0)).toBeTruthy();
-  expect(performance.some((row: { name: string; file?: string; bytes?: number }) => row.name === "model.asset" && row.file?.includes("model_int8.onnx") && Number(row.bytes) > 0)).toBeTruthy();
+  expect(performance.some((row: { name: string; file?: string; bytes?: number }) => row.name === "model.asset" && row.file?.includes("model_quantized.onnx") && Number(row.bytes) > 0)).toBeTruthy();
   expect(performance.some((row: { name: string; fp32ToInt8Ratio?: number }) => row.name === "model.compression" && Number(row.fp32ToInt8Ratio) > 0)).toBeTruthy();
   const sanitizedRemoteResources = [...new Set(externalRequests.map((value) => { const url = new URL(value); return `${url.origin}${url.pathname}`; }))];
   const actualRun = { at: new Date().toISOString(), browser: testInfo.project.name, model: "Xenova/all-MiniLM-L6-v2", revision: "751bff37182d3f1213fa05d7196b954e230abad9", externalModelResources: sanitizedRemoteResources, inferenceRequests, observations, performance };
-  mkdirSync(resolve("benchmark/results"), { recursive: true });
-  writeFileSync(resolve(`benchmark/results/${testInfo.project.name}-actual.json`), `${JSON.stringify(actualRun, null, 2)}\n`);
+  mkdirSync(resolve("benchmark/results/v3"), { recursive: true });
+  writeFileSync(resolve(`benchmark/results/v3/${testInfo.project.name}-e2e.json`), `${JSON.stringify(actualRun, null, 2)}\n`);
   console.info(JSON.stringify({ browser: testInfo.project.name, externalModelResources: sanitizedRemoteResources, observations, performanceRows: performance.length }));
 });

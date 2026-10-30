@@ -3,6 +3,8 @@ import { performance } from "node:perf_hooks";
 import { FulltextIndexConfig, Schema, SeekdbClient, VectorIndexConfig } from "seekdb";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { AsyncLocalStorage } from "node:async_hooks";
+import { embeddingSpace } from "../frontend/src/embedding-space.mjs";
 
 const model = JSON.parse(readFileSync(fileURLToPath(new URL("../model.json", import.meta.url)), "utf8"));
 const client = new SeekdbClient({
@@ -12,6 +14,26 @@ const client = new SeekdbClient({
   password: process.env.SEEKDB_PASSWORD ?? "",
   database: process.env.SEEKDB_DATABASE ?? "test",
 });
+const tracing = new AsyncLocalStorage();
+if (process.env.EDGESEEK_TRACE_SQL === "1") {
+  const internal = client._delegate._internal;
+  const execute = internal.execute.bind(internal);
+  const digest = value => createHash("sha256").update(String(value)).digest("hex");
+  const redact = sql => String(sql).replace(/\[(?:\s*[-+\d.eE]+\s*,?){20,}\]/g, "[VECTOR_REDACTED]");
+  internal.execute = async (statement, params) => {
+    const trace = tracing.getStore();
+    if (!trace) return execute(statement, params);
+    const start = performance.now();
+    const rows = await execute(statement, params);
+    const generated = String(statement).includes("DBMS_HYBRID_SEARCH.GET_SQL") ? rows?.[0]?.query_sql : null;
+    trace.push({ sql: redact(statement), sqlSha256: digest(statement), paramCount: params?.length ?? 0,
+      paramsSha256: params ? digest(JSON.stringify(params)) : null, elapsedMs: performance.now() - start,
+      rowCount: rows?.length ?? 0, generatedSql: generated ? redact(String(generated).trim().replace(/^['"]|['"]$/g, "")) : undefined,
+      generatedSqlSha256: generated ? digest(String(generated).trim().replace(/^['"]|['"]$/g, "")) : undefined,
+      rows: generated ? undefined : (rows ?? []).map(row => Object.fromEntries(Object.entries(row).filter(([key]) => /^(_?id|document|metadata|_score|score|distance|_distance)$/i.test(key)))) });
+    return rows;
+  };
+}
 
 export async function initializeDatabase() {
   await client.execute(`CREATE TABLE IF NOT EXISTS edgeseek_kbs (
@@ -50,7 +72,7 @@ export async function listKnowledgeBases() {
 export async function createKnowledgeBase(name, modelKey) {
   const cleanName = String(name ?? "").trim().slice(0, 255);
   if (!cleanName) throw new HttpError(400, "请输入知识库名称");
-  if (modelKey !== model.modelKey) throw new HttpError(409, "当前模型配置与项目索引不兼容");
+  if (![embeddingSpace(model.modelKey, model.revision, "WASM", "q8"), embeddingSpace(model.modelKey, model.revision, "WASM", "fp32"), embeddingSpace(model.modelKey, model.revision, "WebGPU", "fp16")].includes(modelKey)) throw new HttpError(409, "知识库需要明确的模型精度与后端配置");
   const id = randomUUID().replaceAll("-", "");
   const collection = collectionName(id);
   const schema = new Schema({
@@ -110,72 +132,98 @@ export async function getDocument(kbId, documentId) {
 }
 
 export async function importDocument(kbId, input) {
+  const batch = await importDocuments(kbId, [input]);
+  return { ...batch.results[0], refreshMs: batch.refreshMs, visibilityMs: batch.visibilityMs };
+}
+
+export async function importDocuments(kbId, inputs) {
   const kb = await getKnowledgeBase(kbId);
-  if (input.modelKey !== kb.modelKey || kb.dimension !== model.dimension) {
-    throw new HttpError(409, "文档向量模型或维度与该知识库不一致");
-  }
-  const content = String(input.content ?? "");
-  const sha256 = createHash("sha256").update(content, "utf8").digest("hex");
-  if (!content.trim() || sha256 !== input.sha256) throw new HttpError(400, "文档内容校验失败");
-  if (!Array.isArray(input.chunks) || !input.chunks.length) throw new HttpError(400, "没有可写入的文本分块");
-  if (input.chunks.length > 8000) throw new HttpError(413, "单份文档超过 8000 个分块");
-  for (const [index, chunk] of input.chunks.entries()) {
-    if (typeof chunk.text !== "string" || !chunk.text.trim() || !Array.isArray(chunk.embedding)) {
-      throw new HttpError(400, `第 ${index + 1} 个分块数据无效`);
-    }
-    validateVector(chunk.embedding);
-  }
-
-  const documentId = createHash("sha256").update(`${kb.id}\0${sha256}`).digest("hex");
-  const prior = await client.execute("SELECT status FROM edgeseek_documents WHERE kb_id = ? AND sha256 = ?", [kb.id, sha256]);
-  if (prior?.[0]?.status === "imported") return { duplicate: true, documentId, chunks: 0 };
-
-  await client.execute(`INSERT INTO edgeseek_documents (id, kb_id, filename, content, sha256, chunk_count, status)
-    VALUES (?, ?, ?, ?, ?, ?, 'processing')
-    ON DUPLICATE KEY UPDATE filename = VALUES(filename), content = VALUES(content), chunk_count = VALUES(chunk_count), status = 'processing'`,
-  [documentId, kb.id, safeFilename(input.filename), content, sha256, input.chunks.length]);
-
+  if (!Array.isArray(inputs) || !inputs.length || inputs.length > 100) throw new HttpError(400, "批次须包含 1 至 100 份文档");
   const collection = await getCollection(kb.id);
-  const ids = input.chunks.map((_, index) => createHash("sha256").update(`${documentId}:${index}`).digest("hex"));
-  const metadata = input.chunks.map((_, index) => ({
-    documentId, filename: safeFilename(input.filename), sha256, chunkIndex: index,
-    chunkCount: input.chunks.length, modelKey: kb.modelKey, dtype: String(input.dtype ?? "unknown"),
-  }));
-  const writeStarted = performance.now();
-  await collection.upsert({
-    ids,
-    documents: input.chunks.map((chunk) => chunk.text),
-    embeddings: input.chunks.map((chunk) => chunk.embedding),
-    metadatas: metadata,
-  });
-  const writeMs = performance.now() - writeStarted;
+  const results = [];
+  const pending = [];
+  const seen = new Set();
+  for (const input of inputs) {
+    if (!input || typeof input !== "object") throw new HttpError(400, "文档数据无效");
+    const expectedSpace = embeddingSpace(model.modelKey, model.revision, input.backend, input.dtype);
+    if (!expectedSpace || input.modelKey !== kb.modelKey || input.modelKey !== expectedSpace || kb.dimension !== model.dimension) {
+      throw new HttpError(409, "文档向量模型或维度与该知识库不一致");
+    }
+    const content = String(input.content ?? "");
+    const sha256 = createHash("sha256").update(content, "utf8").digest("hex");
+    if (!content.trim() || sha256 !== input.sha256) throw new HttpError(400, "文档内容校验失败");
+    if (!Array.isArray(input.chunks) || !input.chunks.length) throw new HttpError(400, "没有可写入的文本分块");
+    if (input.chunks.length > 8000) throw new HttpError(413, "单份文档超过 8000 个分块");
+    for (const [index, chunk] of input.chunks.entries()) {
+      if (!chunk || typeof chunk.text !== "string" || !chunk.text.trim() || !Array.isArray(chunk.embedding)) {
+        throw new HttpError(400, `第 ${index + 1} 个分块数据无效`);
+      }
+      validateVector(chunk.embedding);
+    }
+
+    const documentId = createHash("sha256").update(`${kb.id}\0${sha256}`).digest("hex");
+    const prior = await client.execute("SELECT status FROM edgeseek_documents WHERE kb_id = ? AND sha256 = ?", [kb.id, sha256]);
+    if (seen.has(sha256) || prior?.[0]?.status === "imported") {
+      results.push({ duplicate: true, documentId, chunks: 0 });
+      continue;
+    }
+    seen.add(sha256);
+
+    await client.execute(`INSERT INTO edgeseek_documents (id, kb_id, filename, content, sha256, chunk_count, status)
+      VALUES (?, ?, ?, ?, ?, ?, 'processing')
+      ON DUPLICATE KEY UPDATE filename = VALUES(filename), content = VALUES(content), chunk_count = VALUES(chunk_count), status = 'processing'`,
+    [documentId, kb.id, safeFilename(input.filename), content, sha256, input.chunks.length]);
+
+    const ids = input.chunks.map((_, index) => createHash("sha256").update(`${documentId}:${index}`).digest("hex"));
+    const metadata = input.chunks.map((_, index) => ({
+      documentId, filename: safeFilename(input.filename), sha256, chunkIndex: index,
+      chunkCount: input.chunks.length, modelKey: kb.modelKey, dtype: String(input.dtype ?? "unknown"),
+    }));
+    const writeStarted = performance.now();
+    await collection.upsert({
+      ids,
+      documents: input.chunks.map((chunk) => chunk.text),
+      embeddings: input.chunks.map((chunk) => chunk.embedding),
+      metadatas: metadata,
+    });
+    const writeMs = performance.now() - writeStarted;
+    const entry = { duplicate: false, documentId, chunks: ids.length, writeMs };
+    results.push(entry);
+    pending.push({ input, documentId, ids });
+  }
+
+  if (!pending.length) return { results, refreshMs: 0, visibilityMs: 0 };
 
   const refreshStarted = performance.now();
   await collection.refresh_index();
   const refreshMs = performance.now() - refreshStarted;
 
   const visibleStarted = performance.now();
-  const readback = await collection.get({ ids, include: ["embeddings"] });
-  const visibleIds = firstDimension(readback.ids);
-  const visibleVectors = Array.isArray(readback.embeddings) ? readback.embeddings : [];
-  if (visibleIds.length !== ids.length || visibleVectors.length !== ids.length) {
-    throw new Error("seekdb 写入后回读数量不一致，文档保持 processing 状态，可重新导入恢复");
-  }
-  for (let row = 0; row < ids.length; row++) {
-    const expected = input.chunks[row].embedding;
-    if (visibleIds[row] !== ids[row] || visibleVectors[row].length !== expected.length ||
-        visibleVectors[row].some((value, col) => Math.abs(value - expected[col]) > 1e-4)) {
-      throw new Error("seekdb 向量回读校验失败，文档保持 processing 状态，可重新导入恢复");
+  for (const { input, ids } of pending) {
+    const readback = await collection.get({ ids, include: ["embeddings"] });
+    const visibleIds = firstDimension(readback.ids);
+    const visibleVectors = Array.isArray(readback.embeddings) ? readback.embeddings : [];
+    if (visibleIds.length !== ids.length || visibleVectors.length !== ids.length) {
+      throw new Error("seekdb 写入后回读数量不一致，文档保持 processing 状态，可重新导入恢复");
+    }
+    for (let row = 0; row < ids.length; row++) {
+      const expected = input.chunks[row].embedding;
+      if (visibleIds[row] !== ids[row] || visibleVectors[row].length !== expected.length ||
+          visibleVectors[row].some((value, col) => Math.abs(value - expected[col]) > 1e-4)) {
+        throw new Error("seekdb 向量回读校验失败，文档保持 processing 状态，可重新导入恢复");
+      }
     }
   }
   const visibilityMs = performance.now() - visibleStarted;
-  await client.execute("UPDATE edgeseek_documents SET status = 'imported' WHERE id = ?", [documentId]);
-  return { duplicate: false, documentId, chunks: ids.length, writeMs, refreshMs, visibilityMs };
+  for (const { documentId } of pending) await client.execute("UPDATE edgeseek_documents SET status = 'imported' WHERE id = ?", [documentId]);
+  return { results, refreshMs, visibilityMs };
 }
 
 export async function search(kbId, input) {
   const kb = await getKnowledgeBase(kbId);
-  if (input.modelKey !== kb.modelKey || kb.dimension !== model.dimension) {
+  if (!input || typeof input !== "object") throw new HttpError(400, "查询数据无效");
+  const expectedSpace = embeddingSpace(model.modelKey, model.revision, input.backend, input.dtype);
+  if (!expectedSpace || input.modelKey !== kb.modelKey || input.modelKey !== expectedSpace || kb.dimension !== model.dimension) {
     throw new HttpError(409, "查询向量模型或维度与该知识库不一致");
   }
   const query = String(input.query ?? "").trim();
@@ -193,13 +241,15 @@ export async function search(kbId, input) {
       include: ["documents", "metadatas", "distances"],
     });
   } else if (input.mode === "hybrid") {
-    result = await collection.hybridSearch({
+    const trace = [];
+    result = await tracing.run(trace, () => collection.hybridSearch({
       query: { whereDocument: { $contains: query } },
       knn: { queryEmbeddings: [input.embedding] },
       rank: { rrf: { rankWindowSize: Math.max(20, nResults * 4), rankConstant: 60 } },
       nResults,
       include: ["documents", "metadatas", "distances"],
-    });
+    }));
+    if (process.env.EDGESEEK_TRACE_SQL === "1") console.info(JSON.stringify({ event: "seekdb.hybrid.trace", kbId: kb.id, trace }));
   } else {
     throw new HttpError(400, "检索方式必须是 vector、fulltext 或 hybrid");
   }

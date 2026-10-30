@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "./env.mjs";
 
 loadEnv();
-const { createKnowledgeBase, findDuplicateDocuments, getDocument, health, importDocument, initializeDatabase, listDocuments, listKnowledgeBases, search, HttpError } = await import("./db.mjs");
+const { createKnowledgeBase, findDuplicateDocuments, getDocument, health, importDocument, importDocuments, initializeDatabase, listDocuments, listKnowledgeBases, search, HttpError } = await import("./db.mjs");
 const root = fileURLToPath(new URL("../", import.meta.url));
 const staticRoot = resolve(root, "frontend/dist");
 const modelRoot = resolve(root, "frontend/public/models");
@@ -44,6 +44,10 @@ async function routeApi(request, url) {
   if (parts.length === 4 && parts[3] === "documents" && request.method === "GET") return { body: { documents: await listDocuments(kbId) } };
   if (parts.length === 4 && parts[3] === "documents" && request.method === "POST") {
     return { status: 201, body: await importDocument(kbId, await readJson(request)) };
+  }
+  if (parts.length === 5 && parts[3] === "documents" && parts[4] === "batch" && request.method === "POST") {
+    const body = await readJson(request);
+    return { status: 201, body: await importDocuments(kbId, body.documents) };
   }
   if (parts.length === 5 && parts[3] === "documents" && request.method === "GET") return { body: { document: await getDocument(kbId, parts[4]) } };
   if (parts.length === 4 && parts[3] === "search" && request.method === "POST") return { body: await search(kbId, await readJson(request)) };

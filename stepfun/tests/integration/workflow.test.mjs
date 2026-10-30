@@ -7,6 +7,9 @@ import { createServer } from "node:net";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import model from "../../model.json" with { type: "json" };
+import { embeddingSpace } from "../../frontend/src/embedding-space.mjs";
+
+const modelKey = embeddingSpace(model.modelKey, model.revision, "WASM", "q8");
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
 
@@ -17,7 +20,7 @@ test("real API imports incrementally, isolates knowledge bases, and survives ser
   let child = await startServer(port, environment);
   try {
     const name = `workflow-${Date.now()}`;
-    const { kb } = await json(`/api/kbs`, { method: "POST", body: { name, modelKey: model.modelKey } });
+    const { kb } = await json(`/api/kbs`, { method: "POST", body: { name, modelKey } });
     const first = await importDocument(kb.id, "primary.md", "seekdb bluejay primary record", [1, 0, 0]);
     assert.equal(first.duplicate, false);
     assert.equal(first.chunks, 1);
@@ -35,12 +38,31 @@ test("real API imports incrementally, isolates knowledge bases, and survives ser
     const freshSearch = await search(kb.id, "cedar", [0, 1, 0], "fulltext");
     assert.equal(freshSearch.results[0]?.metadata.filename, "incremental.md");
 
-    const { kb: isolated } = await json(`/api/kbs`, { method: "POST", body: { name: `${name}-isolated`, modelKey: model.modelKey } });
+    const { kb: isolated } = await json(`/api/kbs`, { method: "POST", body: { name: `${name}-isolated`, modelKey } });
     await importDocument(isolated.id, "tenant-only.md", "private violet tenant token", [0, 0, 1]);
     const isolatedSearch = await search(isolated.id, "violet tenant", [0, 0, 1], "hybrid");
     assert.equal(isolatedSearch.results[0]?.metadata.filename, "tenant-only.md");
     const primarySearch = await search(kb.id, "violet tenant", [1, 0, 0], "hybrid");
     assert.ok(primarySearch.results.every((row) => row.metadata.filename !== "tenant-only.md"));
+
+    const batchInput = (filename, content, index) => {
+      const embedding = Array(384).fill(0); embedding[index] = 1;
+      return { filename, content, sha256: hash(content), modelKey, backend: "WASM", dtype: "q8", chunks: [{ text: content, embedding }] };
+    };
+    const one = batchInput("batch-one.md", "batch first unique record", 0);
+    const two = batchInput("batch-two.md", "batch second unique record", 1);
+    const batched = await json(`/api/kbs/${isolated.id}/documents/batch`, { method: "POST", body: { documents: [one, two, one] } });
+    assert.deepEqual(batched.results.map((row) => row.duplicate), [false, false, true]);
+    assert.ok(batched.refreshMs >= 0);
+    assert.ok((await search(isolated.id, "batch second unique", [0, 1, 0], "hybrid")).results.some((row) => row.metadata.filename === "batch-two.md"));
+    const recover = batchInput("recover.md", "recoverable partial batch", 2);
+    const invalid = { ...batchInput("bad.md", "invalid batch input", 0), sha256: "0".repeat(64) };
+    const failedBatch = await fetch(`http://127.0.0.1:${port}/api/kbs/${isolated.id}/documents/batch`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ documents: [recover, invalid] }) });
+    assert.equal(failedBatch.status, 400);
+    assert.equal((await json(`/api/kbs/${isolated.id}/documents`)).documents.find((doc) => doc.filename === "recover.md")?.status, "processing");
+    const retried = await json(`/api/kbs/${isolated.id}/documents/batch`, { method: "POST", body: { documents: [recover] } });
+    assert.equal(retried.results[0].duplicate, false);
+    assert.equal((await json(`/api/kbs/${isolated.id}/documents`)).documents.find((doc) => doc.filename === "recover.md")?.status, "imported");
 
     const beforeRestart = await json(`/api/kbs/${kb.id}/documents`);
     assert.equal(beforeRestart.documents.length, 2);
@@ -117,14 +139,14 @@ async function importDocument(kbId, filename, content, direction) {
   const vector = Array(384).fill(0);
   direction.forEach((value, index) => { vector[index] = value; });
   return json(`/api/kbs/${kbId}/documents`, { method: "POST", body: {
-    filename, content, sha256: hash(content), modelKey: model.modelKey, dtype: "fixture", chunks: [{ text: content, embedding: vector }],
+    filename, content, sha256: hash(content), modelKey, backend: "WASM", dtype: "q8", chunks: [{ text: content, embedding: vector }],
   } });
 }
 
 async function search(kbId, query, direction, mode) {
   const embedding = Array(384).fill(0);
   direction.forEach((value, index) => { embedding[index] = value; });
-  return json(`/api/kbs/${kbId}/search`, { method: "POST", body: { query, embedding, modelKey: model.modelKey, mode, topK: 5 } });
+  return json(`/api/kbs/${kbId}/search`, { method: "POST", body: { query, embedding, modelKey, backend: "WASM", dtype: "q8", mode, topK: 5 } });
 }
 
 function hash(value) {

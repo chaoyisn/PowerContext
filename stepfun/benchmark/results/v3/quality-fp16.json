@@ -1,0 +1,851 @@
+{
+  "at": "2026-10-30T02:16:30.496Z",
+  "precision": "fp16",
+  "cases": [
+    {
+      "id": "en-hybrid",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "database.md",
+        "index.md",
+        "zh-search.md",
+        "garden.md",
+        "privacy.md",
+        "weather.md",
+        "zh-privacy.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 5.812699999980396
+    },
+    {
+      "id": "en-hybrid",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "database.md",
+        "index.md",
+        "weather.md",
+        "garden.md",
+        "zh-search.md",
+        "privacy.md",
+        "zh-privacy.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 13.960599999991246
+    },
+    {
+      "id": "en-privacy",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "privacy.md",
+        "zh-privacy.md",
+        "index.md",
+        "zh-search.md",
+        "weather.md",
+        "garden.md",
+        "database.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 6.134599999990314
+    },
+    {
+      "id": "en-privacy",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "privacy.md",
+        "index.md",
+        "zh-privacy.md",
+        "zh-search.md",
+        "weather.md",
+        "garden.md",
+        "database.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 16.769399999990128
+    },
+    {
+      "id": "en-index",
+      "language": "en",
+      "mode": "vector",
+      "ranking": [
+        "index.md",
+        "database.md",
+        "privacy.md",
+        "zh-search.md",
+        "weather.md",
+        "zh-privacy.md",
+        "garden.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 2.1534000000101514
+    },
+    {
+      "id": "en-index",
+      "language": "en",
+      "mode": "hybrid",
+      "ranking": [
+        "index.md",
+        "database.md",
+        "privacy.md",
+        "zh-search.md",
+        "weather.md",
+        "zh-privacy.md",
+        "garden.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 6.8906000000133645
+    },
+    {
+      "id": "zh-search",
+      "language": "zh",
+      "mode": "vector",
+      "ranking": [
+        "zh-search.md",
+        "zh-privacy.md",
+        "privacy.md",
+        "database.md",
+        "index.md",
+        "garden.md",
+        "weather.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 3.130300000018906
+    },
+    {
+      "id": "zh-search",
+      "language": "zh",
+      "mode": "hybrid",
+      "ranking": [
+        "zh-search.md",
+        "zh-privacy.md",
+        "privacy.md",
+        "database.md",
+        "index.md",
+        "garden.md",
+        "weather.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 1,
+      "dbMs": 9.168900000018766
+    },
+    {
+      "id": "cross-language",
+      "language": "cross",
+      "mode": "vector",
+      "ranking": [
+        "zh-privacy.md",
+        "zh-search.md",
+        "privacy.md",
+        "garden.md",
+        "index.md",
+        "weather.md",
+        "database.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 0.9197207891481876,
+      "dbMs": 2.493799999996554
+    },
+    {
+      "id": "cross-language",
+      "language": "cross",
+      "mode": "hybrid",
+      "ranking": [
+        "zh-privacy.md",
+        "zh-search.md",
+        "privacy.md",
+        "garden.md",
+        "index.md",
+        "weather.md",
+        "database.md"
+      ],
+      "recall5": 1,
+      "recall10": 1,
+      "ndcg10": 0.9197207891481876,
+      "dbMs": 7.542500000010477
+    }
+  ],
+  "errors": [],
+  "dataset": "benchmark/v3-quality.json",
+  "note": "Small independently labelled set; seven candidates make Recall@10 non-discriminating.",
+  "browser": "156.0.4314.50",
+  "kbId": "9f016b46ca55444084d15c5e8b35f916",
+  "performance": [
+    {
+      "at": "2026-10-30T02:16:32.812Z",
+      "name": "model.asset",
+      "file": "config.json",
+      "bytes": 650,
+      "acquisitionMs": 0.1,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:16:32.827Z",
+      "name": "model.asset",
+      "file": "tokenizer.json",
+      "bytes": 711661,
+      "acquisitionMs": 14.4,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:16:32.839Z",
+      "name": "model.asset",
+      "file": "tokenizer_config.json",
+      "bytes": 366,
+      "acquisitionMs": 26.7,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:16:34.055Z",
+      "name": "model.asset",
+      "file": "onnx/model_fp16.onnx",
+      "bytes": 45297825,
+      "acquisitionMs": 1169.2,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9"
+    },
+    {
+      "at": "2026-10-30T02:16:36.045Z",
+      "name": "model.load",
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+      "modelKey": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean-normalized:384",
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384,
+      "durationMs": 3776.6,
+      "workerInitMs": 3526.6,
+      "modelAssetBytes": 46010502,
+      "cacheState": "asset-size-reported",
+      "fallback": false
+    },
+    {
+      "at": "2026-10-30T02:16:36.695Z",
+      "name": "network.deduplicate",
+      "durationMs": 16,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:36.718Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 22,
+      "wallMs": 22.6,
+      "itemsPerSecond": 45.45,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:37.289Z",
+      "name": "network.document-write",
+      "durationMs": 569.7,
+      "bytes": 93,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:37.289Z",
+      "name": "seekdb.write",
+      "durationMs": 25.11,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:37.289Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 504.65,
+      "visibleMs": 4.29,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:37.555Z",
+      "name": "network.deduplicate",
+      "durationMs": 9,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:37.799Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 235.8,
+      "wallMs": 243.5,
+      "itemsPerSecond": 4.24,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:38.454Z",
+      "name": "network.document-write",
+      "durationMs": 655.5,
+      "bytes": 104,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:38.454Z",
+      "name": "seekdb.write",
+      "durationMs": 13.63,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:38.455Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 607.57,
+      "visibleMs": 1.9,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:38.931Z",
+      "name": "network.deduplicate",
+      "durationMs": 9.4,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:38.951Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 18.6,
+      "wallMs": 19.3,
+      "itemsPerSecond": 53.76,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:39.804Z",
+      "name": "network.document-write",
+      "durationMs": 852.6,
+      "bytes": 101,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:39.804Z",
+      "name": "seekdb.write",
+      "durationMs": 8,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:39.804Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 804.99,
+      "visibleMs": 1.78,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:40.329Z",
+      "name": "network.deduplicate",
+      "durationMs": 10,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:40.342Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 12.8,
+      "wallMs": 13.1,
+      "itemsPerSecond": 78.13,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:40.894Z",
+      "name": "network.document-write",
+      "durationMs": 550.3,
+      "bytes": 82,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:40.894Z",
+      "name": "seekdb.write",
+      "durationMs": 10.65,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:40.894Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 503.89,
+      "visibleMs": 1.36,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:41.194Z",
+      "name": "network.deduplicate",
+      "durationMs": 9.2,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:41.208Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 13.7,
+      "wallMs": 14.1,
+      "itemsPerSecond": 72.99,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:41.855Z",
+      "name": "network.document-write",
+      "durationMs": 646.9,
+      "bytes": 77,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:41.855Z",
+      "name": "seekdb.write",
+      "durationMs": 9.08,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:41.855Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 605.25,
+      "visibleMs": 3.99,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:42.060Z",
+      "name": "network.deduplicate",
+      "durationMs": 9,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:42.078Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 18.3,
+      "wallMs": 18.5,
+      "itemsPerSecond": 54.64,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:42.623Z",
+      "name": "network.document-write",
+      "durationMs": 544.4,
+      "bytes": 105,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:42.623Z",
+      "name": "seekdb.write",
+      "durationMs": 7.55,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:42.623Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 503.09,
+      "visibleMs": 6.16,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:42.938Z",
+      "name": "network.deduplicate",
+      "durationMs": 12.4,
+      "files": 1
+    },
+    {
+      "at": "2026-10-30T02:16:42.953Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 4,
+      "durationMs": 14.9,
+      "wallMs": 15.3,
+      "itemsPerSecond": 67.11,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:43.496Z",
+      "name": "network.document-write",
+      "durationMs": 542.5,
+      "bytes": 93,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:43.496Z",
+      "name": "seekdb.write",
+      "durationMs": 8.1,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:43.496Z",
+      "name": "seekdb.index-refresh",
+      "durationMs": 505.28,
+      "visibleMs": 1.25,
+      "chunks": 1
+    },
+    {
+      "at": "2026-10-30T02:16:44.010Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 64,
+      "wallMs": 64.2,
+      "itemsPerSecond": 15.63,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:44.010Z",
+      "name": "query.embedding",
+      "durationMs": 64,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:44.030Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 5.81,
+      "networkMs": 13.89,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.067Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 121.3,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.169Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 17.1,
+      "wallMs": 17.4,
+      "itemsPerSecond": 58.48,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:44.169Z",
+      "name": "query.embedding",
+      "durationMs": 17.1,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:44.198Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 13.96,
+      "networkMs": 14.54,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.212Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 60.8,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.316Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 13.8,
+      "wallMs": 14.3,
+      "itemsPerSecond": 72.46,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:44.316Z",
+      "name": "query.embedding",
+      "durationMs": 13.8,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:44.340Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 6.13,
+      "networkMs": 16.97,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.340Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 38.4,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.433Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 15.8,
+      "wallMs": 15.9,
+      "itemsPerSecond": 63.29,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:44.433Z",
+      "name": "query.embedding",
+      "durationMs": 15.8,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:44.479Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 16.77,
+      "networkMs": 28.43,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.497Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 79.5,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.609Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 15.1,
+      "wallMs": 15.4,
+      "itemsPerSecond": 66.23,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:44.609Z",
+      "name": "query.embedding",
+      "durationMs": 15.1,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:44.624Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 2.15,
+      "networkMs": 12.15,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.638Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 44.7,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.727Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 12.2,
+      "wallMs": 12.9,
+      "itemsPerSecond": 81.97,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:44.727Z",
+      "name": "query.embedding",
+      "durationMs": 12.2,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:44.747Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 6.89,
+      "networkMs": 12.61,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.747Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 33.5,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.828Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 16.7,
+      "wallMs": 16.8,
+      "itemsPerSecond": 59.88,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:44.828Z",
+      "name": "query.embedding",
+      "durationMs": 16.7,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:44.842Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 3.13,
+      "networkMs": 10.17,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.842Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 30.9,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.919Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 16.9,
+      "wallMs": 17.1,
+      "itemsPerSecond": 59.17,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:44.920Z",
+      "name": "query.embedding",
+      "durationMs": 16.9,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:44.942Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 9.17,
+      "networkMs": 13.03,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:44.957Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 55.1,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:45.066Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 12.2,
+      "wallMs": 12.4,
+      "itemsPerSecond": 81.97,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:45.067Z",
+      "name": "query.embedding",
+      "durationMs": 12.2,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:45.086Z",
+      "name": "seekdb.search",
+      "mode": "vector",
+      "dbMs": 2.49,
+      "networkMs": 15.91,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:45.086Z",
+      "name": "query.end-to-end",
+      "mode": "vector",
+      "durationMs": 32.1,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:45.177Z",
+      "name": "embedding.batch",
+      "items": 1,
+      "batchSize": 1,
+      "durationMs": 14.1,
+      "wallMs": 14.3,
+      "itemsPerSecond": 70.92,
+      "backend": "WebGPU",
+      "dtype": "fp16",
+      "dimension": 384
+    },
+    {
+      "at": "2026-10-30T02:16:45.177Z",
+      "name": "query.embedding",
+      "durationMs": 14.1,
+      "backend": "WebGPU",
+      "dtype": "fp16"
+    },
+    {
+      "at": "2026-10-30T02:16:45.197Z",
+      "name": "seekdb.search",
+      "mode": "hybrid",
+      "dbMs": 7.54,
+      "networkMs": 11.86,
+      "resultCount": 7
+    },
+    {
+      "at": "2026-10-30T02:16:45.211Z",
+      "name": "query.end-to-end",
+      "mode": "hybrid",
+      "durationMs": 48.2,
+      "resultCount": 7
+    }
+  ],
+  "complete": true
+}

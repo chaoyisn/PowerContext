@@ -1,0 +1,9 @@
+{
+  "api": {
+    "ok": true,
+    "sdk": "seekdb@1.4.0",
+    "database": "test"
+  },
+  "frontendStatus": 200,
+  "at": "2026-10-30T10:37:50.2045804+08:00"
+}

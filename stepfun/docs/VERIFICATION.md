@@ -1,5 +1,14 @@
 # 验证记录
 
+## V3（2026-10-30）
+
+- 实际浏览器向量查询的 seekdb-js 执行边界追踪：`GET_SQL` 返回语句与后续执行语句 SHA-256 均为 `528ee53fea21627bcfdb3964f981a15c52c52d981480e4859ef229f5e4a40c87`；数据库返回 3 行，ID、原文、得分和排序与 API 响应一致。SQL 中的全文、向量和 RRF 均在数据库执行。证据是 SDK 执行边界，而非数据库审计日志：`benchmark/results/v3/trace-verification.json`、`api-sql-trace.log`。
+- 有窗口 Edge 156.0.4314.50 使用 Intel Gen12LP 非回退适配器，支持 shader-f16，WebGPU FP16 加载本地权重并完成真实 384 维推理。重复输入 L2 差异 0.0041175；不能假定与 q8 空间可混用。`edge-gpu.json`、`edge-gpu.png`。
+- 模拟 adapter 不可用与初始化失败均回退 WASM q8 并完成两段真实推理：`fallback.json`。另在有窗口 Edge 成功加载 GPU 模型后注入错误，清理并回退 q8 推理通过：`gpu-disposal.json`。模拟仅注入测试 Worker 响应，不修改全局浏览器设置；GPU 推理中途故障与实际设备丢失未实测。
+- `space-probe.json` 使用真实 FP32/q8 输出验证双向错配被前端拦截，数据库 API 另有 409 测试；刷新恢复、API 重启查询、知识库隔离和连续导入/重复导入用真实向量验证（`restart-probe.json`、`chrome-workflow.json`）。数据库断连恢复和真实向量失败批次恢复尚未验证。
+- `batch-ui.json` 用四份真实浏览器 q8 向量验证单请求批量导入、去重和检索可见；`batch-integration.log` 使用合成 fixture 验证批次中途失败保留 processing、随后重试成功。Chrome/Edge 的 headless E2E 和有窗口 Edge 工作流均通过，创建知识库后选回旧 ID 的缺陷已修复。
+- T1–T9：PASS；T10：BLOCKED（断连恢复未测）；T11：PASS（Chrome 完整 UI 为 headless，Edge 完整 UI 为有窗口）；T12：BLOCKED（缺冷/热完整基准、应用端同口径优化前后样本及峰值内存）。V1/V2 记录保留在下方。
+
 ## V2.1（2026-10-30）
 
 - 独立 Playwright Chrome 156.0.8078.73 与 Edge 156.0.4314.50，均为 headless、单页、单 Worker 串行执行：静态页面 L0、实验页 L1、普通 Worker L2、真实 WASM 模型初始化与推理 L3 均 PASS。截图、网络、控制台、向量摘要见 `benchmark/results/v2/{chrome,msedge}-probe.json` 和对应截图。

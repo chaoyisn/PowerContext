@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 const children = [
   spawn(process.execPath, ["server/index.mjs"], { stdio: "inherit" }),
-  spawn(process.execPath, [resolve("node_modules/vite/bin/vite.js"), "--host", "127.0.0.1"], { stdio: "inherit" }),
+  spawn(process.execPath, [resolve("node_modules/vite/bin/vite.js"), "--host", "127.0.0.1", "--config", "scripts/vite-lab.config.mjs"], { stdio: "inherit" }),
 ];
 let stopping = false;
 

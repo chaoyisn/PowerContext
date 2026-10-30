@@ -4,8 +4,10 @@ import test from "node:test";
 import { createServer } from "node:net";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { embeddingSpace } from "../../frontend/src/embedding-space.mjs";
 
 const model = JSON.parse(readFileSync(fileURLToPath(new URL("../../model.json", import.meta.url)), "utf8"));
+const modelKey = embeddingSpace(model.modelKey, model.revision, "WASM", "q8");
 const root = fileURLToPath(new URL("../../", import.meta.url));
 
 test("API rejects model mismatch and invalid vector dimensions", async () => {
@@ -23,16 +25,21 @@ test("API rejects model mismatch and invalid vector dimensions", async () => {
 
     const create = await fetch(`${base}/api/kbs`, {
       method: "POST", headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name: `dimension-check-${Date.now()}`, modelKey: model.modelKey }),
+      body: JSON.stringify({ name: `dimension-check-${Date.now()}`, modelKey }),
     });
     assert.equal(create.status, 201);
     const { kb } = await create.json();
     const badSearch = await fetch(`${base}/api/kbs/${kb.id}/search`, {
       method: "POST", headers: { "content-type": "application/json" },
-      body: JSON.stringify({ query: "test", embedding: [1, 0, 0], modelKey: model.modelKey, mode: "vector", topK: 5 }),
+      body: JSON.stringify({ query: "test", embedding: [1, 0, 0], modelKey, backend: "WASM", dtype: "q8", mode: "vector", topK: 5 }),
     });
     assert.equal(badSearch.status, 422);
     assert.match((await badSearch.json()).error, /384/);
+    const wrongSpace = await fetch(`${base}/api/kbs/${kb.id}/search`, {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ query: "test", embedding: Array(384).fill(0), modelKey, backend: "WASM", dtype: "fp32", mode: "vector" }),
+    });
+    assert.equal(wrongSpace.status, 409);
   } finally {
     await stopServer(child);
   }

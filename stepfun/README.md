@@ -4,9 +4,9 @@ EdgeSeek 是一个浏览器端知识库：TXT/Markdown 文档在 Web Worker 中�
 
 ## 当前状态
 
-- P1 数据与 API 路径已在真实 seekdb Server 上验证，包含向量回读、增量导入、去重、索引刷新、知识库隔离和 API 重启持久化。
-- seekdb-js `1.4.0` 的 `hybridSearch()` 已验证调用数据库 `DBMS_HYBRID_SEARCH.GET_SQL` 路径。
-- 浏览器 Worker、WebGPU 优先与 WASM 降级逻辑已实现。受本机浏览器资源限制，端侧模型推理、Chrome/Edge E2E 和实际性能采样尚未完成；详见 [VERIFICATION.md](docs/VERIFICATION.md)。
+- 浏览器 Worker 的 WASM q8 与有窗口 Edge 的物理 GPU WebGPU FP16 均已真实推理；模拟 GPU 不可用和初始化失败后，WASM q8 真实推理通过。
+- 浏览器真实向量已写入 seekdb。SDK 执行边界追踪核对了 `GET_SQL` 返回语句与后续执行的语句及数据库结果，详见 [VERIFICATION.md](docs/VERIFICATION.md)。
+- 知识库绑定精度与后端；旧版未记录精度的知识库必须重新创建并导入。精度质量对照为小样本，批量刷新优化、完整桌面 UI 及断连恢复仍待验收。
 
 ## 启动
 
@@ -15,6 +15,7 @@ Windows PowerShell：
 ```powershell
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 .\scripts\install.ps1
+npm run fetch:model
 .\scripts\start.ps1
 ```
 

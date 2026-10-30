@@ -100,7 +100,7 @@ async function infer(texts: string[]) {
 async function embed(texts: string[], requestedBatchSize: number, requestId: string): Promise<EmbeddedBatch> {
   if (!status || !extractor) throw new Error("Initialize the local model before embedding");
   if (!texts.length || texts.some((text) => !text.trim())) throw new Error("Embedding input cannot be empty");
-  const batchSize = [1, 4, 8].includes(requestedBatchSize) ? requestedBatchSize : 4;
+  const batchSize = [1, 4, 8, 16].includes(requestedBatchSize) ? requestedBatchSize : 4;
   const started = performance.now();
   const embeddings: number[][] = [];
   for (let offset = 0; offset < texts.length; offset += batchSize) {
@@ -114,11 +114,14 @@ async function embed(texts: string[], requestedBatchSize: number, requestId: str
       const probe = await infer(["EdgeSeek WASM fallback verification"]);
       validate(probe[0]);
       status = { ...status, backend: "WASM", dtype: "q8", fallbackReason };
-      embeddings.push(...await infer(texts.slice(offset, offset + batchSize)));
+      // Discard earlier GPU batches: every output in a returned batch must share one space.
+      embeddings.length = 0;
+      offset = -batchSize;
+      continue;
     }
     self.postMessage({ requestId, progress: { phase: "embedding", completed: Math.min(offset + batchSize, texts.length), total: texts.length } });
   }
-  return { embeddings, elapsedMs: performance.now() - started, batchSize, backend: status.backend, dtype: status.dtype };
+  return { embeddings, elapsedMs: performance.now() - started, batchSize, backend: status.backend, dtype: status.dtype, fallbackReason: status.fallbackReason };
 }
 
 function validate(vector: number[]) {

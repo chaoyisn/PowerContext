@@ -1,0 +1,39 @@
+
+Running 1 test using 1 worker
+
+(node:3212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [edge] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes (11.9s)
+
+
+  1) [edge] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes 
+
+    Error: expect(received).toBeFalsy()
+
+    Received: true
+
+      71 |   await expect(page.getByText(/显示 \d+ 条数据库返回结果|输入查询后/)).toBeVisible({ timeout: 60_000 });
+      72 |   const primaryResults = await page.locator(".result-source").allTextContents();
+    > 73 |   expect(primaryResults.some((value) => value.includes("isolated.md"))).toBeFalsy();
+         |                                                                         ^
+      74 |
+      75 |   await page.getByRole("button", { name: "性能记录" }).click();
+      76 |   await page.getByLabel("精度").selectOption("fp32");
+        at D:\OceanBase\PowerContext-stepfun\stepfun\tests\e2e\quality.spec.ts:73:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-edge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-edge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-edge\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-edge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [edge] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes 

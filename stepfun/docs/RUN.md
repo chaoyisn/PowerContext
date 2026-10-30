@@ -1,5 +1,11 @@
 # EdgeSeek 运行说明
 
+## V3 验收与旧知识库
+
+进入 `stepfun` 后，先确保 Docker 中专用 seekdb 服务运行，执行 `npm run fetch:model` 校验固定模型，再运行 `npm run dev`；访问 `http://127.0.0.1:5174/`。创建知识库时先加载所选推理配置；切换精度或实际后端后需使用匹配的知识库。旧版没有记录精度的知识库需新建并重新导入，原数据不会自动迁移。
+
+诊断时可在隔离测试数据下设置 `EDGESEEK_TRACE_SQL=1` 启动 API，输出 SDK 执行边界的 SQL 跟踪；日志可能包含测试查询和文档，不要在真实私有数据上开启。V3 原始记录及脚本见 `benchmark/results/v3/` 与 `scripts/*probe.mjs`。
+
 ## V2.1 本地模型与实验页
 
 安装依赖后执行 `npm run fetch:model`，脚本从固定 revision 获取并校验模型，权重保存在被 Git 忽略的 `frontend/public/models/`。运行 `npm run dev:lab`，访问 `http://127.0.0.1:5174/embedding-lab.html`，选择 q8 / INT8 后点击加载；完成后可下载 JSON。实验页使用本地 ONNX Runtime 文件，缺失模型时会报告错误。`node scripts/browser-probe.mjs chrome` 或 `msedge` 可运行独立浏览器的分层检查。完整应用还需启动专用 seekdb 和 `npm run dev:server`。

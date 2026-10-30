@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-30T02:18:10.981Z",
+  "q8Kb": "1a976f12ee9b4fc0b0a7bb560fac7663",
+  "fp32Kb": "1b1ea7e8fd654c328d409ddc24a51d62",
+  "errors": [],
+  "fp32QueryAgainstQ8Blocked": true,
+  "mismatchMessage": "!\n当前推理配置与知识库向量空间不一致，请切换到匹配的知识库或重新创建并导入文档\n×",
+  "q8QueryWorks": true,
+  "q8Results": [
+    "▤privacy.md·分块 1",
+    "▤index.md·分块 1",
+    "▤database.md·分块 1",
+    "▤weather.md·分块 1",
+    "▤zh-privacy.md·分块 1"
+  ],
+  "refreshRestoredKb": true,
+  "queryAfterRefresh": true,
+  "q8QueryAgainstFp32Blocked": true
+}

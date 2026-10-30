@@ -1,8 +1,14 @@
 import { chromium } from "playwright";
 import { createHash } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 
 const evidence = { started: new Date().toISOString(), events: [], errors: [] };
+const evidenceDir = process.env.EDGESEEK_EVIDENCE_DIR || "benchmark/results/v2";
+const channel = process.env.EDGESEEK_BROWSER || "chrome";
+const headed = process.env.EDGESEEK_HEADED === "1";
+evidence.channel = channel;
+evidence.headed = headed;
+await mkdir(evidenceDir, { recursive: true });
 const docs = [
   ["vectors.md", "The database supports vector search. Semantic similarity finds documents by meaning."],
   ["privacy.md", "Browser-side embeddings can improve privacy. The browser computes vectors locally before storage."],
@@ -10,7 +16,7 @@ const docs = [
 ];
 let browser;
 try {
-  browser = await chromium.launch({ channel: "chrome", headless: true, timeout: 20000 });
+  browser = await chromium.launch({ channel, headless: !headed, timeout: 20000 });
   evidence.version = browser.version();
   const context = await browser.newContext();
   await context.addInitScript(() => localStorage.setItem("edgeseek.precision", "int8"));
@@ -21,8 +27,9 @@ try {
     if (!request.url().includes("/api/")) return;
     let body;
     try { body = request.postDataJSON(); } catch { /* GET or no JSON */ }
-    const vectors = body?.chunks?.map(chunk => chunk.embedding) ?? (body?.embedding ? [body.embedding] : []);
-    evidence.events.push({ kind: "request", method: request.method(), url: request.url(), filename: body?.filename, mode: body?.mode, modelKey: body?.modelKey, dtype: body?.dtype, vectors: vectors.map(vector => ({ dimension: vector.length, finite: vector.every(Number.isFinite), norm: Math.sqrt(vector.reduce((sum, x) => sum + x*x, 0)), sha256: createHash("sha256").update(JSON.stringify(vector)).digest("hex") })) });
+    const documents = Array.isArray(body?.documents) ? body.documents : [body];
+    const vectors = documents.flatMap(doc => doc?.chunks?.map(chunk => chunk.embedding) ?? (doc?.embedding ? [doc.embedding] : []));
+    evidence.events.push({ kind: "request", method: request.method(), url: request.url(), filename: body?.filename, filenames: body?.documents?.map(doc => doc.filename), mode: body?.mode, modelKey: body?.modelKey, dtype: body?.dtype, vectors: vectors.map(vector => ({ dimension: vector.length, finite: vector.every(Number.isFinite), norm: Math.sqrt(vector.reduce((sum, x) => sum + x*x, 0)), sha256: createHash("sha256").update(JSON.stringify(vector)).digest("hex") })) });
   });
   page.on("response", async response => {
     if (!response.url().includes("/api/")) return;
@@ -53,7 +60,7 @@ try {
   await page.locator(".result-card").first().waitFor({ timeout: 60000 });
   evidence.results = await page.locator(".result-card").allTextContents();
   evidence.performance = await page.evaluate(() => JSON.parse(localStorage.getItem("edgeseek.performance.v1") || "[]"));
-  await page.screenshot({ path: "benchmark/results/v2/chrome-workflow.png", timeout: 15000 });
+  await page.screenshot({ path: `${evidenceDir}/${channel}-workflow.png`, timeout: 15000 });
   evidence.completed = true;
   await context.close();
 } catch (error) { evidence.errors.push(error.stack || String(error)); }
@@ -61,6 +68,6 @@ finally {
   if (browser) await browser.close().catch(() => {});
   evidence.events = evidence.events.filter(event => !/\/api\/kbs\/[^/]+\//.test(event.url) || (evidence.kbId && event.url.includes(`/api/kbs/${evidence.kbId}/`)));
   evidence.finished = new Date().toISOString();
-  await writeFile("benchmark/results/v2/chrome-workflow.json", JSON.stringify(evidence, null, 2) + "\n");
+  await writeFile(`${evidenceDir}/${channel}-workflow.json`, JSON.stringify(evidence, null, 2) + "\n");
   console.log(JSON.stringify({ completed: evidence.completed, kbId: evidence.kbId, results: evidence.results, errors: evidence.errors }, null, 2));
 }

@@ -1,0 +1,39 @@
+
+Running 1 test using 1 worker
+
+(node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [edge] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes (13.2s)
+
+
+  1) [edge] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes 
+
+    Error: expect(received).toBeFalsy()
+
+    Received: true
+
+      73 |   ]);
+      74 |   const primaryBody = await primaryResponse.json() as { results: { metadata?: { filename?: string } }[] };
+    > 75 |   expect(primaryBody.results.some((row) => row.metadata?.filename === "isolated.md")).toBeFalsy();
+         |                                                                                       ^
+      76 |   await expect.poll(async () => (await page.locator(".result-source").allTextContents()).some((value) => value.includes("isolated.md"))).toBeFalsy();
+      77 |
+      78 |   await page.getByRole("button", { name: "性能记录" }).click();
+        at D:\OceanBase\PowerContext-stepfun\stepfun\tests\e2e\quality.spec.ts:75:87
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-edge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-edge\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-edge\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\quality-browser-local-embe-9627f-seekdb-results-across-modes-edge\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [edge] › tests\e2e\quality.spec.ts:9:1 › browser-local embeddings feed real seekdb results across modes 

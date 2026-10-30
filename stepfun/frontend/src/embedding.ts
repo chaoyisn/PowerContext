@@ -14,6 +14,7 @@ export type EmbeddedBatch = {
   batchSize: number;
   backend: "WebGPU" | "WASM";
   dtype: "fp32" | "q8" | "fp16";
+  fallbackReason?: string;
 };
 
 type Reply = { requestId: string; value?: unknown; error?: string; progress?: Record<string, unknown> };
@@ -54,6 +55,7 @@ export class EmbeddingClient {
 
   close() {
     this.worker.terminate();
+    for (const item of this.pending.values()) item.reject(new Error("Embedding worker was closed"));
     this.pending.clear();
   }
 
