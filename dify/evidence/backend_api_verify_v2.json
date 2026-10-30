@@ -85,7 +85,7 @@
       "code": "A14",
       "title": "后端不可达时快速失败而不是无限挂起",
       "passed": true,
-      "detail": "ConnectError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。 / 用时 2.05s"
+      "detail": "ConnectError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。 / 用时 2.07s"
     },
     {
       "code": "A15",

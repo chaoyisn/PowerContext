@@ -13,7 +13,7 @@
 | 仓库 | `E:\OceanBaseContest\powercontext-minimax` |
 | 分支 | `competition/dify-memory-town` |
 | V1 基线 | `f388d6e4` — feat(dify): 记仇小镇 —— NPC 的复仇日记 |
-| V2 提交 | 见文末「提交信息」一节（本次提交） |
+| V2 提交 | `61ec2323` — feat(dify): 《记仇小镇》V2 —— 语义动作理解、多地点多 NPC、多结局与强制鉴权（其后有一个仅刷新验收证据的 follow-up 提交） |
 | 改动范围 | 全部在 `dify/` 下：`app/` `backend/` `data/` `deploy/` `docs/` `examples/` `scripts/` `tests/` `evidence/` `README.md` |
 | 未触碰 | `competition/minimax-sdd-context`、`submission-v3`、`ResearchFlow` 相关分支、其它赛题目录、`minimax/`（另一个赛题的未跟踪文件） |
 
@@ -503,7 +503,8 @@ V1 的 T8.1/T8.2 原来用"偷王冠"来测幂等，但王冠只有一件 ——
 |---|---|
 | 分支 | `competition/dify-memory-town` |
 | 提交类型 | 普通 `git commit`（**不是** amend，**没有** force push） |
-| 提交范围 | 仅 `dify/` 下的 V2 增量改动 |
+| 提交哈希 | `61ec2323`（+ 一条仅刷新验收证据的 follow-up 提交） |
+| 提交范围 | 仅 `dify/` 下的 V2 增量改动（38 个文件 + 证据刷新） |
 | 推送 | **未推送**（未经明确授权不推送远程） |
 | 比赛平台 | **未提交** |
 
