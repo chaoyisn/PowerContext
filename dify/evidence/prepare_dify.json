@@ -1,0 +1,35 @@
+{
+  "plugin_id": "langgenius/anthropic",
+  "provider": "langgenius/anthropic/anthropic",
+  "model": "claude-sonnet-4-6",
+  "plugin_installed": true,
+  "provider_credential_configured": true,
+  "backend_token_present": true,
+  "results": [
+    {
+      "name": "登录 Dify Console",
+      "passed": true,
+      "detail": "登录成功"
+    },
+    {
+      "name": "Anthropic 模型插件",
+      "passed": true,
+      "detail": "插件已安装（langgenius/anthropic 0.3.39）"
+    },
+    {
+      "name": "Provider 凭据",
+      "passed": true,
+      "detail": "provider 凭据已配置"
+    },
+    {
+      "name": "模型 claude-sonnet-4-6",
+      "passed": true,
+      "detail": "模型 claude-sonnet-4-6 可用（插件共 25 个预置模型）"
+    },
+    {
+      "name": "后端服务凭据",
+      "passed": true,
+      "detail": "TOWN_BACKEND_TOKEN 已设置"
+    }
+  ]
+}

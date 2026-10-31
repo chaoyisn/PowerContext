@@ -278,7 +278,7 @@ V2 的迁移是**增量**的：`data/schema_v2.sql` 用 `ALTER TABLE … ADD COL
 | PowerContext | 7 / 7 PASS | `evidence/memory_verify.json` |
 | V1 Dify 全链路 T1–T9（历史） | 23 / 23 PASS | `evidence/dify_e2e.json` |
 | V1 Dify 全链路 T1–T9（**V2 环境下重跑**） | 27 / 27 PASS | `evidence/dify_e2e_v2.json` |
-| **V2 主验收 V2-T01–V2-T14** | **58 / 58 PASS** | `evidence/v2_acceptance.json` |
+| **V2 主验收 V2-T01–V2-T14** | **61 / 61 PASS** | `evidence/v2_acceptance.json` |
 | **V2-T12 真故障演练** | **10 / 10 PASS** | `evidence/memory_outage.json` |
 | 检索策略对比 | 已实测 | `evidence/retrieval_comparison.json` |
 
@@ -494,6 +494,58 @@ V1 的 T8.1/T8.2 原来用"偷王冠"来测幂等，但王冠只有一件 ——
 | 6 | **PowerContext 的 `remember` 没有幂等键。** | 幂等是我们自己用"写前查同 kind 同 text"实现的，代价是每次写多一次 `entries/list`。 |
 | 7 | **渡鸦法官的"历史证据"判定目前基于证据件数量。** | 证据来源是显式声明的（`EVIDENCE_SOURCES`），不是从对话里推断；更强的语义判定留待 V3。 |
 | 8 | **`minimax/` 目录是另一个赛题的未跟踪文件。** | 完全未触碰；提交时用显式路径，不会误加。 |
+| 9 | **V1 提交 `f388d6e4` 的历史里仍有明文 Console 密码。** | 当前 HEAD 的文件已脱敏；但清除历史需要重写 git 历史，与"禁止改写 V1 历史"冲突，**刻意不做**。详见 7.5 节。 |
+
+---
+
+## 7.5 提交前审计：评委能不能在独立环境跑起来
+
+"功能做完"和"评委能独立跑起来"是两件事。提交前专门按**评委的视角**
+从零走了一遍部署流程，发现并修掉了 5 个**只有在独立环境才会暴露**的
+阻塞问题 —— 每一个都能让"新建玩家成功"成立、但游戏跑不起来。
+
+| # | 问题 | 后果 | 修法 |
+|---|---|---|---|
+| 1 | **模型插件与它的 API Key 不在仓库里。** 插件装在 gitignore 掉的 `deploy/volumes/plugin_daemon/cwd/`，API Key 存在 Dify 的 Postgres。 | 新克隆的仓库 `docker compose up` 之后，两个 LLM 节点因为"provider 未配置"而**完全跑不起来**，而 README 里一个字都没提。 | 新增 `scripts/prepare_dify.py`：装 Anthropic 插件 → 配 provider 凭据 → 确认 `claude-sonnet-4-6` 可用 → 确认后端凭据在位。**幂等**。 |
+| 2 | **README 写错了导入入口。** 原来写的是 `import_and_run_dify.py` —— 那个脚本**不注入**后端凭据。 | 按 README 操作，导入的应用**每一轮都返回 401「X-Town-Token 无效」**，玩家看到的是错误消息而不是 NPC 台词。 | README 改为 `deploy_v2.py`（导入 + 注入凭据），并明确写"不要用 `import_and_run_dify.py` 部署 V2"。 |
+| 3 | **验收脚本把"坏掉的部署"报成了 PASS。** `import_and_run_dify.py` 的 T1.4 只检查"工作流状态是 succeeded 且 answer 非空"。 | 401 的情况下这两条**都成立** —— 于是脚本报 6/6 通过，而应用其实是坏的。 | T1.4 改为检查台词里有没有输出格式标记、有没有后端错误码；命中就 **FAIL** 并直接告诉部署者该跑哪个脚本。 |
+| 4 | **环境变量名写错。** README 写 `SDD_SEEKDB_HOST` / `SDD_POWERCONTEXT_URL`，但**脚本读的是 `TOWN_*`**（`SDD_*` 只是 compose 层的名字，compose 会翻译成容器里的 `TOWN_*`）。 | 照 README 在 `.env` 里填 `SDD_*`，**宿主机直跑的脚本一个变量都读不到**，只能吃默认值 —— 在别的端口上就会连错库。 | README 环境变量表改标 `TOWN_*` 并说明两套名字的分工；`.env.example` 里两组都列上并注明用途。 |
+| 5 | **V1 的历史证据文件里写着明文 Console 密码。** `evidence/all_checks.json` 记录了命令行原文，含 `--password <明文密码>`。 | 凭据进了 git 历史，仓库公开可见。 | 当前 HEAD 里已脱敏成 `***`（保留"确实传了密码"这个事实，只抹掉密码本身）。`run_all_checks.py` 的 `_redact()` 早就这么做了，只是这个 V1 的旧文件是它之前生成的。 |
+
+> **一个必须如实说明的遗留问题：** 这个密码**仍然存在于 V1 的提交
+> `f388d6e4` 里**。彻底清除它需要重写 git 历史
+> （`filter-repo` / rebase），而赛题明确禁止"改写 V1 历史"，
+> 因此**没有做**。当前 HEAD 的文件内容已经干净。
+> 如果这个仓库将来要公开，第一件事应该是**轮换 Dify Console 密码** ——
+> 旧密码本来就只是本地开发用的。
+
+另外两处**文档与事实不符**，一并改掉：
+
+- README 说"建 8 张表" —— 实际是 **13 张**（V1 的 8 张 + V2 新增 5 张）。
+- `.env.example` 写着"由 `scripts/start_powercontext.py` 启动" ——
+  **那个脚本不存在**。改成如实说明：PowerContext 是本仓库**不包含**的
+  独立服务，得按它自己的官方文档部署。
+
+### 7.6 现在评委的完整路径
+
+```bash
+git clone https://github.com/chaoyisn/PowerContext && cd PowerContext/dify
+cp deploy/.env.example deploy/.env      # 填 TOWN_BACKEND_TOKEN 与模型端点
+cd deploy && docker compose -f docker-compose.yaml up -d && cd ..
+python scripts/init_seekdb.py            # 建 13 张表 + 种子（幂等）
+python scripts/prepare_dify.py  --email <账号> --password <密码>   # 插件 + provider 凭据
+python scripts/deploy_v2.py      --email <账号> --password <密码>   # 导入 DSL + 注入后端凭据
+python scripts/run_all_checks.py --email <账号> --password <密码> --suffix _v2
+python examples/play_demo_v2.py --email <账号> --password <密码>
+```
+
+两条**必须自己提供**的依赖已在 README 3.1 节写明：模型端点
+（任何 `/v1/messages` 协议的兼容服务）与 PowerContext 服务本身
+（它不在本仓库里）。
+
+V2-T00 现在把"模型插件已安装 / provider 凭据已配置 / DSL 使用的模型可用"
+也纳入前置断言 —— 这三条以前是**隐式**的（跑不动才知道），现在是
+**显式**的（跑之前就知道）。
 
 ---
 
@@ -567,7 +619,7 @@ feat(dify): 《记仇小镇》V2 —— 语义动作理解、多地点多 NPC、
 
 | 验收点 | 断言数 | 证据 |
 |---|---|---|
-| V2-T00 前置条件（依赖可用、鉴权、DSL 导入、凭据注入） | 5 | `evidence/v2_acceptance.json` |
+| V2-T00 前置条件（依赖可用、鉴权、DSL 导入、凭据注入、**模型插件与 provider 凭据**） | 8 | `evidence/v2_acceptance.json` |
 | V2-T01 语义动作识别 | 7 | 同上 |
 | V2-T02 地点探索 | 6 | 同上 |
 | V2-T03 NPC 与关系 | 3 | 同上 |
@@ -583,5 +635,5 @@ feat(dify): 《记仇小镇》V2 —— 语义动作理解、多地点多 NPC、
 | V2-T12 真故障演练（10 条断言） | 10 | `evidence/memory_outage.json` |
 | V2-T13 V1 无回归（历史证据 + 重跑） | 2 | `evidence/dify_e2e*.json` |
 | V2-T14 干净环境部署 | 5 | `evidence/v2_acceptance.json` |
-| **合计（主验收）** | **58** | `evidence/v2_acceptance.json` |
+| **合计（主验收）** | **61** | `evidence/v2_acceptance.json` |
 | 检索策略对比 | — | `evidence/retrieval_comparison.json` |

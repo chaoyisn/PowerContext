@@ -1,9 +1,9 @@
 {
   "powercontext_url": "http://127.0.0.1:8800",
   "players": {
-    "a": "mem_a_05650924",
-    "b": "mem_b_05650924",
-    "c": "mem_c_05650924"
+    "a": "mem_a_91c83bb8",
+    "b": "mem_b_91c83bb8",
+    "c": "mem_c_91c83bb8"
   },
   "passed": 7,
   "total": 7,
@@ -18,7 +18,7 @@
       "code": "M1",
       "title": "关键事件写入 PowerContext",
       "passed": true,
-      "detail": "scope_id=scp_0ah83khkd137dmeffpfk499msd artifact_id=art_f371c645f4f94a20b5545a00932fd0d1 kind=town-key-event"
+      "detail": "scope_id=scp_557b2y2e1recpfrgce4a1a8p1v artifact_id=art_96ceaf9121ca4aa386683840042c3fd4 kind=town-key-event"
     },
     {
       "code": "M2",
@@ -42,7 +42,7 @@
       "code": "M5",
       "title": "同一玩家始终解析到同一个 scope（绑定稳定）",
       "passed": true,
-      "detail": "scope=scp_0ah83khkd137dmeffpfk499msd / scp_0ah83khkd137dmeffpfk499msd / scp_0ah83khkd137dmeffpfk499msd"
+      "detail": "scope=scp_557b2y2e1recpfrgce4a1a8p1v / scp_557b2y2e1recpfrgce4a1a8p1v / scp_557b2y2e1recpfrgce4a1a8p1v"
     },
     {
       "code": "M6",
@@ -54,8 +54,8 @@
   "recalled_a": [
     {
       "kind": "town-key-event",
-      "text": "[mem_a_05650924] 偷走了 奥托镇长 的「镇长的金王冠」。奥托镇长 因此记恨上了他。",
-      "artifact_id": "art_f371c645f4f94a20b5545a00932fd0d1",
+      "text": "[mem_a_91c83bb8] 偷走了 奥托镇长 的「镇长的金王冠」。奥托镇长 因此记恨上了他。",
+      "artifact_id": "art_96ceaf9121ca4aa386683840042c3fd4",
       "revision": 1,
       "state": "active"
     }

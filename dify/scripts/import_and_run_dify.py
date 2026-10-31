@@ -265,7 +265,28 @@ def main() -> int:
               f"事件流报错：{str(failed or error)[:400]}")
         return 1
 
-    check("T1.4", "运行 Chatflow 得到 NPC 台词", bool(answer),
+    # 台词"有内容"不等于"游戏跑起来了"。
+    #
+    # V2 的后端强制校验 X-Town-Token，凭据没注入时它返回 401，
+    # Chatflow 会把那句错误原文透给玩家："X-Town-Token 无效"。
+    # 那样的话工作流状态确实是 succeeded、answer 确实非空 ——
+    # 但玩家看到的是一条错误消息，不是 NPC 台词。
+    #
+    # 所以这里额外检查：台词得带 V1/V2 的输出格式标记，
+    # 而且不能是后端的错误码/错误消息。
+    answer_ok = bool(answer) and "当前地点" in answer
+    backend_error = any(marker in answer for marker in (
+        "X-Town-Token", "unauthorized", "identity_mismatch",
+        "invalid_request_error", "X-Town-Identity",
+    ))
+    if backend_error:
+        check("T1.4", "运行 Chatflow 得到 NPC 台词", False,
+              f"后端拒绝了请求：{answer[:200]!r}。"
+              f"V2 请用 scripts/deploy_v2.py 导入（它会注入后端凭据），"
+              f"并先跑 scripts/prepare_dify.py。")
+        return 1
+
+    check("T1.4", "运行 Chatflow 得到 NPC 台词", answer_ok,
           f"player={player_id} answer={answer[:140]!r}")
     check("T1.5", "运行状态为 succeeded",
           bool(finished) and finished.get("data", {}).get("status") == "succeeded",

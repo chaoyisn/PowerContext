@@ -21,13 +21,13 @@
       "code": "C3",
       "title": "玩家注册写入 town_player 且落在起始地点",
       "passed": true,
-      "detail": "player_id=verify_a_c94027be location=town_square"
+      "detail": "player_id=verify_a_b42c992d location=town_square"
     },
     {
       "code": "C4",
       "title": "初始关系值符合设定",
       "passed": true,
-      "detail": "mayor={'player_id': 'verify_a_c94027be', 'npc_id': 'mayor', 'affinity': 0, 'trust': 50, 'grudge_level': 0, 'last_action': ''}"
+      "detail": "mayor={'player_id': 'verify_a_b42c992d', 'npc_id': 'mayor', 'affinity': 0, 'trust': 50, 'grudge_level': 0, 'last_action': ''}"
     },
     {
       "code": "C5",
@@ -45,7 +45,7 @@
       "code": "C7",
       "title": "道具转移真实改变 owner 字段",
       "passed": true,
-      "detail": "npc/mayor -> player/verify_a_c94027be"
+      "detail": "npc/mayor -> player/verify_a_b42c992d"
     },
     {
       "code": "C7b",

@@ -108,14 +108,15 @@ dify/
 ├── scripts/
 │   ├── init_seekdb.py             # 建表 + 灌种子（V2 增量迁移）
 │   ├── build_dsl.py               # DSL 生成器（Chatflow 的唯一真相来源）
-│   ├── deploy_v2.py               # 凭据注入 Dify（不写进 DSL）
+│   ├── prepare_dify.py            # 装 Anthropic 插件 + 配 provider 凭据（新环境必做）
+│   ├── deploy_v2.py               # 导入 DSL + 注入后端凭据（不写进 DSL）
 │   ├── verify_seekdb.py           # 真实 seekdb 验收
 │   ├── verify_backend_api.py      # 真实后端 API 验收
 │   ├── verify_memory.py           # 真实 PowerContext 验收
 │   ├── verify_dify_e2e.py         # V1 真实 Dify 全链路 T1–T9 验收
 │   ├── verify_v2_acceptance.py    # V2 主验收 V2-T01–V2-T14
 │   ├── verify_memory_outage.py    # V2-T12 真故障演练（PowerContext 不可达）
-│   ├── import_and_run_dify.py     # 导入 DSL 并跑一轮对话
+│   ├── import_and_run_dify.py     # 导入 DSL 并跑一轮对话（V1 回归用，比对导入前后结构）
 │   └── run_all_checks.py          # 一条命令跑全部验收
 ├── tests/
 │   ├── test_rules.py              # V1 Mock 单元测试
@@ -139,8 +140,27 @@ dify/
 |---|---|---|
 | Docker / Docker Compose | v2 | 跑 Dify 与 town-backend |
 | seekdb（OceanBase 兼容） | 5.7.25 兼容 | 游戏状态库 |
-| PowerContext | 1.4.1 | 关键事件记忆服务 |
+| PowerContext | 1.4.1 | 关键事件记忆服务（**本仓库不包含它的代码**，见下） |
 | Python | 3.10+ | 后端与验收脚本 |
+| **Anthropic 兼容模型端点** | — | **必需**。DSL 的两个 LLM 节点用 Anthropic 插件；端点可以是官方 Anthropic，也可以是任何 `/v1/messages` 协议的兼容服务 |
+
+> **两个没法用 `docker compose` 起来的依赖**，部署者要自己提供：
+>
+> 1. **模型端点** —— 云上的 Anthropic，或本地兼容代理。
+>    改 `deploy/.env` 里的 `ANTHROPIC_API_BASE_URL` 与 `ANTHROPIC_API_KEY` 即可。
+> 2. **PowerContext 服务** —— 它是 PowerContext 仓库自己的产品，
+>    **不在本仓库里**，也不在 `docker-compose.yaml` 里。
+>    按 PowerContext 官方文档部署（默认监听 `127.0.0.1:8800`），
+>    然后把地址配到 `deploy/.env` 的 `SDD_POWERCONTEXT_URL` /
+>    `TOWN_POWERCONTEXT_URL`。
+>    本仓库只通过 `backend/town_backend/memory.py` **调用**它的 HTTP 接口，
+>    用到的接口全部实测确认过（见 `docs/V2_DEVELOPMENT_REPORT.md` 第 4.2 节）。
+>
+> 不起 PowerContext 的话，游戏**状态**依然能跑通（后端会如实报告
+> 记忆写失败，并把欠下的记忆留在 outbox 里等补偿），
+> 但跨会话记忆 —— 本赛题的核心能力之一 —— 就无从验收。
+> `scripts/verify_memory.py` 与 `scripts/verify_memory_outage.py`
+> 会分别验证"有它时正常"和"没它时如实失败"。
 
 ### 3.2 启动
 
@@ -171,19 +191,50 @@ cd dify
 python scripts/init_seekdb.py
 ```
 
-建 8 张表并灌入种子数据。脚本幂等，可重复执行。
+建 13 张表（V1 的 8 张 + V2 新增 5 张）并灌入种子数据。脚本幂等，可重复执行；
+V2 的迁移是**增量**的，不删已有数据。
 
-### 3.4 导入 Chatflow
+### 3.4 准备 Dify（插件 + 凭据）
+
+DSL 里的两个 LLM 节点用的是 **Anthropic 模型插件**。插件代码和它的 API Key
+都**不在仓库里**（插件装在 gitignore 掉的 `deploy/volumes/` 运行时数据卷，
+API Key 存在 Dify 的数据库），所以新环境必须先做这一步：
 
 ```bash
-# 方式一：脚本导入并立刻跑一轮
-python scripts/import_and_run_dify.py --email <console账号> --password <密码>
+python scripts/prepare_dify.py --email <console账号> --password <密码>
+```
+
+它会：装 Anthropic 插件 → 配置 provider 凭据（API Key / API URL）→
+确认 `claude-sonnet-4-6` 可用 → 确认后端服务凭据在位。**幂等，可重复执行。**
+
+模型接入参数按 `命令行 > 环境变量 > deploy/.env > 默认值` 解析：
+
+| 变量 | 默认 | 说明 |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | 空 | Anthropic 兼容端点的 Key，**必填** |
+| `ANTHROPIC_API_BASE_URL` | `http://host.docker.internal:15721` | Anthropic 兼容端点地址 |
+
+### 3.5 导入 Chatflow
+
+```bash
+# 方式一：脚本导入 DSL → 注入后端凭据 → 校验导出不含明文凭据
+python scripts/deploy_v2.py --email <console账号> --password <密码>
 
 # 方式二：Dify 控制台手动导入
 #   Dify → 工作室 → 导入 DSL → 选择 app/memory-town-chatflow.yml
+#   然后在应用的「环境变量」里把 TOWN_BACKEND_TOKEN 填成 deploy/.env 里的同一个值
 ```
 
-### 3.5 体验游戏
+> **必须用 `deploy_v2.py`，不要用 `import_and_run_dify.py` 部署 V2。**
+> V2 的后端**强制**校验 `X-Town-Token`，而 DSL 里的
+> `TOWN_BACKEND_TOKEN` 只是个**空值**声明 —— 真实值必须由 `deploy_v2.py`
+> 在导入后注入 Dify 的加密环境变量。
+> 直接用 `import_and_run_dify.py` 导入的话，节点会拿到空凭据，
+> 后端一律返回 401「X-Town-Token 无效」。
+> （`import_and_run_dify.py` 仍然是 V1 的回归脚本，用途是**比对导入前后
+> 的 DSL 结构有没有被改写**，不是部署入口。）
+
+### 3.6 体验游戏
 
 ```bash
 # V1：四步演示（进镇 → 偷王冠 → 新会话翻旧账 → 换玩家）
@@ -541,12 +592,23 @@ cd dify/deploy && docker compose -f docker-compose.yaml up -d
 # 1. 初始化游戏数据（V2 增量迁移，不删已有数据）
 cd .. && python scripts/init_seekdb.py
 
-# 2. 跑全部验收
+# 2. 准备 Dify：装 Anthropic 插件 + 配 provider 凭据（幂等）
+python scripts/prepare_dify.py --email <账号> --password <密码>
+
+# 3. 导入 DSL 并注入后端凭据
+python scripts/deploy_v2.py --email <账号> --password <密码>
+
+# 4. 跑全部验收
 python scripts/run_all_checks.py --email <账号> --password <密码> --suffix _v2
 
-# 3. 玩一把
+# 5. 玩一把
 python examples/play_demo_v2.py --email <账号> --password <密码>
 ```
+
+> 第 2、3 步是**独立环境部署的必要步骤**，不能跳：
+> 第 2 步装的是模型插件与它的 API Key（都不在仓库里），
+> 第 3 步注入的是后端服务凭据 `TOWN_BACKEND_TOKEN`
+> （真实值只存在于 `deploy/.env`，DSL 里只有空值声明）。
 
 单独跑某一项：
 
@@ -557,6 +619,7 @@ python scripts/verify_memory.py --json evidence/memory_verify.json
 python scripts/verify_dify_e2e.py --email <账号> --password <密码> --json evidence/dify_e2e_v2.json
 python scripts/verify_v2_acceptance.py --email <账号> --password <密码> --json evidence/v2_acceptance.json
 python scripts/verify_memory_outage.py --json evidence/memory_outage.json
+python scripts/prepare_dify.py --email <账号> --password <密码>   # Dify 就绪检查
 python -m pytest tests/ -q         # Mock 单元测试，不需要服务
 ```
 
@@ -565,12 +628,20 @@ python -m pytest tests/ -q         # Mock 单元测试，不需要服务
 | 变量 | 默认 | 说明 |
 |---|---|---|
 | `DIFY_API_BASE` | `http://127.0.0.1:5001` | Dify Console API |
-| `SDD_SEEKDB_HOST` / `_PORT` / `_DATABASE` | `127.0.0.1` / `2881` / `memory_town` | seekdb |
-| `SDD_POWERCONTEXT_URL` | `http://127.0.0.1:8800` | PowerContext |
+| `TOWN_SEEKDB_HOST` / `_PORT` / `_DATABASE` | `127.0.0.1` / `2881` / `memory_town` | seekdb（**宿主机直跑脚本**用这一组） |
+| `TOWN_POWERCONTEXT_URL` | `http://127.0.0.1:8800` | PowerContext |
+| `ANTHROPIC_API_KEY` | 空 | Anthropic 兼容端点的 Key，`prepare_dify.py` 用 |
+| `ANTHROPIC_API_BASE_URL` | `http://host.docker.internal:15721` | Anthropic 兼容端点地址 |
 | **`TOWN_BACKEND_TOKEN`** | 空 | **V2 起必须非空**：后端所有业务接口都要求 `X-Town-Token` 与它一致，否则 401 |
 | **`TOWN_ALLOW_ANONYMOUS`** | `0` | 置 `1` 打开 demo 模式（**关闭玩家身份隔离**，接口会如实标 `demo_mode: true`） |
 | `TOWN_TEST_IDENTITY` | `verify_suite` | 验收脚本绑定的玩家身份（不是秘密） |
 
+> **两套变量名，别搞混：**
+> - `TOWN_*` —— 宿主机上直接跑脚本时用（`init_seekdb.py`、`verify_*.py`
+>   都读这一组）。`docker-compose.yaml` 里的 `SDD_*` 只是 compose 层的
+>   变量名，compose 会把它们翻译成容器里的 `TOWN_*`，**脚本不读 `SDD_*`**。
+> - 容器里的 `town-backend` 用的也是 `TOWN_*`（见 compose 的 `environment`）。
+>
 > `TOWN_BACKEND_TOKEN` **只**写进 `dify/deploy/.env`（已 gitignore）。
 > 仓库里的 `.env.example` 只有占位值。
 

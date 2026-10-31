@@ -31,7 +31,7 @@
     {
       "label": "Dify 全链路 T1–T9 验收",
       "kind": "真实集成测试",
-      "command": "D:\\Anaconda\\python.exe E:\\OceanBaseContest\\powercontext-minimax\\dify\\scripts\\verify_dify_e2e.py --email admin@memorytown.local --password TownAdmin2026 --json E:\\OceanBaseContest\\powercontext-minimax\\dify\\evidence\\dify_e2e.json",
+      "command": "D:\\Anaconda\\python.exe E:\\OceanBaseContest\\powercontext-minimax\\dify\\scripts\\verify_dify_e2e.py --email admin@memorytown.local --password *** --json E:\\OceanBaseContest\\powercontext-minimax\\dify\\evidence\\dify_e2e.json",
       "returncode": 0,
       "passed": true
     }

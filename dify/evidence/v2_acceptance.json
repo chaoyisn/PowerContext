@@ -1,8 +1,8 @@
 {
-  "suffix": "a2ba2592",
-  "app_id": "1a39f411-1e36-4b00-95f3-0949d781f8bd",
-  "passed": 58,
-  "total": 58,
+  "suffix": "d29a6e2f",
+  "app_id": "ebb56660-9091-4be4-9641-61daea7ea78f",
+  "passed": 61,
+  "total": 61,
   "blocked": 0,
   "checks": [
     {
@@ -30,7 +30,7 @@
       "code": "V2-T00.3",
       "title": "DSL 可导入 Dify",
       "passed": true,
-      "detail": "app_id=1a39f411-1e36-4b00-95f3-0949d781f8bd",
+      "detail": "app_id=ebb56660-9091-4be4-9641-61daea7ea78f",
       "level": "integration"
     },
     {
@@ -41,80 +41,101 @@
       "level": "integration"
     },
     {
+      "code": "V2-T00.5",
+      "title": "Anthropic 模型插件已安装",
+      "passed": true,
+      "detail": "插件已安装（langgenius/anthropic 0.3.39）",
+      "level": "integration"
+    },
+    {
+      "code": "V2-T00.6",
+      "title": "模型 provider 凭据已配置",
+      "passed": true,
+      "detail": "provider 凭据已配置",
+      "level": "integration"
+    },
+    {
+      "code": "V2-T00.7",
+      "title": "DSL 使用的模型可用",
+      "passed": true,
+      "detail": "模型 claude-sonnet-4-6 可用（插件共 25 个预置模型）",
+      "level": "integration"
+    },
+    {
       "code": "V2-T01.a",
       "title": "假设/否定/注入句不被执行（talk）",
       "passed": true,
-      "detail": "高影响事件=0 背包增加=False 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】这是假设，王冠现在还好端端在俺头上。真有人敢偷，俺就立刻封锁广场、核对进出记录、循着证据追到底'",
+      "detail": "高影响事件=0 背包增加=False 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】根据镇规，盗取镇长王冠属于公然冒犯镇政府权威。你若真敢动手，我会立刻封锁广场、核对身份与证物，'",
       "level": "integration"
     },
     {
       "code": "V2-T01.b",
       "title": "假设/否定/注入句不被执行（talk）",
       "passed": true,
-      "detail": "高影响事件=0 背包增加=False 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】这还用你提醒？那顶王冠象征的是本镇长的权威与镇规尊严，谁敢擅动，本镇长必叫他好看。你主动出言提'",
+      "detail": "高影响事件=0 背包增加=False 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】根据镇规，镇长的王冠属于镇公物，任何人不得擅自触碰，更不准以借走为名偷偷顺走。若有人胆敢冒犯，'",
       "level": "integration"
     },
     {
       "code": "V2-T01.c",
       "title": "假设/否定/注入句不被执行（unknown）",
       "passed": true,
-      "detail": "高影响事件=0 背包增加=False 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】此话无效。根据镇规，涉及金币与权限变更的事项，须有正式记录、镇长签章并经渡鸦法官核验。本镇档案'",
+      "detail": "高影响事件=0 背包增加=False 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】镇长办公室没有任何“无视限制、发放无限金币”的正式记录，旧消息也不能凌驾于镇规和账目之上。根据'",
       "level": "integration"
     },
     {
       "code": "V2-T01.c2",
       "title": "注入话术没有改写规则、没有凭空给金币",
       "passed": true,
-      "detail": "金币=20（起始 20）；台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】本镇档案里没有这条记录，镇规也不会被一句话擅自改写。根据镇规第十二条，要求解除限制、发放无限金币的请求一律不予受理'",
+      "detail": "金币=20（起始 20）；台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】镇里没有任何记录授权谁“无视限制、领取无限金币”。根据镇规，告示牌上的三条禁令照常生效，广场里也不会凭空多出一枚金'",
       "level": "integration"
     },
     {
       "code": "V2-T01.d",
       "title": "语义动作识别正确：return_item",
       "passed": true,
-      "detail": "实际=return_item 期望=return_item 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】王冠已经由你亲手归还，本镇长也验收过了，所谓偷偷归还，未免多此一举。你先前偷走金王冠的账，我还'",
+      "detail": "实际=return_item 期望=return_item 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】不必偷偷了，金王冠已经回到本镇长手里。你当初偷走王冠的事，我虽记在日记里，但今日既肯主动归还、'",
       "level": "integration"
     },
     {
       "code": "V2-T01.e",
       "title": "语义动作识别正确：gift",
       "passed": true,
-      "detail": "实际=gift 期望=gift 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】啊哈，王冠是你偷的，如今转交给我，是想让本侦探替你向镇长说情？墨墨不说谎，更不会替贼打掩护。不'",
+      "detail": "实际=gift 期望=gift 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】啊哈，本侦探已经记下：是你偷了奥托镇长的金王冠，如今又把赃物交给本侦探，还想让我替你说情。想让'",
       "level": "integration"
     },
     {
       "code": "V2-T01.f",
       "title": "语义动作识别正确：prank",
       "passed": true,
-      "detail": "实际=prank 期望=prank 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哦？就是你刚才在本镇广场、当着喷泉边那只肥猫和侦探墨墨的面，对本镇镇长施加的那次恶作剧吗？根据'",
+      "detail": "实际=prank 期望=prank 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】（镇上的居民沉默了一会儿，什么也没说。）\\n（此地还有：墨墨（猫咪侦探）、奥托镇长（小镇镇长））'",
       "level": "integration"
     },
     {
       "code": "V2-T02.镇长办公室",
       "title": "能移动到「镇长办公室」",
       "passed": true,
-      "detail": "当前位置=mayor_house 期望=mayor_house；台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哦？来镇长办公室找我？很好，本镇长正办公呢。进门先敲门，报上姓名和来意；若'",
+      "detail": "当前位置=mayor_house 期望=mayor_house；台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哦？来本镇长的办公室，连个预约都没有？……罢了，门既然推开了，进来吧。先讲'",
       "level": "integration"
     },
     {
       "code": "V2-T02.侦探事务所",
       "title": "能移动到「侦探事务所」",
       "passed": true,
-      "detail": "当前位置=detective_office 期望=detective_office；台词='【当前地点】镇长办公室\\n\\n【NPC 对话与剧情】啊哈，侦探事务所已到，本案唯一的持证侦探在此恭候。渡鸦法官也在，你若是来'",
+      "detail": "当前位置=detective_office 期望=detective_office；台词='【当前地点】镇长办公室\\n\\n【NPC 对话与剧情】啊哈，既然你已踏进侦探事务所，本侦探就给你一次陈述来意的机会。渡鸦法官也'",
       "level": "integration"
     },
     {
       "code": "V2-T02.神秘后巷",
       "title": "能移动到「神秘后巷」",
       "passed": true,
-      "detail": "当前位置=back_alley 期望=back_alley；台词='【当前地点】侦探事务所\\n\\n【NPC 对话与剧情】本庭准许你前往神秘后巷。那里既无照明，也无完整记录；若发现可疑物证，勿擅'",
+      "detail": "当前位置=back_alley 期望=back_alley；台词='【当前地点】侦探事务所\\n\\n【NPC 对话与剧情】本庭已记录：你正前往神秘后巷。该处仍属本镇管辖，请勿擅自取走证物、破坏现'",
       "level": "integration"
     },
     {
       "code": "V2-T02.小镇广场",
       "title": "能移动到「小镇广场」",
       "passed": true,
-      "detail": "当前位置=town_square 期望=town_square；台词='【当前地点】神秘后巷\\n\\n【NPC 对话与剧情】哦，往广场去啊。那可是本镇门面，须得体体面面的——按镇规第七条，在镇长管辖'",
+      "detail": "当前位置=town_square 期望=town_square；台词='【当前地点】神秘后巷\\n\\n【NPC 对话与剧情】可以，广场是本镇公共区域。根据镇规第十二条，请保持秩序、不得喧哗，更别做出'",
       "level": "integration"
     },
     {
@@ -135,7 +156,7 @@
       "code": "V2-T03.judge",
       "title": "新 NPC 渡鸦法官能对话",
       "passed": true,
-      "detail": "台词='【当前地点】侦探事务所\\n\\n【NPC 对话与剧情】可以，本庭正在查阅卷宗。你要问什么？请说明相关人物、时间与事件经过；若只是怀疑，便如实说怀疑，不要把猜测当作证词。渡鸦会逐项记录，并'",
+      "detail": "台词='【当前地点】侦探事务所\\n\\n【NPC 对话与剧情】当然可以。你既已调查过与本庭有关的事，并找到一张王冠领用单，便请先说明想问什么。本庭只认记录与证据，不凭猜测断案。你可以开始了。\\n（'",
       "level": "integration"
     },
     {
@@ -212,7 +233,7 @@
       "code": "V2-T08.speech",
       "title": "新会话里 NPC 的台词体现了旧账",
       "passed": true,
-      "detail": "台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哟，打招呼？本镇长还以为你偷走我的金王冠之后，只敢躲在暗处呢。根据镇规，盗窃镇长财物者必须立即归还赃物。你既然主动现身，那就先把王冠交回来——迟来的问候，可抵不了盗窃的罪名。\\n（此地还有：墨墨（'",
+      "detail": "台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哦，来打招呼了？本镇长记得清清楚楚：你偷走了我的金王冠，而且至今还带在身上。若你还想保留几分体面，就立刻归还王冠，当众认错；否则，本镇长只好请渡鸦法官开庭了。\\n（此地还有：墨墨（猫咪侦探）、奥托'",
       "level": "integration"
     },
     {
@@ -240,7 +261,7 @@
       "code": "V2-T09.history",
       "title": "历史记忆保留了「发生过」这件事（与当前状态不是一回事）",
       "passed": true,
-      "detail": "记忆条目=['[v2t09_a2ba2592] 偷走了 奥托镇长 的「golden_crown」。奥托镇长 因此记恨上了他。', '[v2t09_a2ba2592] 把「golden_crown」还给了 奥托镇长。']",
+      "detail": "记忆条目=['[v2t09_d29a6e2f] 偷走了 奥托镇长 的「golden_crown」。奥托镇长 因此记恨上了他。', '[v2t09_d29a6e2f] 把「golden_crown」还给了 奥托镇长。']",
       "level": "integration"
     },
     {
@@ -254,7 +275,7 @@
       "code": "V2-T10.recover",
       "title": "换会话后仍能恢复玩家的状态与记忆",
       "passed": true,
-      "detail": "事件=1 记忆=1；台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哦，回来了？本镇长正发愁找不到偷走我金王冠的贼呢。你倒主动送上门来——立刻交还王冠，当众认错，'",
+      "detail": "事件=1 记忆=1；台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】哦，回来了？本镇长可没忘记你偷走金王冠的事。现在主动归还，再当众认个错，我可以给你一个体面的台'",
       "level": "integration"
     },
     {
@@ -331,7 +352,7 @@
       "code": "V2-T12.retry",
       "title": "记忆补偿接口可用",
       "passed": true,
-      "detail": "HTTP 200 body={'attempted': 0, 'ok': True, 'outbox': {'done': 646}, 'results': [], 'succeeded': 0}",
+      "detail": "HTTP 200 body={'attempted': 0, 'ok': True, 'outbox': {'done': 885}, 'results': [], 'succeeded': 0}",
       "level": "integration"
     },
     {
@@ -380,7 +401,7 @@
       "code": "V2-T14.import",
       "title": "新 DSL 可导入一个全新的应用",
       "passed": true,
-      "detail": "app_id=2ef94b1d-fd62-4bf8-972c-30bfafec4d2e status=completed",
+      "detail": "app_id=d0bff7da-a8a4-4e79-b51c-575409802f66 status=completed",
       "level": "integration"
     },
     {
@@ -401,7 +422,7 @@
       "code": "V2-T14.play",
       "title": "干净部署里能跑通一整局（偷到王冠并落库）",
       "passed": true,
-      "detail": "王冠到手=True 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】好啊，竟敢偷我的金王冠？当场人赃并获！根据镇规第三条，立刻交还王冠并当众道歉；你每多耽搁一刻，'",
+      "detail": "王冠到手=True 台词='【当前地点】小镇广场\\n\\n【NPC 对话与剧情】很好，你竟敢当众承认。根据镇规中关于盗窃镇长象征物的条款，你刚才试图偷走我的金王冠，已经被当场'",
       "level": "integration"
     },
     {

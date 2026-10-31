@@ -52,6 +52,12 @@ import httpx  # noqa: E402
 
 from auth_helper import auth_headers, backend_token, test_identity  # noqa: E402
 from deploy_v2 import inject_token  # noqa: E402
+from prepare_dify import (  # noqa: E402
+    check_model_available,
+    ensure_plugin,
+    ensure_provider_credential,
+    resolve_setting,
+)
 from import_and_run_dify import Console, sse_answer  # noqa: E402
 from verify_backend_api import reset_fixtures  # noqa: E402
 
@@ -795,6 +801,22 @@ def main() -> int:
     app_id = imported["app_id"]
     injected, inject_detail = inject_token(console, app_id, token)
     if not check("V2-T00.4", "服务凭据注入 Dify 应用", injected, inject_detail):
+        return 1
+
+    # 模型插件与 provider 凭据 —— 全新环境最常见的卡点。
+    # 插件和它的 API Key 都不在仓库里（插件装在 gitignore 掉的
+    # deploy/volumes/，API Key 存在 Dify 的 Postgres），
+    # 所以这一步失败说明"还没跑 prepare_dify.py"。
+    plugin_ok, plugin_detail = ensure_plugin(console)
+    if not check("V2-T00.5", "Anthropic 模型插件已安装", plugin_ok, plugin_detail):
+        return 1
+    cred_ok, cred_detail = ensure_provider_credential(
+        console, resolve_setting("ANTHROPIC_API_KEY"),
+        resolve_setting("ANTHROPIC_API_BASE_URL") or "http://host.docker.internal:15721")
+    if not check("V2-T00.6", "模型 provider 凭据已配置", cred_ok, cred_detail):
+        return 1
+    model_ok, model_detail = check_model_available(console)
+    if not check("V2-T00.7", "DSL 使用的模型可用", model_ok, model_detail):
         return 1
 
     console_identity = _console_identity(console)
